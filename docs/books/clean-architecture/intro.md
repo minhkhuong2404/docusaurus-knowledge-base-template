@@ -39,98 +39,12 @@ This isn't just another patterns book. It is a principled argument for how to st
 
 The book is organized into **six parts** plus appendices, progressing from the smallest unit of code to the largest architectural concerns:
 
-```
-Clean Architecture
-│
-├── Part I   — Introduction
-│   ├── Chapter 1: What Is Design and Architecture?
-│   └── Chapter 2: A Tale of Two Values
-│
-├── Part II  — Programming Paradigms
-│   ├── Chapter 3: Paradigm Overview
-│   ├── Chapter 4: Structured Programming
-│   ├── Chapter 5: Object-Oriented Programming
-│   └── Chapter 6: Functional Programming
-│
-├── Part III — Design Principles (SOLID)
-│   ├── Chapter 7:  SRP — Single Responsibility Principle
-│   ├── Chapter 8:  OCP — Open-Closed Principle
-│   ├── Chapter 9:  LSP — Liskov Substitution Principle
-│   ├── Chapter 10: ISP — Interface Segregation Principle
-│   └── Chapter 11: DIP — Dependency Inversion Principle
-│
-├── Part IV  — Component Principles
-│   ├── Chapter 12: Components
-│   ├── Chapter 13: Component Cohesion
-│   └── Chapter 14: Component Coupling
-│
-├── Part V   — Architecture
-│   ├── Chapter 15: What Is Architecture?
-│   ├── Chapter 16: Independence
-│   ├── Chapter 17: Boundaries — Drawing Lines
-│   ├── Chapter 18: Boundary Anatomy
-│   ├── Chapter 19: Policy and Level
-│   ├── Chapter 20: Business Rules
-│   ├── Chapter 21: Screaming Architecture
-│   ├── Chapter 22: Testable Architecture
-│   ├── Chapter 23: Humble Objects
-│   ├── Chapter 24: Partial Boundaries
-│   ├── Chapter 25: Layers and Boundaries
-│   ├── Chapter 26: The Clean Architecture
-│   ├── Chapter 27: The Main Component
-│   ├── Chapter 28: Services: Great and Small
-│   └── Chapter 29: The Test Boundary
-│
-├── Part VI  — Details
-│   ├── Chapter 30: The Database Is a Detail
-│   ├── Chapter 31: The Web Is a Detail
-│   └── Chapter 32: Frameworks Are Details
-│
-├── Chapter 33: Case Study — Video Sales
-├── Chapter 34: The Missing Chapter
-└── Appendix A: Architecture Archaeology
-```
-
----
-
-## The Central Thesis
-
-The book builds toward one defining insight:
-
-> **Architecture is about deferring decisions.** A good architect maximizes the number of decisions NOT made — keeping options open until the last responsible moment.
-
-This single idea ripples across all levels:
-
-- At the **code level** → SOLID principles keep classes flexible
-- At the **component level** → Cohesion and coupling principles keep packages deployable independently
-- At the **system level** → Boundaries keep business logic decoupled from infrastructure (databases, web frameworks, UI)
-
----
-
-## Key Mental Models
-
-### 1. The Dependency Rule
-The single most important rule in the book:
-
-> **Source code dependencies must point only inward — toward higher-level policies.**
-
-Nothing in an inner circle (business rules) can know anything about something in an outer circle (frameworks, databases, UI).
-
-```
-      ┌─────────────────────────────┐
-      │  Frameworks & Drivers       │  ← outermost
-      │  ┌─────────────────────┐   │
-      │  │  Interface Adapters  │   │
-      │  │  ┌─────────────┐   │   │
-      │  │  │  Use Cases   │   │   │
-      │  │  │  ┌───────┐  │   │   │
-      │  │  │  │ Entities│  │   │   │
-      │  │  │  └───────┘  │   │   │
-      │  │  └─────────────┘   │   │
-      │  └─────────────────────┘   │
-      └─────────────────────────────┘
-         Dependencies point INWARD →
-```
+| Concentric Circle Layer | Architecture Role | Examples & Concrete Technologies | Dependency Rule Principle |
+|---|---|---|---|
+| **Layer 1: Entities** (Center) | Enterprise Business Rules | Domain Models, Value Objects, Business Invariants | **Zero dependencies**. Completely independent of frameworks and database schemas. |
+| **Layer 2: Use Cases** | Application Business Rules | Service orchestrators, Command/Query handlers | Only depends on Entities. Defines repository and gateway interfaces (DIP). |
+| **Layer 3: Interface Adapters** | Boundary Converters | Controllers, Presenters, Gateways, DTO Mappers | Translates data formats between web/database representations and internal use case models. |
+| **Layer 4: Frameworks & Drivers** (Outermost) | I/O Infrastructure & Tools | Spring Boot, PostgreSQL, React, Kafka, Redis | Volatile details. Swappable without modifying business rules or use case logic. |
 
 ### 2. Behavior vs. Structure
 Software has two values, and most teams optimize the wrong one:

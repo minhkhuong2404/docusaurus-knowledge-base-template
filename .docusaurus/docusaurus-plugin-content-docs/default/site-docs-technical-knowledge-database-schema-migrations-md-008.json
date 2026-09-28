@@ -76,7 +76,7 @@
     "permalink": "/technical-knowledge/database/advanced-sql"
   },
   "next": {
-    "title": "Indexing & Query Optimization",
-    "permalink": "/technical-knowledge/database/indexing-query-optimization"
+    "title": "Online DDL & Safe Index Creation",
+    "permalink": "/technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals"
   }
 }

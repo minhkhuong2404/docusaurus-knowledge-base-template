@@ -48,8 +48,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Senior Deep Dive",
-    "permalink": "/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive"
+    "title": "Advanced SPL & SRE Recipes",
+    "permalink": "/technical-knowledge/splunk/splunk-advanced-spl-recipes"
   },
   "next": {
     "title": "Processes & Threads",

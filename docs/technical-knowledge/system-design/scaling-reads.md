@@ -410,10 +410,7 @@ When product `1234` is updated, the application sends a single purge command for
 
 CQRS isolates mutation logic (Commands) from lookup logic (Queries) by maintaining **separate models — and often separate physical stores — for writes versus reads.** Rather than querying a highly normalized relational schema designed for transactional integrity, reads are served from denormalized "projection" tables or documents that are pre-shaped for exactly the query patterns the application needs.
 
-                  ┌──────────────┐
-                  │    Query     │
-                  └──────────────┘
-```
+<CqrsDataFlowDiagram />
 
 By decoupling storage schemas:
 

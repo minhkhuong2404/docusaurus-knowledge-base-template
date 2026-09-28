@@ -64,17 +64,11 @@ class OrderServiceTest {
 }
 ```
 
-```
-Execution order for 2 test methods:
-
-  @BeforeAll ──────────────────────────────────────────
-       │
-       ├── @BeforeEach → @Test (test1) → @AfterEach
-       │
-       ├── @BeforeEach → @Test (test2) → @AfterEach
-       │
-  @AfterAll ───────────────────────────────────────────
-```
+**Execution order for test methods:**
+1. `@BeforeAll` (runs once before all tests)
+2. `@BeforeEach` ➔ `@Test (test1)` ➔ `@AfterEach`
+3. `@BeforeEach` ➔ `@Test (test2)` ➔ `@AfterEach`
+4. `@AfterAll` (runs once after all tests)
 
 ### Test Annotations
 
@@ -300,26 +294,7 @@ class ApplicationIntegrationTest {
 
 ### Sliced Test Annotations — Load Only What You Need
 
-```
-Full context (@SpringBootTest):
-  ┌──────────────────────────────────────────────────────┐
-  │ Controllers + Services + Repos + Config + Security + │
-  │ Kafka + Redis + Scheduling + ...                     │
-  └──────────────────────────────────────────────────────┘
-  ⏱️ Startup time: 5-30 seconds
-
-@WebMvcTest slice:
-  ┌───────────────────────────────────┐
-  │ Controllers + Filters + Advice   │
-  └───────────────────────────────────┘
-  ⏱️ Startup time: 1-3 seconds
-
-@DataJpaTest slice:
-  ┌───────────────────────────────────┐
-  │ Repositories + JPA + In-mem DB   │
-  └───────────────────────────────────┘
-  ⏱️ Startup time: 2-5 seconds
-```
+<SpringTestAnnotationsDiagram initialTab="slices" />
 
 #### @WebMvcTest — Controller Layer Only
 

@@ -10,6 +10,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import HikariCPPoolDiagram from '@site/src/components/HikariCPPoolDiagram';
 import HikariSizingDiagram from '@site/src/components/HikariSizingDiagram';
+import ConnectionHoldTimeDiagram from '@site/src/components/ConnectionHoldTimeDiagram';
 
 # Database Connection Pooling
 
@@ -142,22 +143,10 @@ HikariCP is the fastest JVM connection pool. It is the default in Spring Boot si
 
 ### Core parameters explained
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                      HikariCP Pool (max=10)                          │
-│                                                                      │
-│  ┌──────┐ ┌──────┐ ┌──────┐   ← Active (borrowed by threads)       │
-│  │  C1  │ │  C2  │ │  C3  │                                         │
-│  └──────┘ └──────┘ └──────┘                                         │
-│                                                                      │
-│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐   ← Idle (warm, ready)       │
-│  │  C4  │ │  C5  │ │  C6  │ │  C7  │                               │
-│  └──────┘ └──────┘ └──────┘ └──────┘                               │
-│                                                                      │
-│  ← minimum-idle keeps at least N idle connections warm →            │
-│  ← maximum-pool-size is the total ceiling →                         │
-└──────────────────────────────────────────────────────────────────────┘
-```
+| Connection State | Pool Representation | Description |
+|---|---|---|
+| **Active (Borrowed)** | `C1`, `C2`, `C3` | Physical sockets currently loaned to worker threads running queries |
+| **Idle (Warm)** | `C4`, `C5`, `C6`, `C7` | Established, authenticated connections waiting for incoming threads |
 
 | Parameter | Default | What it controls | Recommendation |
 |-----------|---------|-----------------|----------------|
@@ -244,19 +233,11 @@ This is wrong. Here is why:
 
 **Lock contention:** more concurrent transactions increase the probability of two transactions waiting for the same row lock. As active connections grow, lock wait time grows super-linearly.
 
-```
-Throughput vs Connection Count:
-                     ▲
-     Throughput      │         ●
-                     │       ●   ●
-                     │     ●       ●
-                     │   ●           ●●●●●●  ← plateau, then degradation
-                     │ ●
-                     └──────────────────────►
-                            Connection count
-                              ▲
-                          sweet spot
-```
+| Connection Pool Range | Database Resource Behavior | Throughput & Latency Impact |
+|---|---|---|
+| **Under-provisioned** (1–5 conns) | CPU under-utilized; app requests wait in pool queue. | Low throughput, high client-side queue latency. |
+| **Sweet Spot ($C = T \times 2 + N$)** | 100% efficient CPU query execution, zero context-switch thrash. | **Peak throughput, minimum p99 latency.** |
+| **Over-provisioned** (100–500 conns) | 492 threads queue for 8 CPU cores; OS context switching storm; lock contention spikes. | Severe throughput degradation, database connection starvation. |
 
 ### The sizing formula
 
@@ -1052,19 +1033,7 @@ In large-scale high-throughput architectures (e.g. Shopify handling Black Friday
 
 The reason: **Engineers measure Query Execution Time, but the connection pool is bottlenecked by Connection Hold Time.**
 
-```
-Query Execution Time: ~2ms (actual work inside MySQL engine)
-┌───────────┐
-│ SQL Query │
-└───────────┘
-
-Connection Hold Time: ~45ms (physical socket borrowed from pool)
-┌────────────────────────────────────────────────────────────────────────┐
-│ App BEGIN ──► Calc Cart ──► JSON parse ──► SQL 1 ──► Transform ──► COMMIT │
-└────────────────────────────────────────────────────────────────────────┘
-  ▲                                                                    ▲
-  │ Borrowed from Pool                                                 │ Returned to Pool
-```
+<ConnectionHoldTimeDiagram />
 
 A connection is borrowed the moment `BEGIN` / `@Transactional` starts and remains locked to that thread until `COMMIT` or `ROLLBACK` finishes. Even if no external network calls occur, unnecessary application serialization, intermediate business calculations, or multi-statement transactions hold connections idle, starving adjacent high-throughput workloads.
 
@@ -1081,16 +1050,12 @@ Order findOrderWithTag(@Param("id") Long id);
 
 **Step 2: Proxy Layer Aggregation (ProxySQL / PgBouncer / OpenTelemetry)**
 Configure your database proxy (such as ProxySQL or an eBPF proxy) to parse the `/* conn_tag:... */` prefix and measure the total duration from transaction start to commit per tag:
-```
-ProxySQL Aggregated Metrics:
-┌───────────────────────────────────┬───────────────────┬──────────────────────┐
-│ Business Process Tag              │ Avg Query Latency │ Total Conn Hold Time │
-├───────────────────────────────────┼───────────────────┼──────────────────────┤
-│ conn_tag:inventory_reservation    │ 1.8 ms            │ 3.2 ms               │
-│ conn_tag:checkout_completion      │ 2.1 ms            │ 58.4 ms  ◄── BOTTLENECK!│
-│ conn_tag:cart_enrichment          │ 0.9 ms            │ 24.1 ms              │
-└───────────────────────────────────┴───────────────────┴──────────────────────┘
-```
+
+| Business Process Tag | Avg Query Latency | Total Conn Hold Time | Diagnostic Status |
+|---|---|---|---|
+| `conn_tag:inventory_reservation` | 1.8 ms | 3.2 ms | ✅ Healthy |
+| `conn_tag:checkout_completion` | 2.1 ms | 58.4 ms | 🚨 **BOTTLENECK!** |
+| `conn_tag:cart_enrichment` | 0.9 ms | 24.1 ms | ⚠️ Elevated |
 *Discovery*: Inventory reservations were not the bottleneck; legacy checkout completion logic held connections 18x longer than reservations. Trimming the transaction boundaries and eliminating redundant reads on the primary database reclaimed 50% of reads and 33% of primary transactions.
 
 #### Step 3: Re-evaluating Database Thread Concurrency (`innodb_thread_concurrency`)

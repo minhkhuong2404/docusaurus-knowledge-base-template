@@ -388,29 +388,30 @@ export default function UserProfileModal({
       onClick={onClose}
     >
       <div
+        className="user-profile-modal-dialog"
         style={{
-          backgroundColor: '#0d1117',
-          border: '1.5px solid rgba(56, 189, 248, 0.4)',
+          backgroundColor: 'var(--ifm-background-surface-color, #0d1117)',
+          border: '1.5px solid var(--sidebar-border, rgba(56, 189, 248, 0.4))',
           borderRadius: '16px',
           padding: '1.75rem',
           maxWidth: '520px',
           width: '92%',
           maxHeight: '90vh',
           overflowY: 'auto',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(56, 189, 248, 0.25)',
-          color: '#ffffff',
+          boxShadow: 'var(--modal-shadow, 0 25px 60px rgba(0, 0, 0, 0.4))',
+          color: 'var(--ifm-color-content, #ffffff)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--sidebar-border, rgba(255, 255, 255, 0.1))' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span style={{ fontSize: '1.5rem' }}>⚙️</span>
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff', fontWeight: 800 }}>
+              <h2 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--ifm-color-content, #ffffff)', fontWeight: 800 }}>
                 Account & Security Settings
               </h2>
-              <span style={{ fontSize: '11px', color: '#94a3b8' }}>Manage your credentials, password, and email verification</span>
+              <span style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary, #94a3b8)' }}>Manage your credentials, password, and email verification</span>
             </div>
           </div>
           <button
@@ -418,7 +419,7 @@ export default function UserProfileModal({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#94a3b8',
+              color: 'var(--ifm-color-content-secondary, #94a3b8)',
               fontSize: '1.25rem',
               cursor: 'pointer',
               padding: '4px 8px',
@@ -430,7 +431,7 @@ export default function UserProfileModal({
         </div>
 
         {/* Tab Navigation */}
-        <div style={{ display: 'flex', gap: '8px', background: 'rgba(255, 255, 255, 0.05)', padding: '4px', borderRadius: '10px', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', gap: '8px', background: 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.05))', padding: '4px', borderRadius: '10px', marginBottom: '1.25rem' }}>
           <button
             type="button"
             onClick={() => setActiveTab('profile')}
@@ -442,9 +443,9 @@ export default function UserProfileModal({
               fontWeight: 700,
               fontSize: '0.85rem',
               cursor: 'pointer',
-              background: activeTab === 'profile' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
-              color: activeTab === 'profile' ? '#38bdf8' : '#94a3b8',
-              borderBottom: activeTab === 'profile' ? '2px solid #38bdf8' : 'none',
+              background: activeTab === 'profile' ? 'var(--sidebar-active-bg, rgba(56, 189, 248, 0.2))' : 'transparent',
+              color: activeTab === 'profile' ? 'var(--brand-green, #38bdf8)' : 'var(--ifm-color-content-secondary, #94a3b8)',
+              borderBottom: activeTab === 'profile' ? '2px solid var(--brand-green, #38bdf8)' : 'none',
               transition: 'all 0.2s',
             }}
           >
@@ -461,9 +462,9 @@ export default function UserProfileModal({
               fontWeight: 700,
               fontSize: '0.85rem',
               cursor: 'pointer',
-              background: activeTab === 'security' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
-              color: activeTab === 'security' ? '#38bdf8' : '#94a3b8',
-              borderBottom: activeTab === 'security' ? '2px solid #38bdf8' : 'none',
+              background: activeTab === 'security' ? 'var(--sidebar-active-bg, rgba(56, 189, 248, 0.2))' : 'transparent',
+              color: activeTab === 'security' ? 'var(--brand-green, #38bdf8)' : 'var(--ifm-color-content-secondary, #94a3b8)',
+              borderBottom: activeTab === 'security' ? '2px solid var(--brand-green, #38bdf8)' : 'none',
               transition: 'all 0.2s',
             }}
           >
@@ -476,14 +477,15 @@ export default function UserProfileModal({
           <div>
             {/* User Details Card */}
             <div
+              className="user-card-panel"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '14px',
                 padding: '1rem',
                 borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                background: 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.03))',
+                border: '1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))',
                 marginBottom: '1.25rem',
               }}
             >
@@ -491,7 +493,7 @@ export default function UserProfileModal({
                 <img
                   src={currentUser.photoURL}
                   alt={currentUser.displayName || 'User'}
-                  style={{ width: '54px', height: '54px', borderRadius: '50%', border: '2px solid #38bdf8', objectFit: 'cover' }}
+                  style={{ width: '54px', height: '54px', borderRadius: '50%', border: '2px solid var(--brand-green, #38bdf8)', objectFit: 'cover' }}
                 />
               ) : (
                 <div
@@ -499,7 +501,7 @@ export default function UserProfileModal({
                     width: '54px',
                     height: '54px',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                    background: 'var(--gradient-brand, linear-gradient(135deg, #0284c7 0%, #0369a1 100%))',
                     color: '#ffffff',
                     display: 'flex',
                     alignItems: 'center',
@@ -513,7 +515,7 @@ export default function UserProfileModal({
               )}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontWeight: 800, fontSize: '1.05rem', color: '#ffffff' }}>
+                  <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--ifm-color-content, #ffffff)' }}>
                     {currentUser.displayName || 'Learner'}
                   </span>
                   {isSuperAdmin ? (
@@ -525,12 +527,12 @@ export default function UserProfileModal({
                       Admin
                     </span>
                   ) : isPremium ? (
-                    <span style={{ fontSize: '10px', background: '#38bdf8', color: '#000', padding: '2px 6px', borderRadius: '6px', fontWeight: 800 }}>
+                    <span style={{ fontSize: '10px', background: 'var(--brand-green, #38bdf8)', color: '#000', padding: '2px 6px', borderRadius: '6px', fontWeight: 800 }}>
                       Premium
                     </span>
                   ) : null}
                 </div>
-                <div style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: '2px' }}>
+                <div style={{ fontSize: '0.82rem', color: 'var(--ifm-color-content-secondary, #94a3b8)', marginTop: '2px' }}>
                   {currentUser.email}
                 </div>
               </div>
@@ -541,14 +543,14 @@ export default function UserProfileModal({
               style={{
                 padding: '1rem',
                 borderRadius: '12px',
-                background: isEmailVerified ? 'rgba(52, 211, 153, 0.08)' : 'rgba(251, 146, 60, 0.08)',
-                border: isEmailVerified ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(251, 146, 60, 0.3)',
+                background: isEmailVerified ? 'var(--sidebar-active-bg, rgba(52, 211, 153, 0.08))' : 'rgba(251, 146, 60, 0.08)',
+                border: isEmailVerified ? '1px solid var(--sidebar-border, rgba(52, 211, 153, 0.3))' : '1px solid rgba(251, 146, 60, 0.3)',
                 marginBottom: '1.25rem',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isEmailVerified ? 0 : '10px' }}>
                 <div>
-                  <div style={{ fontSize: '0.88rem', fontWeight: 700, color: isEmailVerified ? '#34d399' : '#fb923c', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 700, color: isEmailVerified ? 'var(--brand-green, #34d399)' : '#fb923c', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     {isEmailVerified ? '✅ Email Address Verified' : '⚠️ Email Not Verified'}
                   </div>
                   <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
@@ -592,11 +594,11 @@ export default function UserProfileModal({
 
                   {/* Direct in-app OTP fallback card */}
                   {currentOtpCode && (
-                    <div style={{ backgroundColor: 'rgba(52, 211, 153, 0.08)', border: '1.5px dashed #34d399', borderRadius: '8px', padding: '0.75rem', marginBottom: '10px', textAlign: 'center' }}>
-                      <div style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700, marginBottom: '2px' }}>
+                    <div style={{ backgroundColor: 'var(--sidebar-active-bg, rgba(52, 211, 153, 0.08))', border: '1.5px dashed var(--brand-green, #34d399)', borderRadius: '8px', padding: '0.75rem', marginBottom: '10px', textAlign: 'center' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--brand-green, #34d399)', fontWeight: 700, marginBottom: '2px' }}>
                         ⚡ In-App Verification Code (Direct Fallback):
                       </div>
-                      <div style={{ fontSize: '1.4rem', letterSpacing: '5px', fontWeight: 800, color: '#34d399', fontFamily: 'monospace', margin: '4px 0' }}>
+                      <div style={{ fontSize: '1.4rem', letterSpacing: '5px', fontWeight: 800, color: 'var(--brand-green, #34d399)', fontFamily: 'monospace', margin: '4px 0' }}>
                         {currentOtpCode}
                       </div>
                       <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginTop: '6px' }}>
@@ -607,7 +609,7 @@ export default function UserProfileModal({
                             setOtpDigits(digits);
                           }}
                           style={{
-                            backgroundColor: '#34d399',
+                            backgroundColor: 'var(--brand-green, #34d399)',
                             color: '#000000',
                             border: 'none',
                             borderRadius: '6px',
@@ -624,9 +626,9 @@ export default function UserProfileModal({
                           onClick={handleQuickBypassVerify}
                           disabled={otpLoading}
                           style={{
-                            backgroundColor: 'rgba(52, 211, 153, 0.2)',
-                            color: '#34d399',
-                            border: '1px solid #34d399',
+                            backgroundColor: 'var(--sidebar-active-bg, rgba(52, 211, 153, 0.2))',
+                            color: 'var(--brand-green, #34d399)',
+                            border: '1px solid var(--brand-green, #34d399)',
                             borderRadius: '6px',
                             padding: '4px 10px',
                             fontSize: '0.72rem',
@@ -644,7 +646,7 @@ export default function UserProfileModal({
                     <div
                       style={{
                         fontSize: '0.8rem',
-                        color: otpMsg.type === 'success' ? '#34d399' : '#ef4444',
+                        color: otpMsg.type === 'success' ? 'var(--brand-green, #34d399)' : '#ef4444',
                         marginBottom: '10px',
                         textAlign: 'center',
                         fontWeight: 600,
@@ -807,7 +809,7 @@ export default function UserProfileModal({
                 </form>
               ) : (
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '8px', border: '1px solid #30363d' }}>
-                  <span style={{ fontSize: '0.9rem', color: '#ffffff', fontWeight: 600 }}>{currentUser.displayName || 'No display name set'}</span>
+                  <span style={{ fontSize: '0.9rem', color: 'var(--ifm-color-content, #ffffff)', fontWeight: 600 }}>{currentUser.displayName || 'No display name set'}</span>
                   <button
                     type="button"
                     onClick={() => setIsEditingName(true)}
@@ -831,7 +833,7 @@ export default function UserProfileModal({
               <div
                 style={{
                   fontSize: '0.8rem',
-                  color: profileMsg.type === 'success' ? '#34d399' : '#ef4444',
+                  color: profileMsg.type === 'success' ? 'var(--brand-green, #34d399)' : '#ef4444',
                   marginBottom: '1rem',
                   fontWeight: 600,
                 }}
@@ -877,9 +879,9 @@ export default function UserProfileModal({
                       gap: '6px',
                       padding: '6px 12px',
                       borderRadius: '8px',
-                      background: 'rgba(52, 211, 153, 0.1)',
-                      border: '1px solid rgba(52, 211, 153, 0.3)',
-                      color: '#34d399',
+                      background: 'var(--sidebar-active-bg, rgba(52, 211, 153, 0.1))',
+                      border: '1px solid var(--sidebar-border, rgba(52, 211, 153, 0.3))',
+                      color: 'var(--brand-green, #34d399)',
                       fontSize: '0.8rem',
                       fontWeight: 700,
                     }}
@@ -1003,7 +1005,7 @@ export default function UserProfileModal({
                   marginBottom: '1.25rem',
                 }}
               >
-                <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', marginBottom: '4px' }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)', marginBottom: '4px' }}>
                   🔄 Update Password
                 </div>
                 <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '1rem' }}>
@@ -1012,7 +1014,7 @@ export default function UserProfileModal({
 
                 <form onSubmit={handleUpdatePassword}>
                   <div style={{ marginBottom: '10px' }}>
-                    <label style={{ display: 'block', fontSize: '0.8rem', color: '#cbd5e1', marginBottom: '4px', fontWeight: 600 }}>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--ifm-color-content-secondary, #cbd5e1)', marginBottom: '4px', fontWeight: 600 }}>
                       Current Password
                     </label>
                     <input
@@ -1024,9 +1026,9 @@ export default function UserProfileModal({
                         width: '100%',
                         padding: '8px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #30363d',
-                        background: '#161b22',
-                        color: '#ffffff',
+                        border: '1px solid var(--sidebar-border, #30363d)',
+                        background: 'var(--search-bg, #161b22)',
+                        color: 'var(--ifm-color-content, #ffffff)',
                         fontSize: '0.9rem',
                       }}
                       required
@@ -1034,7 +1036,7 @@ export default function UserProfileModal({
                   </div>
 
                   <div style={{ marginBottom: '10px' }}>
-                    <label style={{ display: 'block', fontSize: '0.8rem', color: '#cbd5e1', marginBottom: '4px', fontWeight: 600 }}>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--ifm-color-content-secondary, #cbd5e1)', marginBottom: '4px', fontWeight: 600 }}>
                       New Password
                     </label>
                     <input
@@ -1046,9 +1048,9 @@ export default function UserProfileModal({
                         width: '100%',
                         padding: '8px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #30363d',
-                        background: '#161b22',
-                        color: '#ffffff',
+                        border: '1px solid var(--sidebar-border, #30363d)',
+                        background: 'var(--search-bg, #161b22)',
+                        color: 'var(--ifm-color-content, #ffffff)',
                         fontSize: '0.9rem',
                       }}
                       required
@@ -1056,7 +1058,7 @@ export default function UserProfileModal({
                   </div>
 
                   <div style={{ marginBottom: '12px' }}>
-                    <label style={{ display: 'block', fontSize: '0.8rem', color: '#cbd5e1', marginBottom: '4px', fontWeight: 600 }}>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--ifm-color-content-secondary, #cbd5e1)', marginBottom: '4px', fontWeight: 600 }}>
                       Confirm New Password
                     </label>
                     <input
@@ -1068,9 +1070,9 @@ export default function UserProfileModal({
                         width: '100%',
                         padding: '8px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #30363d',
-                        background: '#161b22',
-                        color: '#ffffff',
+                        border: '1px solid var(--sidebar-border, #30363d)',
+                        background: 'var(--search-bg, #161b22)',
+                        color: 'var(--ifm-color-content, #ffffff)',
                         fontSize: '0.9rem',
                       }}
                       required
@@ -1102,13 +1104,13 @@ export default function UserProfileModal({
               <div
                 style={{
                   fontSize: '0.82rem',
-                  color: passwordMsg.type === 'success' ? '#34d399' : '#ef4444',
+                  color: passwordMsg.type === 'success' ? 'var(--brand-green, #34d399)' : '#ef4444',
                   marginBottom: '1.25rem',
                   fontWeight: 600,
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  background: passwordMsg.type === 'success' ? 'rgba(52, 211, 153, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                  border: passwordMsg.type === 'success' ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)',
+                  background: passwordMsg.type === 'success' ? 'var(--sidebar-active-bg, rgba(52, 211, 153, 0.1))' : 'rgba(239, 68, 68, 0.1)',
+                  border: passwordMsg.type === 'success' ? '1px solid var(--sidebar-border, rgba(52, 211, 153, 0.3))' : '1px solid rgba(239, 68, 68, 0.3)',
                 }}
               >
                 {passwordMsg.text}
@@ -1128,7 +1130,7 @@ export default function UserProfileModal({
               }}
             >
               <div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--ifm-color-content, #ffffff)' }}>
                   Forgot or Need Reset Link?
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>

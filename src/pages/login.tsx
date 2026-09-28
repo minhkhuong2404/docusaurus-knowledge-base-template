@@ -22,6 +22,7 @@ import {
   isUserPermanentlyVerified,
   markUserPermanentlyVerified,
 } from '../services/emailVerificationService';
+import { setCachedUserProfile } from '../context/UserProgressContext';
 
 function formatFirebaseError(code: string): string {
   switch (code) {
@@ -235,7 +236,9 @@ export default function Login(): React.ReactNode {
         if (userCred.user && isUserPermanentlyVerified(userCred.user)) {
           markUserPermanentlyVerified(userCred.user);
         }
+        setCachedUserProfile(userCred.user);
         sessionStorage.setItem('premium_session_state', 'logged_in');
+        localStorage.setItem('premium_session_state', 'logged_in');
         window.location.href = returnTo;
       }
     } catch (err: any) {
@@ -361,7 +364,9 @@ export default function Login(): React.ReactNode {
 
   const handleGoogleSuccess = (_user: User) => {
     markUserPermanentlyVerified(_user);
+    setCachedUserProfile(_user);
     sessionStorage.setItem('premium_session_state', 'logged_in');
+    localStorage.setItem('premium_session_state', 'logged_in');
     window.location.href = returnTo;
   };
 

@@ -86,25 +86,9 @@ export default function Root({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="space-decorations">
-        {/* Planets */}
-        <div className="planet mercury" />
-        <div className="planet venus" />
-        <div className="planet earth" />
-        <div className="planet mars" />
-        <div className="planet jupiter" />
-        <div className="planet saturn" />
-        <div className="planet uranus" />
-        <div className="planet neptune" />
-
         {/* Satellites & Space Stations */}
         <div className="satellite iss" />
         <div className="satellite sputnik" />
-
-        {/* Comets & Meteors */}
-        <div className="comet comet-1" />
-        <div className="comet comet-2" />
-        <div className="comet comet-3" />
-        <div className="comet comet-4" />
 
         {/* Rockets */}
         <div className="rocket-bg rocket-1" />
@@ -119,10 +103,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <div className="universal-item galaxy-2" />
         <div className="universal-item nebula-1" />
         <div className="universal-item nebula-2" />
-        <div className="universal-item shooting-star-1" />
-        <div className="universal-item shooting-star-2" />
-        <div className="universal-item constellation-1" />
-        <div className="universal-item constellation-2" />
       </div>
       <UserProgressProvider>
         <LevelUpToast />

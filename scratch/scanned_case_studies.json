@@ -1,0 +1,649 @@
+[
+  {
+    "slug": "facebook-2021-outage-analysis",
+    "url": "https://sujeet.pro/articles/facebook-2021-outage-analysis",
+    "title": "Facebook 2021 Outage: BGP Withdrawal, DNS Collapse, and the Backbone That Disappeared",
+    "desc": "Anatomy of the October 2021 Meta outage \u2014 how a backbone maintenance command triggered global BGP withdrawal, collapsed DNS for 3.5 billion users, and exposed fatal shared-fate dependencies in every recovery path.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Problem",
+      "Options Considered",
+      "Recovery",
+      "Cascading Failures",
+      "Lessons Learned",
+      "Applying This to Your System"
+    ],
+    "summary": "Published Feb 16, 2026 Updated Apr 21, 2026 Case Study Reliability Outages Facebook 2021 Outage: BGP Withdrawal, DNS Collapse, and the Backbone That Disappeared How a routine backbone-maintenance command at Facebook (now Meta) \u2014 meant to assess capacity, but waved through by a buggy audit tool \u2014 severed every inter-datacenter link in AS32934, caused edge facilities to withdraw the BGP (Border Gateway Protocol) routes for the prefixes hosting their authoritative DNS servers, and made Facebook, Instagram, WhatsApp, and Messenger unresolvable for ~6 hours on October 4, 2021. With ~3.5 billion combined users 1 unable to resolve any Meta domain, this incident is the canonical demonstration of what happens when DNS, remote management, physical security, and internal tooling all share fate with the network backbone \u2014 and that backbone vanishes. Failure chain: a maintenance command severed the backbone, BGP withdrew the DNS-bearing prefixes, recursive resolvers SERVFAILed, and every recovery path shared fate with the failed backbone. Abstract The mental model for this incident is a dependency inversion collapse \u2014where the systems designed to recover from failures (remote management, internal tools, physical security) all depended on the very infrastructure that failed: Layer What Failed Why Recovery Was Hard Backbone A maintenance command severed all inter-datacenter links The audit tool meant to prevent this had a bug that let the command execute BGP Edge facilities auto-withdrew BG",
+    "status": "ok"
+  },
+  {
+    "slug": "aws-kinesis-2020-outage",
+    "url": "https://sujeet.pro/articles/aws-kinesis-2020-outage",
+    "title": "AWS Kinesis 2020 Outage: Thread Limits, Thundering Herds, and Hidden Dependencies",
+    "desc": "A deep-dive into the 2020 AWS Kinesis outage where a routine capacity addition hit an OS thread limit, cascading through CloudWatch, Lambda, and Cognito for 17 hours due to O(N^2) scaling and hidden dependencies.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Problem",
+      "Recovery",
+      "Dependent Services Impact",
+      "Lessons Learned",
+      "Applying This to Your System",
+      "Conclusion"
+    ],
+    "summary": "Published Feb 16, 2026 Updated Apr 21, 2026 Case Study Reliability Outages AWS Kinesis 2020 Outage: Thread Limits, Thundering Herds, and Hidden Dependencies How a routine capacity addition to Amazon Kinesis Data Streams in US-EAST-1 exceeded an OS thread limit on every front-end server, triggering a 17-hour cascading failure that took down CloudWatch, Lambda, Cognito, and dozens of other AWS services on November 25, 2020\u2014the day before Thanksgiving. Every timeline, root cause, and corrective action below is grounded in AWS\u2019s official post-event summary ; this article reconstructs the failure chain, draws out the structural patterns (O(N\u00b2) thread fan-out, untested failsafes, monitoring that shares fate with the services it monitors), and translates them into checks you can run against your own systems. The failure chain: a capacity addition pushed per-server thread counts past the OS limit, collapsing the entire monolithic front-end fleet. Recovery was throttled to avoid thundering herd effects, extending the outage to 17 hours. Abstract The core mental model for this incident is a three-stage failure amplification: Stage What Happened Why It Was Hard to Fix Trigger Adding servers to the front-end fleet pushed per-server OS thread count past the configured limit Thread-per-peer gossip protocol scaled O(N) per server, O(N\u00b2) aggregate\u2014the limit was latent until capacity growth crossed it Cascade Kinesis front-end servers could not build shard-map caches, killing request routing ",
+    "status": "ok"
+  },
+  {
+    "slug": "stripe-idempotency-reliability",
+    "url": "https://sujeet.pro/articles/stripe-idempotency-reliability",
+    "title": "Stripe: Idempotency for Payment Reliability",
+    "desc": "How Stripe makes payment APIs safe to retry \u2014 Idempotency-Key, atomic phases, recovery points, transactionally-staged job drains, and what changed in API v2.",
+    "h2s": [
+      "Why payment APIs need exactly-once semantics",
+      "Mental model: the database as the coordinator",
+      "The idempotency-key row",
+      "Atomic phases: bracketing every foreign call",
+      "Foreign-state mutations: the constraint that drives the design",
+      "Transactionally-staged job drains",
+      "Background recovery: the completer",
+      "Reaping: the row isn\u2019t permanent"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Distributed Systems System Design API Design Idempotency Reliability Stripe: Idempotency for Payment Reliability Stripe handles network ambiguity in a payment API the way a database handles a power loss: it makes every state transition recoverable, then retries to convergence. The mechanism is a small set of patterns \u2014 Idempotency-Key requests, atomic phases bracketing every external call, recovery points that survive process death, and jobs staged inside the same transaction that produced them. This article walks through how those pieces fit together at the scale Stripe operates ($1 trillion in 2023 payment volume on a 99.999%-uptime document store) 1 2 , what changed when API v2 shipped, and how to apply the same model to your own system. Idempotency-Key request lifecycle: clients tag every mutating request, the server upserts a tracking row, and a retry either jumps to the cached response or resumes from the last recovery point. Why payment APIs need exactly-once semantics A network call can fail in three ways that look identical from the client side: The connection never reaches the server. The server accepts the request, mutates state, then crashes before responding. The server completes the request, but the response is lost in transit. Only the first is unambiguously safe to retry. The other two leave the client guessing whether a charge already happened. For a card-present flow this is recoverable through human reco",
+    "status": "ok"
+  },
+  {
+    "slug": "discord-rust-read-states",
+    "url": "https://sujeet.pro/articles/discord-rust-read-states",
+    "title": "Discord: Rewriting Read States from Go to Rust",
+    "desc": "Why Discord rewrote their Read States service from Go to Rust \u2014 Go",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Problem",
+      "Options Considered",
+      "Implementation",
+      "Outcome",
+      "Lessons Learned",
+      "Applying This to Your System"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Reliability Performance Rust Go Garbage Collection Discord: Rewriting Read States from Go to Rust How Discord eliminated periodic latency spikes in their most heavily accessed service by rewriting it from Go to Rust\u2014and why the garbage collector, not the application code, was the bottleneck. The Read States service tracks which channels every user has read across billions of states, and its performance directly affects every connection, every message send, and every message acknowledgment on the platform. Discord's Read States service before and after the Rust rewrite. The Go GC had to scan the entire LRU cache every 2 minutes; Rust's ownership model frees evicted entries immediately with zero scanning overhead. Abstract Discord\u2019s Read States service is a cache-heavy, latency-sensitive system that tracks per-user, per-channel read positions across billions of states. The Go implementation suffered periodic latency spikes every ~2 minutes\u2014not because of application bugs, but because Go\u2019s garbage collector must scan the entire live heap to determine reachability, and the service held tens of millions of live objects in an LRU (Least Recently Used) cache. The core mental model: Aspect Go (GC-managed) Rust (ownership-managed) Cache eviction Entry becomes garbage; freed at next GC cycle Entry freed immediately when owner goes out of scope Live heap scanning Every GC cycle scans all live objects\u2014cost is linear with live heap No ",
+    "status": "ok"
+  },
+  {
+    "slug": "graceful-degradation",
+    "url": "https://sujeet.pro/articles/graceful-degradation",
+    "title": "Graceful Degradation",
+    "desc": "Designing distributed systems to maintain partial functionality under failure through degradation hierarchies, circuit breakers, bulkheads, load shedding, and coordinated recovery \u2014 with explicit trade-offs between availability and correctness.",
+    "h2s": [
+      "Mental model",
+      "Why naive approaches fail",
+      "The degradation hierarchy",
+      "Pattern 1: Circuit breaker",
+      "Pattern 2: Load shedding",
+      "Pattern 3: Bulkheads",
+      "Pattern 4: Timeouts and retries",
+      "Pattern 5: Fallback chains"
+    ],
+    "summary": "Published Feb 4, 2026 Updated Apr 21, 2026 Reliability Distributed Systems System Design Patterns Architecture Graceful Degradation Graceful degradation is the discipline of designing distributed systems that keep serving something useful when components fail, rather than collapsing to a hard error for every caller. The thesis: a system serving a degraded response to all users is almost always preferable to one returning errors to most users \u2014 provided the degradation is deliberate , bounded , and observable . This article catalogues the patterns that make that possible (circuit breakers, bulkheads, load shedding, retries-with-jitter, fallback chains), the failure modes each one prevents, and the production trade-offs that distinguish a resilient system from a fragile one. Graceful degradation creates ordered intermediate states between full health and complete failure, with explicit recovery paths back to normal operation. Mental model Graceful degradation turns hard dependencies into soft dependencies through an ordered hierarchy of fallback behaviors. Four ideas carry most of the weight: Degradation hierarchy. The system has named, ordered states between \u201cfully healthy\u201d and \u201ccompletely down\u201d \u2014 each one trades capability for availability. Operators and users know what each state looks like. Failure isolation. Circuit breakers, bulkheads, and aggressive timeouts contain a single failing component so it cannot pull the rest of the request graph down with it. Michael Nygard\u2019s ",
+    "status": "ok"
+  },
+  {
+    "slug": "shopify-pod-architecture",
+    "url": "https://sujeet.pro/articles/shopify-pod-architecture",
+    "title": "Shopify: Pod Architecture for Multi-Tenant Isolation at Scale",
+    "desc": "How Shopify evolved from a sharded Rails monolith to pod-based isolation \u2014 containing blast radius per failure domain, enabling sub-minute pod failover, and surviving 489 million edge requests per minute on Black Friday 2025.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The problem",
+      "Options considered",
+      "Implementation",
+      "Outcome",
+      "Lessons learned",
+      "Applying this to your system"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Architecture System Design Distributed Systems Reliability Engineering Databases Migrations Shopify: Pod Architecture for Multi-Tenant Isolation at Scale Shopify scales a single Ruby on Rails monolith to billions of dollars of commerce per weekend by isolating the infrastructure beneath the monolith, not by decomposing the application above it. A pod is a self-contained slice of stateful infrastructure \u2014 one MySQL shard, its own Redis, its own Memcached, its own cron \u2014 that serves a subset of shops with zero cross-pod runtime dependencies. Stateless workers stay shared. The Sorting Hat (Lua on OpenResty) maps each request to its pod by injecting an X-Sorting-Hat-PodId header, and Ghostferry (Go, with a TLA+ specification) live-migrates a shop between pods in seconds. This article reconstructs why pods were necessary, how each moving part works, and where the pattern generalises. Pod overview: stateless workers are shared, every stateful store is replicated per pod, and cross-pod data flows only through an eventually consistent CDC pipeline. Abstract A pod is a fully isolated set of datastores \u2014 MySQL shard, Redis, Memcached, cron runners \u2014 that serves a subset of shops with zero cross-pod communication. Stateless workers (app servers, job runners) are shared and route to the correct pod via a header injected by the Sorting Hat ( Shopify Engineering, 2018 ). The core insight: sharding databases horizontally solved write thr",
+    "status": "ok"
+  },
+  {
+    "slug": "netflix-microservices-evolution",
+    "url": "https://sujeet.pro/articles/netflix-microservices-evolution",
+    "title": "Netflix: From Monolith to Microservices \u2014 A 7-Year Architecture Evolution",
+    "desc": "Trace Netflix",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Problem",
+      "Options Considered",
+      "Implementation",
+      "Outcome",
+      "Post-Migration: From Microservices to Platform (2016\u20132026)",
+      "Lessons Learned"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Architecture System Design Distributed Systems Cloud Native Resilience Netflix: From Monolith to Microservices \u2014 A 7-Year Architecture Evolution In August 2008, a corruption event in Netflix\u2019s monolithic Oracle database prevented DVD shipments for three days \u2014 exposing a single point of failure that threatened the business. Rather than patching the existing architecture, Netflix leadership made a radical decision: migrate entirely to AWS and decompose the monolith into independent microservices. 1 Over the next seven years (2009 \u2013 2016), Netflix grew from 9.4 million to roughly 89 million paid streaming subscribers, scaled from ~20 million to 2 billion+ API requests per day, and built an open-source ecosystem \u2014 Eureka, Hystrix, Zuul, the Simian Army \u2014 that redefined how the industry thinks about cloud-native architecture. This case study traces the technical decisions, migration phases, tools built, and hard-won lessons from one of the most influential architecture transformations in software history. Netflix's 7-year journey from a monolithic Java/Oracle stack to hundreds of microservices on AWS, triggered by the 2008 database corruption incident. Abstract Netflix\u2019s monolith-to-microservices migration is an architecture evolution story , not a rewrite story. The mental model: Phase Timeline What Changed Key Challenge Trigger Aug 2008 Oracle DB corruption \u2192 3-day outage Single point of failure exposed Cloud pathfinders 200",
+    "status": "ok"
+  },
+  {
+    "slug": "twitter-timeline-architecture",
+    "url": "https://sujeet.pro/articles/twitter-timeline-architecture",
+    "title": "Twitter/X: Timeline Architecture and the Recommendation Algorithm",
+    "desc": "Twitter",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "Era 1: Fanout-on-Write (2009-2016)",
+      "Era 2: The Algorithmic Timeline (2016-2025)",
+      "Era 3: The Grok-Based System (2026+)",
+      "Lessons Learned",
+      "Applying This to Your System",
+      "Conclusion"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Architecture System Design Distributed Systems Recommendation Systems Twitter/X: Timeline Architecture and the Recommendation Algorithm How Twitter evolved from a monolithic Ruby on Rails app delivering reverse-chronological tweets at 4,600 writes/second into a distributed ML pipeline that processes 500 million tweets daily through a multi-stage recommendation system \u2014 and how X replaced all of it with a Grok-based transformer in 2026. This case study traces the full arc: fanout-on-write, the hybrid celebrity problem, the algorithmic timeline controversy, the unprecedented open-sourcing of the recommendation algorithm, and the latest Phoenix/Thunder architecture. Three eras of Twitter's timeline: pre-materialized Redis fanout (2009-2016), multi-service ML pipeline with SimClusters/GraphJet/MaskNet (2016-2025), and the unified Grok-based Phoenix/Thunder system (2026+). Abstract Twitter\u2019s timeline architecture is a case study in three distinct approaches to content delivery at scale, each driven by different bottlenecks: Fanout-on-write (2009-2016) : Pre-materialize timelines in Redis at tweet creation time. Each tweet triggers writes to every follower\u2019s timeline cache. Optimizes for read latency (sub-millisecond) at the cost of write amplification. Breaks down for celebrities with millions of followers \u2014 solved via a hybrid approach that merges high-follower tweets at read time. Multi-service ML pipeline (2016-2025) : Shift",
+    "status": "ok"
+  },
+  {
+    "slug": "facebook-tao-social-graph",
+    "url": "https://sujeet.pro/articles/facebook-tao-social-graph",
+    "title": "Facebook TAO: The Social Graph\u2019s Distributed Cache",
+    "desc": "A deep dive into TAO, Facebook",
+    "h2s": [
+      "Thesis",
+      "Mental model",
+      "Why a graph-aware cache, not a smarter memcache",
+      "Data model and API",
+      "Architecture",
+      "Consistency model",
+      "Implementation details worth borrowing",
+      "Production reality"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Architecture System Design Distributed Systems Databases Facebook TAO: The Social Graph\u2019s Distributed Cache Facebook\u2019s social graph is read-mostly, deeply interconnected, and queried hundreds of times per page render. Before TAO, every product team coordinated MySQL and a lookaside memcache from PHP, which left graph semantics, invalidation, and consistency to client code. TAO (\u201cThe Associations and Objects\u201d) is the graph-aware cache that replaced that lookaside model: a fixed objects-and-edges API, a two-tier (leader + follower) cache, write-through to sharded MySQL, and asynchronous invalidations propagated through the database replication stream. The 2013 paper reported a billion reads per second at a 96.4% follower hit rate; 1 by 2021 the same system served \u201cover ten billion reads and tens of millions of writes per second\u201d against \u201cmany petabytes\u201d of graph data. 2 This article reads the original USENIX paper closely, layers in what Meta has published since (RAMP-TAO in 2021, Polaris and consistency tracing in 2022, TAOBench in 2022), and pulls out the design decisions worth borrowing for any read-mostly, latency-sensitive cache. High-level TAO topology: clients only talk to local followers; the local leader coordinates writes; writes for a shard are forwarded to the master region's leader; invalidations ride the MySQL replication stream. Thesis A cache that understands the data\u2019s shape can do things a generic key-value",
+    "status": "ok"
+  },
+  {
+    "slug": "uber-microservices-journey",
+    "url": "https://sujeet.pro/articles/uber-microservices-journey",
+    "title": "Uber: From Monolith to Domain-Oriented Microservices",
+    "desc": "Uber",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "Phase 1: The Monolith (2009-2013)",
+      "Phase 2: The Microservices Explosion (2013-2018)",
+      "Phase 3: DOMA \u2014 Domain-Oriented Microservice Architecture (2018-2020)",
+      "Outcome",
+      "Lessons Learned",
+      "Applying This to Your System"
+    ],
+    "summary": "Published Feb 16, 2026 Updated Apr 21, 2026 Case Study Architecture System Design Microservices Uber: From Monolith to Domain-Oriented Microservices How Uber evolved from two monolithic services to 4,000+ microservices and then restructured into domain-oriented architecture, demonstrating that the hardest part of microservices is not splitting the monolith but managing what comes after. Each architectural phase solved real scaling bottlenecks while creating new organizational and operational challenges at the next order of magnitude. Uber's three architectural phases. Each transition was triggered by the previous architecture hitting its operational limits at the next order of magnitude. Abstract Uber\u2019s architecture evolution follows a pattern common to hypergrowth companies: the monolith works until organizational scaling demands decomposition, the resulting microservices work until their sheer number creates a new class of problems, and the response is not to go back but to add structure on top. The core mental model has three phases: Monolith (2009-2013) : Two services (Python API + Node.js Dispatch) sharing a single PostgreSQL instance. Worked for one city and one product. Failed when concurrent engineers and concurrent cities made single-deployment and single-database models untenable. Microservices explosion (2013-2018) : Aggressive decomposition drove service count from 1 to 4,000+ in five years. Enabled 10x engineering growth (200 to 2,000 engineers in 18 months) but ",
+    "status": "ok"
+  },
+  {
+    "slug": "uber-schemaless-datastore",
+    "url": "https://sujeet.pro/articles/uber-schemaless-datastore",
+    "title": "Uber Schemaless: Building a Scalable Datastore on MySQL",
+    "desc": "How Uber built Schemaless \u2014 a horizontally scalable, append-only datastore layered on sharded MySQL \u2014 to escape a single-PostgreSQL bottleneck. Covers the immutable cell model, fixed 4,096-shard layout, two-cluster buffered writes, eventually consistent indexes, and the trigger framework.",
+    "h2s": [
+      "Thesis",
+      "Mental model",
+      "The pre-Schemaless problem",
+      "The cell model",
+      "Sharding architecture",
+      "Worker tier and request paths",
+      "Secondary indexes",
+      "Trigger framework"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Architecture System Design Databases Distributed Systems Migrations Uber Schemaless: Building a Scalable Datastore on MySQL In early 2014, Uber\u2019s trip storage was a single PostgreSQL instance growing roughly 20% per month, on track to exhaust both disk and IOPS by the end of the year 1 . Rather than adopt Cassandra or Riak, the team built Schemaless \u2014 a thin, horizontally scalable layer on top of sharded MySQL \u2014 and cut over a month before Halloween 2014 1 . The core insight was operational, not technical: pick the storage engine the team can debug at 3 a.m., then make it look distributed by adding the smallest possible coordination layer on top. This case study walks the cell model, the fixed-shard layout, the two-cluster buffered-write protocol, the trigger framework, and the design lines along which Schemaless eventually broke and was replaced by Docstore. Schemaless overview: a stateless worker tier hashes the row key into one of 4,096 shards; each shard cluster is one MySQL master plus two cross-DC minions; a trigger framework tails per-shard logs. Thesis Schemaless is a deliberately small abstraction. The whole product fits on one whiteboard: Immutable cells indexed by (row_key, column_name, ref_key) mean every write is idempotent and the database is also a totally-ordered change log per shard 2 3 . Fixed 4,096 shards with shard = hash(row_key) % 4096 keep routing stateless and remove the hard parts of dynamic reshar",
+    "status": "ok"
+  },
+  {
+    "slug": "slack-distributed-architecture",
+    "url": "https://sujeet.pro/articles/slack-distributed-architecture",
+    "title": "Slack: Scaling a Real-Time Messaging Platform from Monolith to Distributed Architecture",
+    "desc": "How Slack scaled from a PHP monolith to a distributed architecture \u2014 migrating to Vitess for flexible sharding, building Flannel for edge caching, and adopting cellular infrastructure for 99.99% availability \u2014 all without a big-bang rewrite.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Problem",
+      "Options Considered",
+      "Implementation",
+      "Real-Time Messaging Architecture",
+      "Flannel: The Edge Cache",
+      "Load Balancing: HAProxy to Envoy Migration"
+    ],
+    "summary": "Published Feb 16, 2026 Updated Apr 21, 2026 Case Study Architecture System Design Slack: Scaling a Real-Time Messaging Platform from Monolith to Distributed Architecture How Slack evolved from a PHP monolith with workspace-sharded MySQL into a distributed system handling 2.3 million queries per second (QPS) across Vitess-managed databases, 4 million concurrent WebSocket connections through a global edge cache, and a cellular infrastructure design achieving 99.99% availability\u2014all without a single big-bang rewrite. This case study traces the architectural decisions behind each layer: data storage, real-time messaging, edge caching, and reliability infrastructure. Slack's distributed architecture as of ~2023. Traffic enters through Envoy, hits the Flannel edge cache, and flows into either the real-time messaging layer (Channel/Gateway Servers) or the webapp monolith. The data layer is anchored by Vitess-managed MySQL with memcached caching and Kafka for event streaming. Abstract Slack\u2019s architecture tells the story of pragmatic scaling\u2014keeping a PHP monolith productive while surgically extracting the subsystems that couldn\u2019t scale within it. The core mental model has four layers: Layer Component Design Choice Trade-off Edge Flannel + Envoy Application-level edge cache with consistent hashing per workspace Reduces backend load 7\u201344x but adds a stateful layer to manage Real-Time Channel Servers + Gateway Servers Stateful servers with consistent hash rings; ~16M channels per host ",
+    "status": "ok"
+  },
+  {
+    "slug": "linkedin-kafka-origin",
+    "url": "https://sujeet.pro/articles/linkedin-kafka-origin",
+    "title": "LinkedIn and the Birth of Apache Kafka: Solving the O(N\u00b2) Data Integration Problem",
+    "desc": "How LinkedIn",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Problem",
+      "Options Considered",
+      "Implementation",
+      "Outcome",
+      "What Changed Since",
+      "Lessons Learned"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Architecture System Design Distributed Systems Data Engineering LinkedIn and the Birth of Apache Kafka: Solving the O(N\u00b2) Data Integration Problem By 2010, LinkedIn\u2019s data plumbing was failing: every new data source meant another bespoke pipeline to every downstream system, and the wiring grew with the square of the system count. Oracle SQL*Loader jobs from the OLTP database into the warehouse ran for days with manual babysitting, and despite significant engineering effort, only about 14% of their activity data was making it into Hadoop . Traditional messaging systems like ActiveMQ required a full TCP/IP roundtrip per message \u2014 not feasible for the throughput requirements of log-style traffic . Jay Kreps, Neha Narkhede, and Jun Rao built Kafka to collapse this complexity: a distributed commit log that decouples producers from consumers, turning N\u00d7M point-to-point integrations into N+M attachments to a shared bus. This case study unpacks the architectural decisions that made Kafka the backbone of modern data infrastructure. LinkedIn's data integration complexity before and after Kafka. The O(N\u00b2) point-to-point connections collapsed into O(N) connections through a unified log. Abstract The core insight : Data integration is fundamentally a problem of decoupling producers from consumers. Every data source (databases, applications, logs) and every data sink (Hadoop, search, real-time processing) creates a potential integration",
+    "status": "ok"
+  },
+  {
+    "slug": "dropbox-magic-pocket",
+    "url": "https://sujeet.pro/articles/dropbox-magic-pocket",
+    "title": "Dropbox Magic Pocket: Building Exabyte-Scale Blob Storage",
+    "desc": "How Dropbox built Magic Pocket \u2014 a content-addressable, exabyte-scale block store \u2014 to migrate 500+ PB off S3, save $74.6M net, and achieve 12+ nines of durability with SMR drives, erasure coding, and continuous integrity verification.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Opportunity",
+      "Options Considered",
+      "Implementation",
+      "Migration",
+      "Verification: Pocket Watch",
+      "Repair Operations"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Storage Distributed Systems Infrastructure Migrations Data Dropbox Magic Pocket: Building Exabyte-Scale Blob Storage How Dropbox migrated 500+ petabytes off AWS S3 onto custom infrastructure in roughly two years, saving $74.6 million net while matching or exceeding the durability of the service it replaced. Magic Pocket is a content-addressable, immutable block store originally built by a team of fewer than six engineers , and as of 2023 serves 700+ million registered users across more than 600,000 storage drives . Magic Pocket's core architecture: clients interact with Edgestore for metadata, which routes to Magic Pocket frontends. Frontends consult the Block Index for placement and store blocks across three geographic zones with cross-zone replication. Abstract Magic Pocket is a content-addressable, immutable block store where the key is a block\u2019s SHA-256 hash and the value is a compressed, encrypted blob up to 4 MB . The mental model has three layers: Metadata layer ( Edgestore + Block Index): Maps file paths to block hashes, and block hashes to physical locations. Sharded MySQL under the hood. Placement and routing layer (Frontends + Master): Determines which cell and volume stores each block. Handles deduplication at write time via hash lookup. The Master orchestrates repair and garbage collection but holds no authoritative state \u2014 the Replication Table does. Physical storage layer (OSD nodes + Diskotech servers): rou",
+    "status": "ok"
+  },
+  {
+    "slug": "instagram-cassandra-migration",
+    "url": "https://sujeet.pro/articles/instagram-cassandra-migration",
+    "title": "Instagram: From Redis to Cassandra and the Rocksandra Storage Engine",
+    "desc": "How Instagram migrated activity feed and fraud detection from Redis to Cassandra for \u224875% cost savings, then built Rocksandra (a RocksDB-based pluggable storage engine) to drop P99 reads from 60 ms to 20 ms and GC stalls by ~10x \u2014 a seven-year evolution from 12 nodes to 1,000+ across six data centres.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Problem",
+      "Options Considered",
+      "Implementation",
+      "Outcome",
+      "Lessons Learned",
+      "Applying This to Your System"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Data Migrations Distributed Systems Storage Databases Instagram: From Redis to Cassandra and the Rocksandra Storage Engine Instagram migrated activity feed, fraud detection, and direct-message workloads from Redis to Apache Cassandra in 2012 to escape memory-bound costs, then built Rocksandra \u2014 a pluggable storage engine that swaps Cassandra\u2019s Java storage path for RocksDB \u2014 to reverse JVM garbage collection stalls that dominated P99 latency at 1,000+ nodes. The pattern reappears at each phase: adopt a proven distributed system, hit a structural ceiling, and replace the offending layer rather than the entire stack. This article reconstructs the seven-year evolution from primary sources \u2014 Cassandra Summit talks, the Apache JIRA, the Instagram engineering blog, and the OSDI 2018 Akkio paper \u2014 and surfaces the engineering decisions a senior engineer would want to relitigate today. Instagram's Cassandra journey: from Redis replacement to a globally distributed, custom-storage-engine deployment spanning six data centres. Abstract Instagram\u2019s Cassandra story is not a single migration but a series of compounding infrastructure decisions spanning 2012 to 2019: The cost problem (2012) : Redis stored everything in memory. Fraud detection logs and activity feeds were growing faster than Instagram could afford RAM. Cassandra\u2019s disk-backed LSM (Log-Structured Merge) tree storage cut infrastructure costs by \u224875% while adding horizontal ",
+    "status": "ok"
+  },
+  {
+    "slug": "youtube-vitess-scaling",
+    "url": "https://sujeet.pro/articles/youtube-vitess-scaling",
+    "title": "YouTube: Scaling MySQL to Serve Billions with Vitess",
+    "desc": "How YouTube built Vitess to scale MySQL from 4 shards to 256 across tens of thousands of nodes, solving cascading connection storms, enabling zero-downtime resharding, and serving millions of queries per second \u2014 and why they eventually migrated to Spanner anyway.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Problem",
+      "Options Considered",
+      "Implementation",
+      "Outcome",
+      "Lessons Learned",
+      "Applying This to Your System"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Databases Distributed Systems Data Migrations Architecture YouTube: Scaling MySQL to Serve Billions with Vitess How YouTube built Vitess to horizontally scale MySQL from 4 shards to 256 across tens of thousands of nodes, serving millions of queries per second without abandoning the relational model\u2014and why they eventually migrated to Spanner anyway. YouTube's database architecture evolution: from application-level sharding with direct MySQL connections to Vitess's proxy-based middleware that abstracts sharding from applications. Abstract Vitess answers a question most teams face eventually: what happens when MySQL can\u2019t keep up, but migrating to a different database is more expensive than scaling the one you have? The core insight : Instead of replacing MySQL, insert a proxy layer (VTGate + VTTablet) that handles connection pooling, query routing, and shard management. Applications talk to Vitess as if it were a single MySQL instance. The proxy parses SQL \u2014 a foundational decision that enabled query rewriting, shard routing, and safety mechanisms a pass-through proxy can never achieve. Connection pooling came first : YouTube\u2019s immediate crisis was thousands of application-side connections stampeding a freshly-promoted primary on failover. VTTablet\u2019s bounded connection pool was Vitess\u2019s first feature, holding MySQL at a safe connection count regardless of application-fleet size. Sharding evolved from vertical to horizontal ",
+    "status": "ok"
+  },
+  {
+    "slug": "github-mysql-migration",
+    "url": "https://sujeet.pro/articles/github-mysql-migration",
+    "title": "GitHub: Scaling MySQL from One Database to 1,200+ Hosts",
+    "desc": "How GitHub scaled MySQL from a single database to 1,200+ hosts and 5.5M QPS through vertical partitioning, custom tooling (gh-ost, orchestrator, freno), Vitess adoption, and a rolling MySQL 8.0 upgrade \u2014 without a big rewrite.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "Phase 1: The Monolith (~2008\u20132014)",
+      "Phase 2: Tooling and High Availability (2014\u20132019)",
+      "Phase 3: Partitioning (2019\u20132021)",
+      "Phase 4: Fleet Scale and MySQL 8.0 (2022\u20132024)",
+      "Options Considered (Across Phases)",
+      "Lessons Learned"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Data Migrations GitHub: Scaling MySQL from One Database to 1,200+ Hosts How GitHub evolved its MySQL infrastructure from a single monolithic database to a fleet of 1,200+ hosts across 50+ clusters serving 5.5 million queries per second (QPS)\u2014through vertical partitioning, custom tooling (gh-ost, orchestrator, freno), Vitess adoption, and a major version upgrade\u2014while keeping github.com available throughout. GitHub's MySQL infrastructure evolution across four phases, from a single database to a distributed fleet of 1,200+ hosts. Abstract GitHub\u2019s database story is a masterclass in scaling a relational database without abandoning it. The mental model: Phase Problem Solution Key Insight Monolith (~2008\u20132014) Single MySQL primary = single point of failure; schema changes = production risk Datacenter migration, functional partitioning, read replicas You can defer architectural rework if you optimize hardware and config aggressively Tooling &#x26; HA (2014\u20132019) Trigger-based migrations lock tables; failovers take minutes; replication lag blindsides apps gh-ost (triggerless), orchestrator/raft (10\u201313s failover), freno (cooperative throttling) Build the operational tooling first\u2014it makes every subsequent migration safer Partitioning (2019\u20132021) mysql1 at 950K QPS; any incident affects all features Schema domains, vertical partitioning, Vitess for horizontal sharding Partition by logical domain, not by load\u2014the boundaries are alre",
+    "status": "ok"
+  },
+  {
+    "slug": "pinterest-mysql-sharding",
+    "url": "https://sujeet.pro/articles/pinterest-mysql-sharding",
+    "status": "ok",
+    "title": "Pinterest: MySQL Sharding from Zero to Billions of Objects",
+    "desc": "How Pinterest replaced three failing NoSQL stores with sharded MySQL \u2014 a 64-bit ID scheme that embeds routing, virtual shards for painless growth, and a &quot;boring technology&quot; philosophy still running a decade later.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Problem",
+      "Options Considered",
+      "Implementation",
+      "The Migration",
+      "Outcome",
+      "Lessons Learned"
+    ]
+  },
+  {
+    "slug": "discord-message-storage",
+    "url": "https://sujeet.pro/articles/discord-message-storage",
+    "title": "Discord: From Billions to Trillions of Messages \u2014 A Three-Database Journey",
+    "desc": "How Discord evolved message storage from MongoDB to Cassandra to ScyllaDB across trillions of messages \u2014 solving JVM GC pauses, hot partitions, and tombstone storms with Rust data services and request coalescing.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "Phase 1: MongoDB (2015\u20132016)",
+      "Phase 2: Cassandra (2017\u20132021)",
+      "Options Considered",
+      "Implementation",
+      "Outcome",
+      "Lessons Learned"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Data Databases Distributed Systems Migrations Discord: From Billions to Trillions of Messages \u2014 A Three-Database Journey How Discord evolved its message storage from a single MongoDB replica set to Cassandra to ScyllaDB over 8 years, building Rust-based data services and a custom \u201csuper-disk\u201d storage architecture along the way \u2014 reducing cluster size from 177 to 72 nodes while dropping p99 read latency from 125ms to 15ms. Discord's message storage evolution across three phases, from a MongoDB replica set to a ScyllaDB cluster with Rust data services. Abstract Discord\u2019s message storage story is a case study in outgrowing databases \u2014 twice \u2014 and building the infrastructure layer that makes the final choice work. The mental model: Phase Trigger Solution Key Insight MongoDB (2015\u20132016) 100M messages; index exceeded RAM; latency became unpredictable Migrate to Cassandra for linear scalability and predictable performance Plan for migration from day one \u2014 Discord\u2019s MongoDB schema was designed to port cleanly Cassandra (2017\u20132021) Trillions of messages; JVM GC pauses, compaction backlogs, hot partitions caused cascading latency and on-call toil Migrate to ScyllaDB (C++, no GC) with Rust data services for request coalescing The database alone isn\u2019t the bottleneck \u2014 the access pattern layer above it (data services) determines whether hot partitions cascade or get absorbed ScyllaDB + Rust (2020\u20132022) Needed lower latency, better work",
+    "status": "ok"
+  },
+  {
+    "slug": "figma-multiplayer-infrastructure",
+    "url": "https://sujeet.pro/articles/figma-multiplayer-infrastructure",
+    "title": "Figma: Building Multiplayer Infrastructure for Real-Time Design Collaboration",
+    "desc": "How Figma built real-time multiplayer editing for 200 concurrent users by rejecting both OT and pure CRDTs in favor of server-authoritative last-writer-wins at the property level, backed by Rust and DynamoDB.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Design Decision: Why Not OT, Why Not CRDTs",
+      "Implementation",
+      "Outcome",
+      "Lessons Learned",
+      "Conclusion",
+      "Appendix"
+    ],
+    "summary": "Published Feb 9, 2026 Updated Apr 21, 2026 Case Study System Design Distributed Systems Reliability Figma: Building Multiplayer Infrastructure for Real-Time Design Collaboration How Figma built a real-time collaboration engine that supports 200 concurrent editors per document using a CRDT-inspired, server-authoritative protocol \u2014 rejecting both Operational Transformation and pure CRDTs in favor of property-level last-writer-wins with fractional indexing, backed by a Rust multiplayer server and a DynamoDB write-ahead journal processing over 2.2 billion changes per day. Figma's real-time infrastructure: browser clients sync document edits through a per-document Rust process over WebSockets, while LiveGraph handles non-document data subscriptions backed by PostgreSQL. Abstract Figma\u2019s multiplayer system is a case study in choosing the simplest conflict resolution model that actually works for the domain. The mental model: Document model : Every Figma file is a tree of objects represented as Map&#x3C;ObjectID, Map&#x3C;Property, Value>> \u2014 similar to the HTML DOM. Conflict resolution operates at the individual property level, not the document or object level. Not OT, not pure CRDT : Figma rejected Operational Transformation (OT) for its combinatorial complexity and pure Conflict-free Replicated Data Types (CRDTs) for their decentralization overhead. Instead, they built a server-authoritative system inspired by CRDT last-writer-wins registers \u2014 the server defines operation ordering",
+    "status": "ok"
+  },
+  {
+    "slug": "whatsapp-erlang-scaling",
+    "url": "https://sujeet.pro/articles/whatsapp-erlang-scaling",
+    "title": "WhatsApp: 2 Million Connections Per Server with Erlang",
+    "desc": "How WhatsApp pushed Erlang/BEAM and FreeBSD to 2 million concurrent connections per server, served 465 million users with ~32 engineers, and patched the VM (timer wheels, GC throttling, pg2) to keep a small fleet ahead of growth \u2014 a case study in vertical density and runtime co-design.",
+    "h2s": [
+      "Abstract",
+      "Context",
+      "The Starting Point: ejabberd and Erlang",
+      "The 2 Million Connections Milestone",
+      "BEAM VM Tuning and Custom Patches",
+      "The gen_industry Dispatch Pattern",
+      "FunXMPP: The Custom Binary Protocol",
+      "Storage Architecture"
+    ],
+    "summary": "Published Feb 8, 2026 Updated Apr 21, 2026 Case Study Distributed Systems System Design Erlang Outages WhatsApp: 2 Million Connections Per Server with Erlang How WhatsApp scaled to a billion users on Erlang/BEAM and FreeBSD with ~32 engineers, ~550 servers, and a custom binary protocol that shrank messages an order of magnitude \u2014 by pushing per-server density to limits most teams never attempt and patching the runtime when off-the-shelf primitives ran out. WhatsApp's architecture evolved in three phases: an ejabberd/FreeBSD foundation, a scaling phase dominated by BEAM patches and FunXMPP, and a post-acquisition era of Linux, end-to-end encryption, and the WARTS runtime fork. Abstract WhatsApp\u2019s architecture is a case study in radical simplicity at extreme scale. The mental model: One Erlang process per connection, one connection per user. The BEAM VM\u2019s lightweight processes \u2014 a few hundred words of initial heap, on the order of 1\u20133 KB for an idle process \u2014 and per-process garbage collection made 2 million concurrent connections per server viable on commodity hardware ( Erlang Efficiency Guide \u2014 Processes ). This is the foundation everything else builds on. Vertical density before horizontal sprawl. WhatsApp pushed each server to 2+ million connections before adding servers. Operational complexity scales with node count, not core count \u2014 so fewer, larger machines reduce the surface area for failure. Custom everything where it matters. ejabberd was rewritten. XMPP was replaced",
+    "status": "ok"
+  },
+  {
+    "slug": "edge-delivery-and-cache-invalidation",
+    "url": "https://sujeet.pro/articles/edge-delivery-and-cache-invalidation",
+    "title": "Edge Delivery and Cache Invalidation",
+    "desc": "Cache key design, TTL strategies, invalidation approaches (versioned URLs, surrogate-key purge, stale-while-revalidate), edge compute patterns, and the operational failure modes \u2014 thundering herd, fragmentation, propagation lag \u2014 that decide whether a CDN deployment is a load shield or a liability.",
+    "h2s": [
+      "Thesis",
+      "Mental model",
+      "Cache fundamentals",
+      "Cache invalidation strategies",
+      "Stale-while-revalidate and stale-if-error",
+      "Operational guardrails",
+      "Edge compute use cases",
+      "Practical takeaways"
+    ],
+    "summary": "Published Feb 3, 2026 Updated Apr 21, 2026 Platform Engineering Infrastructure Performance HTTP Caching CDN Edge Delivery and Cache Invalidation A modern CDN is two systems welded together: a globally distributed read-through cache governed by HTTP caching semantics , and a programmable purge plane that lets you reach into hundreds of points of presence to expire content on demand. Both halves have to be designed deliberately; defaults will give you a hot origin, fragmented cache, or stale pages on incident day. This article is the mental model and the failure-mode catalogue a senior engineer needs to design cache keys, pick TTLs, choose an invalidation strategy, and make edge compute pay its way. CDN topology: clients hit edge PoPs; edge misses funnel through Origin Shield, which collapses concurrent fetches into a single origin request. Thesis Cache delivery reduces to three coupled decisions: what to cache (cache key design), how long (TTL strategy), and how to invalidate (path, tag, version, or wait). Get the cache key wrong and users see other users\u2019 content. Get the TTL wrong and you either hammer your origin or serve stale pages through an incident. Get invalidation wrong and you can\u2019t ship. Decision Optimises Sacrifices Long TTL Origin load, latency Freshness; needs deliberate invalidation Short TTL Freshness Hit ratio, origin load Wide cache key (more Vary ) Variant correctness Fragmentation; lower hit ratio Versioned / fingerprinted URLs Eliminates invalidation URL ",
+    "status": "ok"
+  },
+  {
+    "slug": "deployment-strategies-blue-green-canary",
+    "url": "https://sujeet.pro/articles/deployment-strategies-blue-green-canary",
+    "title": "Deployment Strategies: Blue-Green, Canary, and Rolling",
+    "desc": "Architectural trade-offs between blue-green, canary, and rolling deployments, covering traffic shifting mechanics, database migration coordination, automated rollback criteria, and operational failure modes encountered during incident response.",
+    "h2s": [
+      "Strategy taxonomy",
+      "Mental model: blast radius, rollback, cost",
+      "Deployment vs release",
+      "Blue-Green Deployments",
+      "Canary Deployments",
+      "Rolling Updates",
+      "Feature Flags and Deployment Decoupling",
+      "Database Migration Coordination"
+    ],
+    "summary": "Published Feb 3, 2026 Updated Apr 21, 2026 Platform Engineering DevOps Infrastructure CI/CD Reliability Engineering Migrations Deployment Strategies: Blue-Green, Canary, and Rolling Production deployment strategies for balancing release velocity against blast radius. Covers the architectural trade-offs between blue-green, canary, and rolling deployments\u2014with specific focus on traffic shifting mechanics, database migration coordination, automated rollback criteria, and operational failure modes that senior engineers encounter during incident response. Each deployment strategy meets the user through traffic management and is constrained by data-layer compatibility. Blue-green and canary require explicit schema-migration coordination; rolling updates assume backward compatibility from day one. Strategy taxonomy Before comparing trade-offs, fix the vocabulary. Practitioners conflate at least seven distinct patterns; the rest of the article uses these definitions. Pattern Mechanism User exposure on bad version Rollback unit Recreate Stop old, start new 100% after downtime window Redeploy old Rolling update Replace pods incrementally (Kubernetes default) Grows linearly during rollout Reverse rolling update Blue-Green Two parallel environments, atomic router switch 100% after switch (0% before) Flip router back Canary Small percentage of real traffic to new version, gated on metrics Bounded to canary share (e.g. 1\u201325%) Stop traffic shift Shadow / mirrored Edge proxy or mesh duplicat",
+    "status": "ok"
+  },
+  {
+    "slug": "ssg-performance-optimizations",
+    "url": "https://sujeet.pro/articles/ssg-performance-optimizations",
+    "title": "SSG Performance on AWS: Atomic Deploys, Edge Functions, and Pre-Compression",
+    "desc": "Production static site delivery on S3 + CloudFront \u2014 atomic versioned deploys, CloudFront Functions vs Lambda@Edge, Continuous Deployment for blue/green, Brotli pre-compression with edge content negotiation, and CLS budget mechanics.",
+    "h2s": [
+      "Thesis",
+      "Mental model: SSG vs SSR vs ISR vs CSR",
+      "Atomic, versioned deployments",
+      "Edge logic: CloudFront Functions vs Lambda@Edge",
+      "Pre-compression: serving Brotli without breaking caches",
+      "CloudFront Continuous Deployment for blue/green",
+      "CLS budget on a static site",
+      "URL redirects at the edge"
+    ],
+    "summary": "Published Feb 3, 2026 Updated Apr 21, 2026 Platform Engineering DevOps Infrastructure Performance Web Vitals CI/CD SSG Performance on AWS: Atomic Deploys, Edge Functions, and Pre-Compression Static site generation (SSG) only looks like \u201ccompile, upload, done\u201d until the second time you have to roll back at 02:00 with traffic on top of half-cached assets. This article is the production playbook for serving an SSG build through Amazon S3 and CloudFront: how to lay out atomic versioned deploys, when to choose CloudFront Functions over Lambda@Edge, how to pre-compress with Brotli without breaking content negotiation, how to use the native CloudFront Continuous Deployment feature for blue/green releases, and what an SSG site can actually do about Cumulative Layout Shift. Build phase, S3 versioned origin, CloudFront with optional edge function, and global edge delivery \u2014 the surface area covered in this article. Thesis Three architectural decisions compound to determine an SSG site\u2019s TTFB, blast radius, and cost: Where the work happens. Build-time rendering moves database queries, template expansion, and asset minification out of the request path. Origin servers shrink to file delivery and the CDN does the rest. How releases are structured. Versioned, immutable build prefixes in S3 make rollback a configuration change instead of a redeploy. Object-level S3 Versioning is the wrong tool for application rollback. Where logic lives at the edge. CloudFront Functions at 0.60 per 1M handle",
+    "status": "ok"
+  },
+  {
+    "slug": "build-pipelines-ci-cd",
+    "url": "https://sujeet.pro/articles/build-pipelines-ci-cd",
+    "title": "Build Pipelines and CI/CD Architecture",
+    "desc": "How to design commit-to-production pipelines: stage ordering, caching and reproducibility, test and security gates, deployment models, observability, and the failure modes that matter in real systems.",
+    "h2s": [
+      "Mental model: one pipeline, many environments",
+      "Pipeline stages: what belongs where",
+      "Caching, artifacts, and reproducibility",
+      "Test gates: what to run when",
+      "Security gates: minimum viable rigor",
+      "Deployment strategies: blast radius versus complexity",
+      "Runners, isolation, and parallelism",
+      "Observability and pipeline metrics"
+    ],
+    "summary": "Published Jan 24, 2026 Updated Apr 21, 2026 Platform Engineering CI/CD Build Systems Reliability Engineering Build Pipelines and CI/CD Architecture Continuous integration and delivery are not \u201ca Jenkins server\u201d or \u201csome GitHub Actions YAML.\u201d They are a feedback and promotion system : turn source revisions into verified, immutable release candidates, move those candidates through environments with increasing realism, and only then expose them to production traffic\u2014with enough telemetry and guardrails to detect mistakes before they become incidents. This article stays inside that system: pipeline shape , caching and reproducibility , verification gates , deployment mechanics , observability , and trade-offs . It assumes you already know what a container image is; it focuses on the decisions that separate fragile pipelines from ones teams can trust for years. Mental model: one pipeline, many environments Treat build (compile, package, image layers) and promotion (which artifact is running where) as related but distinct concerns. A single logical pipeline usually produces one immutable artifact set per revision (images, packages, static assets, generated SBOMs) and then selects which artifact is bound to staging, canary, and production\u2014rather than rebuilding different \u201cflavors\u201d per environment. Typical promotion flow: verify cheaply first, publish durable outputs once, gate risky changes, then roll forward with observability. The ordering above is deliberate: fail fast on lint, t",
+    "status": "ok"
+  },
+  {
+    "slug": "ecommerce-ssg-to-ssr-migration",
+    "url": "https://sujeet.pro/articles/ecommerce-ssg-to-ssr-migration",
+    "title": "E-commerce SSG to SSR Migration: Strategy and Pitfalls",
+    "desc": "A staff-engineer playbook for migrating an e-commerce platform from SSG to SSR with a Strangler Fig rollout \u2014 covering the cache-header capability gap, edge-bucketing on CloudFront, ISR as a sometimes-better midpoint, and the operational realities of real-time content updates.",
+    "h2s": [
+      "Terminology",
+      "Why an SSG front end fails an e-commerce business",
+      "Migration recipe at a glance",
+      "Mental model: pick the rendering mode per route, not per platform",
+      "The Strangler Fig at the edge",
+      "Cache invalidation: tag the response, not the URL",
+      "Edge personalization without breaking the cache",
+      "Cost and latency model"
+    ],
+    "summary": "Published Jan 24, 2026 Updated Apr 21, 2026 Platform Engineering Architecture Performance Web Vitals Patterns Migrations E-commerce SSG to SSR Migration: Strategy and Pitfalls Marketing launches a campaign at 09:00. By 09:15 the featured product still shows yesterday\u2019s price because the static rebuild has not finished. By 10:00 Google Ads has rejected the campaign for price mismatch. This is the moment most e-commerce teams decide their static-first front end has become a liability \u2014 and the moment the real work starts. This article is a playbook for migrating an e-commerce front end from Static Site Generation (SSG) to Server-Side Rendering (SSR) without breaking SEO, conversion, or cost. It is opinionated about three things: that the migration is risk-management more than feature delivery; that you almost always want the Strangler Fig pattern at the edge rather than a big-bang cutover; and that the right destination for many teams is not pure SSR but Incremental Static Regeneration with on-demand revalidation . SSG vs SSR vs Strangler-Fig migration: the edge proxy splits traffic between origins so the new platform can be validated without a cutover. Terminology Term Definition SSG Static Site Generation \u2014 HTML emitted at build time, served from CDN SSR Server-Side Rendering \u2014 HTML rendered per request on the origin ISR Incremental Static Regeneration \u2014 static HTML refreshed in the background after expiry PPR Partial Pre-Rendering \u2014 static shell with streamed dynamic \u201choles\u201d",
+    "status": "ok"
+  },
+  {
+    "slug": "data-migration-strategies",
+    "url": "https://sujeet.pro/articles/data-migration-strategies",
+    "title": "Zero-Downtime Data Migrations: Backfills, Dual Writes, and Safe Cutovers",
+    "desc": "A production-oriented playbook for overlapping migrations: invariants during dual writes, idempotent backfills and lag control, reconciliation, cutover gates, rollback triggers, and decommissioning the old path.",
+    "h2s": [
+      "What \u201czero downtime\u201d actually promises",
+      "Invariants before you touch traffic",
+      "Schema evolution: expand and contract",
+      "Dual writes versus single commit plus fan-out",
+      "Backfills, lag, and throughput",
+      "Validation and reconciliation",
+      "Cutover criteria and gates",
+      "Rollback: when to pull the cord"
+    ],
+    "summary": "Published Jan 24, 2026 Updated Apr 21, 2026 Distributed Systems Reliability Engineering Data Engineering Platform Engineering Zero-Downtime Data Migrations: Backfills, Dual Writes, and Safe Cutovers Schema migrations answer \u201cwhat does the DDL look like next?\u201d Data migrations answer \u201chow do we move rows, blobs, or derived documents from system A to system B while production keeps accepting traffic, and how do we prove we can roll back?\u201d This article stays on that second problem: backfills , dual writes or log-driven fan-out , reconciliation , cutover , rollback , and decommissioning \u2014the parts that usually decide whether an outage becomes a story or a footnote. End state is not \u201cthe new cluster exists,\u201d it is \u201ctraffic can survive losing the old path,\u201d with measured drift and a rehearsed rollback. What \u201czero downtime\u201d actually promises Zero downtime means users keep making progress on their work while you change storage layout, vendor, or region. It does not mean zero risk, zero cost, or zero observable behavior change. You are trading a short hard outage for a longer soft window where two representations of truth coexist. The engineering problem is to keep that window bounded , measurable , and reversible . PostgreSQL documents logical replication as a publisher/subscriber stream that can copy existing data and then apply ongoing changes; operators still must reason about conflicts, schema mapping, and monitoring lag ( PostgreSQL documentation: Logical replication ). MySQL\u2019s r",
+    "status": "ok"
+  },
+  {
+    "slug": "slos-slis-error-budgets",
+    "url": "https://sujeet.pro/articles/slos-slis-error-budgets",
+    "title": "SLOs, SLIs, and Error Budgets",
+    "desc": "The SLO reliability framework from Google",
+    "h2s": [
+      "Abstract",
+      "Mental Model: SLI vs SLO vs SLA",
+      "Defining SLIs: User-Centric Reliability Measurement",
+      "Defining SLOs: Targets with Commitment",
+      "Error Budgets: Quantifying Acceptable Unreliability",
+      "Burn Rate: The Velocity of Failure",
+      "Multi-Window, Multi-Burn-Rate Alerting",
+      "Error Budget Policies"
+    ],
+    "summary": "Published Feb 3, 2026 Updated Apr 21, 2026 Platform Engineering DevOps Infrastructure Reliability Reliability Engineering SLOs, SLIs, and Error Budgets Service Level Objectives (SLOs), Service Level Indicators (SLIs), and error budgets form the framework Google\u2019s SRE practice uses to quantify reliability and trade it against development velocity. SLIs measure what users actually experience, SLOs commit to a target on those measurements, and error budgets convert the gap between perfection and the target into a finite resource that engineering can spend on releases, experiments, and incidents. This article covers the design reasoning behind each concept, the mathematics of multi-window multi-burn-rate alerting, and the operational practices \u2014 policies, review cadence, anti-patterns \u2014 that decide whether an SLO program drives decisions or just decorates a dashboard. SLO framework: events feed SLIs, SLIs roll up to SLOs, the gap to 100% becomes the error budget that gates release velocity vs. reliability work. Abstract The framework rests on three interdependent concepts: SLIs quantify user-centric reliability as a ratio of good events to valid events \u2014 measuring what users experience, not what infrastructure reports. SLOs commit to explicit targets (e.g., \u201c99.9% of requests succeed\u201d) over a defined compliance period, creating an accountability contract between product, development, and operations. Error budgets quantify acceptable unreliability ( ), converting an abstract targe",
+    "status": "ok"
+  },
+  {
+    "slug": "logging-metrics-tracing",
+    "url": "https://sujeet.pro/articles/logging-metrics-tracing",
+    "title": "Logging, Metrics, and Tracing Fundamentals",
+    "desc": "Understand the three pillars of observability \u2014 structured logging, metrics, and distributed tracing \u2014 including cardinality trade-offs, sampling strategies, and OpenTelemetry",
+    "h2s": [
+      "Abstract",
+      "Observability Signal Taxonomy",
+      "Connecting the Three Pillars",
+      "Structured Logging Practices",
+      "Metrics Design and Aggregation",
+      "Distributed Tracing and Context",
+      "OpenTelemetry Pipeline: SDK and Collector",
+      "Sampling and Cost Control"
+    ],
+    "summary": "Published Feb 3, 2026 Updated Apr 21, 2026 Observability OpenTelemetry Platform Engineering DevOps Infrastructure Logging, Metrics, and Tracing Fundamentals Observability in distributed systems rests on three complementary signals: logs capture discrete events with full context, metrics quantify system behavior over time, and traces reconstruct request paths across service boundaries. Each signal answers different questions, and choosing wrong defaults for cardinality, sampling, or retention can render your observability pipeline either useless or prohibitively expensive. This article covers the design reasoning behind each signal type, OpenTelemetry \u2019s unified data model, and the operational trade-offs that determine whether your system remains debuggable at scale. OpenTelemetry's unified instrumentation model: three signals exported via OTLP, with trace context linking logs and exemplars linking metrics back to traces. Abstract Observability signals differ fundamentally in what they optimize: Logs preserve full event context at the cost of storage; use them for debugging specific incidents Metrics sacrifice detail for efficient aggregation; use them for alerting and dashboards Traces reconstruct causality across services; use them to understand distributed request flow The critical design decisions: Cardinality determines cost: metrics with unbounded label values (user IDs, request IDs) will crash your time-series database Sampling trades completeness for cost: head samplin",
+    "status": "ok"
+  },
+  {
+    "slug": "drm-basics-for-streaming",
+    "url": "https://sujeet.pro/articles/drm-basics-for-streaming",
+    "title": "DRM Fundamentals for Streaming Media",
+    "desc": "How CENC encryption, Widevine/FairPlay/PlayReady, and EME work together to protect streaming content \u2014 covering AES modes, security levels, license server design, key rotation, and the real threat model DRM addresses.",
+    "h2s": [
+      "Abstract",
+      "Common Encryption (CENC)",
+      "The DRM Ecosystem",
+      "PSSH and DRM Signaling",
+      "License Server Architecture",
+      "Client Integration: EME",
+      "Content Packaging",
+      "Threat Model and Limitations"
+    ],
+    "summary": "Published Feb 3, 2026 Updated Apr 21, 2026 Media Security Architecture Web Platform DRM Fundamentals for Streaming Media Digital Rights Management (DRM) for streaming media combines encryption, license management, and platform-specific security to control content playback. This article covers the encryption architecture ( CENC , AES modes), the three dominant DRM systems (Widevine, FairPlay, PlayReady), license server design, client integration via EME (Encrypted Media Extensions) , and operational considerations including key rotation, security levels, and the threat model that DRM addresses. DRM pipeline: content encryption with CENC, key management through license servers, and client-side decryption via platform CDMs. Abstract DRM protects streaming content by combining two mechanisms: encryption (scrambling content so it\u2019s unplayable without keys) and license enforcement (controlling who gets keys and under what conditions). The challenge is that this must work across a fragmented device ecosystem where each platform (Apple, Google, Microsoft) controls its own security hardware. The core mental model: CENC separates encryption from DRM. Common Encryption (ISO/IEC 23001-7:2023) standardizes how content is encrypted using AES-128. The same encrypted file works with any DRM system \u2014 Widevine, FairPlay, or PlayReady. What differs is how keys are delivered. Three DRM systems, one reason: hardware trust. Each platform vendor controls the Trusted Execution Environment (TEE) on t",
+    "status": "ok"
+  },
+  {
+    "slug": "video-transcoding-pipeline",
+    "url": "https://sujeet.pro/articles/video-transcoding-pipeline",
+    "title": "Video Transcoding Pipeline Design",
+    "desc": "Pipeline architecture for scalable video transcoding \u2014 covering codec selection, rate control strategies, chunked parallel encoding, per-title bitrate ladders, VMAF quality validation, and the compute/storage/egress cost trade-offs behind production video platforms.",
+    "h2s": [
+      "Abstract",
+      "Pipeline Stages",
+      "Codec Selection and Rate Control",
+      "Bitrate Ladder Design",
+      "Quality Validation",
+      "Failure Handling and Resilience",
+      "Cost Optimization",
+      "Security and Content Protection"
+    ],
+    "summary": "Published Feb 3, 2026 Updated Apr 21, 2026 Media Platform Engineering System Design Architecture Video Transcoding Pipeline Design Building scalable video transcoding pipelines requires orchestrating CPU/GPU-intensive encoding jobs across distributed infrastructure while optimizing for quality, cost, and throughput. This article covers pipeline architecture patterns, codec selection, rate control strategies, job orchestration with chunked parallel processing, quality validation, and failure handling for production video platforms. End-to-end transcoding pipeline: source ingestion \u2192 orchestration \u2192 chunked encoding \u2192 quality check \u2192 packaging \u2192 CDN. Abstract A video transcoding pipeline transforms source video into multiple renditions optimized for adaptive streaming. The core challenge: encoding is computationally expensive (a 4K video can take 10-100x real-time on CPU), yet platforms need to process thousands of hours daily with predictable latency. The mental model: Encoding is the bottleneck. Everything else (upload, packaging, CDN propagation) takes seconds; encoding takes minutes to hours. Pipeline design optimizes encoding throughput. Parallelization happens at two levels: across videos (horizontal scaling via job queues) and within a video (chunked encoding). The first scales linearly with workers; the second reduces wall-clock time for individual jobs. Rate control determines quality-to-size trade-off. CRF (Constant Rate Factor) targets quality, CBR (Constant Bitrate)",
+    "status": "ok"
+  },
+  {
+    "slug": "web-video-playback-architecture",
+    "url": "https://sujeet.pro/articles/web-video-playback-architecture",
+    "title": "Web Video Playback Architecture: HLS, DASH, and Low Latency",
+    "desc": "The complete video delivery pipeline from codecs (H.264, HEVC, AV1) and containers to adaptive streaming with HLS and DASH, DRM fragmentation, and ultra-low latency techniques \u2014 including protocol internals, design trade-offs, and production failure modes.",
+    "h2s": [
+      "Abstract",
+      "Introduction",
+      "The Foundation - Codecs and Compression",
+      "Packaging and Segmentation",
+      "The Protocols of Power - HLS and MPEG-DASH",
+      "Securing the Stream: Digital Rights Management",
+      "The New Frontier: Ultra-Low Latency",
+      "Client-Side Playback: Media Source Extensions"
+    ],
+    "summary": "Published Feb 3, 2026 Updated Apr 21, 2026 Media Architecture Networking Web Platform Platform Engineering Web Video Playback Architecture: HLS, DASH, and Low Latency The complete video delivery pipeline from codecs and compression to adaptive streaming protocols, DRM systems, and ultra-low latency technologies. Covers protocol internals, design trade-offs, and production failure modes for building resilient video applications. End-to-end pipeline: a mezzanine source is encoded, packaged into CMAF segments, encrypted under CENC, distributed by CDN PoPs and DRM license servers, then consumed by an ABR-driven player feeding MSE and the platform CDM. Abstract Video streaming solves a fundamental tension: high-quality video requires high bitrates, but network conditions are unpredictable and heterogeneous. The solution is Adaptive Bitrate (ABR) streaming \u2014pre-encode multiple quality variants, segment them into small chunks, and let the client dynamically select based on real-time conditions. The core mental model: Codecs compress by removing spatial/temporal redundancy. The trade-off is compression efficiency vs. decode complexity and hardware support. H.264 is universal but inefficient; AV1 achieves 30% better compression than HEVC (High Efficiency Video Coding) but requires modern hardware. Containers package compressed streams into addressable segments. CMAF (Common Media Application Format) unifies HLS and DASH delivery by standardizing fragmented MP4 (fMP4) structure, elimin",
+    "status": "ok"
+  },
+  {
+    "slug": "image-processing-service-design",
+    "url": "https://sujeet.pro/articles/image-processing-service-design",
+    "title": "Image Processing Service Design: CDN, Transforms, and APIs",
+    "desc": "Architecture for a cloud-agnostic, multi-tenant image processing platform with on-the-fly transforms, content-addressed caching, signed URLs, and a CDN-first delivery strategy achieving sub-second response times.",
+    "h2s": [
+      "Abstract",
+      "System Overview",
+      "Component Naming",
+      "Architecture Principles",
+      "Technology Stack",
+      "High-Level Architecture",
+      "Data Models",
+      "URL Design"
+    ],
+    "summary": "Published Feb 3, 2026 Updated Apr 21, 2026 Media System Design Platform Engineering Performance Caching CDN Image Processing Service Design: CDN, Transforms, and APIs This document presents the architectural design for a cloud-agnostic, multi-tenant image processing platform that provides on-the-fly transformations with enterprise-grade security, performance, and cost optimization. The platform supports hierarchical multi-tenancy (Organization \u2192 Tenant \u2192 Space), public and private image delivery, and deployment across AWS, GCP, Azure, or on-premise infrastructure. Key capabilities include deterministic transformation caching to ensure sub-second delivery, HMAC-SHA256 signed URLs for secure private access, CDN (Content Delivery Network) integration for global edge caching, and a \u201ctransform-once-serve-forever\u201d approach that minimizes processing costs while guaranteeing HTTP 200 responses even for first-time transformation requests. Architecture overview: clients hit the CDN; misses fall through to the Image Gateway, which orchestrates the Transform Engine, Redis cache, registry, and object storage. Abstract Image processing at scale requires balancing three competing concerns: latency (users expect sub-second delivery), cost (processing and storage grow with traffic), and correctness (transformations must be deterministic and secure). This architecture resolves these tensions through a layered caching strategy with content-addressed storage. Cache funnel: a typical multi-layer ",
+    "status": "ok"
+  },
+  {
+    "slug": "load-testing-strategy-capacity-planning",
+    "url": "https://sujeet.pro/articles/load-testing-strategy-capacity-planning",
+    "title": "Load Testing Strategy and Capacity Planning",
+    "desc": "Hypothesis-driven load test design, realistic traffic modeling, saturation signals and bottleneck classes, and turning measurements into capacity envelopes with explicit headroom\u2014without mistaking a tool run for an engineering answer.",
+    "h2s": [
+      "Mental model: capacity is a function, not a number",
+      "Start with decisions, not scripts",
+      "Open vs closed workload models \u2014 the choice that quietly determines validity",
+      "Model traffic as a mix, not a peak RPS number",
+      "Test catalogue: same model, different questions",
+      "Warmup, steady-state, and what \u201cstable\u201d means",
+      "Dependencies: what to mock, what to touch",
+      "Data realism: the hidden multiplier on validity"
+    ],
+    "summary": "Published Jan 24, 2026 Updated Apr 21, 2026 Performance Engineering Reliability Engineering Distributed Systems Testing Load Testing Strategy and Capacity Planning Load tests are easy to run and hard to interpret. The familiar failure mode is a green dashboard after a scripted ramp followed by an outage when production traffic diverges from the script, when dependencies throttle the caller, or when tail latency was never part of the pass criteria. This article treats load testing as an experimental discipline\u2014hypothesis, instrumented execution, controlled variables\u2014and connects it to capacity planning as a decision about limits, headroom, and risk, not a single headline number. The goal is not \u201cmore requests.\u201d The goal is falsifiable learning: which constraints bind first under a realistic workload mix, how close the system is to its service objectives under that mix, and what to change in architecture or operations before the next revenue event forces the lesson in production. The capacity-planning loop: every run feeds the next run's hypothesis, not just a slide. Mental model: capacity is a function, not a number Three primitives carry every other claim in this article. They are universally known to performance engineers, but they are routinely confused in practice: Little\u2019s Law ties throughput to concurrency and time-in-system: , where is concurrent items, is arrival rate, and is mean residence time. It is the first sanity check whenever someone collapses \u201ccapacity\u201d into a",
+    "status": "ok"
+  },
+  {
+    "slug": "k6-load-testing-overview",
+    "url": "https://sujeet.pro/articles/k6-load-testing-overview",
+    "title": "k6 Load Testing: Architecture, Workload Models, and CI Gating",
+    "desc": "How k6 turns load testing into code: the Go + Sobek runtime, open vs closed workload modelling, the seven built-in executors, the metrics-and-thresholds CI gate, and where it sits next to JMeter, Gatling, and Locust.",
+    "h2s": [
+      "TL;DR",
+      "Mental model",
+      "Architecture: Go, goroutines, and the embedded JS runtime",
+      "Your first script",
+      "Workload modelling: scenarios and executors",
+      "The five canonical test shapes",
+      "Metrics and thresholds: the CI gate",
+      "CI integration"
+    ],
+    "summary": "Published Jan 24, 2026 Updated Apr 21, 2026 Testing Performance Engineering CI/CD DevOps Platform Engineering k6 Load Testing: Architecture, Workload Models, and CI Gating k6 is a Grafana-maintained load-testing tool that runs JavaScript or TypeScript test scripts on top of a Go execution engine. This article is for senior engineers who already know what load testing is and want a working mental model of how k6 generates load, what it measures, and where it fits in a CI/CD pipeline. By the end you should be able to choose between an open and closed workload model, write a test whose pass/fail is enforceable in CI, and know when k6 is the wrong tool. TL;DR k6 is a single Go binary that embeds a pure-Go JavaScript runtime ( Sobek , forked from goja in k6 v0.52.0 ). One process can sustain 30,000\u201340,000 VUs and ~300k RPS on a single machine before you need to fan out. Each Virtual User is a goroutine with its own Sobek runtime and event loop. There is no shared global state and no Node.js \u2014 fs , path , and npm modules are not available. Workload modelling separates what traffic looks like (open vs closed model, seven executors ) from what behaviour you simulate (the test function). Open (arrival-rate) models avoid coordinated omission ; closed (VU-based) models match fixed-pool, user-think-time scenarios. The metrics-and-thresholds pair is the CI gate: every metric is one of Counter , Gauge , Rate , or Trend , and any unmet threshold makes k6 run exit code 99. As of k6 1.0 ( rel",
+    "status": "ok"
+  },
+  {
+    "slug": "statsig-experimentation-overview",
+    "url": "https://sujeet.pro/articles/statsig-experimentation-overview",
+    "title": "Statsig Experimentation Platform: SDK Architecture and Rollouts",
+    "desc": "How Statsig",
+    "h2s": [
+      "TL;DR",
+      "Mental model",
+      "Unified pipeline, in practice",
+      "Deterministic assignment",
+      "Server SDK: download and evaluate locally",
+      "Client SDK: pre-computed values",
+      "DataAdapter: the only resilience knob worth tuning",
+      "Cloud vs. Warehouse Native"
+    ],
+    "summary": "Published Jan 24, 2026 Updated Apr 21, 2026 Experimentation Feature Flags Testing Platform Engineering Statsig Experimentation Platform: SDK Architecture and Rollouts Statsig is one of the few feature-flagging vendors whose product surface \u2014 flags, experiments, product analytics, session replay \u2014 sits on a single ingestion and assignment pipeline. For a senior engineer integrating it, the interesting questions are mechanical rather than marketing: how a user is bucketed, where evaluation runs, what the SDK does on a cold start, how to keep evaluation alive when the Statsig API is unreachable, and how the deployment model (cloud vs. warehouse-native) shapes the rest of the system. This article walks through those mechanics with citations to the official docs and SDK source. Statsig high-level architecture: server SDKs pull config specs from the CDN and evaluate locally; client SDKs receive pre-evaluated payloads from /initialize. TL;DR Two evaluation models, one assignment algorithm. Server SDKs download the full ruleset and evaluate locally; client SDKs receive pre-computed values for the current user from /initialize . Both produce the same bucket because both feed SHA-256(salt + unitID) into a mod 10000 (experiments) or mod 1000 (layers) bucket assignment ( How Evaluation Works ). Deterministic, stateless. SDKs do not persist user \u2192 bucket mappings. The hash is recomputed every check; the same user gets the same bucket as long as the rule\u2019s salt is unchanged ( How Evaluatio",
+    "status": "ok"
+  }
+]

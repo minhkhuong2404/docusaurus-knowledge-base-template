@@ -1,0 +1,1003 @@
+id,topic,difficulty,questionText,codeSnippet,optionA,optionB,optionC,optionD,correctOption,explanation
+java-oca-0001,Java Building Blocks,medium,What is the result of attempting to compile and run the following class?,"1: public class _C {
+2:   private static int $;
+3:   public static void main(String[] main) {
+4:     String a_b;
+5:     System.out.print($);
+6:     System.out.print(a_b);
+7:   }
+8: }",Outputs 0null,Compiler error on line 1 and line 2,Compiler error on line 6,Compiler error on line 4,C,"Option C is correct because local variables (such as a_b on line 4) do not get default values and must be explicitly assigned before being referenced. Since a_b is read on line 6 without initialization, line 6 fails compilation. Line 1 and 2 are completely legal because Java identifiers can begin with an underscore (_) or a dollar sign ($). Static and instance variables like $ get default values (0 for int)."
+java-oca-0002,Core Java APIs,medium,What is the result of the following code snippet?,"String s1 = ""Java"";
+String s2 = ""Java"";
+StringBuilder sb1 = new StringBuilder();
+sb1.append(""Ja"").append(""va"");
+System.out.println(s1 == s2);
+System.out.println(s1.equals(s2));
+System.out.println(sb1.toString() == s1);
+System.out.println(sb1.toString().equals(s1));",true is printed out exactly once,true is printed out exactly twice,true is printed out exactly three times,true is printed out exactly four times,C,"String literals s1 and s2 both point to the same string in the string pool, so s1 == s2 and s1.equals(s2) are both true (2 times). sb1.toString() creates a new String object at runtime on the heap, so sb1.toString() == s1 is false. However, sb1.toString().equals(s1) checks logical character sequence equality, which evaluates to true. Therefore, true is printed out exactly 3 times."
+java-oca-0003,Class Design,hard,What happens when attempting to compile and run the following code?,"1: interface HasTail { int getTailLength(); }
+2: abstract class Puma implements HasTail {
+3:   protected int getTailLength() { return 4; }
+4: }
+5: public class Cougar extends Puma {
+6:   public static void main(String[] args) {
+7:     Puma puma = new Puma();
+8:     System.out.println(puma.getTailLength());
+9:   }
+10:  public int getTailLength(int length) { return 2; }
+11: }",It compiles and outputs 4,It compiles and outputs 2,Compilation fails due to multiple errors: invalid method override on line 3 and attempting to instantiate an abstract class on line 7,Compilation fails only because getTailLength(int length) on line 10 does not match the interface signature,C,"First, all interface methods are implicitly public. On line 3, Puma attempts to implement getTailLength() with protected access, which reduces visibility and causes a compiler error. Second, on line 7, Puma is an abstract class and cannot be instantiated with 'new Puma()'. Line 10 is merely an overload (different parameter list), not an override."
+java-oca-0004,Operators and Statements,medium,What is the output of the following program?,"public class FeedingSchedule {
+  public static void main(String[] args) {
+    boolean keepGoing = true;
+    int count = 0;
+    int x = 3;
+    while(count++ < 3) {
+      int y = (1 + 2 * count) % 3;
+      switch(y) {
+        default:
+        case 0: x -= 1; break;
+        case 1: x += 5;
+      }
+    }
+    System.out.println(x);
+  }
+}",4,5,6,7,C,"Let's trace iteration by iteration: Iteration 1: count was 0, count++ < 3 is true, count becomes 1. y = (1 + 2*1) % 3 = 3 % 3 = 0. Hits case 0: x = 3 - 1 = 2 (break). Iteration 2: count is 1, count++ < 3 is true, count becomes 2. y = (1 + 2*2) % 3 = 5 % 3 = 2. Hits default: falls through to case 0 because no break on default: x = 2 - 1 = 1 (break). Iteration 3: count is 2, count++ < 3 is true, count becomes 3. y = (1 + 2*3) % 3 = 7 % 3 = 1. Hits case 1: x = 1 + 5 = 6. Iteration 4: count is 3, 3 < 3 is false, loop terminates. Final x is 6."
+java-oca-0005,Exceptions,easy,What is the output of the following code snippet?,"System.out.print(""a"");
+try {
+  System.out.print(""b"");
+  throw new IllegalArgumentException();
+} catch (RuntimeException e) {
+  System.out.print(""c"");
+} finally {
+  System.out.print(""d"");
+}
+System.out.print(""e"");",abce,abde,abcde,Compilation error,C,"Prints 'a', enters try, prints 'b', throws IllegalArgumentException. Since IllegalArgumentException extends RuntimeException, the catch block catches it and prints 'c'. Then the finally block runs unconditionally and prints 'd'. Execution resumes normally after try-catch-finally, printing 'e'. Result is 'abcde'."
+java-oca-0006,Methods and Encapsulation,easy,What is the result of the following program?,"public class MathFunctions {
+  public static void addToInt(int x, int amountToAdd) {
+    x = x + amountToAdd;
+  }
+  public static void main(String[] args) {
+    int a = 15;
+    int b = 10;
+    MathFunctions.addToInt(a, b);
+    System.out.println(a);
+  }
+}",10,15,25,Compiler error,B,"Java is strictly pass-by-value. When 'a' is passed into addToInt(int x, int amountToAdd), a copy of its primitive value 15 is passed into parameter x. Reassigning x inside addToInt has zero effect on the caller variable 'a'. Therefore, 'a' remains 15."
+java-oca-0007,Core Java APIs,medium,What is the result of the following code?,"int[] array = {6, 9, 8};
+List<Integer> list = new ArrayList<>();
+list.add(array[0]);
+list.add(array[2]);
+list.set(1, array[1]);
+list.remove(0);
+System.out.println(list);",[8],[9],"[6, 9]",IndexOutOfBoundsException is thrown,B,"Initial array is {6, 9, 8}. list.add(6) -> [6]. list.add(8) -> [6, 8]. list.set(1, 9) replaces element at index 1 with 9 -> [6, 9]. list.remove(0) removes the element at index 0 (value 6) -> leaving [9]. Printing list outputs [9]."
+java-oca-0008,Class Design,hard,What is the output of the following code?,"public class Deer {
+  public Deer() { System.out.print(""Deer""); }
+  public Deer(int age) { System.out.print(""DeerAge""); }
+  private boolean hasHorns() { return false; }
+  public static void main(String[] args) {
+    Deer deer = new Reindeer(5);
+    System.out.println("","" + deer.hasHorns());
+  }
+}
+class Reindeer extends Deer {
+  public Reindeer(int age) { System.out.print(""Reindeer""); }
+  public boolean hasHorns() { return true; }
+}","DeerReindeer,false","DeerReindeer,true","DeerAgeReindeer,false","DeerAgeReindeer,true",A,"When new Reindeer(5) is executed, Reindeer(int age) does not explicitly invoke a parent constructor, so the compiler automatically inserts super() on line 1. Deer() runs first, printing 'Deer', then Reindeer's constructor prints 'Reindeer'. Next, hasHorns() in Deer is declared private. Private methods cannot be overridden, only hidden. Because the reference variable 'deer' has compile-time type Deer, deer.hasHorns() calls Deer's private method, which returns false. Output is 'DeerReindeer,false'."
+java-oca-0009,Exceptions,easy,"Which of the following statements correctly distinguishes checked exceptions, runtime exceptions, and Errors in Java?",,Checked exceptions are required to be handled or declared; Errors and RuntimeExceptions are unchecked and do not require handling or declaration.,"Runtime exceptions are required to be caught or declared, whereas Checked exceptions are optional.",Errors are checked exceptions that must be handled by application code.,Only Exception subclasses that extend RuntimeException are required to be declared in throws clauses.,A,"In Java, checked exceptions (subclasses of Exception excluding RuntimeException) are subject to the handle-or-declare rule. RuntimeException and its subclasses, as well as Error and its subclasses, are unchecked and are not required to be handled or declared."
+java-oca-0010,Java Building Blocks,medium,"Consider the following code. Immediately after line 6 executes, which grasshopper objects are eligible for garbage collection?","1: public class Grasshopper {
+2:   public Grasshopper(String n) { name = n; }
+3:   public static void main(String[] args) {
+4:     Grasshopper one = new Grasshopper(""g1"");
+5:     Grasshopper two = new Grasshopper(""g2"");
+6:     one = two;
+7:     two = null;
+8:     one = null;
+9:   }
+10:  private String name;
+11: }",Neither object is eligible for garbage collection,Only the g1 object is eligible for garbage collection,Only the g2 object is eligible for garbage collection,Both g1 and g2 objects are eligible for garbage collection,B,"On line 4, 'one' points to g1. On line 5, 'two' points to g2. On line 6, 'one' is reassigned to point to g2. At this exact point, no reference points to the g1 object anymore, making only g1 eligible for garbage collection."
+java-oca-0011,Operators and Statements,hard,What is the output of the following program?,"public class FeedingSchedule {
+  public static void main(String[] args) {
+    int x = 5, j = 0;
+    OUTER: for(int i=0; i<3; )
+    INNER: do {
+      i++; x++;
+      if(x > 10) break INNER;
+      x += 4;
+      j++;
+    } while(j <= 2);
+    System.out.println(x);
+  }
+}",10,12,13,17,B,"Trace: Outer loop i=0. Inner loop (do-while): 1st iteration: i=1, x=6. x > 10 is false. x += 4 -> x=10. j++ -> j=1. Condition j <= 2 is true. 2nd iteration: i=2, x=11. x > 10 (11 > 10) is true! break INNER triggers. j remains 1. Now back to OUTER loop condition: i < 3 (2 < 3) is true. Next iteration of OUTER: executes INNER: i becomes 3, x becomes 12. x > 10 is true, break INNER immediately. Now OUTER checks i < 3 (3 < 3), which is false! Loop terminates. Final x is 12."
+java-oca-0012,Methods and Encapsulation,medium,What is the result of the following program?,"public class Egret {
+  private String color;
+  public Egret() {
+    this(""white"");
+  }
+  public Egret(String color) {
+    color = color;
+  }
+  public static void main(String[] args) {
+    Egret e = new Egret();
+    System.out.println(""Color:"" + e.color);
+  }
+}",Color:white,Color:null,Color:,Compiler error on line 4,B,"In Egret(String color), the assignment 'color = color;' assigns the parameter to itself! It does NOT assign to the instance variable this.color. Therefore, the instance variable 'color' remains initialized to its default value, which is null. The output is 'Color:null'."
+java-oca-0013,Operators and Statements,medium,What is the output of the following program?,"public class BearOrShark {
+  public static void main(String[] args) {
+    int luck = 10;
+    if((luck > 10 ? luck++ : --luck) < 10) {
+      System.out.print(""Bear"");
+    }
+    if(luck < 10) System.out.print(""Shark"");
+  }
+}",Bear,Shark,BearShark,Does not print anything,C,"In the ternary expression (luck > 10 ? luck++ : --luck), luck is 10, so luck > 10 is false. Only the false branch --luck is evaluated. --luck decrements luck from 10 to 9 and returns 9. 9 < 10 is true, so 'Bear' is printed. Then the second if evaluates (luck < 10); since luck is now 9, 9 < 10 is true and 'Shark' is printed. Total output: 'BearShark'."
+java-oca-0014,Operators and Statements,medium,"Assuming we have a valid, non-null HenHouse object, which of the following is NOT a possible outcome when this program runs?","Chicken chicken = house.getChickens().get(0);
+for(int i=0; i < house.getChickens().size();
+    chicken = house.getChickens().get(i++)) {
+  System.out.println(""Cluck"");
+}",The application will output Cluck exactly once,The application will output Cluck more than once,The application will compile but produce an exception at runtime,The application will compile and exit without producing any output or exception,D,"If house.getChickens() has 0 elements, the initial call get(0) throws IndexOutOfBoundsException. If it has 1 element, line 1 succeeds, loop runs once and prints Cluck. If it has >1 elements, loop runs multiple times. If getChickens() returns null, line 1 throws NullPointerException. Therefore, the code will ALWAYS either print 'Cluck' at least once or throw an exception at runtime. It can never exit cleanly without printing or throwing."
+java-oca-0015,Class Design,medium,"Given the following classes, which type can be placed in the blank so that the code compiles successfully?","public interface CanSwim {}
+public class Amphibian implements CanSwim {}
+class Tadpole extends Amphibian {}
+public class FindAllTadPole {
+  public static void main(String[] args) {
+    List<Tadpole> tadpoles = new ArrayList<Tadpole>();
+    for(Amphibian amphibian : tadpoles) {
+      ___________ tadpole = amphibian;
+    }
+  }
+}",Tadpole,CanSwim,Long,All of the above,B,"The loop variable 'amphibian' has reference type Amphibian. Since Amphibian implements CanSwim, an Amphibian reference can be assigned directly to a CanSwim, Amphibian, or Object variable without casting. Assigning to Tadpole (Option A) would fail because Tadpole is a subclass of Amphibian and requires an explicit downcast."
+java-oca-0016,Class Design,hard,What change allows the following code to compile?,"1: public interface Animal { public default String getName() { return null; } }
+2: interface Mammal { public default String getName() { return null; } }
+3: abstract class Otter implements Mammal, Animal {}",Remove the default modifier from Mammal only,Override getName() in class Otter,Change the return type of getName() in Animal to Object,Change the access modifier of Otter to public,B,"When a class implements two interfaces that provide duplicate default methods with the exact same signature, a compiler error occurs due to multiple inheritance ambiguity. The implementing class (even if abstract) must resolve the conflict by explicitly overriding the default method."
+java-oca-0017,Methods and Encapsulation,medium,Which line can be inserted at line 11 to compile and print true?,"10: public static void main(String[] args) {
+11:   // INSERT CODE HERE
+12: }
+13: private static boolean test(Predicate<Integer> p) {
+14:   return p.test(5);
+15: }",System.out.println(test(i -> i == 5));,System.out.println(test(i -> { i == 5; }));,System.out.println(test((int i) -> i == 5));,System.out.println(test((int i) -> { return i == 5; }));,A,"Option A is a valid lambda expression with a single inferred parameter and an expression body. Option B fails because braces require a 'return' statement. Options C and D fail because the parameter type must match Integer (autoboxing works for values, not type inference in lambda parameter declarations)."
+java-oca-0018,Core Java APIs,easy,"Which of the following lines correctly outputs a date representing April 1, 2015 using the java.time API?",,"System.out.println(LocalDate.of(2015, Calendar.APRIL, 1));","System.out.println(LocalDate.of(2015, Month.APRIL, 1));","System.out.println(new LocalDate(2015, 4, 1));","System.out.println(LocalDate.of(2015, 3, 1));",B,"LocalDate uses private constructors, so 'new LocalDate()' does not compile. In java.time, months are 1-indexed (April is 4, not 3 as in old Calendar). LocalDate.of(2015, Month.APRIL, 1) and LocalDate.of(2015, 4, 1) are the correct factory methods."
+java-oca-0019,Java Building Blocks,easy,Java bytecode is stored in files with which file extension?,,.java,.bytecode,.class,.jar,C,"Java source code is saved in files ending with .java, which are compiled by javac into platform-independent bytecode saved in .class files."
+java-oca-0020,Exceptions,easy,Which of the following exceptions is a checked exception in Java?,,java.io.IOException,java.lang.IllegalArgumentException,java.lang.NullPointerException,java.lang.NumberFormatException,A,"IOException extends java.lang.Exception directly and does not extend RuntimeException, making it a checked exception. IllegalArgumentException, NullPointerException, and NumberFormatException are all unchecked (Runtime) exceptions."
+java-oca-0021,Java Building Blocks,easy,Which of the following is a valid Java identifier?,,1980_s,_helloWorld,true,java.lang,B,"Option B (_helloWorld) is valid because identifiers in Java may begin with a letter, underscore (_), or dollar sign ($). Option A is invalid because identifiers cannot begin with a number. Option C is invalid because 'true' is a reserved boolean literal. Option D is invalid because dots (.) are package separators and not allowed in identifiers."
+java-oca-0022,Java Building Blocks,easy,What is the output of the following program?,"public class WaterBottle {
+  private String brand;
+  private boolean empty;
+  public static void main(String[] args) {
+    WaterBottle wb = new WaterBottle();
+    System.out.print(""Empty = "" + wb.empty);
+    System.out.print("", Brand = "" + wb.brand);
+  }
+}","Empty = false, Brand = null","Empty = false, Brand =","Empty = null, Brand = null",Line 6 generates a compiler error,A,"Instance variables (fields) receive default values upon object instantiation. For primitive boolean types, the default value is false. For reference types such as String, the default value is null. Therefore, the program outputs 'Empty = false, Brand = null'."
+java-oca-0023,Java Building Blocks,medium,"Given the following lines of code inside a method, which statement correctly identifies the compiler errors?","4: short numPets = 5;
+5: int numGrains = 5.6;
+6: String name = ""Scruffy"";
+7: numPets.length();
+8: numGrains.length();
+9: name.length();","Lines 5, 7, and 8 generate compiler errors",Only line 5 generates a compiler error,Only lines 7 and 8 generate compiler errors,All lines compile except line 9,A,Line 5 fails because 5.6 is a double literal and cannot be assigned to an int without an explicit cast. Lines 7 and 8 fail because numPets (short) and numGrains (int) are primitive types; primitives do not have methods. Line 9 compiles because length() is a valid method on String.
+java-oca-0024,Java Building Blocks,medium,"Given the following class, where can 'String result = ""done"";' be inserted so that line 8 compiles without error?","1: public class Snake {
+2:   // INSERTION POINT 1
+3:   public void shed(boolean time) {
+4:     // INSERTION POINT 2
+5:     if (time) {
+6:       // INSERTION POINT 3
+7:     }
+8:     System.out.println(result);
+9:   }
+10: }",At line 2 or line 4 only,At line 6 only,"At line 2, line 4, or line 6",At line 2 only,A,"Inserting at line 2 makes result an instance variable, in scope throughout the class. Inserting at line 4 makes result a local variable scoped to the whole method. Inserting at line 6 scopes result to the if-block, so it is out of scope on line 8."
+java-oca-0025,Java Building Blocks,easy,"Given classes in packages 'aquarium' and 'aquarium.jellies', which import allows AquariumVisitor to compile?","package aquarium;
+public class Tank { }
+
+package aquarium.jellies;
+public class Jelly { }
+
+package visitor;
+// INSERT IMPORTS HERE
+public class AquariumVisitor {
+  public void admire(Jelly jelly) { }
+}",import aquarium.*;,import aquarium.*.Jelly;,import aquarium.jellies.Jelly;,import aquarium.jellies.Jelly.*;,C,Jelly is located in package aquarium.jellies. Either 'import aquarium.jellies.Jelly;' or 'import aquarium.jellies.*;' works. Wildcards cannot appear in the middle of an import (eliminating Option B) and wildcard on package aquarium does not import classes in subpackages (eliminating Option A).
+java-oca-0026,Java Building Blocks,medium,"Given the following class definitions, what is the maximum number of import statements that can be removed while still allowing Tank to compile?","package aquarium; public class Water { }
+
+package aquarium;
+import java.lang.*;
+import java.lang.System;
+import aquarium.Water;
+import aquarium.*;
+public class Tank {
+  public void print(Water water) {
+    System.out.println(water);
+  }
+}",1,2,3,4,D,All 4 imports can be removed! java.lang.* and java.lang.System are automatically imported by the compiler in every Java file. aquarium.Water and aquarium.* are redundant because Tank and Water are already in the exact same package (aquarium).
+java-oca-0027,Java Building Blocks,medium,"Given two Water classes in different packages, which snippet correctly resolves the naming conflict in WaterFiller?","package aquarium;
+public class Water { boolean salty = false; }
+
+package aquarium.jellies;
+public class Water { boolean salty = true; }
+
+package employee;
+// INSERT IMPORTS HERE
+public class WaterFiller {
+  Water water;
+}",import aquarium.*; import aquarium.jellies.*;,import aquarium.Water; import aquarium.jellies.*;,import aquarium.Water; import aquarium.jellies.Water;,None of these imports can make the code compile without full qualification,B,"In Java, an explicit class import takes precedence over a wildcard import. 'import aquarium.Water; import aquarium.jellies.*;' causes the compiler to resolve Water unambiguously to aquarium.Water. Option A causes an ambiguous type error; Option C causes a direct import collision error."
+java-oca-0028,Java Building Blocks,easy,"Given the following class, which command-line invocation prints 'Blue Jay'?","public class BirdDisplay {
+  public static void main(String[] name) {
+    System.out.println(name[1]);
+  }
+}",java BirdDisplay Sparrow Blue Jay,"java BirdDisplay Sparrow ""Blue Jay""","java BirdDisplay.class Sparrow ""Blue Jay""","java BirdDisplay ""Blue Jay"" Sparrow",B,"Command-line arguments are zero-indexed: name[0] is the first argument, and name[1] is the second. In Option B, 'Sparrow' is at index 0 and '""Blue Jay""' (quotes preserve the space as a single string) is at index 1. Option C fails because .class must not be appended when running java."
+java-oca-0029,Java Building Blocks,easy,Which parameter declaration is valid for a standard executable main method entry point?,public static void main( _______ ),String[] 123,String names,String... $n,String args,C,"The main method parameter must be an array of Strings or a String vararg. The identifier can begin with a dollar sign ($n), letter, or underscore. Option A starts with digits (invalid identifier); Options B and D are single Strings rather than arrays or varargs."
+java-oca-0030,Java Building Blocks,easy,Which of the following is a legal main entry point method that can be run from the command line by the JVM?,,public void main(String[] args),public static void main(String[] args),public static final main(String[] args),private static void main(String[] args),B,The required entry point signature must be 'public static void main(String[] args)'. Option A is non-static; Option C is missing the void return type; Option D is private.
+java-oca-0031,Java Building Blocks,easy,What are the default values of an uninitialized instance variable of type double and an uninitialized instance variable of type String?,,"0.0 and """"",null and null,0.0 and null,0 and null,C,"Instance variables for floating-point primitive types (float and double) default to 0.0 (or 0.0f). All object reference types, including String, default to null."
+java-oca-0032,Java Building Blocks,easy,What default value does Java assign to an uninitialized local variable of type boolean?,,false,null,0,Local variables do not receive default values; using an uninitialized local variable causes a compiler error.,D,Local variables defined inside method bodies do NOT receive default values. Attempting to read an uninitialized local variable triggers a compiler error.
+java-oca-0033,Java Building Blocks,easy,Which default values are correctly assigned to instance variables in a class?,,boolean defaults to false; int defaults to 0,boolean defaults to true; int defaults to 0,boolean defaults to null; int defaults to null,boolean defaults to false; int defaults to 0.0,A,"Primitive boolean instance variables default to false, and primitive int instance variables default to 0."
+java-oca-0034,Java Building Blocks,medium,"Given a class located in '/my/directory/named/A/Bird.java', if compiled from '/my/directory', what must the package declaration be?",,package my.directory.named.a;,package named.a;,package named.A;,package A;,C,"Package names reflect the directory hierarchy below the classpath root. Package names are case sensitive in Java, matching directory 'named/A', so 'package named.A;' is required."
+java-oca-0035,Java Building Blocks,medium,Which of the following numeric literal declarations with underscores compiles without error?,,double d1 = 1_234_.0;,double d2 = 1_234._0;,double d3 = 1_234.0_;,double d4 = 1_234.0;,D,"Underscores in numeric literals are allowed only strictly between two digits. They cannot be adjacent to a decimal point (as in A and B), and cannot appear at the very beginning or end of a literal (as in C)."
+java-oca-0036,Java Building Blocks,medium,Which of the following lines will compile when inserted into admission()?,"public class Price {
+  public void admission() {
+    // INSERT CODE HERE
+    System.out.println(amount);
+  }
+}",int amount = 9L;,int amount = 0b101;,int amount = 1_2_;,double amount = 1_2_.0_0;,B,0b101 is a binary integer literal (value 5) and assigns cleanly to an int. Option A fails because a long literal (9L) cannot be assigned to an int without casting. Options C and D fail because underscores cannot end a literal or be adjacent to a decimal point.
+java-oca-0037,Java Building Blocks,easy,"In the statement 'Bunny bun = new Bunny();', what are Bunny and bun?",,Bunny is a reference and bun is a class,Bunny is a class and bun is a reference to an object,Both Bunny and bun are classes,Both Bunny and bun are object references,B,"Bunny is the class name (the type), and 'bun' is a reference variable that points to an instance of Bunny in heap memory."
+java-oca-0038,Java Building Blocks,easy,Which of the following represents the required order of elements in a standard Java source file?,,"class declaration, package statement, import statements","import statements, package statement, class declaration","package statement, import statements, class declaration","package statement, class declaration, import statements",C,"The order of elements in a Java file is PIC: Package declaration first (if present), followed by Import statements (if present), followed by Class declarations."
+java-oca-0039,Java Building Blocks,hard,When is the Rabbit object instantiated on line 3 first eligible for garbage collection?,"1: public class Rabbit {
+2:   public static void main(String[] args) {
+3:     Rabbit one = new Rabbit();
+4:     Rabbit two = new Rabbit();
+5:     Rabbit three = one;
+6:     one = null;
+7:     Rabbit four = one;
+8:     three = null;
+9:     two = null;
+10:    two = new Rabbit();
+11:    System.gc();
+12:  }
+13: }",Immediately following line 6,Immediately following line 8,Immediately following line 9,Immediately following line 12,B,"The Rabbit created on line 3 initially has reference 'one' pointing to it. On line 5, 'three' also points to it. Setting 'one = null' on line 6 still leaves 'three' pointing to it. On line 8, 'three = null' removes the last reference to this object, making it eligible for GC immediately after line 8."
+java-oca-0040,Java Building Blocks,easy,What is guaranteed when System.gc() is called in a Java program?,"Bear bear = new Bear();
+bear = null;
+System.gc();",Garbage collection is guaranteed to run immediately,The finalize() method of the Bear instance is guaranteed to run before the next line,"System.gc() merely suggests to the JVM to run garbage collection, but execution is not guaranteed",All unreferenced objects are immediately removed from heap memory,C,System.gc() is merely a suggestion to the Java Virtual Machine that it might be an opportune moment to run GC; the JVM is completely free to ignore the suggestion or defer it.
+java-oca-0041,Java Building Blocks,medium,What does the following code output when run?,"public class Salmon {
+  int count;
+  public void Salmon() {
+    count = 4;
+  }
+  public static void main(String[] args) {
+    Salmon s = new Salmon();
+    System.out.println(s.count);
+  }
+}",0,4,Compilation fails because constructors cannot have a return type,Compilation fails because of duplicate method name,A,"Because 'public void Salmon()' has a return type (void), it is a regular method, NOT a constructor! When 'new Salmon()' executes, the default compiler-generated no-argument constructor is invoked. The method Salmon() is never called, so instance variable count remains at its default value 0."
+java-oca-0042,Java Building Blocks,easy,Which of the following is a core characteristic of the Java platform?,,Java allows operator overloading on all primitive types and objects,Java bytecode compiled on Windows can run on any platform with a compatible JVM,Java provides direct memory pointers that allow manual memory deallocation,Java source code is compiled directly to native OS machine code,B,"Java is platform-independent at the binary level ('write once, run everywhere') because source code compiles into bytecode (.class), which runs on any JVM implementation. Java does not support operator overloading or pointer arithmetic."
+java-oca-0043,Java Building Blocks,easy,Which statement correctly describes javac and java command-line tools?,,"javac compiles a .java file into a .class bytecode file, while java takes the class name (without extension) to run it",javac compiles a .class file into a .java file,java takes the .class file name with extension as a parameter to execute,javac compiles source code directly into executable .exe files,A,javac takes the source filename (e.g. javac Test.java) and produces a .class bytecode file. The java launcher takes the fully qualified class name without the .class extension (e.g. java Test).
+java-oca-0044,Operators and Statements,easy,Which of the following Java operators can be used with boolean variables?,,== and !,+ and -,% and <=,++ and --,A,"The equality operators (==, !=) and the logical complement operator (!) can be used with boolean variables. Arithmetic operators (+, -, %, ++, --) and relational comparison operators (<=, >=, <, >) cannot be applied to boolean types in Java."
+java-oca-0045,Operators and Statements,medium,What data type will allow the following code snippet to compile without explicit casting?,"byte x = 5;
+byte y = 10;
+_____ z = x + y;",byte,short,int,boolean,C,"According to Java's binary numeric promotion rules, smaller integral types (byte, short, char) are automatically promoted to int whenever a binary arithmetic operator (+, -, *, /, %) is applied. Thus, x + y produces an int, which can be assigned to int, long, float, or double, but not to byte or short without an explicit cast."
+java-oca-0046,Operators and Statements,medium,What is the result of attempting to compile and run the following application?,"public class CompareValues {
+  public static void main(String[] args) {
+    int x = 0;
+    while(x++ < 10) {}
+    String message = x > 10 ? ""Greater than"" : false;
+    System.out.println(message + "","" + x);
+  }
+}","Greater than,10","Greater than,11",The code will not compile because of line 4,The code will not compile because of line 5,D,"Line 5 fails compilation. Although the two result expressions of a ternary operator (? :) do not strictly have to match in every context, when assigning to a variable (String message = ...), both branches must be assignable to the target type. 'false' is a boolean literal and cannot be assigned to a String variable."
+java-oca-0047,Operators and Statements,medium,What change allows the following code snippet to compile successfully?,"long x = 10;
+int y = 2 * x;",Change '2 * x' to '2 * (int)x',Cast the result of '2 * x' using '(int)(2 * x)' or change y's type to long,Change the type of x to short without changing line 2,"No change needed, Java automatically downcasts long to int",B,"Because x is a long, 2 * x promotes 2 to long and produces a long. Assigning a long to an int requires an explicit cast on the resulting expression: '(int)(2 * x)' or casting x '(int)x', or changing the type of y to long."
+java-oca-0048,Operators and Statements,easy,What is the output of the following code snippet?,"List<Integer> list = new ArrayList<>();
+list.add(10);
+list.add(14);
+for(int x : list) {
+  System.out.print(x + "", "");
+  break;
+}","10, 14,","10, 14","10, ",The code contains an infinite loop,C,"The enhanced for-each loop retrieves the first element (10), prints '10, ', and immediately hits the 'break;' statement, terminating the loop after the first iteration. The output is '10, '."
+java-oca-0049,Operators and Statements,easy,What is the result of attempting to compile and run the following code?,"int x = 4;
+long y = x * 4 - x++;
+if(y < 10) System.out.println(""Too Low"");
+else System.out.println(""Just right"");
+else System.out.println(""Too High"");",Too Low,Just right,Too High,Compilation error on the second else statement,D,An if-then-else construct can have only one 'else' block per 'if'. Having two consecutive 'else' blocks without an intervening 'if' (as in 'else ... else ...') is a syntax error.
+java-oca-0050,Operators and Statements,medium,What is the output of the following nested ternary expression when x = 5?,"int x = 5;
+System.out.println(x > 2 ? x < 4 ? 10 : 8 : 7);",5,10,8,7,C,"With parentheses showing precedence: x > 2 ? (x < 4 ? 10 : 8) : 7. Since x = 5, x > 2 is true. We evaluate the inner ternary (x < 4 ? 10 : 8). Since 5 < 4 is false, the expression evaluates to 8."
+java-oca-0051,Operators and Statements,hard,What is the output of the following code snippet?,"boolean x = true, z = true;
+int y = 20;
+x = (y != 10) ^ (z = false);
+System.out.println(x + "", "" + y + "", "" + z);","true, 10, true","true, 20, false","false, 20, true","false, 20, false",B,"First, (y != 10) evaluates to true (20 != 10). Next, (z = false) is an assignment that sets z to false and evaluates to false. Now we have true ^ false. The XOR operator (^) returns true when the operands are different. So x becomes true. Variable y remains 20 and z is false. Output: 'true, 20, false'."
+java-oca-0052,Operators and Statements,medium,How many times will the following loop print 'Hello World'?,"for(int i=0; i<10 ; ) {
+  i = i++;
+  System.out.println(""Hello World"");
+}",9 times,10 times,11 times,The loop is infinite and does not terminate,D,"In 'i = i++', the post-increment operator evaluates: the current value of i (0) is temporarily saved, i is incremented to 1, and then the saved value 0 is assigned back into i! Therefore, i resets to 0 after every iteration and never reaches 10, resulting in an infinite loop."
+java-oca-0053,Operators and Statements,medium,What is the result of attempting to compile the following code?,"byte a = 40, b = 50;
+byte sum = (byte) a + b;
+System.out.println(sum);",Outputs 90,"Compilation error on line 2 because the cast (byte) applies only to 'a', and the resulting sum (a + b) promotes to int",Outputs 40,Runtime overflow exception,B,"Type cast operators have higher precedence than the addition (+) operator. Thus, '(byte) a + b' casts only 'a' to byte, and then adds 'b'. Due to numeric promotion, byte + byte promotes both to int, resulting in an int sum. Assigning that int sum to 'byte sum' fails compilation. The fix is 'byte sum = (byte)(a + b);'."
+java-oca-0054,Operators and Statements,easy,What is the output of the following code?,"int x = 5 * 4 % 3;
+System.out.println(x);",2,3,5,6,A,* and % have equal operator precedence and evaluate left to right. 5 * 4 = 20. 20 % 3 = 2 (since 3 * 6 = 18 with a remainder of 2). Output is 2.
+java-oca-0055,Operators and Statements,easy,What is the result of attempting to compile the following code snippet?,"int x = 0;
+String s = null;
+if(x == s) System.out.println(""Success"");
+else System.out.println(""Failure"");",Outputs Success,Outputs Failure,The code fails to compile because int and String are incomparable types for ==,Throws NullPointerException at runtime,C,"In Java, the equality operator (==) cannot be used to compare a primitive numeric type (int) with an object reference type (String) when there is no inheritance relationship or unboxing possible. The compiler throws an incomparable types error."
+java-oca-0056,Operators and Statements,medium,What is the output of the following code snippet?,"int x1 = 50, x2 = 75;
+boolean b = x1 >= x2;
+if(b = true) System.out.println(""Success"");
+else System.out.println(""Failure"");",Success,Failure,Compiler error inside the if condition,None of the above,A,"Notice that 'if(b = true)' uses the assignment operator (=), NOT the comparison operator (==)! The assignment sets b to true and returns the assigned value (true). Therefore, the if condition evaluates to true and 'Success' is printed."
+java-oca-0057,Operators and Statements,easy,What is the output of the following code snippet?,"int c = 7;
+int result = 4;
+result += ++c;
+System.out.println(result);",11,12,15,16,B,"++c is a pre-increment: c is incremented from 7 to 8 first, and the value 8 is returned. Then result += 8 adds 8 to 4, making result = 12."
+java-oca-0058,Operators and Statements,easy,What is the result of attempting to compile the following code snippet?,"int x = 1, y = 15;
+while x < 10
+  y--;
+x++;
+System.out.println(x + "", "" + y);","10, 5","11, 5",The code does not compile because while condition must be enclosed in parentheses,The code contains an infinite loop,C,"In Java, the conditional boolean expression in a while loop must strictly be enclosed in parentheses: 'while (x < 10)'. Omitting parentheses is a syntax error."
+java-oca-0059,Operators and Statements,medium,What is the result of attempting to compile the following code snippet?,"do {
+  int y = 1;
+  System.out.print(y++ + "" "");
+} while(y <= 10);",Prints 1 2 3 4 5 6 7 8 9 10,Infinite loop,The code does not compile because 'y' is declared inside the do block and is out of scope in the while condition,Throws a runtime exception,C,"The variable 'y' is declared inside the braces of the do-while body. Its scope ends at the closing curly brace '}'. Therefore, 'y' is out of scope and cannot be referenced in the while(y <= 10) condition."
+java-oca-0060,Operators and Statements,medium,What is the output of the following code snippet?,"boolean keepGoing = true;
+int result = 15, i = 10;
+do {
+  i--;
+  if(i == 8) keepGoing = false;
+  result -= 2;
+} while(keepGoing);
+System.out.println(result);",7,9,11,13,C,"Iteration 1: i decrements from 10 to 9. i==8 is false. result -= 2 -> result=13. keepGoing is true. Iteration 2: i decrements from 9 to 8. i==8 is true -> keepGoing becomes false. result -= 2 -> result=11. Loop checks while(keepGoing), which is false! Loop terminates. Final result is 11."
+java-oca-0061,Operators and Statements,hard,What is the output of the following code snippet with labeled loops?,"int count = 0;
+ROW_LOOP: for(int row = 1; row <= 3; row++)
+  for(int col = 1; col <= 2 ; col++) {
+    if(row * col % 2 == 0) continue ROW_LOOP;
+    count++;
+  }
+System.out.println(count);",1,2,3,4,B,row=1: col=1: 1*1%2 != 0 -> count becomes 1. col=2: 1*2%2 == 0 -> continue ROW_LOOP breaks to row=2. row=2: col=1: 2*1%2 == 0 -> continue ROW_LOOP immediately breaks to row=3. row=3: col=1: 3*1%2 != 0 -> count becomes 2. col=2: 3*2%2 == 0 -> continue ROW_LOOP. Total count is 2.
+java-oca-0062,Operators and Statements,medium,What is the result of the following code snippet?,"int m = 9, n = 1, x = 0;
+while(m > n) {
+  m--;
+  n += 2;
+  x += m + n;
+}
+System.out.println(x);",11,23,36,50,C,"Start: m=9, n=1, x=0. Iteration 1: 9 > 1 -> m=8, n=3 -> x = 0 + (8+3) = 11. Iteration 2: 8 > 3 -> m=7, n=5 -> x = 11 + (7+5) = 23. Iteration 3: 7 > 5 -> m=6, n=7 -> x = 23 + (6+7) = 36. Check: 6 > 7 is false. Loop ends. Final x is 36."
+java-oca-0063,Operators and Statements,medium,What is the result of the following switch statement?,"final char a = 'A', d = 'D';
+char grade = 'B';
+switch(grade) {
+  case a:
+  case 'B': System.out.print(""great"");
+  case 'C': System.out.print(""good""); break;
+  case d:
+  case 'F': System.out.print(""not good"");
+}",great,greatgood,good,Compiler error because case labels use variables,B,"Variables 'a' and 'd' are declared 'final' and initialized with compile-time constant character literals, so they are legal case labels. When grade is 'B', execution matches 'case 'B':', printing 'great'. Because there is no break statement on case 'B', execution falls through into 'case 'C':' and prints 'good', where the 'break;' terminates the switch. Output is 'greatgood'."
+java-oca-0064,Core Java APIs,medium,What is the result of attempting to compile and run the following code?,"public class Fish {
+  public static void main(String[] args) {
+    int numFish = 4;
+    String fishType = ""tuna"";
+    String anotherFish = numFish + 1;
+    System.out.println(anotherFish + "" "" + fishType);
+    System.out.println(numFish + "" "" + 1);
+  }
+}",5 tuna followed by 4 1,41 tuna followed by 4 1,The code does not compile because of line 5,The code does not compile because of line 7,C,Line 5 fails compilation: numFish + 1 evaluates to an int (4 + 1 = 5). Java does not automatically convert an int into a String unless one of the operands is already a String. Assigning an int to a String variable without String concatenation or String.valueOf() is a compile error.
+java-oca-0065,Core Java APIs,medium,Which of the following lines will be printed by this code?,"String s = ""Hello"";
+String t = new String(s);
+if (""Hello"".equals(s)) System.out.println(""one"");
+if (t == s) System.out.println(""two"");
+if (t.equals(s)) System.out.println(""three"");
+if (""Hello"" == s) System.out.println(""four"");
+if (""Hello"" == t) System.out.println(""five"");","one, two, three","one, three, four","one, three, five",All five lines are printed,B,"'s' points to the string pool literal 'Hello'. 't' is explicitly constructed with 'new String(s)', creating a distinct object on the heap outside the pool. Therefore, '""Hello"".equals(s)' is true ('one'), 't == s' is false, 't.equals(s)' is true ('three'), '""Hello"" == s' is true because both refer to the pool literal ('four'), and '""Hello"" == t' is false because t is a separate heap object."
+java-oca-0066,Core Java APIs,easy,Which of the following statements regarding immutability in Java is TRUE?,,An immutable object's internal state can be changed via setter methods,An immutable object cannot be modified after creation and can be garbage collected when unreachable,StringBuilder and StringBuffer are immutable classes in Java,Immutable objects are permanently stored in memory and can never be garbage collected,B,An immutable object cannot have its state modified once created. String is immutable; StringBuilder and StringBuffer are mutable. Immutable objects are stored on the heap and are subject to normal garbage collection when no longer reachable.
+java-oca-0067,Core Java APIs,medium,What is the result of the following StringBuilder operations?,"StringBuilder sb = new StringBuilder();
+sb.append(""aaa"").insert(1, ""bb"").insert(4, ""ccc"");
+System.out.println(sb);",abbaaccc,abbaccca,bbaaaccc,bbaaccca,B,"sb.append('aaa') gives 'aaa'. insert(1, 'bb') inserts 'bb' at index 1: 'a' + 'bb' + 'aa' = 'abbaa'. Next, insert(4, 'ccc') inserts 'ccc' at index 4 (between the two 'a's at the end): 'abba' + 'ccc' + 'a' = 'abbaccca'."
+java-oca-0068,Core Java APIs,medium,What is the result of the following code snippet?,"String s1 = ""java"";
+StringBuilder s2 = new StringBuilder(""java"");
+if (s1 == s2)
+  System.out.print(""1"");
+if (s1.equals(s2))
+  System.out.print(""2"");",1,2,12,The code does not compile because == cannot compare String and StringBuilder,D,"In Java, the equality operator == requires that the two operand types have an inheritance relationship (or both be primitives, etc.). Since String and StringBuilder are in completely separate class hierarchies with neither inheriting from the other, 's1 == s2' is a compile-time error."
+java-oca-0069,Core Java APIs,medium,What is the result of the following program?,"public class Lion {
+  public void roar(String roar1, StringBuilder roar2) {
+    roar1.concat(""!!!"");
+    roar2.append(""!!!"");
+  }
+  public static void main(String[] args) {
+    String roar1 = ""roar"";
+    StringBuilder roar2 = new StringBuilder(""roar"");
+    new Lion().roar(roar1, roar2);
+    System.out.println(roar1 + "" "" + roar2);
+  }
+}",roar roar,roar roar!!!,roar!!! roar,roar!!! roar!!!,B,"String is immutable. Calling roar1.concat('!!!') produces a new String object whose reference is ignored and not assigned, leaving roar1 unchanged ('roar'). StringBuilder is mutable; roar2.append('!!!') mutates the existing buffer in place. Therefore, roar2 becomes 'roar!!!'."
+java-oca-0070,Core Java APIs,easy,What is the result of attempting to run the following code?,"String letters = ""abcdef"";
+System.out.println(letters.length());
+System.out.println(letters.charAt(3));
+System.out.println(letters.charAt(6));","Prints 6, d, and throws StringIndexOutOfBoundsException","Prints 6, c, and null","Prints 5, d, and throws ArrayIndexOutOfBoundsException",The code does not compile,A,"letters.length() is 6. Characters are zero-indexed: charAt(3) is 'd' (0:a, 1:b, 2:c, 3:d). Because valid indices are 0 through 5, charAt(6) is out of bounds and throws StringIndexOutOfBoundsException."
+java-oca-0071,Core Java APIs,medium,What is printed by the following substring calls?,"String numbers = ""012345678"";
+System.out.println(numbers.substring(1, 3));
+System.out.println(numbers.substring(7, 7));
+System.out.println(numbers.substring(7));","12, followed by a blank line, followed by 78","123, followed by 7, followed by 78","12, followed by 7, followed by 8","Throws StringIndexOutOfBoundsException on numbers.substring(7, 7)",A,"substring(1, 3) takes index 1 up to index 3 (exclusive): characters at index 1 and 2 -> '12'. substring(7, 7) has start == end, returning an empty string """" (printed as a blank line). substring(7) returns characters from index 7 to the end -> '78'."
+java-oca-0072,Core Java APIs,medium,What is the result of the following code snippet?,"String s = ""purr"";
+s.toUpperCase();
+s.trim();
+s.substring(1, 3);
+s += "" two"";
+System.out.println(s.length());",2,4,8,10,C,"Because String is immutable and the return values of toUpperCase(), trim(), and substring(1, 3) are completely ignored, 's' remains 'purr' (length 4). Then s += ' two' concatenates ' two' to 'purr', producing 'purr two' which has 8 characters (including the space)."
+java-oca-0073,Core Java APIs,medium,What is the output of the following code snippet?,"String a = """";
+a += 2;
+a += 'c';
+a += false;
+if (a == ""2cfalse"") System.out.println(""=="");
+if (a.equals(""2cfalse"")) System.out.println(""equals"");",==,equals,== followed by equals,Compiler error on line 2,B,"The += operator on String converts the operands and concatenates them, so 'a' becomes the String ""2cfalse"". However, because 'a' was constructed at runtime via dynamic concatenation, it is a new heap object and not the interned string literal ""2cfalse"". Thus 'a == ""2cfalse""' is false, while 'a.equals(""2cfalse"")' is true."
+java-oca-0074,Core Java APIs,easy,What occurs when the following code is executed?,"StringBuilder letters = new StringBuilder(""abcdefg"");
+letters.substring(6, 5);",Returns empty string,Throws StringIndexOutOfBoundsException,"Returns ""f""",Compiler error,B,"In Java's String and StringBuilder substring(start, end) methods, if start > end, the method throws a StringIndexOutOfBoundsException."
+java-oca-0075,Core Java APIs,medium,What is the output of the following StringBuilder operations?,"StringBuilder numbers = new StringBuilder(""0123456789"");
+numbers.delete(2, 8);
+numbers.append(""-"").insert(2, ""+"");
+System.out.println(numbers);",01+89-,012+9-,012+-9,0123456789,A,"delete(2, 8) deletes characters from index 2 up to 8 (exclusive, indices 2 through 7: '234567'), leaving '0189'. append('-') appends '-' to the end: '0189-'. insert(2, '+') inserts '+' at index 2: '01' + '+' + '89-' = '01+89-'."
+java-oca-0076,Core Java APIs,easy,What is the result of attempting to compile and run the following code?,"StringBuilder b = ""rumble"";
+b.append(4).deleteCharAt(3).delete(3, b.length() - 1);
+System.out.println(b);",rum4,rum,The code does not compile on line 1,Throws StringIndexOutOfBoundsException,C,"A String literal (""rumble"") cannot be directly assigned to a StringBuilder variable. It must be instantiated with 'new StringBuilder(""rumble"")'. Line 1 fails compilation."
+java-oca-0077,Core Java APIs,medium,Which statement correctly modifies 'puzzle' to print 'avaJ'?,"StringBuilder puzzle = new StringBuilder(""Java"");
+// INSERT CODE HERE
+System.out.println(puzzle);",puzzle.reverse();,"puzzle.append(""vaJ$"").substring(0, 4);",puzzle.reverse().toString();,Both A and C,D,"puzzle.reverse() reverses the characters of the StringBuilder in place, mutating 'Java' to 'avaJ'. In Option C, reverse() mutates puzzle and then toString() returns a String (the returned String is ignored, but puzzle remains reversed). Both A and C leave puzzle containing 'avaJ'."
+java-oca-0078,Core Java APIs,medium,Which of the following array declarations is NOT legal in Java?,,int[][] scores = new int[5][];,Object[][][] cubbies = new Object[3][0][5];,int[][] types = new int[];,java.util.Date[] dates[] = new java.util.Date[2][];,C,"When creating a multidimensional array with new, the size of at least the first dimension must be specified. 'new int[]' without a dimension size or initializer is illegal for declaring an array, and fails compilation."
+java-oca-0079,Core Java APIs,easy,How is the number of elements obtained for a standard Java array 'char[] c' versus an 'ArrayList l'?,,c.length() and l.length,c.length and l.size(),c.size() and l.size(),c.capacity and l.length(),B,"In Java, an array has a public final field named 'length' (no parentheses). An ArrayList has a method named 'size()' (with parentheses)."
+java-oca-0080,Core Java APIs,easy,Which statement is true regarding the size of a Java array compared to an ArrayList?,,Both arrays and ArrayLists can dynamically resize at runtime,"An array has a fixed size determined upon creation, whereas an ArrayList can dynamically grow and shrink","An array is immutable, whereas an ArrayList is mutable",An ArrayList has a fixed size and cannot contain duplicate elements,B,"Arrays in Java have a fixed size once instantiated on the heap. In contrast, an ArrayList is backed by a dynamic array that automatically resizes as elements are added or removed."
+java-oca-0081,Core Java APIs,medium,Which of the following statements about ArrayList equality is TRUE?,,Two ArrayList instances are equal via equals() only if they refer to the exact same object reference,Two ArrayList instances are equal via equals() if they contain the same elements in the exact same order,Calling remove(0) on an empty ArrayList throws a compile-time error,Two arrays with identical elements in the same order return true when compared with equals(),B,"ArrayList overrides equals() to compare content: two lists are equal if they contain the same number of elements and corresponding elements are equal in the same order. By contrast, arrays do NOT override equals() (they use Object reference equality)."
+java-oca-0082,Core Java APIs,easy,What is the result of attempting to compile and run the following code?,"List<String> list = new ArrayList<String>();
+list.add(""one"");
+list.add(""two"");
+list.add(7);
+for(String s : list) System.out.print(s);",onetwo7,onetwo,Compiler error on line 4 (list.add(7)),ClassCastException at runtime,C,"Because 'list' is parameterized with the generic type <String>, the compiler restricts the add method to accept only String objects. Passing an int literal (7) causes a compile error on line 4."
+java-oca-0083,Core Java APIs,medium,What is the output of the following ArrayList operations?,"ArrayList<Integer> values = new ArrayList<>();
+values.add(4);
+values.add(5);
+values.set(1, 6);
+values.remove(0);
+for (Integer v : values) System.out.print(v);",4,5,6,46,C,"values.add(4) -> [4]. values.add(5) -> [4, 5]. values.set(1, 6) replaces the element at index 1 with 6 -> [4, 6]. values.remove(0) removes element at index 0 (value 4) -> leaving [6]. Printing the list outputs 6."
+java-oca-0084,Core Java APIs,medium,What is the result of performing Arrays.binarySearch on an unsorted array?,"int[] random = { 6, -4, 12, 0, -10 };
+int x = 12;
+int y = Arrays.binarySearch(random, x);
+System.out.println(y);",2,4,The result is undefined and unpredictable,Throws IllegalArgumentException,C,"The contract of Arrays.binarySearch states that the array MUST be sorted prior to making the call. If the array is unsorted, the return value is undefined."
+java-oca-0085,Core Java APIs,medium,What is the output of the following code snippet?,"List<Integer> list = Arrays.asList(10, 4, -1, 5);
+Collections.sort(list);
+Integer array[] = list.toArray(new Integer[4]);
+System.out.println(array[0]);",-1,10,4,UnsupportedOperationException is thrown,A,"Arrays.asList produces a fixed-size list that allows element mutation (such as reordering). Collections.sort(list) sorts the list in ascending order: [-1, 4, 5, 10]. list.toArray populates the array, and array[0] is -1."
+java-oca-0086,Core Java APIs,easy,What is the result of attempting to compile the following code?,"String[] names = {""Tom"", ""Dick"", ""Harry""};
+List<String> list = names.asList();
+list.set(0, ""Sue"");
+System.out.println(names[0]);",Outputs Sue,Outputs Tom,Compiler error on line 2 because arrays do not have an asList() method,Throws UnsupportedOperationException,C,"An array in Java does not have an instance method named 'asList()'. To convert an array into a List, one must invoke the static utility method: 'Arrays.asList(names)'."
+java-oca-0087,Core Java APIs,hard,What does the following code output?,"List<String> hex = Arrays.asList(""30"", ""8"", ""3A"", ""FF"");
+Collections.sort(hex);
+int x = Collections.binarySearch(hex, ""8"");
+int y = Collections.binarySearch(hex, ""3A"");
+int z = Collections.binarySearch(hex, ""4F"");
+System.out.println(x + "" "" + y + "" "" + z);",0 1 -2,0 1 -3,2 1 -3,1 2 -3,C,"Natural String sorting is alphabetical (ASCII order): ""30"", ""3A"", ""8"", ""FF"". '8' is at index 2 (x=2). '3A' is at index 1 (y=1). '4F' is not found; it belongs between ""3A"" (index 1) and ""8"" (index 2), so its insertion point is index 2. Rule for element not found: -(insertion_index + 1) = -(2 + 1) = -3 (z=-3). Output: '2 1 -3'."
+java-oca-0088,Core Java APIs,medium,What happens when the following loop attempts to iterate over the List?,"List<Integer> ages = new ArrayList<>();
+ages.add(Integer.parseInt(""5""));
+ages.add(Integer.valueOf(""6""));
+ages.add(7);
+ages.add(null);
+for (int age : ages) System.out.print(age);",Prints 567null,"Prints 567, then throws NullPointerException",Compiler error on line 5 (ages.add(null)),Compiler error in the for-each loop header,B,"Adding null to List<Integer> is completely legal. However, the enhanced for loop declares the loop variable as primitive 'int age'. When Java attempts to unbox the null Integer element into primitive int (by calling intValue() on null), a NullPointerException is thrown."
+java-oca-0089,Core Java APIs,easy,What is the result of comparing two independent ArrayList instances containing the same string?,"List<String> one = new ArrayList<String>();
+one.add(""abc"");
+List<String> two = new ArrayList<>();
+two.add(""abc"");
+if (one == two)
+  System.out.println(""A"");
+else if (one.equals(two))
+  System.out.println(""B"");
+else
+  System.out.println(""C"");",A,B,C,Throws ClassCastException,B,"'one' and 'two' are two separate objects allocated on the heap, so one == two evaluates to false. However, ArrayList overrides equals() to compare content. Since both lists have 1 element and ""abc"".equals(""abc""), one.equals(two) is true and prints 'B'."
+java-oca-0090,Core Java APIs,easy,"Which line can be inserted to instantiate a LocalDate representing June 21, 2014?","import java.time.*;
+public class StartOfSummer {
+  public static void main(String[] args) {
+    LocalDate date = ____________________________
+  }
+}","new LocalDate(2014, 6, 21);","LocalDate.of(2014, Month.JUNE, 21);","LocalDate.of(2014, 5, 21);","new LocalDate(2014, Month.JUNE, 21);",B,"LocalDate has private constructors and must be created via static factory methods such as LocalDate.of(year, month, day). Months in java.time are 1-indexed (June is 6, or Month.JUNE)."
+java-oca-0091,Core Java APIs,medium,What is the result of attempting to compile and run the following code?,"LocalDate date = LocalDate.parse(""2018-04-30"", DateTimeFormatter.ISO_LOCAL_DATE);
+date.plusDays(2);
+date.plusHours(3);
+System.out.println(date.getYear() + "" "" + date.getMonth() + "" "" + date.getDayOfMonth());",2018 APRIL 30,2018 MAY 2,The code does not compile because LocalDate has no plusHours() method,Throws DateTimeParseException,C,"LocalDate represents a date without time components. Methods such as plusHours(), plusMinutes(), and plusSeconds() do NOT exist in LocalDate and cause a compile error."
+java-oca-0092,Core Java APIs,medium,What is the result of attempting to create the following LocalDate?,"LocalDate date = LocalDate.of(2018, Month.APRIL, 40);
+System.out.println(date);",Outputs 2018-04-30,Outputs 2018-05-10,Throws java.time.DateTimeException at runtime,Compilation error,C,"The factory method LocalDate.of validates input date components. Because April only has 30 days, passing 40 as the day of the month throws a runtime java.time.DateTimeException."
+java-oca-0093,Core Java APIs,easy,What is the output of the following code?,"LocalDate date = LocalDate.of(2018, Month.APRIL, 30);
+date.plusDays(2);
+date.plusYears(3);
+System.out.println(date.getYear() + "" "" + date.getMonth() + "" "" + date.getDayOfMonth());",2018 APRIL 2,2018 APRIL 30,2021 MAY 2,2021 APRIL 30,B,"LocalDate instances are immutable! Methods like plusDays() and plusYears() return a new LocalDate instance and do not modify the original object. Because the return values were not reassigned, 'date' remains April 30, 2018."
+java-oca-0094,Core Java APIs,medium,What is the output of the following code snippet?,"LocalDateTime d = LocalDateTime.of(2015, 5, 10, 11, 22, 33);
+Period p = Period.of(1, 2, 3);
+d = d.minus(p);
+DateTimeFormatter f = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+System.out.println(d.format(f));",3/7/14 11:22 AM,5/10/15 11:22 AM,11:22 AM,UnsupportedTemporalTypeException is thrown,C,"Subtracting period (1 year, 2 months, 3 days) modifies the date component of 'd'. However, formatter 'f' is created with ofLocalizedTime, which formats only the time component. The time remains 11:22:33, so d.format(f) outputs '11:22 AM'."
+java-oca-0095,Core Java APIs,hard,What is the output of the following code with chained Period factory methods?,"LocalDateTime d = LocalDateTime.of(2015, 5, 10, 11, 22, 33);
+Period p = Period.ofDays(1).ofYears(2);
+d = d.minus(p);
+DateTimeFormatter f = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+System.out.println(f.format(d));",5/9/13 11:22 AM,5/10/13 11:22 AM,5/9/14 11:22 AM,Compilation error on Period chaining,B,"Period factory methods (ofDays, ofYears, ofMonths) are static methods! In Java, chaining static methods does NOT combine their values; instead, 'Period.ofDays(1).ofYears(2)' simply invokes the static method Period.ofYears(2), discarding the 1-day period entirely. Subtracting 2 years from 2015-05-10 yields 2013-05-10, printing '5/10/13 11:22 AM'."
+java-oca-0096,Core Java APIs,medium,"Given the following string conversion methods, which one returns a primitive int?",,"Integer.valueOf(""123"");","Integer.parseInt(""123"");","Integer.getInteger(""123"");","Integer.decode(""123"");",B,"In Java's wrapper classes, methods named parseXxx() (like Integer.parseInt) return the corresponding primitive type, whereas valueOf() returns the wrapper object (Integer)."
+java-oca-0097,Methods and Encapsulation,easy,Which modifier can fill in the blank in this code to make it compile?,"public class Ant {
+  _____ void method() { }
+}",default,private,Public,String,B,"In Java, access modifiers can be public, protected, private, or omitted for default package-private access (there is no 'default' access modifier keyword in classes). 'private' is a valid access modifier. 'Public' is capitalized and invalid; 'String' is a type and cannot precede void."
+java-oca-0098,Methods and Encapsulation,medium,Which of the following method declarations compiles successfully?,,public final int void method() { },static final void method3() { },private void int method() { },void public method() { },B,"Optional specifiers such as static and final can be listed in any order, but they must appear BEFORE the return type. In Option B, 'static final void method3() { }' correctly places the specifiers before void. In Option A and C, two return types are given; in Option D, the access modifier 'public' appears after the return type 'void'."
+java-oca-0099,Methods and Encapsulation,easy,Which of the following methods compiles without a compiler error?,,public void methodA() { return null; },public int methodD() { return 9; },public int methodE() { return 9.0; },public int methodF() { return; },B,Option B returns an int literal matching the int return type. Option A fails because void methods cannot return a value (even null). Option C fails because 9.0 is a double and cannot be returned as an int without casting. Option D fails because non-void methods must return a value.
+java-oca-0100,Methods and Encapsulation,easy,Which of the following vararg method signatures compiles successfully?,,"public void moreC(int... nums, String values) {}","public void moreD(String... values, int... nums) {}","public void moreB(String values, int... nums) {}","public void moreE(String[] values, ...int nums) {}",C,"A varargs parameter must be the last parameter in the method's parameter list, and a method can have at most one vararg parameter. In Option C, 'int... nums' is correctly placed at the end."
+java-oca-0101,Methods and Encapsulation,medium,"Given the method 'public int howMany(boolean b, boolean... b2) { return b2.length; }', which call returns 2?",,"howMany(true, true);","howMany(true, true, true);",howMany(true);,howMany();,B,"The first argument 'true' is bound to parameter 'b'. The remaining arguments are gathered into the varargs array 'b2'. In 'howMany(true, true, true)', b2 receives two booleans, so b2.length is 2."
+java-oca-0102,Methods and Encapsulation,easy,Which of the following can be achieved using Java access modifiers alone?,,"Allow read access to all methods, but not any instance variables (by making variables private and methods public)",Make a package-private class visible to only selected classes in the same package,Restrict access to only classes that start with the prefix 'Test',Allow external classes to read instance variables directly without method access,A,"By declaring instance variables private and getter/setter methods public, a class encapsulates its state, preventing direct field access while granting method access. Access modifiers apply at class, package, and subclass levels, not on naming conventions or selective package subsets."
+java-oca-0103,Methods and Encapsulation,hard,"Given Classroom in 'my.school' and School in 'my.city', which line in School's main() compiles without error?","package my.school;
+public class Classroom {
+  private int roomNumber;
+  protected String teacherName;
+  static int globalKey = 54321;
+  public int floor = 3;
+  Classroom(int r, String t) {
+    roomNumber = r;
+    teacherName = t;
+  }
+}
+
+package my.city;
+import my.school.*;
+public class School {
+  public static void main(String[] args) {
+    // Line 5: System.out.println(Classroom.globalKey);
+    // Line 6: Classroom room = new Classroom(101, ""Mrs. Anderson"");
+    // Line 7: System.out.println(room.roomNumber);
+    // Line 8: System.out.println(room.floor);
+    // Line 9: System.out.println(room.teacherName);
+  }
+}",Line 5,Line 6,Line 8,Line 9,C,"Classroom and School are in different packages. Line 5 fails because globalKey has default package-private access. Line 6 fails because Classroom's constructor has package-private access. Line 7 fails because roomNumber is private. Line 9 fails because teacherName is protected and School does not inherit from Classroom. Only line 8 accesses 'public int floor', which is public and accessible anywhere."
+java-oca-0104,Methods and Encapsulation,easy,What is the primary difference between data encapsulation and immutability?,,Encapsulation uses public variables; immutability uses private variables,"Encapsulation restricts direct field access using private variables and public getters/setters, whereas immutability forbids modifying state after instantiation (no setters)",Encapsulation requires classes to be final; immutability allows subclassing,Encapsulation and immutability are identical concepts in Java,B,"Encapsulation protects class invariants by making fields private and controlling mutations via accessors/mutators. Immutability goes a step further by ensuring that once an object is constructed, its state can never be altered (omitting setters and protecting mutable references)."
+java-oca-0105,Methods and Encapsulation,easy,Which method signature follows JavaBeans naming conventions for a boolean property named 'canSwim'?,,public boolean getCanSwim() { return canSwim; },public boolean isCanSwim() { return canSwim; },public boolean canSwim() { return canSwim; },public boolean isSwim() { return canSwim; },B,"According to JavaBeans naming conventions, boolean accessor methods must begin with the prefix 'is' followed by the capitalized property name: 'isCanSwim()'."
+java-oca-0106,Methods and Encapsulation,medium,What is the output of running class Chimp?,"package rope;
+public class Rope {
+  public static int LENGTH = 5;
+  static { LENGTH = 10; }
+  public static void swing() { System.out.print(""swing ""); }
+}
+
+package chimp;
+import rope.*;
+import static rope.Rope.*;
+public class Chimp {
+  public static void main(String[] args) {
+    Rope.swing();
+    new Rope().swing();
+    System.out.println(LENGTH);
+  }
+}",swing swing 5,swing swing 10,swing 10,Compiler error on line 2 (static import),B,"Rope.swing() outputs 'swing '. new Rope().swing() calls the static method via an instance reference, outputting 'swing '. During class initialization of Rope, LENGTH is initialized to 5, then the static initializer immediately sets LENGTH to 10. Chimp imports static members of Rope and prints LENGTH (10). Output: 'swing swing 10'."
+java-oca-0107,Methods and Encapsulation,medium,What happens when attempting to compile the following class?,"public class Rope {
+  public static void swing() { System.out.print(""swing ""); }
+  public void climb() { System.out.println(""climb ""); }
+  public static void play() {
+    swing();
+    climb(); // LINE 10
+  }
+  public static void main(String[] args) {
+    Rope.play();
+  }
+}",Compiles and prints 'swing climb ',Compilation error on line 10 because a static method cannot directly call an instance method,Throws NullPointerException at runtime,Compilation error on line 12,B,"Static methods belong to the class and do not have an associated 'this' instance context. Therefore, the static method play() cannot directly invoke the non-static instance method climb() without an explicit object reference."
+java-oca-0108,Methods and Encapsulation,hard,What is the output of the following program?,"public class RopeSwing {
+  private static Rope rope1 = new Rope();
+  private static Rope rope2 = new Rope();
+  {
+    System.out.println(rope1.length);
+  }
+  public static void main(String[] args) {
+    rope1.length = 2;
+    rope2.length = 8;
+    System.out.println(rope1.length);
+  }
+}
+class Rope {
+  public static int length = 0;
+}",02,08,2,8,D,"Notice that RopeSwing has an instance initializer '{ System.out.println(rope1.length); }', but RopeSwing is never instantiated with new RopeSwing() in main()! Thus the instance block never executes. In main(), 'length' is a static variable in Rope. Assigning rope2.length = 8 updates the shared static variable. System.out.println(rope1.length) reads this shared static variable, printing 8."
+java-oca-0109,Methods and Encapsulation,hard,How many compiler errors are present in the following class definition?,"1: public class RopeSwing {
+2:   private static final String leftRope;
+3:   private static final String rightRope;
+4:   private static final String bench;
+5:   private static final String name = ""name"";
+6:   static {
+7:     leftRope = ""left"";
+8:     rightRope = ""right"";
+9:   }
+10:  static {
+11:    name = ""name"";
+12:    rightRope = ""right"";
+13:  }
+14:  public static void main(String[] args) {
+15:    bench = ""bench"";
+16:  }
+17: }",2,3,4,5,C,There are 4 compiler errors: (1) line 4: static final bench is never initialized in a static initializer; (2) line 11: name is already initialized on line 5 and cannot be reassigned; (3) line 12: rightRope is already initialized on line 8 and cannot be reassigned in a second static block; (4) line 15: static final bench cannot be assigned inside main().
+java-oca-0110,Methods and Encapsulation,medium,Which line can replace line 2 to allow sort(list) to compile in class Imports?,"import java.util.*;
+// INSERT CODE HERE
+public class Imports {
+  public void method(ArrayList<String> list) {
+    sort(list);
+  }
+}",import static java.util.Collections;,import static java.util.Collections.*;,static import java.util.Collections.*;,import static java.util.Collections.sort(ArrayList<String>);,B,Static imports must use the keyword order 'import static' followed by the fully qualified class name and static member name or wildcard ('import static java.util.Collections.*;' or 'import static java.util.Collections.sort;'). You cannot include method parameter signatures in import statements.
+java-oca-0111,Methods and Encapsulation,medium,What does the following overloaded method execution print?,"public class Test {
+  public void print(byte x) { System.out.print(""byte""); }
+  public void print(int x) { System.out.print(""int""); }
+  public void print(float x) { System.out.print(""float""); }
+  public void print(Object x) { System.out.print(""Object""); }
+  public static void main(String[] args) {
+    Test t = new Test();
+    short s = 123;
+    t.print(s);
+    t.print(true);
+    t.print(6.789);
+  }
+}",bytefloatObject,intfloatObject,intObjectObject,byteObjectObject,C,"For t.print(s): 's' is a short; Java promotes short to int (wider primitive), matching print(int). For t.print(true): boolean autoboxes to Boolean, which matches print(Object). For t.print(6.789): 6.789 is a double; Java autoboxes double to Double, which matches print(Object). Result: 'intObjectObject'."
+java-oca-0112,Methods and Encapsulation,easy,What is the output of the following program?,"public class Squares {
+  public static long square(int x) {
+    long y = x * (long) x;
+    x = -1;
+    return y;
+  }
+  public static void main(String[] args) {
+    int value = 9;
+    long result = square(value);
+    System.out.println(value);
+  }
+}",-1,9,81,Compiler error on line 9,B,"In Java, primitive arguments are passed by value. Reassigning x = -1 inside the square() method only changes the local copy 'x'. The caller's variable 'value' remains 9."
+java-oca-0113,Methods and Encapsulation,medium,"What is printed for s1, s2, and s3 after executing the following code?","public class StringBuilders {
+  public static StringBuilder work(StringBuilder a, StringBuilder b) {
+    a = new StringBuilder(""a"");
+    b.append(""b"");
+    return a;
+  }
+  public static void main(String[] args) {
+    StringBuilder s1 = new StringBuilder(""s1"");
+    StringBuilder s2 = new StringBuilder(""s2"");
+    StringBuilder s3 = work(s1, s2);
+    System.out.println(""s1 = "" + s1);
+    System.out.println(""s2 = "" + s2);
+    System.out.println(""s3 = "" + s3);
+  }
+}","s1 = a, s2 = s2b, s3 = a","s1 = s1, s2 = s2b, s3 = a","s1 = s1, s2 = s2, s3 = a","s1 = a, s2 = s2, s3 = s1",B,"In work(s1, s2), 'a' is reassigned to point to a new StringBuilder(""a""), which does not affect the caller's reference s1 (s1 stays ""s1""). b.append(""b"") mutates the underlying object referred to by s2, so s2 becomes ""s2b"". The returned reference 'a' is assigned to s3, so s3 is ""a""."
+java-oca-0114,Methods and Encapsulation,medium,Which statement regarding constructor rules and 'this' is TRUE in Java?,,this() can be called from anywhere inside any method,this.variableName can be called from any static method in the class,A call to this() can only appear as the first statement in a constructor,The compiler automatically supplies a default constructor even if an explicit constructor is defined,C,"A constructor can invoke another overloaded constructor in the same class using this(...), and this call MUST strictly be the first non-comment statement in that constructor."
+java-oca-0115,Methods and Encapsulation,medium,Which class definition compiles AND has a compiler-supplied default no-argument constructor?,,public class Bird { public bird() {} },public class Bird { public Bird(String name) {} },public class Bird { void Bird() { } },public class Bird { private Bird(int age) {} },C,"In Option C, 'void Bird() { }' has a return type (void), which means it is a regular method that happens to share the class name, NOT a constructor! Because no constructors were explicitly defined in Option C, the compiler generates a default no-argument constructor. In Option A, 'bird()' has no return type and case does not match (fails compilation). In B and D, user constructors are defined, suppressing the default constructor."
+java-oca-0116,Methods and Encapsulation,medium,Which code can be inserted at LINE 1 to allow class BirdSeed to print 2?,"public class BirdSeed {
+  private int numberBags;
+  boolean call;
+  public BirdSeed() {
+    // LINE 1
+    call = false;
+  }
+  public BirdSeed(int numberBags) {
+    this.numberBags = numberBags;
+  }
+  public static void main(String[] args) {
+    BirdSeed seed = new BirdSeed();
+    System.out.println(seed.numberBags);
+  }
+}",BirdSeed(2);,new BirdSeed(2);,this(2);,this.numberBags = 2;,C,"To invoke an overloaded constructor from another constructor, the syntax is 'this(arguments);'. It must be placed on the very first line of the constructor."
+java-oca-0117,Methods and Encapsulation,easy,Which statement correctly assigns constructor parameter 'numSpots' to the instance field of the same name?,"public class Cheetah {
+  int numSpots;
+  public Cheetah(int numSpots) {
+    // INSERT CODE HERE
+  }
+}",numSpots = numSpots;,this.numSpots = numSpots;,numSpots = this.numSpots;,super.numSpots = numSpots;,B,"Because the parameter name shadows the instance field, 'this.numSpots' explicitly references the instance variable, assigning it the parameter value."
+java-oca-0118,Methods and Encapsulation,hard,What is the output when class OrderDriver is executed?,"public class Order {
+  static String result = """";
+  { result += ""c""; }
+  static
+  { result += ""u""; }
+  { result += ""r""; }
+}
+public class OrderDriver {
+  public static void main(String[] args) {
+    System.out.print(Order.result + "" "");
+    System.out.print(Order.result + "" "");
+    new Order();
+    new Order();
+    System.out.print(Order.result + "" "");
+  }
+}",curur,u ucrcr,u u ucrcr,u u curcur,C,"First access to Order (Order.result) triggers static initialization: static block adds 'u' -> result=""u"". Lines 3 & 4 print ""u "" twice: ""u u "". Next, 'new Order()' runs instance initializers in order: 'c' then 'r' -> result=""ucr"". Second 'new Order()' runs instance initializers again: 'c' then 'r' -> result=""ucrcr"". Line 7 prints Order.result. Total output: 'u u ucrcr'."
+java-oca-0119,Methods and Encapsulation,hard,What is the output of the following class?,"public class Order {
+  String value = ""t"";
+  { value += ""a""; }
+  { value += ""c""; }
+  public Order() {
+    value += ""b"";
+  }
+  public Order(String s) {
+    value += s;
+  }
+  public static void main(String[] args) {
+    Order order = new Order(""f"");
+    order = new Order();
+    System.out.println(order.value);
+  }
+}",tacb,tacf,tacbf,tacftacb,A,"When new Order() is instantiated on line 13: fields and instance initializers execute in source order: value starts as ""t"", first block appends ""a"" (""ta""), second block appends ""c"" (""tac""). Then the no-arg constructor runs and appends ""b"" (""tacb""). Printing order.value outputs 'tacb'."
+java-oca-0120,Methods and Encapsulation,medium,"Given the class Order3, which assignment compiles inside CODE SNIPPET 1 (an instance block)?","public class Order3 {
+  final String value1 = ""1"";
+  static String value2 = ""2"";
+  String value3 = ""3"";
+  {
+    // CODE SNIPPET 1
+  }
+}","value1 = ""d"";","value2 = ""e"";",value1 = null;,None of the above,B,"value1 is a 'final' instance variable already initialized on its declaration line; it cannot be reassigned anywhere else. value2 is a static non-final variable; instance blocks can access and modify static variables without issue. Therefore, 'value2 = ""e"";' compiles."
+java-oca-0121,Methods and Encapsulation,hard,What does the following program print?,"public class Create {
+  Create() { System.out.print(""1 ""); }
+  Create(int num) { System.out.print(""2 ""); }
+  Create(Integer num) { System.out.print(""3 ""); }
+  Create(Object num) { System.out.print(""4 ""); }
+  Create(int... nums) { System.out.print(""5 ""); }
+  public static void main(String[] args) {
+    new Create(100);
+    new Create(1000L);
+  }
+}",2 4,3 4,4 2,2 5,A,"For new Create(100): 100 is an int literal; it matches Create(int) directly (exact primitive match), printing '2 '. For new Create(1000L): 1000L is a long literal. Java cannot widen long to int. Java will autobox long to Long; Long does not match Integer, but Long is a subclass of Object! Therefore it matches Create(Object num), printing '4 '. Total output: '2 4'."
+java-oca-0122,Methods and Encapsulation,easy,What is the output of the following class using java.util.function.Predicate?,"import java.util.function.*;
+public class Panda {
+  int age;
+  public static void main(String[] args) {
+    Panda p1 = new Panda();
+    p1.age = 1;
+    check(p1, p -> p.age < 5);
+  }
+  private static void check(Panda panda, Predicate<Panda> pred) {
+    String result = pred.test(panda) ? ""match"" : ""not match"";
+    System.out.print(result);
+  }
+}",match,not match,Compiler error on line 8,NullPointerException at runtime,A,"The lambda expression 'p -> p.age < 5' implements the single abstract method 'boolean test(T t)' of Predicate<Panda>. Since p1.age is 1, which is less than 5, pred.test(p1) returns true, outputting 'match'."
+java-oca-0123,Methods and Encapsulation,medium,What is the result of attempting to compile and run the following code?,"interface Climb {
+  boolean isTooHigh(int height, int limit);
+}
+public class Climber {
+  public static void main(String[] args) {
+    check((h, l) -> h.append(l).isEmpty(), 5);
+  }
+  private static void check(Climb climb, int height) {
+    if (climb.isTooHigh(height, 10))
+      System.out.println(""too high"");
+    else
+      System.out.println(""ok"");
+  }
+}",ok,too high,Compiler error on line 7 because h and l are inferred as primitive ints,Throws ClassCastException,C,"The interface Climb specifies 'boolean isTooHigh(int height, int limit);'. Therefore, the compiler infers parameters 'h' and 'l' as primitive ints. Primitive types do not have an append() method, so line 7 fails compilation."
+java-oca-0124,Methods and Encapsulation,medium,Which of the following lambda expressions can correctly fill the blank in 'list.removeIf(______);' where list is 'List<String>'?,,s -> { return s.isEmpty(); },s -> { s.isEmpty(); },String s -> s.isEmpty(),(s) -> { s.isEmpty(); },A,"When braces '{}' are used in a lambda body, a 'return' statement is mandatory if a value must be returned. Option A correctly includes 'return s.isEmpty();'. Option B and D omit 'return'. Option C fails because parameter lists with explicit types require parentheses: '(String s) -> ...'."
+java-oca-0125,Methods and Encapsulation,medium,"Given 'interface Secret { String magic(double d); }', which lambda expression is valid?",,"(e) -> ""Poof""","(e) -> { ""Poof"" }","(e) -> { String e = """"; return ""Poof""; }","(e) -> { return ""Poof"" }",A,"Option A is a valid single-expression lambda returning String '""Poof""'. Option B and D fail because block bodies require semicolons and return keywords. Option C fails because declaring 'String e' redeclares lambda parameter 'e' within the same scope."
+java-oca-0126,Class Design,easy,"In Java 8, which modifier is implicitly applied by the compiler to ALL interface methods (abstract, default, and static)?",,abstract,public,static,default,B,"In Java 8, ALL interface methods (whether abstract, default, or static) are implicitly public. Prior to Java 8, all methods were also assumed abstract, but since Java 8 allows concrete default and static methods in interfaces, abstract is no longer implicitly applied to all methods."
+java-oca-0127,Class Design,medium,What is the result of attempting to compile and run the following code?,"1: class Mammal {
+2:   public Mammal(int age) {
+3:     System.out.print(""Mammal"");
+4:   }
+5: }
+6: public class Platypus extends Mammal {
+7:   public Platypus() {
+8:     System.out.print(""Platypus"");
+9:   }
+10:  public static void main(String[] args) {
+11:    new Mammal(5);
+12:  }
+13: }",Mammal,PlatypusMammal,The code fails to compile because Platypus does not explicitly call super(int age),The code fails to compile because Mammal is not public,C,"The parent class Mammal defines an explicit constructor taking an int, so the compiler does NOT insert a default no-argument constructor into Mammal. In Platypus(), the compiler attempts to insert super() on line 8, but no matching no-arg constructor exists in Mammal. Therefore, line 8 generates a compiler error."
+java-oca-0128,Class Design,easy,"Given the following declarations, which reference type can declare 'frog' so that 'frog = new TurtleFrog();' compiles?","public interface CanHop {}
+public class Frog implements CanHop {}
+public class TurtleFrog extends Frog {}","Frog, TurtleFrog, CanHop, or Object",TurtleFrog only,Frog or TurtleFrog only,CanHop only,A,"TurtleFrog is a subclass of Frog, which implements CanHop, and all classes inherit from Object. Due to polymorphism, an instance of TurtleFrog can be assigned to reference variables of type TurtleFrog, Frog, CanHop, or Object without an explicit cast."
+java-oca-0129,Class Design,hard,What happens when attempting to compile the following class Beaver extending Rodent?,"public class Rodent {
+  protected static Integer chew() throws Exception {
+    System.out.println(""Rodent is chewing"");
+    return 1;
+  }
+}
+public class Beaver extends Rodent {
+  public Number chew() throws RuntimeException {
+    System.out.println(""Beaver is chewing on wood"");
+    return 2;
+  }
+}",It compiles without issue,It fails to compile because of static modifier mismatch and non-covariant return types,It fails to compile because Beaver's method throws RuntimeException,It fails to compile because Beaver cannot increase method visibility to public,B,"Two rules are violated: (1) Static modifier mismatch: Rodent.chew() is static, so Beaver.chew() must also be static (for method hiding). A non-static method cannot override/hide a static parent method. (2) Return type: Number is a superclass of Integer, not a subclass (return types must be covariant). Both cause compilation errors."
+java-oca-0130,Class Design,easy,Which of the following members in a subclass can ONLY be hidden and CANNOT be overridden?,,Static methods and instance variables,Public instance methods,Protected instance methods,Abstract methods,A,"In Java, instance variables (fields) and static methods cannot be overridden; they can only be hidden. Instance methods that are public or protected can be overridden polymorphically."
+java-oca-0131,Class Design,medium,Why does the following code fail to compile?,"interface HasExoskeleton {
+  abstract int getNumberOfSections();
+}
+abstract class Insect implements HasExoskeleton {
+  abstract int getNumberOfLegs();
+}
+public class Beetle extends Insect {
+  int getNumberOfLegs() { return 6; }
+}",Insect is abstract and cannot implement an interface,"Beetle, as the first concrete subclass, does not implement the inherited abstract method getNumberOfSections()",HasExoskeleton cannot contain abstract methods,Beetle cannot extend an abstract class,B,"An abstract class (Insect) can inherit interface abstract methods without implementing them. However, the first concrete subclass (Beetle) must implement ALL inherited abstract methods: both getNumberOfLegs() and getNumberOfSections(). Because Beetle does not implement getNumberOfSections(), it fails compilation."
+java-oca-0132,Class Design,easy,Which statement regarding polymorphism in Java is TRUE?,,"If a method takes a superclass parameter type, instances of any subclass may be passed to that method without an explicit cast",A reference to an object may be cast to a subclass without an explicit cast,All ClassCastExceptions can be detected at compile time,Overridden methods in child classes are ignored when invoked through a parent reference,A,"Polymorphic parameter passing allows any subclass instance to be passed wherever a superclass (or implemented interface) is expected, without an explicit cast. Downcasting to a subclass requires an explicit cast, and runtime ClassCastExceptions cannot all be caught at compile time."
+java-oca-0133,Class Design,medium,What compile-time errors exist in the following interface definition?,"public interface Herbivore {
+  int amount = 10;
+  public static void eatGrass(); // LINE 3
+  public int chew() { return 13; } // LINE 4
+}",Line 2 fails because interface variables cannot be initialized inline,"Line 3 fails because static interface methods must provide a body, and Line 4 fails because non-static methods with bodies must be marked with the default keyword",Line 3 only,Line 4 only,B,In Java 8 interfaces: (1) Static interface methods must have a method body (line 3 is missing a body). (2) An interface method that has a body and is not static must be explicitly marked with the 'default' keyword (line 4 has a body but lacks the default keyword). Both lines 3 and 4 fail compilation.
+java-oca-0134,Class Design,easy,What is the result of compiling the following interface and abstract class declarations?,"public interface CanFly {
+  void fly();
+}
+interface HasWings {
+  public abstract Object getWindSpan();
+}
+abstract class Falcon implements CanFly, HasWings {}",The code compiles without issue,Compilation fails because an abstract class must implement all interface methods immediately,Compilation fails because an interface cannot have default package visibility,Compilation fails because CanFly and HasWings cannot be implemented simultaneously,A,Abstract classes are permitted to implement interfaces without implementing any of the inherited abstract methods; the responsibility is deferred to the first concrete subclass.
+java-oca-0135,Class Design,medium,Which statement is true for BOTH abstract classes and interfaces in Java 8?,,Both can contain instance variables,Neither can be instantiated directly using 'new',Both can contain default methods,Both support multiple class inheritance,B,"Neither abstract classes nor interfaces can be instantiated directly using the 'new' keyword. Interfaces cannot declare non-static, non-final instance fields (only public static final constants), and only interfaces can declare 'default' methods."
+java-oca-0136,Class Design,easy,Which modifiers are implicitly assumed by the compiler for all interface variables?,,public static final,protected static final,private final,public abstract,A,"Every variable declared in a Java interface is implicitly public, static, and final (a constant)."
+java-oca-0137,Class Design,medium,What is the output of the following program?,"interface Nocturnal {
+  default boolean isBlind() { return true; }
+}
+public class Owl implements Nocturnal {
+  public boolean isBlind() { return false; }
+  public static void main(String[] args) {
+    Nocturnal nocturnal = (Nocturnal) new Owl();
+    System.out.println(nocturnal.isBlind());
+  }
+}",true,false,Compilation error,ClassCastException at runtime,B,"Default interface methods are virtual methods. When a class (Owl) overrides a default method, the overridden implementation in the class takes precedence at runtime, even when invoked through the interface reference. Output is false."
+java-oca-0138,Class Design,medium,What is the output of the following code snippet?,"class Arthropod {
+  public void printName(double input) { System.out.print(""Arthropod""); }
+}
+public class Spider extends Arthropod {
+  public void printName(int input) { System.out.print(""Spider""); }
+  public static void main(String[] args) {
+    Spider spider = new Spider();
+    spider.printName(4);
+    spider.printName(9.0);
+  }
+}",SpiderArthropod,ArthropodSpider,SpiderSpider,ArthropodArthropod,A,"Spider.printName(int) overloads (does not override) Arthropod.printName(double). When spider.printName(4) is called, 4 is an int, exactly matching Spider's method -> prints 'Spider'. When spider.printName(9.0) is called, 9.0 is a double, matching the inherited method in Arthropod -> prints 'Arthropod'. Result: 'SpiderArthropod'."
+java-oca-0139,Class Design,easy,Which statement is true regarding interface inheritance with the extends keyword?,"interface HasVocalCords {
+  public abstract void makeSound();
+}
+public interface CanBark extends HasVocalCords {
+  public void bark();
+}",An interface cannot extend another interface,CanBark inherits both makeSound() and bark() methods,CanBark must implement makeSound() with a default method body,Classes implementing CanBark are only required to implement bark(),B,"In Java, an interface extends another interface using the 'extends' keyword and inherits all methods of the parent interface. Any concrete class implementing CanBark must implement both makeSound() and bark()."
+java-oca-0140,Class Design,easy,Which of the following is a mandatory requirement for a concrete class extending an abstract class?,,It must be marked with the final keyword,It must implement all inherited abstract methods,It cannot implement any interfaces,It must declare a default no-argument constructor,B,"A concrete class is a non-abstract class. By definition, a concrete class must provide implementations for all inherited abstract methods that have not already been implemented by an intermediate class."
+java-oca-0141,Class Design,easy,What is the result of attempting to compile the following code?,"abstract class Reptile {
+  public final void layEggs() { System.out.println(""Reptile laying eggs""); }
+}
+public class Lizard extends Reptile {
+  public void layEggs() { System.out.println(""Lizard laying eggs""); }
+}",Compiles and prints 'Reptile laying eggs',Compiles and prints 'Lizard laying eggs',Compilation fails because final methods in a superclass cannot be overridden by a subclass,Throws an UnsupportedOperationException,C,"In Java, methods marked with the 'final' keyword cannot be overridden by any subclass. Attempting to override layEggs() in Lizard causes a compiler error."
+java-oca-0142,Class Design,medium,What happens when attempting to compile and run class Whale and Orca?,"public abstract class Whale {
+  public abstract void dive() {}; // LINE 2
+}
+class Orca extends Whale {
+  public void dive(int depth) { System.out.println(""Orca diving""); } // LINE 9
+}",Outputs Orca diving,Fails compilation on line 2 because abstract methods cannot have a body {},Fails compilation on line 9 because Orca cannot overload dive,Fails compilation only because Whale must be public,B,Line 2 contains an abstract method declaration that provides an empty body '{}'. Abstract methods in Java are terminated with a semicolon ';' and must never have a method body. Thus line 2 generates a compiler error.
+java-oca-0143,Class Design,hard,Why does class ClownFish fail to compile?,"interface Aquatic {
+  public default int getNumberOfGills(int input) { return 2; }
+}
+public class ClownFish implements Aquatic {
+  public String getNumberOfGills() { return ""4""; }
+  public String getNumberOfGills(int input) { return ""6""; } // LINE 6
+}",getNumberOfGills() on line 5 conflicts with the interface,Line 6 fails compilation because the return type String is not covariant with the interface method's return type int,Interfaces cannot contain default methods in Java,ClownFish must explicitly call super.getNumberOfGills(),B,"The interface declares 'int getNumberOfGills(int input)'. On line 6, ClownFish declares a method with the exact same signature 'getNumberOfGills(int input)' but returns String. In method overriding, return types must be covariant (same type or subtype). String is not a subtype of int, causing a compiler error."
+java-oca-0144,Class Design,medium,"Given 'public class Cobra extends Snake {}' and 'public class GardenSnake {}' (where GardenSnake does NOT extend Snake), which call to 'setSnake(Snake s)' compiles?",,setSnake(new GardenSnake());,setSnake(new Cobra());,setSnake(new Object());,"setSnake(""Snake"");",B,"Cobra is a subclass of Snake, so an instance of Cobra can be passed to setSnake(Snake snake) without an explicit cast. GardenSnake does not extend Snake, so it cannot be passed."
+java-oca-0145,Class Design,hard,What is the output of the following code snippet?,"public abstract class Bird {
+  private void fly() { System.out.println(""Bird is flying""); }
+  public static void main(String[] args) {
+    Bird bird = new Pelican();
+    bird.fly();
+  }
+}
+class Pelican extends Bird {
+  protected void fly() { System.out.println(""Pelican is flying""); }
+}",Bird is flying,Pelican is flying,Compilation error on line 4,Compilation error on line 5,A,"In Bird, fly() is marked private. Private methods cannot be overridden by subclasses; they are only hidden. When bird.fly() is called from within Bird's main() method on a reference of type Bird, it invokes Bird's private fly() method, printing 'Bird is flying'."
+java-oca-0146,Exceptions,easy,Which of the following statements about Java exceptions is TRUE?,,Runtime exceptions are the same thing as checked exceptions,Runtime exceptions are the same thing as unchecked exceptions,You can declare only checked exceptions in a throws clause,You can handle only Error subclasses with a try-catch statement,B,"In Java, 'runtime exceptions' and 'unchecked exceptions' are synonymous. They represent RuntimeException and its subclasses, which are not subject to the handle-or-declare rule."
+java-oca-0147,Exceptions,easy,Which pair of keywords fills in the blanks to make this method compile?,"7: public void ohNo() _____ Exception {
+8:   _____________ Exception();
+9: }",On line 7: throw; On line 8: throws,On line 7: throws; On line 8: throw new,On line 7: throws; On line 8: throw,On line 7: throws; On line 8: throws new,B,"In a method signature, the keyword 'throws' is used to declare exceptions that may be thrown by the method. Inside a method body, 'throw new' is used to instantiate and throw an exception instance."
+java-oca-0148,Exceptions,easy,When are you required to include a finally block in a regular Java try statement?,,Never (a try statement requires at least one catch block OR a finally block),When the program code doesn't terminate on its own,Whenever there is more than one catch block,Whenever an unchecked exception is thrown,A,"A regular try statement requires either one or more catch blocks, or a finally block, or both. A finally block is never strictly required as long as at least one catch block is present."
+java-oca-0149,Exceptions,easy,Which exception is thrown when attempting to execute the following code?,"Object obj = new Integer(3);
+String str = (String) obj;
+System.out.println(str);",ArrayIndexOutOfBoundsException,ClassCastException,IllegalArgumentException,NumberFormatException,B,"At runtime, 'obj' references an Integer instance. Attempting to cast an Integer to String causes the JVM to throw a java.lang.ClassCastException."
+java-oca-0150,Exceptions,medium,Which of the following exceptions is typically thrown directly by the JVM rather than by application programmer code?,,java.lang.NullPointerException,java.lang.IllegalArgumentException,java.lang.NumberFormatException,java.io.FileNotFoundException,A,"NullPointerException is thrown by the JVM when code attempts to dereference or access a member on a null reference. In contrast, IllegalArgumentException and NumberFormatException are programmatically thrown by code when validating arguments."
+java-oca-0151,Exceptions,easy,What occurs when the statement 'System.out.println(5 / 0);' is executed in a main method?,,It will not compile,It prints Infinity,It runs and throws an ArithmeticException (/ by zero),It runs and throws an IllegalArgumentException,C,"In Java, integer division by zero is not detected at compile time and throws a runtime java.lang.ArithmeticException: / by zero."
+java-oca-0152,Exceptions,medium,What is printed before the stack trace when running class DoSomething?,"public class DoSomething {
+  public void go() {
+    System.out.print(""A"");
+    try {
+      stop();
+    } catch (ArithmeticException e) {
+      System.out.print(""B"");
+    } finally {
+      System.out.print(""C"");
+    }
+    System.out.print(""D"");
+  }
+  public void stop() {
+    System.out.print(""E"");
+    Object x = null;
+    x.toString(); // throws NullPointerException
+    System.out.print(""F"");
+  }
+  public static void main(String[] args) {
+    new DoSomething().go();
+  }
+}",AE,AEBCD,AEC,AECD,C,"go() prints 'A', enters try, calls stop(). stop() prints 'E', then x.toString() throws NullPointerException. Execution returns to go(). The catch block only catches ArithmeticException, so NullPointerException is NOT caught. However, the finally block ALWAYS executes, printing 'C'. The method abruptly terminates with the uncaught NullPointerException, so 'D' is never reached. Output: 'AEC'."
+java-oca-0153,Exceptions,hard,Why does the following try-catch structure fail to compile?,"try {
+  return a / b;
+} catch (RuntimeException e) {
+  return -1;
+} catch (ArithmeticException e) { // LINE 7
+  return 0;
+} finally {
+  System.out.print(""done"");
+}",ArithmeticException cannot be caught after division,Line 7 is unreachable because ArithmeticException is a subclass of RuntimeException and is already handled by line 4,A try block cannot have both catch and finally,return cannot appear inside a catch block,B,"Catch blocks must be ordered from most specific subclass to most general superclass. Because ArithmeticException is a subclass of RuntimeException, any ArithmeticException thrown would already be caught by the first catch block. Line 7 is unreachable code, causing a compiler error."
+java-oca-0154,Exceptions,medium,What is the output of the following program containing System.exit(0)?,"public class Laptop {
+  public void start() {
+    try {
+      System.out.print(""Starting up "");
+      throw new Exception();
+    } catch (Exception e) {
+      System.out.print(""Problem "");
+      System.exit(0);
+    } finally {
+      System.out.print(""Shutting down "");
+    }
+  }
+  public static void main(String[] args) {
+    new Laptop().start();
+  }
+}",Starting up ,Starting up Problem ,Starting up Problem Shutting down ,Starting up Shutting down ,B,"The try block prints 'Starting up ' and throws an Exception. The catch block catches it, prints 'Problem ', and calls System.exit(0). System.exit immediately halts the JVM. In this scenario, the finally block does NOT execute. Output: 'Starting up Problem '."
+java-oca-0155,Exceptions,medium,What is the output of running class Dog?,"public class Dog {
+  public String name;
+  public void parseName() {
+    System.out.print(""1"");
+    try {
+      System.out.print(""2"");
+      int x = Integer.parseInt(name);
+      System.out.print(""3"");
+    } catch (NumberFormatException e) {
+      System.out.print(""4"");
+    }
+  }
+  public static void main(String[] args) {
+    Dog leroy = new Dog();
+    leroy.name = ""Leroy"";
+    leroy.parseName();
+    System.out.print(""5"");
+  }
+}",12,1235,1245,124,C,"parseName() prints '1', enters try, prints '2'. Integer.parseInt(""Leroy"") throws NumberFormatException, skipping line '3'. The catch block catches NumberFormatException and prints '4'. Execution resumes after try-catch and completes parseName(). Then main() prints '5'. Total output: '1245'."
+java-oca-0156,Exceptions,medium,What occurs when running class Cat where the exception is NOT caught?,"public class Cat {
+  public String name;
+  public void parseName() {
+    System.out.print(""1"");
+    try {
+      System.out.print(""2"");
+      int x = Integer.parseInt(name);
+      System.out.print(""3"");
+    } catch (NullPointerException e) {
+      System.out.print(""4"");
+    }
+    System.out.print(""5"");
+  }
+  public static void main(String[] args) {
+    Cat leo = new Cat();
+    leo.name = ""Leo"";
+    leo.parseName();
+    System.out.print(""6"");
+  }
+}","Prints 12, followed by a stack trace for NumberFormatException",Prints 12456,"Prints 1256, followed by a stack trace","Prints 124, followed by a stack trace",A,"parseName() prints '1', enters try, prints '2'. Integer.parseInt(""Leo"") throws NumberFormatException. The catch block only handles NullPointerException, so the exception is unhandled. parseName() abruptly terminates without printing '5' or '6', and the uncaught exception terminates the main thread, outputting '12' followed by the stack trace."
+java-oca-0157,Exceptions,medium,What is printed before the exception stack trace in the following code?,"public class Mouse {
+  public String name;
+  public void run() {
+    System.out.print(""1"");
+    try {
+      System.out.print(""2"");
+      name.toString();
+      System.out.print(""3"");
+    } catch (NullPointerException e) {
+      System.out.print(""4"");
+      throw e;
+    }
+    System.out.print(""5"");
+  }
+  public static void main(String[] args) {
+    Mouse jerry = new Mouse();
+    jerry.run();
+    System.out.print(""6"");
+  }
+}",123,124,1245,1246,B,"run() prints '1', enters try, prints '2'. name is null, so name.toString() throws NullPointerException. The catch block catches it, prints '4', and re-throws 'throw e;'. Because it is re-thrown and not caught by main(), lines '5' and '6' never execute. The output before the stack trace is '124'."
+java-oca-0158,Exceptions,easy,Which types are allowed to appear in the 'throws' clause of a Java method declaration?,,Only checked exceptions,Only RuntimeException subclasses,"Any class that extends java.lang.Throwable (including Error, Exception, and RuntimeException)",Any Java class or interface,C,"Any class that extends java.lang.Throwable may be declared in a throws clause, including checked exceptions, unchecked exceptions (RuntimeException), and Errors."
+java-oca-0159,Exceptions,medium,"Given 'public void ohNo() throws IOException {}', which statement will NOT compile inside ohNo()?",,throw new java.io.IOException();,throw new IllegalArgumentException();,throw new Exception();,throw new RuntimeException();,C,"The method declares 'throws IOException'. 'throw new Exception();' throws a checked exception that is BROADER than IOException. Because the method does not declare 'throws Exception', line C fails compilation. In contrast, unchecked exceptions (IllegalArgumentException, RuntimeException) can be thrown without being declared."
+java-oca-0160,Exceptions,easy,Which of the following is an unchecked (Runtime) exception in Java?,,java.io.IOException,java.io.FileNotFoundException,java.lang.NumberFormatException,java.lang.Exception,C,"NumberFormatException extends IllegalArgumentException, which extends RuntimeException, making it an unchecked exception. IOException and FileNotFoundException are checked exceptions."
+java-oca-0161,Exceptions,easy,Which of the following scenarios represents the most appropriate use of throwing an exception in Java?,,An unexpected or illegal parameter is passed into a method that violates its preconditions,An element is not found when searching an array,As standard flow control to exit a loop prematurely,To return a negative integer status code,A,"Exceptions are designed for exceptional, unexpected circumstances such as illegal method arguments (throwing IllegalArgumentException). Standard search misses should return null, -1, or Optional, not throw exceptions."
+java-oca-0162,Exceptions,hard,"Given 'interface Roar { void roar() throws HasSoreThroatException; }' (where HasSoreThroatException is a checked exception), which overriding method in class Lion will FAIL to compile?",,public void roar() {},public void roar() throws HasSoreThroatException {},public void roar() throws Exception {},public void roar() throws RuntimeException {},C,"When overriding a method, the subclass method cannot declare new or broader checked exceptions than those declared in the parent method. Since Exception is broader than HasSoreThroatException, Option C fails compilation. A subclass method may declare fewer exceptions, identical exceptions, or any unchecked exceptions."
+java-oca-0163,Exceptions,easy,Which statement correctly describes the requirement for handling or declaring exceptions?,,Checked exceptions are required to be handled or declared; runtime exceptions and errors are optional,Runtime exceptions are required to be handled or declared,Errors must be caught in a try-catch block,No exceptions are required to be declared if using Java 8,A,Java enforces the handle-or-declare rule strictly for checked exceptions. Runtime exceptions and Errors are unchecked and do not require handling or declaration.
+java-oca-0164,Exceptions,medium,Which exception type can be inserted in the first catch block so that both catch blocks compile?,"try {
+  System.out.println(""work real hard"");
+} catch ( _____ e) {
+} catch (RuntimeException e) {
+}",Exception,IOException,IllegalArgumentException,NullPointerException,C,"IllegalArgumentException is a subclass of RuntimeException, so catching it BEFORE RuntimeException is valid. Catching Exception before RuntimeException causes an unreachable code error. Catching IOException fails because the try block throws no checked exceptions."
+java-oca-0165,Exceptions,hard,What does the following method output and throw?,"System.out.print(""a"");
+try {
+  System.out.print(""b"");
+  throw new IllegalArgumentException();
+} catch (IllegalArgumentException e) {
+  System.out.print(""c"");
+  throw new RuntimeException(""1"");
+} catch (RuntimeException e) {
+  System.out.print(""d"");
+  throw new RuntimeException(""2"");
+} finally {
+  System.out.print(""e"");
+  throw new RuntimeException(""3"");
+}",Outputs 'abce' and throws RuntimeException with message '3',Outputs 'abce' and throws RuntimeException with message '1',Outputs 'abcde' and throws RuntimeException with message '2',The code does not compile,A,"1. Prints 'a', enters try, prints 'b', throws IllegalArgumentException. 2. First catch block runs, prints 'c', and throws RuntimeException(""1""). 3. The finally block ALWAYS executes before an exception is propagated. It prints 'e' and throws RuntimeException(""3""). 4. An exception thrown from a finally block suppresses and masks any exception thrown earlier in try/catch! Therefore, output is 'abce' and the exception thrown has message '3'."

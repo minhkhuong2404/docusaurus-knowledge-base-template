@@ -20,19 +20,13 @@ const config: Config = {
 		firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
 		firebaseAppId: process.env.FIREBASE_APP_ID,
 	},
-	stylesheets: [
-		{
-			href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
-			type: 'text/css',
-			integrity: 'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
-			crossorigin: 'anonymous',
-		},
-	],
-
 	organizationName: 'minhkhuong2404',
 	projectName: 'docusaurus-knowledge-base-template',
 	onBrokenLinks: 'warn',
-	clientModules: ['./src/clientModules/gtagFix.ts'],
+	clientModules: [
+		'./src/clientModules/gtagFix.ts',
+		'./src/clientModules/scrollRestoration.ts',
+	],
 	future: {
 		v4: true,
 		faster: {
@@ -56,7 +50,7 @@ const config: Config = {
 					showLastUpdateTime: true,
 					showLastUpdateAuthor: true,
 					remarkPlugins: [remarkMath],
-					rehypePlugins: [rehypeKatex],
+					rehypePlugins: [[rehypeKatex, { strict: false }]],
 				},
 				blog: false,
 				theme: {
@@ -98,20 +92,43 @@ const config: Config = {
 		'@docusaurus/theme-mermaid'
 	],
 	themeConfig: {
+		image: 'img/social-preview.png',
 		metadata: [
-			{ name: 'keywords', content: 'development, blog, software, programming, engineering' },
-			{ name: 'description', content: 'A knowledge base for software engineers to share and document technical information.' },
+			{ name: 'keywords', content: 'development, blog, software, programming, engineering, system design, java, distributed systems, leetcode' },
+			{ name: 'description', content: 'Internal technical documentation and interview readiness knowledge base covering Distributed Systems, JVM Concurrency, Database Engine Internals, and Architecture.' },
 			{ name: 'author', content: 'Khuong Lu' },
+			{ property: 'og:title', content: 'Engineering Knowledge Base' },
+			{ property: 'og:description', content: 'Deep-dive technical documentation on Distributed Systems, JVM Concurrency, Database Engine Internals & System Design.' },
+			{ property: 'og:type', content: 'website' },
+			{ property: 'og:url', content: 'https://luminhkhuong.dev' },
+			{ property: 'og:image', content: 'https://luminhkhuong.dev/img/social-preview.png' },
+			{ property: 'og:image:width', content: '1200' },
+			{ property: 'og:image:height', content: '630' },
+			{ property: 'og:image:alt', content: 'Engineering Knowledge Base - Distributed Systems & System Design' },
+			{ name: 'twitter:card', content: 'summary_large_image' },
+			{ name: 'twitter:title', content: 'Engineering Knowledge Base' },
+			{ name: 'twitter:description', content: 'Deep-dive technical documentation on Distributed Systems, JVM Concurrency, Database Engine Internals & System Design.' },
+			{ name: 'twitter:image', content: 'https://luminhkhuong.dev/img/social-preview.png' },
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
 			{ name: 'robots', content: 'index, follow' },
 			{ name: 'theme-color', content: '#000000' },
 			{ name: 'apple-mobile-web-app-capable', content: 'yes' },
+			{ name: 'mobile-web-app-capable', content: 'yes' },
 			{ name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
 			{ name: 'format-detection', content: 'telephone=no' },
 			{ name: 'msapplication-TileColor', content: '#000000' },
 			{ name: 'msapplication-config', content: '/browserconfig.xml' },
 		],
 		headTags: [
+			{
+				tagName: 'script',
+				innerHTML: `
+					try {
+						var preset = localStorage.getItem('kb_theme_preset') || 'emerald';
+						document.documentElement.setAttribute('data-theme-preset', preset);
+					} catch (e) {}
+				`,
+			},
 			{
 				tagName: 'script',
 				innerHTML: `
@@ -163,6 +180,8 @@ const config: Config = {
 				attributes: {
 					rel: 'stylesheet',
 					href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+					media: 'print',
+					onload: "this.media='all'",
 				},
 			},
 		],
@@ -187,14 +206,18 @@ const config: Config = {
 					label: 'Docs',
 				},
 				{
+					to: '/hub',
+					label: 'Career Hub',
+					position: 'left',
+				},
+				{
 					to: '/arcade',
 					label: 'Arcade',
 					position: 'left',
 				},
 				{
-					to: '/stats',
-					label: 'Stats',
-					position: 'left',
+					type: 'custom-themePalettePicker',
+					position: 'right',
 				},
 				{
 					type: 'custom-userNavbarItem',
@@ -215,8 +238,8 @@ const config: Config = {
 		},
 		colorMode: {
 			defaultMode: 'dark',
-			disableSwitch: true,
-			respectPrefersColorScheme: false,
+			disableSwitch: false,
+			respectPrefersColorScheme: true,
 		},
 	},
 }

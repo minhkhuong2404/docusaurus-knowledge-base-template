@@ -144,7 +144,7 @@ export default function MultiDeviceRegistryPatternDiagram(): React.JSX.Element {
       `}</style>
 
       {/* Header bar */}
-      <div className="interactive-diagram-header" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px', borderBottom: '1px solid var(--ifm-color-emphasis-200)', background: 'var(--ifm-color-emphasis-100)' }}>
+      <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
           <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
@@ -153,9 +153,6 @@ export default function MultiDeviceRegistryPatternDiagram(): React.JSX.Element {
         </svg>
         <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700, fontSize: '15px' }}>
           Multi-Device Session Registry Architecture Patterns
-        </span>
-        <span style={{ marginLeft: 'auto', fontSize: '11px', padding: '3px 8px', borderRadius: '4px', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', fontWeight: 600 }}>
-          Interactive Explorer
         </span>
       </div>
 
@@ -184,8 +181,59 @@ export default function MultiDeviceRegistryPatternDiagram(): React.JSX.Element {
 
       {/* Content Area */}
       <div style={{ padding: '16px' }}>
+        {/* Animated SVG Flow Canvas */}
+        <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg" style={{ borderRadius: '10px', marginBottom: '14px', overflow: 'hidden' }}>
+          <svg viewBox="0 0 680 140" style={{ width: '100%', height: 'auto', display: 'block' }}>
+            <defs>
+              <marker id="reg-arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8" />
+              </marker>
+              <marker id="reg-arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#34d399" />
+              </marker>
+              <marker id="reg-arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#a78bfa" />
+              </marker>
+            </defs>
+
+            {/* Devices Left Column */}
+            <rect x="25" y="15" width="130" height="45" rx="6" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+            <text x="90" y="35" textAnchor="middle" fill="#38bdf8" fontSize="10.5" fontWeight="700">📱 Mobile App</text>
+            <text x="90" y="49" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="8.5">devId: mob_101</text>
+
+            <rect x="25" y="80" width="130" height="45" rx="6" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+            <text x="90" y="100" textAnchor="middle" fill="#38bdf8" fontSize="10.5" fontWeight="700">💻 Laptop Web</text>
+            <text x="90" y="114" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="8.5">devId: lap_202</text>
+
+            {/* Moving paths to Auth Gateway */}
+            <path d="M 155 37 L 260 55" stroke="rgba(56,189,248,0.3)" strokeWidth="2" fill="none" />
+            <path d="M 155 37 L 260 55" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" fill="none" markerEnd="url(#reg-arr-blue)" />
+
+            <path d="M 155 102 L 260 85" stroke="rgba(56,189,248,0.3)" strokeWidth="2" fill="none" />
+            <path d="M 155 102 L 260 85" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" fill="none" markerEnd="url(#reg-arr-blue)" />
+
+            {/* Auth Gateway */}
+            <rect x="265" y="40" width="150" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+            <text x="340" y="66" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">Auth Gateway</text>
+            <text x="340" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Session Validator</text>
+
+            {/* Moving path to Registry */}
+            <line x1="415" y1="70" x2="495" y2="70" stroke="rgba(167,139,250,0.3)" strokeWidth="2" />
+            <line x1="415" y1="70" x2="495" y2="70" stroke="#a78bfa" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#reg-arr-purple)" />
+
+            {/* Registry Storage */}
+            <rect x="500" y="40" width="155" height="60" rx="8" fill="rgba(167,139,250,0.12)" stroke="#a78bfa" strokeWidth="1.5" />
+            <text x="577" y="66" textAnchor="middle" fill="#a78bfa" fontSize="11" fontWeight="700">
+              {activePattern === 'relational' ? 'PostgreSQL Registry' : activePattern === 'redis-hash' ? 'Redis Hash Map' : 'Device KeyStore DB'}
+            </text>
+            <text x="577" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">
+              {activePattern === 'relational' ? 'user_sessions table' : activePattern === 'redis-hash' ? 'O(1) HDEL / HGETALL' : 'refreshTokensUsed array'}
+            </text>
+          </svg>
+        </div>
+
         <div className="pattern-grid">
-          {/* Left Column: Code / Schema Inspector */}
+          {/* Left Column: Code / Schema Implementation */}
           <div style={{ background: 'var(--ifm-color-emphasis-100)', padding: '14px', borderRadius: '8px', border: '1px solid var(--ifm-color-emphasis-200)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
               <span style={{ fontSize: '12px', fontWeight: 700, color: current.badgeColor }}>
@@ -222,12 +270,12 @@ export default function MultiDeviceRegistryPatternDiagram(): React.JSX.Element {
             </div>
 
             <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ifm-color-content)', marginBottom: '6px' }}>
-              Engineering Tradeoffs:
+              Engineering Trade-offs:
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {current.tradeoffs.map((tro, idx) => (
-                <div key={idx} style={{ fontSize: '11px', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span>⚠️</span> <span>{tro}</span>
+                <div key={idx} style={{ fontSize: '11px', color: '#f87171', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>⚠</span> <span>{tro}</span>
                 </div>
               ))}
             </div>

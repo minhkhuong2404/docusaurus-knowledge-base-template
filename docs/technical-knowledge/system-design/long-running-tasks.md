@@ -587,7 +587,7 @@ public void generateDailyReport() {
 
 ### Distributed Scheduling (ShedLock)
 
-ShedLock uses a database (or Redis) lock to ensure **only one node** executes a scheduled job at a time:
+ShedLock uses a distributed lock provider (PostgreSQL, MySQL, Redis, DynamoDB, or Mongo) to ensure **only one node** executes a scheduled job at a time across a multi-instance cluster:
 
 ```java
 @Scheduled(fixedDelay = 60_000)
@@ -603,7 +603,7 @@ public void generateDailyReport() {
 ```
 
 ```sql
--- ShedLock requires this table
+-- ShedLock requires this table in your relational database
 CREATE TABLE shedlock (
     name        VARCHAR(64)  NOT NULL,
     lock_until  TIMESTAMP(3) NOT NULL,
@@ -612,6 +612,70 @@ CREATE TABLE shedlock (
     PRIMARY KEY (name)
 );
 ```
+
+#### Deep Dive: `lockAtMostFor` vs `lockAtLeastFor` Mechanics
+
+In high-concurrency multi-node environments, standard `@Scheduled` annotations trigger concurrently on all cluster nodes. ShedLock coordinates mutual exclusion using two complementary time bounds configured in ISO-8601 duration format (e.g. `PT10M` = 10 minutes, `PT30S` = 30 seconds):
+
+```
+Scenario A: Normal Execution (Finished quickly in 30s)
+Time:  0s ───[Job Runs: 30s]─── 30s (Task Completes)
+Lock:  [═════════════════════════════════════════════════] (Held until 5m due to lockAtLeastFor = "PT5M")
+       ▲                                                 ▲
+       Acquired (lock_until = now + 10m)                 Released at now + 5m (Prevents clock-skew re-execution)
+
+Scenario B: Node Crash / Hard Kill during execution
+Time:  0s ───[Job Running...]─── 2m (Node Dies: OOM / Pod Evicted / SIGKILL)
+Lock:  [═══════════════════════════════════════════════════════════════════════════════════]
+       ▲                                                                                   ▲
+       Acquired (lock_until = now + 10m)                                                   Lock expires at 10m
+                                                                                           (Allows other nodes to take over)
+```
+
+##### 1. `lockAtMostFor`: The Crash & Deadlock Safety Net
+- **Purpose**: Defines the **maximum duration** the lock will be held under any circumstance, guaranteeing recovery if a node dies.
+- **Under-the-Hood SQL (Acquisition)**:
+  When a node attempts to acquire the lock, it performs an atomic Compare-And-Swap (CAS) update:
+  ```sql
+  UPDATE shedlock
+  SET lock_until = :now + INTERVAL '10 MINUTE', -- lockAtMostFor
+      locked_at  = :now,
+      locked_by  = 'pod-billing-service-7df9f-x4k9q'
+  WHERE name = 'generateDailyReport'
+    AND lock_until <= :now;
+  ```
+- **If Node Crashes**: If the pod running the task terminates abruptly (JVM crash, OOM killer, node failure), no unlock script runs. The record remains in the database until `:now` surpasses `lock_until`. At that exact moment, another node's scheduler can acquire the lock. This prevents **orphaned locks** and permanent cluster deadlocks.
+- **⚠️ Fatal Sizing Trap (Too Short)**:
+  `lockAtMostFor` **MUST** be significantly longer than the maximum worst-case execution time of the task ($T_{\text{max}}$).
+  - *Example*: If a report job usually takes 4 minutes, but occasionally takes 12 minutes under heavy data load, setting `lockAtMostFor = "PT10M"` is dangerous. At minute 10, the lock expires while Node 1 is still writing data. Node 2 observes an expired lock, acquires it, and begins executing the same job concurrently—resulting in **dual execution, duplicate records, and race conditions**.
+  - **Rule of Thumb**: Set `lockAtMostFor` to **2x to 3x** your p99 expected job duration.
+
+##### 2. `lockAtLeastFor`: Clock Skew & Fast Re-Execution Prevention
+- **Purpose**: Defines the **minimum duration** the lock must be retained, even if the scheduled method finishes in a few milliseconds.
+- **Under-the-Hood SQL (Normal Completion)**:
+  When the method finishes execution normally, ShedLock does **not** immediately set `lock_until = :now`. Instead, it extends the lock to satisfy `lockAtLeastFor`:
+  ```sql
+  -- On normal method exit
+  UPDATE shedlock
+  SET lock_until = GREATEST(:now, locked_at + INTERVAL '5 MINUTE') -- lockAtLeastFor
+  WHERE name = 'generateDailyReport'
+    AND locked_by = 'pod-billing-service-7df9f-x4k9q';
+  ```
+- **Why `lockAtLeastFor` is Critical in Distributed Systems**:
+  1. **Clock Drift between Nodes**: Even with NTP synchronization, distributed nodes in a cluster (AWS EC2, Kubernetes worker nodes) often experience clock skews of 100ms to several seconds. If Node A fires at `00:00:00.000`, finishes in 200ms, and drops the lock, Node B (whose clock lags by 1 second) reaches its scheduled trigger at `00:00:00.800` and executes the exact same job a second time!
+  2. **Sub-second Jobs on Short Schedules**: If a lightweight job (e.g. cache invalidation) takes only 50ms to run, multiple nodes could fire sequentially in a split second without `lockAtLeastFor`.
+  3. **Rolling Deployments & Pod Restarts**: Prevents a newly restarted pod from executing a scheduled batch job that just finished moments prior.
+- **⚠️ Fatal Sizing Trap (Too Long)**:
+  `lockAtLeastFor` **MUST** be strictly shorter than the scheduled execution interval ($T_{\text{interval}}$).
+  - *Example*: If your task runs every 2 minutes (`@Scheduled(fixedRate = 120_000)`), but you set `lockAtLeastFor = "PT5M"`, the lock remains active when minute 2 and minute 4 arrive. Those scheduled runs will be skipped because the lock has not cleared!
+  - **Rule of Thumb**: Set `lockAtLeastFor` to roughly **half the schedule interval** (e.g., for a 1-minute schedule, use 30s; for a 10-minute schedule, use 5m), ensuring it is greater than your cluster's maximum clock drift.
+
+##### Summary Sizing Matrix
+
+| Parameter | Role | Sizing Formula | Failure Mode if Too Short | Failure Mode if Too Long |
+| :--- | :--- | :--- | :--- | :--- |
+| **`lockAtMostFor`** | Dead node recovery / Crash safety net | `> 2x * max(job_duration)` | **Concurrent execution** (lock expires while job is still running) | Delayed failover if node crashes mid-job |
+| **`lockAtLeastFor`** | Clock drift & rapid re-execution guard | `clock_drift < lockAtLeastFor < schedule_interval` | **Duplicate execution** on other nodes due to clock skew | **Skipped executions** (lock remains held when next schedule tick fires) |
 
 ### Enterprise Scheduler (Quartz Clustered)
 
@@ -783,7 +847,17 @@ For `COMPLETED`/`FAILED` jobs (terminal states): `Cache-Control: public, max-age
 
 ### Q: What is the difference between `lockAtMostFor` and `lockAtLeastFor` in ShedLock?
 
-**A:** `lockAtMostFor` is the **maximum** time the lock is held — if the lock holder crashes, the lock automatically expires after this duration so another node can run the job. It prevents "lock orphaning". `lockAtLeastFor` is the **minimum** time the lock is held — even if the job completes in 1 second, the lock is kept for this duration to prevent the same job from immediately running again on another node before the lock release propagates.
+**A:** Both parameters govern distributed lock safety across multi-node clusters, but they defend against completely different failure modes:
+
+1. **`lockAtMostFor` (Crash Recovery & Deadlock Prevention)**:
+   - **Role**: Upper time bound for lock retention.
+   - **Mechanism**: The lock row in the database/Redis is created with `lock_until = locked_at + lockAtMostFor`. If the executing node dies abruptly (JVM crash, OOM kill, network partition), the lock expires naturally after this duration, allowing other nodes to resume the schedule without human intervention.
+   - **Gotcha**: If sized **too short** (shorter than actual task runtime), the lock expires while the task is still executing on Node 1. Node 2 will acquire the lock and run the task concurrently, causing **dual-write race conditions and data corruption**. Sizing formula: `lockAtMostFor > 2x * max(task_duration)`.
+
+2. **`lockAtLeastFor` (Clock Skew & Rapid Re-execution Prevention)**:
+   - **Role**: Lower time bound for lock retention.
+   - **Mechanism**: Even if the scheduled method executes in 50 milliseconds, ShedLock will **not** immediately release the lock to the cluster. Upon method completion, it updates `lock_until = max(now, locked_at + lockAtLeastFor)`.
+   - **Gotcha**: Protects against **clock skew across cluster nodes** (NTP drift of 1–2 seconds) and rapid re-triggers during rolling pod deployments. If sized **too long** (longer than the `@Scheduled` interval), subsequent scheduled ticks will be skipped because the lock is still held. Sizing formula: `clock_drift < lockAtLeastFor < schedule_interval`.
 
 ---
 

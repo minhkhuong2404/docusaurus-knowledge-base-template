@@ -120,19 +120,6 @@ class Counter implements Runnable {
 **Q: Can you please explain the life cycle of a thread?**
 **A:** Java defines **6 thread states** in `Thread.State` (note: the JLS combines RUNNABLE to cover both "ready" and "running"):
 
-```
-         ┌──────────────────────────────────────────┐
-         │                                          │
-   NEW ──┼──► RUNNABLE ──► BLOCKED ──► RUNNABLE ──► TERMINATED
-         │       │              ▲                   │
-         │       ▼              │                   │
-         │    WAITING ──────────┘                   │
-         │       │                                  │
-         │       ▼                                  │
-         │  TIMED_WAITING ──────────────────────────┘
-         └──────────────────────────────────────────┘
-```
-
 | State | Trigger | Exit Condition |
 |-------|---------|----------------|
 | **NEW** | `Thread t = new Thread()` | `t.start()` |
@@ -362,19 +349,12 @@ The Executor framework solves all of these with configurable thread pools, task 
 **Q: Explain the concept of a Thread Pool.**
 **A:** A thread pool is a pre-allocated set of worker threads that pull tasks from a shared **blocking queue**:
 
-```
-                ┌──────────────────────────────────┐
-  submit(task) ─►│    BlockingQueue<Runnable>        │
-                │  [task1] [task2] [task3] ...      │
-                └──────────┬───────────────────────┘
-                           │ poll()
-              ┌────────────┼────────────────┐
-              ▼            ▼                ▼
-         [Worker-1]   [Worker-2]       [Worker-N]
-          execute()    execute()        execute()
-              │            │                │
-              └─── return to pool ──────────┘
-```
+| Pipeline Component | Role in Thread Pool | Internal Behavior & Sizing | Overflow & Exception Handling |
+|---|---|---|---|
+| **Task Submission** | Producer API | `execute(Runnable)` or `submit(Callable<T>)` | If pool `< corePoolSize`, spawn core thread immediately. |
+| **Work Queue** | `BlockingQueue<Runnable>` | Buffers pending tasks (`ArrayBlockingQueue`, `LinkedBlockingQueue`, `SynchronousQueue`). | Once queue reaches capacity, spawns up to `maximumPoolSize`. |
+| **Worker Threads** | `Worker` (extends AQS) | Pre-spawned OS threads looping on `workQueue.take()` or `poll(keepAliveTime)`. | When idle beyond `keepAliveTime`, threads above core are reclaimed. |
+| **Rejection Handler** | `RejectedExecutionHandler` | Invoked when queue is saturated AND worker count = `maximumPoolSize`. | `AbortPolicy` (default), `CallerRunsPolicy`, `DiscardPolicy`, `DiscardOldestPolicy`. |
 
 When a worker finishes a task, it goes back to the queue and picks up the next one. The thread is **never destroyed** — it's reused, eliminating creation overhead. The `ThreadPoolExecutor` constructor exposes:
 - `corePoolSize`: Minimum threads kept alive (even if idle).

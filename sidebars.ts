@@ -24,6 +24,11 @@ const sidebars: SidebarsConfig = {
 			label: '💼 General Interview Framework'
 		},
 		{
+			type: 'doc',
+			id: 'technical-knowledge/engineering-practices/how-to-become-senior-developer',
+			label: '🏆 7 Senior Coding Laws'
+		},
+		{
 			type: 'category',
 			label: '🛠️Technical Knowledge',
 			collapsed: false,
@@ -41,7 +46,8 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/java/java-fundamentals',
 								'technical-knowledge/java/java-oop',
 								'technical-knowledge/java/java-collections',
-								'technical-knowledge/java/java-object-class'
+								'technical-knowledge/java/java-object-class',
+								'technical-knowledge/java/java-functional-interfaces-factory'
 							]
 						},
 						{
@@ -80,6 +86,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/java/java-jvm',
 								'technical-knowledge/java/java-stack-vs-heap',
 								'technical-knowledge/java/java-virtual-threads',
+								'technical-knowledge/java/production-oom-debugging-guide',
 								'technical-knowledge/java/java-diagnostics-troubleshooting'
 							]
 						},
@@ -97,6 +104,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/java/java-io',
+								'technical-knowledge/java/java-off-heap-ffm-api',
 								'technical-knowledge/java/java-new-features'
 							]
 						},
@@ -124,6 +132,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/spring/spring-boot-internals',
 								'technical-knowledge/spring/spring-boot-bootstrap-yml',
 								'technical-knowledge/spring/spring-boot-advanced',
+								'technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime',
 								'technical-knowledge/spring/spring-boot-interview-questions'
 							]
 						},
@@ -179,6 +188,7 @@ const sidebars: SidebarsConfig = {
 					label: '🧪 Testing & Mocking',
 					items: [
 						'technical-knowledge/test/testing-concepts',
+						'technical-knowledge/test/blackbox-and-system-testing',
 						'technical-knowledge/test/spring-test-annotations',
 						'technical-knowledge/test/wiremock'
 					]
@@ -269,11 +279,69 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/system-design/intro',
 						{
 							type: 'category',
+							label: '🎯 Problem Breakdowns',
+							collapsed: false,
+							link: {
+								type: 'doc',
+								id: 'technical-knowledge/system-design/problem-breakdowns/index',
+							},
+							items: [
+								'technical-knowledge/system-design/problem-breakdowns/bitly',
+								'technical-knowledge/system-design/problem-breakdowns/dropbox',
+								'technical-knowledge/system-design/problem-breakdowns/gopuff',
+								'technical-knowledge/system-design/problem-breakdowns/ticketmaster',
+								'technical-knowledge/system-design/problem-breakdowns/fb-news-feed',
+								'technical-knowledge/system-design/problem-breakdowns/tinder',
+								'technical-knowledge/system-design/problem-breakdowns/leetcode',
+								'technical-knowledge/system-design/problem-breakdowns/whatsapp',
+								'technical-knowledge/system-design/problem-breakdowns/distributed-rate-limiter',
+								'technical-knowledge/system-design/problem-breakdowns/youtube',
+								'technical-knowledge/system-design/problem-breakdowns/fb-live-comments',
+								'technical-knowledge/system-design/problem-breakdowns/top-k',
+								'technical-knowledge/system-design/problem-breakdowns/uber',
+								'technical-knowledge/system-design/problem-breakdowns/web-crawler',
+								'technical-knowledge/system-design/problem-breakdowns/ad-click-aggregator',
+								'technical-knowledge/system-design/problem-breakdowns/fb-post-search',
+								'technical-knowledge/system-design/problem-breakdowns/yelp',
+								'technical-knowledge/system-design/problem-breakdowns/instagram',
+								'technical-knowledge/system-design/problem-breakdowns/strava',
+								'technical-knowledge/system-design/problem-breakdowns/distributed-cache',
+								'technical-knowledge/system-design/problem-breakdowns/online-auction',
+								'technical-knowledge/system-design/problem-breakdowns/job-scheduler',
+								'technical-knowledge/system-design/problem-breakdowns/google-news',
+								'technical-knowledge/system-design/problem-breakdowns/camelcamelcamel',
+								'technical-knowledge/system-design/problem-breakdowns/notification-system',
+								'technical-knowledge/system-design/problem-breakdowns/robinhood',
+								'technical-knowledge/system-design/problem-breakdowns/google-docs',
+								'technical-knowledge/system-design/problem-breakdowns/payment-system',
+								'technical-knowledge/system-design/problem-breakdowns/metrics-monitoring',
+								'technical-knowledge/system-design/problem-breakdowns/online-chess',
+								'technical-knowledge/system-design/problem-breakdowns/chatgpt',
+								'technical-knowledge/system-design/problem-breakdowns/flash-sale',
+								'technical-knowledge/system-design/problem-breakdowns/key-value-store',
+								'technical-knowledge/system-design/problem-breakdowns/distributed-file-system',
+								'technical-knowledge/system-design/problem-breakdowns/netflix',
+								'technical-knowledge/system-design/problem-breakdowns/spotify',
+								'technical-knowledge/system-design/problem-breakdowns/email-system',
+								'technical-knowledge/system-design/problem-breakdowns/google-maps',
+								'technical-knowledge/system-design/problem-breakdowns/search-autocomplete',
+								'technical-knowledge/system-design/problem-breakdowns/google-search',
+								'technical-knowledge/system-design/problem-breakdowns/google-calendar',
+								'technical-knowledge/system-design/problem-breakdowns/issue-tracker',
+								'technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart',
+								'technical-knowledge/system-design/problem-breakdowns/pastebin',
+								'technical-knowledge/system-design/problem-breakdowns/cookie-consent',
+							],
+						},
+						{
+							type: 'category',
 							label: '🏗️ Fundamentals',
 							collapsed: true,
 							items: [
 								'technical-knowledge/system-design/architecture-fundamentals',
+								'technical-knowledge/system-design/what-breaks-at-scale',
 								'technical-knowledge/system-design/capacity-planning',
+								'technical-knowledge/system-design/time-and-ordering-and-unique-ids',
 								'technical-knowledge/system-design/interview-framework',
 								'technical-knowledge/system-design/cap-theorem-system-design',
 							],
@@ -286,6 +354,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/scaling-reads',
 								'technical-knowledge/system-design/scaling-writes',
 								'technical-knowledge/system-design/sharding-partitioning',
+								'technical-knowledge/system-design/sharded-counters-and-leaderboards',
 								'technical-knowledge/system-design/caching-strategies',
 								'technical-knowledge/system-design/bloom-filters',
 								'technical-knowledge/system-design/load-balancing-reliability',
@@ -294,6 +363,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/bulkhead-pattern',
 								'technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
 								'technical-knowledge/system-design/nginx-internals',
+								'technical-knowledge/system-design/concurrency-async-threading-models',
 								'technical-knowledge/system-design/consistent-hashing-deep-dive',
 								'technical-knowledge/system-design/rate-limiting-algorithms',
 							],
@@ -305,8 +375,10 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/system-design/distributed-systems',
+								'technical-knowledge/system-design/crdt-collaborative-systems',
 								'technical-knowledge/system-design/real-time-updates',
 								'technical-knowledge/system-design/handling-contention',
+								'technical-knowledge/system-design/inventory-reservation-system',
 								'technical-knowledge/system-design/data-consistency',
 								'technical-knowledge/system-design/distributed-transactions',
 								'technical-knowledge/system-design/two-phase-commit',
@@ -368,6 +440,19 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/observability',
 								'technical-knowledge/system-design/log-aggregation',
 								'technical-knowledge/system-design/distributed-tracing',
+								'technical-knowledge/system-design/opentelemetry-sampling-strategies',
+							],
+						},
+						{
+							type: 'category',
+							label: '🏢 Real-World Case Studies',
+							collapsed: true,
+							items: [
+								'technical-knowledge/system-design/case-studies-outages-reliability',
+								'technical-knowledge/system-design/case-studies-architecture-scaling',
+								'technical-knowledge/system-design/case-studies-data-migrations',
+								'technical-knowledge/system-design/platform-delivery-reliability',
+								'technical-knowledge/system-design/media-systems-and-testing',
 							],
 						},
 						{
@@ -375,6 +460,7 @@ const sidebars: SidebarsConfig = {
 							label: '🎯 Interview Prep',
 							collapsed: true,
 							items: [
+								'technical-knowledge/system-design/60-days-of-system-design',
 								'technical-knowledge/system-design/common-interview-questions',
 							],
 						},
@@ -562,8 +648,10 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/kafka/core/kafka-overview',
+								'technical-knowledge/kafka/core/kafka-vs-rabbitmq',
 								'technical-knowledge/kafka/core/topic',
 								'technical-knowledge/kafka/core/partition',
+								'technical-knowledge/kafka/core/kafka-partitioning-strategies',
 								'technical-knowledge/kafka/core/scaling-partitions',
 								'technical-knowledge/kafka/core/kafka-broker',
 								'technical-knowledge/kafka/core/replication',
@@ -645,6 +733,8 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/database/connection-pooling',
 								'technical-knowledge/database/advanced-sql',
 								'technical-knowledge/database/schema-migrations',
+								'technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals',
+								'technical-knowledge/database/production-database-antipatterns-hygiene',
 							],
 						},
 						{
@@ -653,6 +743,10 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/database/indexing-query-optimization',
+								'technical-knowledge/database/mysql-indexing-beyond-equality',
+								'technical-knowledge/database/exporting-large-datasets-streaming-internals',
+								'technical-knowledge/database/query-optimization-beyond-indexes-upsert-traps',
+								'technical-knowledge/database/postgresql-brin-index-guide',
 								'technical-knowledge/database/query-planner-optimizer',
 								'technical-knowledge/database/performance-monitoring',
 							],
@@ -665,8 +759,14 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/database/acid',
 								'technical-knowledge/database/isolation-levels',
 								'technical-knowledge/database/transactions-concurrency',
+								'technical-knowledge/database/mysql-deadlocks-gap-locks-internals',
+								'technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive',
+								'technical-knowledge/database/long-transactions-undo-mdl-meltdown',
 								'technical-knowledge/database/storage-engines-data-structures',
 								'technical-knowledge/database/postgresql-heap-storage-architecture',
+								'technical-knowledge/database/postgresql-update-locking-mechanics',
+								'technical-knowledge/database/postgresql-checkpoint-wal-tuning',
+								'technical-knowledge/database/postgresql-wal-replication-lag-playbook',
 							],
 						},
 						{
@@ -736,6 +836,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/redis/redis-clustering-replication',
 								'technical-knowledge/redis/redis-performance-patterns',
 								'technical-knowledge/redis/redis-distributed-lock',
+								'technical-knowledge/redis/redis-lua-scripting-distributed-locks',
 								'technical-knowledge/redis/redis-rate-limiting',
 								'technical-knowledge/redis/redis-session-management',
 							]
@@ -758,6 +859,15 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/elasticsearch/elasticsearch-internals',
 						'technical-knowledge/elasticsearch/logstash-kibana-integration',
 						'technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive'
+					]
+				},
+				{
+					type: 'category',
+					label: '⚡ Splunk & SPL',
+					items: [
+						'technical-knowledge/splunk/splunk-fundamentals',
+						'technical-knowledge/splunk/splunk-eval-and-time-bucketing',
+						'technical-knowledge/splunk/splunk-advanced-spl-recipes'
 					]
 				},
 				{
@@ -926,11 +1036,20 @@ const sidebars: SidebarsConfig = {
 						},
 						{
 							type: 'category',
+							label: '🚀 CI/CD & Automation',
+							collapsed: true,
+							items: [
+								'technical-knowledge/devops/cicd-github-actions',
+								'technical-knowledge/devops/gitops-argocd',
+							],
+						},
+						{
+							type: 'category',
 							label: '🏗️ Advanced Architecture',
 							collapsed: true,
 							items: [
 								'technical-knowledge/devops/kubernetes-operators',
-								'technical-knowledge/devops/gitops-argocd',
+								'technical-knowledge/devops/kubernetes-admission-webhooks',
 								'technical-knowledge/devops/devops-observability',
 							],
 						},
@@ -949,6 +1068,7 @@ const sidebars: SidebarsConfig = {
 					label: '☁️ AWS',
 					items: [
 						'technical-knowledge/aws/overview',
+						'technical-knowledge/aws/core-infrastructure-architecture',
 						{
 							type: 'category',
 							label: '🔐 Identity & Access',
@@ -1107,7 +1227,25 @@ const sidebars: SidebarsConfig = {
 							],
 						},
 					]
-				}
+				},
+				{
+					type: 'category',
+					label: '🏃 Agile & Scrum Framework',
+					collapsed: false,
+					items: [
+						'non-technical-knowledge/agile-scrum/intro',
+						'non-technical-knowledge/agile-scrum/scrum-framework',
+						'non-technical-knowledge/agile-scrum/estimation-metrics',
+					],
+				},
+				{
+					type: 'category',
+					label: '🏢 Modern Way of Working (WoW)',
+					collapsed: false,
+					items: [
+						'non-technical-knowledge/agile-scrum/ways-of-working',
+					],
+				},
 			]
 		},
 		{
@@ -1119,6 +1257,11 @@ const sidebars: SidebarsConfig = {
 					type: 'doc',
 					id: 'technical-knowledge/coding-interview-prep/intro',
 					label: '🚀 Getting Started',
+				},
+				{
+					type: 'doc',
+					id: 'technical-knowledge/coding-interview-prep/dsa-patterns-handbook',
+					label: '📘 Quick Handbook (20+ Patterns)',
 				},
 				{
 					type: 'category',
@@ -1774,13 +1917,17 @@ const sidebars: SidebarsConfig = {
 			collapsed: true,
 			items: [
 				'technical-knowledge/ai-agents/overview',
+				'technical-knowledge/ai-agents/mcp-and-agentic-ai',
+				'technical-knowledge/ai-agents/rag-fundamentals',
 				'technical-knowledge/ai-agents/agents',
 				'technical-knowledge/ai-agents/skills',
 				'technical-knowledge/ai-agents/harness',
 				'technical-knowledge/ai-agents/vibe-coding',
 				'technical-knowledge/ai-agents/prompt-engineering',
+				'technical-knowledge/ai-agents/prompt-caching',
 				'technical-knowledge/ai-agents/ai-tools-landscape',
 				'technical-knowledge/ai-agents/context-engineering',
+				'technical-knowledge/ai-agents/loop-engineering',
 				'technical-knowledge/ai-agents/ai-agent-interview-questions'
 			]
 		},

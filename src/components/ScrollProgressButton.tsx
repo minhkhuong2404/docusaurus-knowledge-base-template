@@ -1,17 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from '@docusaurus/router';
 import { useUserProgress } from '../context/UserProgressContext';
 import { isTrackableArticle } from '../utils/trackablePages';
 
 export default function ScrollProgressButton() {
-  const [scrollPercent, setScrollPercent] = useState<number>(0);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isAtEnd, setIsAtEnd] = useState<boolean>(false);
+
+  const isVisibleRef = useRef<boolean>(false);
+  const isAtEndRef = useRef<boolean>(false);
+  const hasMarkedReadRef = useRef<boolean>(false);
+
+  const topBarRef = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<SVGCircleElement>(null);
+  const percentTextRef = useRef<HTMLSpanElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   const location = useLocation();
   const pagePath = location.pathname;
   const { isPageRead, markPageAsRead, isManuallyUnmarked } = useUserProgress();
 
+  // Circle dimensions
+  const size = 52;
+  const strokeWidth = 3.5;
+  const center = size / 2;
+  const radius = center - strokeWidth;
+  const circumference = 2 * Math.PI * radius;
+
+  // Reset read flag on route change
   useEffect(() => {
-    if (pagePath.startsWith('/arcade') || pagePath.startsWith('/stats') || pagePath === '/stats') {
+    hasMarkedReadRef.current = false;
+    isAtEndRef.current = false;
+    setIsAtEnd(false);
+  }, [pagePath]);
+
+  useEffect(() => {
+    if (pagePath.startsWith('/arcade') || pagePath.startsWith('/profile') || pagePath === '/profile' || pagePath.startsWith('/stats')) {
       return;
     }
 
@@ -23,22 +47,62 @@ export default function ScrollProgressButton() {
       const clientHeight = document.documentElement.clientHeight;
       const totalScrollable = scrollHeight - clientHeight;
 
+      let percent = 0;
       if (totalScrollable > 0) {
-        const percent = Math.min(100, Math.max(0, Math.round((scrollTop / totalScrollable) * 100)));
-        setScrollPercent(percent);
-        setIsVisible(scrollTop > 40 || percent > 0);
-
-        // Auto mark as read or credit daily re-read when user reaches end of an eligible article (>= 90% or within 150px of bottom)
-        if (percent >= 90 || (totalScrollable - scrollTop) < 150) {
-          if (isTrackableArticle(pagePath) && !isManuallyUnmarked(pagePath)) {
-            markPageAsRead(pagePath);
-          }
-        }
+        percent = Math.min(100, Math.max(0, Math.round((scrollTop / totalScrollable) * 100)));
       } else {
-        setScrollPercent(100);
-        setIsVisible(false);
-        // Short page without scrollbar
-        if (isTrackableArticle(pagePath) && !isManuallyUnmarked(pagePath)) {
+        percent = 100;
+      }
+
+      // 1. Direct DOM update for Top Reading Bar (0 React re-renders)
+      if (topBarRef.current) {
+        topBarRef.current.style.width = `${percent}%`;
+        topBarRef.current.style.background = 'var(--gradient-brand)';
+        topBarRef.current.style.boxShadow = '0 0 10px var(--neon-glow-color, rgba(56, 189, 248, 0.8))';
+      }
+
+      // 2. Direct DOM update for Radial SVG Progress Ring (0 React re-renders)
+      if (circleRef.current) {
+        const offset = circumference - (percent / 100) * circumference;
+        circleRef.current.style.strokeDashoffset = `${offset}`;
+        circleRef.current.setAttribute('stroke', percent >= 98 ? 'var(--brand-green)' : 'var(--brand-teal)');
+      }
+
+      // 3. Direct DOM update for Percent Text (0 React re-renders)
+      if (percentTextRef.current) {
+        percentTextRef.current.textContent = `${percent}%`;
+      }
+
+      // 4. Update button tooltip
+      if (buttonRef.current) {
+        buttonRef.current.title = percent >= 98
+          ? '100% Read — Click to scroll to top'
+          : `Page Scroll: ${percent}% — Click to scroll to top`;
+      }
+
+      // 5. Only trigger React state update when visibility status actually changes (boolean flip)
+      const shouldBeVisible = totalScrollable > 0 && (scrollTop > 40 || percent > 0);
+      if (shouldBeVisible !== isVisibleRef.current) {
+        isVisibleRef.current = shouldBeVisible;
+        setIsVisible(shouldBeVisible);
+      }
+
+      // 6. Only trigger React state update when completion status flips
+      const completed = percent >= 98;
+      if (completed !== isAtEndRef.current) {
+        isAtEndRef.current = completed;
+        setIsAtEnd(completed);
+      }
+
+      // 7. Auto mark as read: GUARDED by ref so it runs AT MOST ONCE per page visit
+      if (percent >= 90 || (totalScrollable > 0 && (totalScrollable - scrollTop) < 150)) {
+        if (!hasMarkedReadRef.current && isTrackableArticle(pagePath) && !isManuallyUnmarked(pagePath)) {
+          hasMarkedReadRef.current = true;
+          markPageAsRead(pagePath);
+        }
+      } else if (totalScrollable <= 0) {
+        if (!hasMarkedReadRef.current && isTrackableArticle(pagePath) && !isManuallyUnmarked(pagePath)) {
+          hasMarkedReadRef.current = true;
           markPageAsRead(pagePath);
         }
       }
@@ -59,7 +123,7 @@ export default function ScrollProgressButton() {
       if (rafId !== null) cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [pagePath, isPageRead, markPageAsRead, isManuallyUnmarked]);
+  }, [pagePath, isPageRead, markPageAsRead, isManuallyUnmarked, circumference]);
 
   if (pagePath.startsWith('/arcade') || pagePath.startsWith('/stats') || pagePath === '/stats') {
     return null;
@@ -67,43 +131,36 @@ export default function ScrollProgressButton() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      sessionStorage.removeItem(`scroll_pos_${pagePath}`);
+    } catch {
+      // Ignore storage errors
+    }
   };
-
-  const isAtEnd = scrollPercent >= 98;
-
-  // Circle radius & circumference for SVG radial progress
-  const size = 52;
-  const strokeWidth = 3.5;
-  const center = size / 2;
-  const radius = center - strokeWidth;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (scrollPercent / 100) * circumference;
 
   return (
     <>
       {/* Fixed Top Reading Progress Bar */}
       <div
+        ref={topBarRef}
         aria-hidden="true"
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
-          width: `${scrollPercent}%`,
+          width: '0%',
           height: '3px',
-          background: isAtEnd
-            ? 'linear-gradient(90deg, #4ade80, #22c55e)'
-            : 'linear-gradient(90deg, #38bdf8, #3b82f6, #a855f7)',
-          boxShadow: isAtEnd
-            ? '0 0 10px rgba(74, 222, 128, 0.8)'
-            : '0 0 10px rgba(56, 189, 248, 0.8)',
+          background: 'var(--gradient-brand)',
+          boxShadow: '0 0 10px var(--neon-glow-color, rgba(56, 189, 248, 0.8))',
           zIndex: 999999,
-          transition: 'width 0.1s ease-out, background 0.3s ease',
+          transition: 'width 0.08s ease-out, background 0.3s ease',
           pointerEvents: 'none',
         }}
       />
 
       {/* Floating Bottom-Right Scroll Progress Button */}
       <div
+        className="scroll-progress-wrapper"
         style={{
           position: 'fixed',
           bottom: '24px',
@@ -116,24 +173,25 @@ export default function ScrollProgressButton() {
         }}
       >
         <button
+          ref={buttonRef}
           type="button"
+          className={`scroll-progress-btn${isAtEnd ? ' scroll-progress-at-end' : ''}`}
           onClick={scrollToTop}
-          title={isAtEnd ? '100% Read — Click to scroll to top' : `Page Scroll: ${scrollPercent}% — Click to scroll to top`}
-          aria-label={`Scroll progress ${scrollPercent}%. Click to scroll to top`}
+          title="Click to scroll to top"
+          aria-label="Scroll progress. Click to scroll to top"
           style={{
             position: 'relative',
             width: `${size}px`,
             height: `${size}px`,
             borderRadius: '50%',
-            background: 'rgba(15, 23, 42, 0.92)',
+            touchAction: 'manipulation',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             boxSizing: 'border-box',
             border: 'none',
-            color: isAtEnd ? '#4ade80' : '#ffffff',
             boxShadow: isAtEnd
-              ? '0 6px 20px rgba(74, 222, 128, 0.3), 0 0 0 1px rgba(74, 222, 128, 0.25)'
-              : '0 6px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.12)',
+              ? '0 6px 20px var(--neon-glow-color, rgba(74, 222, 128, 0.3)), 0 0 0 1.5px var(--brand-green)'
+              : '0 6px 20px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--sidebar-border)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -161,25 +219,27 @@ export default function ScrollProgressButton() {
             }}
           >
             <circle
+              className="scroll-ring-track"
               cx={center}
               cy={center}
               r={radius}
               fill="none"
-              stroke="rgba(255, 255, 255, 0.12)"
+              stroke="var(--scroll-ring-track, rgba(255, 255, 255, 0.12))"
               strokeWidth={strokeWidth}
             />
             <circle
+              ref={circleRef}
               cx={center}
               cy={center}
               r={radius}
               fill="none"
-              stroke={isAtEnd ? '#4ade80' : '#38bdf8'}
+              stroke="var(--brand-teal)"
               strokeWidth={strokeWidth}
               strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
+              strokeDashoffset={circumference}
               strokeLinecap="round"
               style={{
-                transition: 'stroke-dashoffset 0.15s ease-out, stroke 0.3s ease',
+                transition: 'stroke-dashoffset 0.08s ease-out, stroke 0.3s ease',
               }}
             />
           </svg>
@@ -199,11 +259,15 @@ export default function ScrollProgressButton() {
             }}
           >
             {isAtEnd ? (
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#4ade80', lineHeight: 1 }}>100%</span>
+              <span className="scroll-progress-percent" style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-green)', lineHeight: 1 }}>100%</span>
             ) : (
               <>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#f8fafc', lineHeight: 1, letterSpacing: '-0.02em' }}>
-                  {scrollPercent}%
+                <span
+                  ref={percentTextRef}
+                  className="scroll-progress-percent"
+                  style={{ fontSize: '0.72rem', fontWeight: 700, lineHeight: 1, letterSpacing: '-0.02em' }}
+                >
+                  0%
                 </span>
                 <svg
                   width="10"
@@ -214,7 +278,8 @@ export default function ScrollProgressButton() {
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  style={{ opacity: 0.75, color: '#94a3b8' }}
+                  className="scroll-progress-chevron"
+                  style={{ opacity: 0.75 }}
                 >
                   <polyline points="18 15 12 9 6 15"></polyline>
                 </svg>

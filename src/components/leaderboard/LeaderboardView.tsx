@@ -8,12 +8,73 @@ interface LeaderboardViewProps {
   initialTimeframe?: LeaderboardTimeframe;
 }
 
+const INITIAL_LIMIT = 50;
+
+/**
+ * Renders user avatar with Google profile photo support, referrerPolicy, and initial fallback
+ */
+const UserAvatar: React.FC<{
+  photoURL?: string;
+  name: string;
+  size?: number;
+  border?: string;
+  boxShadow?: string;
+}> = ({ photoURL, name, size = 38, border, boxShadow }) => {
+  const [imgError, setImgError] = useState(false);
+  const initial = (name || 'L').charAt(0).toUpperCase();
+
+  if (photoURL && !imgError) {
+    return (
+      <img
+        src={photoURL}
+        alt={name}
+        referrerPolicy="no-referrer"
+        onError={() => setImgError(true)}
+        style={{
+          width: `${size}px`,
+          height: `${size}px`,
+          borderRadius: '50%',
+          objectFit: 'cover',
+          flexShrink: 0,
+          border: border || '1.5px solid var(--lb-badge-border, rgba(255, 255, 255, 0.15))',
+          boxShadow: boxShadow || 'none',
+          backgroundColor: 'var(--ifm-color-emphasis-200)',
+          display: 'block',
+        }}
+      />
+    );
+  }
+
+  return (
+    <div
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: '50%',
+        backgroundColor: 'var(--ifm-color-primary)',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 800,
+        fontSize: size >= 60 ? '1.5rem' : size >= 48 ? '1.2rem' : size >= 38 ? '0.95rem' : '0.8rem',
+        flexShrink: 0,
+        border: border || 'none',
+        boxShadow: boxShadow || 'none',
+      }}
+    >
+      {initial}
+    </div>
+  );
+};
+
 export default function LeaderboardView({ initialTimeframe = 'alltime' }: LeaderboardViewProps) {
   const { currentUser } = useUserProgress();
   const isSuperAdmin = currentUser?.email ? isSuperAdminUser(currentUser.email) : false;
   const [timeframe, setTimeframe] = useState<LeaderboardTimeframe>(initialTimeframe);
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState<number>(INITIAL_LIMIT);
 
   // Subscribe to leaderboard based on timeframe
   useEffect(() => {
@@ -28,8 +89,18 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
     return () => unsubLeaderboard();
   }, [timeframe]);
 
+  // Reset pagination limit when timeframe tab changes
+  useEffect(() => {
+    setVisibleCount(INITIAL_LIMIT);
+  }, [timeframe]);
+
   // Top 3 Podium
   const topThree = useMemo(() => entries.slice(0, 3), [entries]);
+
+  // Visible entries (Top 50 by default, expandable)
+  const visibleEntries = useMemo(() => entries.slice(0, visibleCount), [entries, visibleCount]);
+  const hasMore = entries.length > visibleCount;
+  const remainingCount = Math.max(0, entries.length - visibleCount);
 
   // Current user entry
   const currentUserEntry = useMemo(() => {
@@ -39,15 +110,91 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
 
   return (
     <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '1rem 0' }}>
+      <style>{`
+        html[data-theme="light"], :root {
+          --lb-text-primary: #0f172a;
+          --lb-text-secondary: #334155;
+          --lb-text-muted: #475569;
+          --lb-card-bg: #ffffff;
+          --lb-header-bg: #f8fafc;
+          --lb-row-border: #e2e8f0;
+          --lb-badge-bg: #f1f5f9;
+          --lb-badge-border: #cbd5e1;
+          --lb-badge-text: #0f172a;
+          --lb-gold: #b45309;
+          --lb-silver: #475569;
+          --lb-bronze: #c2410c;
+          --lb-sky: #0284c7;
+          --lb-purple: #7e22ce;
+          --lb-purple-bg: rgba(168, 85, 247, 0.08);
+          --lb-purple-border: rgba(168, 85, 247, 0.3);
+          --lb-pill-bg: rgba(2, 132, 199, 0.08);
+          --lb-toggle-bg: #e2e8f0;
+          --lb-toggle-inactive-text: #334155;
+        }
+
+        html[data-theme="dark"] {
+          --lb-text-primary: #f8fafc;
+          --lb-text-secondary: #cbd5e1;
+          --lb-text-muted: #94a3b8;
+          --lb-card-bg: var(--ifm-background-surface-color);
+          --lb-header-bg: rgba(255, 255, 255, 0.03);
+          --lb-row-border: var(--ifm-color-emphasis-200);
+          --lb-badge-bg: rgba(255, 255, 255, 0.08);
+          --lb-badge-border: rgba(255, 255, 255, 0.14);
+          --lb-badge-text: #f8fafc;
+          --lb-gold: #fbbf24;
+          --lb-silver: #94a3b8;
+          --lb-bronze: #d97706;
+          --lb-sky: #38bdf8;
+          --lb-purple: #c084fc;
+          --lb-purple-bg: rgba(168, 85, 247, 0.1);
+          --lb-purple-border: rgba(168, 85, 247, 0.4);
+          --lb-pill-bg: rgba(56, 189, 248, 0.1);
+          --lb-toggle-bg: var(--ifm-color-emphasis-100);
+          --lb-toggle-inactive-text: var(--ifm-color-emphasis-700);
+        }
+
+        .podium-card-link {
+          transition: transform 0.2s ease;
+          text-decoration: none !important;
+          color: inherit !important;
+          display: block;
+          transform: translateY(0);
+        }
+        .podium-card-link:hover {
+          transform: translateY(-6px) !important;
+        }
+        .podium-card-link.podium-champion {
+          transform: translateY(-12px);
+        }
+        .podium-card-link.podium-champion:hover {
+          transform: translateY(-18px) !important;
+        }
+        .podium-card-link.podium-champion-solo {
+          transform: translateY(0);
+        }
+        .podium-card-link.podium-champion-solo:hover {
+          transform: translateY(-6px) !important;
+        }
+        .leaderboard-user-link {
+          transition: opacity 0.15s ease;
+        }
+        .leaderboard-user-link:hover .leaderboard-username {
+          color: var(--ifm-color-primary) !important;
+          text-decoration: underline;
+        }
+      `}</style>
+
       {/* Header & Subtitle */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '30px', backgroundColor: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.75rem' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '30px', backgroundColor: 'var(--lb-pill-bg)', color: 'var(--lb-sky)', fontSize: '0.85rem', fontWeight: 800, marginBottom: '0.75rem', border: '1px solid var(--lb-badge-border)' }}>
           <span>🏆</span> GLOBAL ARCHITECT RANKINGS
         </div>
         <h1 style={{ fontSize: '2.25rem', fontWeight: 900, marginBottom: '0.5rem', background: 'linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #fbbf24 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           Engineering Leaderboard
         </h1>
-        <p style={{ color: 'var(--ifm-color-emphasis-600)', fontSize: '1rem', maxWidth: '600px', margin: '0 auto' }}>
+        <p style={{ color: 'var(--lb-text-muted)', fontSize: '1rem', maxWidth: '600px', margin: '0 auto', fontWeight: 500 }}>
           Rankings updated in real time based on Level progression, quiz masteries, DSA challenges, and learning consistency.
         </p>
       </div>
@@ -61,7 +208,7 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
           marginBottom: '2.5rem',
         }}
       >
-        <div style={{ display: 'flex', gap: '8px', backgroundColor: 'var(--ifm-color-emphasis-100)', padding: '6px', borderRadius: '12px', border: '1px solid var(--ifm-color-emphasis-200)', boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}>
+        <div style={{ display: 'flex', gap: '8px', backgroundColor: 'var(--lb-toggle-bg)', padding: '6px', borderRadius: '12px', border: '1px solid var(--lb-row-border)', boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}>
           <button
             type="button"
             onClick={() => setTimeframe('alltime')}
@@ -69,11 +216,11 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
               padding: '9px 24px',
               borderRadius: '8px',
               border: 'none',
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: '0.9rem',
               cursor: 'pointer',
               backgroundColor: timeframe === 'alltime' ? 'var(--ifm-color-primary)' : 'transparent',
-              color: timeframe === 'alltime' ? 'white' : 'var(--ifm-color-emphasis-700)',
+              color: timeframe === 'alltime' ? 'white' : 'var(--lb-toggle-inactive-text)',
               transition: 'all 0.2s',
             }}
           >
@@ -86,11 +233,11 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
               padding: '9px 24px',
               borderRadius: '8px',
               border: 'none',
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: '0.9rem',
               cursor: 'pointer',
               backgroundColor: timeframe === 'weekly' ? 'var(--ifm-color-primary)' : 'transparent',
-              color: timeframe === 'weekly' ? 'white' : 'var(--ifm-color-emphasis-700)',
+              color: timeframe === 'weekly' ? 'white' : 'var(--lb-toggle-inactive-text)',
               transition: 'all 0.2s',
             }}
           >
@@ -103,11 +250,11 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
               padding: '9px 24px',
               borderRadius: '8px',
               border: 'none',
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: '0.9rem',
               cursor: 'pointer',
               backgroundColor: timeframe === 'monthly' ? 'var(--ifm-color-primary)' : 'transparent',
-              color: timeframe === 'monthly' ? 'white' : 'var(--ifm-color-emphasis-700)',
+              color: timeframe === 'monthly' ? 'white' : 'var(--lb-toggle-inactive-text)',
               transition: 'all 0.2s',
             }}
           >
@@ -129,10 +276,13 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
         >
           {/* 2nd Place (Silver) */}
           {topThree[1] && (
-            <div
+            <Link
+              to={`/profile?uid=${topThree[1].uid}`}
+              className="podium-card-link"
+              title={`View ${topThree[1].displayName}'s Profile & Codex`}
               style={{
-                backgroundColor: 'var(--ifm-background-surface-color)',
-                border: '1.5px solid rgba(148, 163, 184, 0.4)',
+                backgroundColor: 'var(--lb-card-bg)',
+                border: '1.5px solid rgba(148, 163, 184, 0.45)',
                 borderRadius: '20px',
                 padding: '1.5rem 1rem',
                 textAlign: 'center',
@@ -140,61 +290,115 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
                 position: 'relative',
               }}
             >
-              <div style={{ fontSize: '2rem', marginBottom: '4px' }}>🥈</div>
-              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+              <div style={{ position: 'relative', display: 'inline-block', marginBottom: '8px' }}>
+                <UserAvatar
+                  photoURL={topThree[1].photoURL || (currentUser && topThree[1].uid === currentUser.uid ? currentUser.photoURL || undefined : undefined)}
+                  name={topThree[1].displayName}
+                  size={54}
+                  border="2.5px solid #94a3b8"
+                  boxShadow="0 0 14px rgba(148, 163, 184, 0.35)"
+                />
+                <span
+                  style={{
+                    position: 'absolute',
+                    bottom: '-6px',
+                    right: '-6px',
+                    fontSize: '1.2rem',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))',
+                  }}
+                >
+                  🥈
+                </span>
+              </div>
+              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--lb-silver)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>
                 2ND PLACE
               </div>
-              <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '4px' }}>
+              <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '4px', color: 'var(--lb-text-primary)' }}>
                 {topThree[1].displayName}
               </div>
-              <div style={{ fontSize: '0.85rem', color: '#38bdf8', fontWeight: 700, marginBottom: '8px' }}>
+              <div style={{ fontSize: '0.85rem', color: 'var(--lb-sky)', fontWeight: 800, marginBottom: '8px' }}>
                 {topThree[1].rankBadge} Lv.{topThree[1].level} • {topThree[1].rankTitle}
               </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--ifm-font-color-base)' }}>
+              <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--lb-text-primary)' }}>
                 {topThree[1].timeframeExp.toLocaleString()}{' '}
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--ifm-color-emphasis-600)' }}>EXP</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--lb-text-muted)' }}>EXP</span>
               </div>
-            </div>
+            </Link>
           )}
 
           {/* 1st Place (Gold Champion) */}
           {topThree[0] && (
-            <div
+            <Link
+              to={`/profile?uid=${topThree[0].uid}`}
+              className={`podium-card-link ${topThree.length > 1 ? 'podium-champion' : 'podium-champion-solo'}`}
+              title={`View ${topThree[0].displayName}'s Profile & Codex`}
               style={{
-                backgroundColor: 'var(--ifm-background-surface-color)',
+                backgroundColor: 'var(--lb-card-bg)',
                 border: '2px solid rgba(251, 191, 36, 0.7)',
                 borderRadius: '24px',
                 padding: '2rem 1.25rem',
                 textAlign: 'center',
                 boxShadow: '0 12px 36px rgba(251, 191, 36, 0.25)',
                 position: 'relative',
-                transform: topThree.length > 1 ? 'translateY(-12px)' : 'none',
-                background: 'linear-gradient(180deg, rgba(251, 191, 36, 0.08) 0%, var(--ifm-background-surface-color) 100%)',
+                background: 'linear-gradient(180deg, rgba(251, 191, 36, 0.12) 0%, var(--lb-card-bg) 100%)',
               }}
             >
-              <div style={{ fontSize: '2.5rem', marginBottom: '4px' }}>🥇👑</div>
-              <div style={{ fontSize: '0.82rem', fontWeight: 900, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '8px' }}>
+              <div style={{ position: 'relative', display: 'inline-block', marginBottom: '10px' }}>
+                <UserAvatar
+                  photoURL={topThree[0].photoURL || (currentUser && topThree[0].uid === currentUser.uid ? currentUser.photoURL || undefined : undefined)}
+                  name={topThree[0].displayName}
+                  size={68}
+                  border="3px solid #fbbf24"
+                  boxShadow="0 0 24px rgba(251, 191, 36, 0.45)"
+                />
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '-12px',
+                    right: '-8px',
+                    fontSize: '1.5rem',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))',
+                  }}
+                >
+                  👑
+                </span>
+                <span
+                  style={{
+                    position: 'absolute',
+                    bottom: '-6px',
+                    right: '-6px',
+                    fontSize: '1.3rem',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))',
+                  }}
+                >
+                  🥇
+                </span>
+              </div>
+              <div style={{ fontSize: '0.82rem', fontWeight: 900, color: 'var(--lb-gold)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '6px' }}>
                 GRAND CHAMPION
               </div>
-              <div style={{ fontWeight: 900, fontSize: '1.3rem', marginBottom: '4px' }}>
+              <div style={{ fontWeight: 900, fontSize: '1.3rem', marginBottom: '4px', color: 'var(--lb-text-primary)' }}>
                 {topThree[0].displayName}
               </div>
-              <div style={{ fontSize: '0.9rem', color: '#fbbf24', fontWeight: 800, marginBottom: '8px' }}>
+              <div style={{ fontSize: '0.9rem', color: 'var(--lb-gold)', fontWeight: 800, marginBottom: '8px' }}>
                 {topThree[0].rankBadge} Lv.{topThree[0].level} • {topThree[0].rankTitle}
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#fbbf24' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--lb-gold)' }}>
                 {topThree[0].timeframeExp.toLocaleString()}{' '}
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--ifm-color-emphasis-600)' }}>EXP</span>
+                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--lb-gold)' }}>EXP</span>
               </div>
-            </div>
+            </Link>
           )}
 
           {/* 3rd Place (Bronze) */}
           {topThree[2] && (
-            <div
+            <Link
+              to={`/profile?uid=${topThree[2].uid}`}
+              className="podium-card-link"
+              title={`View ${topThree[2].displayName}'s Profile & Codex`}
               style={{
-                backgroundColor: 'var(--ifm-background-surface-color)',
-                border: '1.5px solid rgba(217, 119, 6, 0.4)',
+                backgroundColor: 'var(--lb-card-bg)',
+                border: '1.5px solid rgba(217, 119, 6, 0.45)',
                 borderRadius: '20px',
                 padding: '1.5rem 1rem',
                 textAlign: 'center',
@@ -202,21 +406,40 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
                 position: 'relative',
               }}
             >
-              <div style={{ fontSize: '2rem', marginBottom: '4px' }}>🥉</div>
-              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#d97706', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+              <div style={{ position: 'relative', display: 'inline-block', marginBottom: '8px' }}>
+                <UserAvatar
+                  photoURL={topThree[2].photoURL || (currentUser && topThree[2].uid === currentUser.uid ? currentUser.photoURL || undefined : undefined)}
+                  name={topThree[2].displayName}
+                  size={54}
+                  border="2.5px solid #d97706"
+                  boxShadow="0 0 14px rgba(217, 119, 6, 0.35)"
+                />
+                <span
+                  style={{
+                    position: 'absolute',
+                    bottom: '-6px',
+                    right: '-6px',
+                    fontSize: '1.2rem',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))',
+                  }}
+                >
+                  🥉
+                </span>
+              </div>
+              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--lb-bronze)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>
                 3RD PLACE
               </div>
-              <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '4px' }}>
+              <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '4px', color: 'var(--lb-text-primary)' }}>
                 {topThree[2].displayName}
               </div>
-              <div style={{ fontSize: '0.85rem', color: '#d97706', fontWeight: 700, marginBottom: '8px' }}>
+              <div style={{ fontSize: '0.85rem', color: 'var(--lb-bronze)', fontWeight: 800, marginBottom: '8px' }}>
                 {topThree[2].rankBadge} Lv.{topThree[2].level} • {topThree[2].rankTitle}
               </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--ifm-font-color-base)' }}>
+              <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--lb-text-primary)' }}>
                 {topThree[2].timeframeExp.toLocaleString()}{' '}
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--ifm-color-emphasis-600)' }}>EXP</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--lb-text-muted)' }}>EXP</span>
               </div>
-            </div>
+            </Link>
           )}
         </div>
       )}
@@ -225,8 +448,8 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
       {isSuperAdmin && (
         <div
           style={{
-            backgroundColor: 'rgba(168, 85, 247, 0.1)',
-            border: '1.5px solid rgba(168, 85, 247, 0.4)',
+            backgroundColor: 'var(--lb-purple-bg)',
+            border: '1.5px solid var(--lb-purple-border)',
             borderRadius: '16px',
             padding: '0.9rem 1.4rem',
             marginBottom: '1.5rem',
@@ -239,10 +462,10 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span style={{ fontSize: '1.4rem' }}>🛡️</span>
             <div>
-              <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#c084fc' }}>
+              <div style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--lb-purple)' }}>
                 Super Admin Account
               </div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--ifm-color-emphasis-600)' }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--lb-text-muted)', fontWeight: 500 }}>
                 You are currently viewing the leaderboard in administrative mode. Your account is excluded from the ranking table.
               </div>
             </div>
@@ -251,11 +474,11 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
             style={{
               fontSize: '0.72rem',
               fontWeight: 800,
-              color: '#c084fc',
-              backgroundColor: 'rgba(168, 85, 247, 0.18)',
+              color: 'var(--lb-purple)',
+              backgroundColor: 'var(--lb-purple-bg)',
               padding: '3px 10px',
               borderRadius: '20px',
-              border: '1px solid rgba(168, 85, 247, 0.3)',
+              border: '1px solid var(--lb-purple-border)',
             }}
           >
             EXCLUDED
@@ -267,7 +490,7 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
       {!isSuperAdmin && currentUserEntry && (
         <div
           style={{
-            backgroundColor: 'rgba(56, 189, 248, 0.12)',
+            backgroundColor: 'var(--lb-card-bg)',
             border: '1.5px solid var(--ifm-color-primary)',
             borderRadius: '16px',
             padding: '1rem 1.5rem',
@@ -278,204 +501,405 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
             boxShadow: '0 4px 16px rgba(56, 189, 248, 0.15)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '50%',
-                backgroundColor: 'var(--ifm-color-primary)',
-                color: 'white',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 900,
-                fontSize: '1rem',
-              }}
-            >
-              #{currentUserEntry.rankPosition}
+          <Link
+            to="/profile"
+            title="View your Engineering Profile & Codex"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              textDecoration: 'none',
+              color: 'inherit',
+              cursor: 'pointer',
+            }}
+          >
+            <div style={{ position: 'relative', flexShrink: 0 }}>
+              <UserAvatar
+                photoURL={currentUserEntry.photoURL || currentUser?.photoURL || undefined}
+                name={currentUserEntry.displayName}
+                size={42}
+                border="2px solid var(--ifm-color-primary)"
+                boxShadow="0 0 12px rgba(56, 189, 248, 0.35)"
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  bottom: '-4px',
+                  right: '-6px',
+                  backgroundColor: 'var(--ifm-color-primary)',
+                  color: 'white',
+                  borderRadius: '10px',
+                  padding: '1px 5px',
+                  fontSize: '0.65rem',
+                  fontWeight: 900,
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
+                }}
+              >
+                #{currentUserEntry.rankPosition}
+              </span>
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 800, fontSize: '1.05rem' }}>{currentUserEntry.displayName}</span>
+                <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--lb-text-primary)' }}>{currentUserEntry.displayName}</span>
                 <span style={{ backgroundColor: 'var(--ifm-color-primary)', color: 'white', fontSize: '0.7rem', fontWeight: 800, padding: '2px 6px', borderRadius: '4px' }}>
                   YOU
                 </span>
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--ifm-color-emphasis-600)' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--lb-text-muted)', fontWeight: 500 }}>
                 {currentUserEntry.rankBadge} Lv.{currentUserEntry.level} • {currentUserEntry.rankTitle}
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--ifm-color-primary)' }}>
+          <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '3px' }}>
+            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--lb-sky)' }}>
               {currentUserEntry.timeframeExp.toLocaleString()} EXP
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--ifm-color-emphasis-600)' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--lb-text-muted)', fontWeight: 500 }}>
               🔥 {currentUserEntry.streak}d Streak • 🧩 {currentUserEntry.quizzesCorrect} Quizzes
             </div>
+            {currentUserEntry.rankPosition > visibleCount && (
+              <button
+                type="button"
+                onClick={() => {
+                  setVisibleCount(Math.max(currentUserEntry.rankPosition + 5, visibleCount));
+                  setTimeout(() => {
+                    const el = document.getElementById(`leaderboard-row-${currentUserEntry.uid}`);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }, 60);
+                }}
+                style={{
+                  marginTop: '4px',
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  padding: '3px 9px',
+                  borderRadius: '6px',
+                  backgroundColor: 'var(--lb-pill-bg)',
+                  color: 'var(--lb-sky)',
+                  border: '1px solid var(--lb-badge-border)',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <span>Reveal my rank in table (Rank #{currentUserEntry.rankPosition}) ➔</span>
+              </button>
+            )}
           </div>
         </div>
       )}
 
       {/* Full Leaderboard Table */}
       <div
+        id="leaderboard-table-top"
         style={{
-          backgroundColor: 'var(--ifm-background-surface-color)',
+          backgroundColor: 'var(--lb-card-bg)',
           borderRadius: '16px',
-          border: '1px solid var(--ifm-color-emphasis-200)',
+          border: '1px solid var(--lb-row-border)',
           overflow: 'hidden',
           boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
         }}
       >
+        {/* Table Top Status Bar */}
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: '70px 1fr 140px 120px 140px',
-            padding: '1rem 1.25rem',
-            backgroundColor: 'var(--ifm-color-emphasis-100)',
-            borderBottom: '1px solid var(--ifm-color-emphasis-200)',
-            fontWeight: 800,
-            fontSize: '0.82rem',
-            color: 'var(--ifm-color-emphasis-600)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.75rem 1.25rem',
+            backgroundColor: 'var(--lb-header-bg)',
+            borderBottom: '1px solid var(--lb-row-border)',
+            flexWrap: 'wrap',
+            gap: '8px',
           }}
         >
-          <div>Rank</div>
-          <div>Learner</div>
-          <div style={{ textAlign: 'center' }}>Cosmic Rank</div>
-          <div style={{ textAlign: 'center' }}>Stats</div>
-          <div style={{ textAlign: 'right' }}>EXP Score</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--lb-text-primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              🎖️ Architect Standings
+            </span>
+            <span
+              style={{
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                color: 'var(--lb-sky)',
+                backgroundColor: 'var(--lb-pill-bg)',
+                padding: '2px 8px',
+                borderRadius: '12px',
+                border: '1px solid var(--lb-badge-border)',
+              }}
+            >
+              Top {Math.min(visibleCount, entries.length)} {entries.length > visibleCount ? `of ${entries.length}` : ''}
+            </span>
+          </div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--lb-text-muted)', fontWeight: 500 }}>
+            Showing top 50 by default • Expand below for lower ranks
+          </div>
         </div>
 
-        {loading ? (
-          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--ifm-color-emphasis-600)' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem', animation: 'spin 1s linear infinite' }}>⏳</div>
-            <p style={{ fontWeight: 600 }}>Syncing latest global rankings...</p>
-          </div>
-        ) : entries.length === 0 ? (
-          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--ifm-color-emphasis-600)' }}>
-            <p style={{ fontWeight: 600, fontSize: '1rem' }}>No learners found.</p>
-          </div>
-        ) : (
-          entries.map((entry) => {
-            const isUser = currentUser && entry.uid === currentUser.uid;
-            return (
-              <div
-                key={entry.uid}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '70px 1fr 140px 120px 140px',
-                  padding: '1rem 1.25rem',
-                  alignItems: 'center',
-                  borderBottom: '1px solid var(--ifm-color-emphasis-200)',
-                  backgroundColor: isUser ? 'rgba(56, 189, 248, 0.08)' : 'transparent',
-                  transition: 'background-color 0.15s ease',
-                }}
-              >
-                {/* Rank # */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  {entry.rankPosition === 1 ? (
-                    <span style={{ fontSize: '1.3rem' }}>🥇</span>
-                  ) : entry.rankPosition === 2 ? (
-                    <span style={{ fontSize: '1.3rem' }}>🥈</span>
-                  ) : entry.rankPosition === 3 ? (
-                    <span style={{ fontSize: '1.3rem' }}>🥉</span>
-                  ) : (
-                    <span style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--ifm-color-emphasis-600)' }}>
-                      #{entry.rankPosition}
-                    </span>
-                  )}
-                </div>
+        {/* Scrollable table container */}
+        <div style={{ overflowX: 'auto' }}>
+          <div style={{ minWidth: '620px' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '70px 1fr 140px 120px 140px',
+                padding: '0.9rem 1.25rem',
+                backgroundColor: 'var(--lb-header-bg)',
+                borderBottom: '1px solid var(--lb-row-border)',
+                fontWeight: 800,
+                fontSize: '0.8rem',
+                color: 'var(--lb-text-secondary)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}
+            >
+              <div>Rank</div>
+              <div>Learner</div>
+              <div style={{ textAlign: 'center' }}>Cosmic Rank</div>
+              <div style={{ textAlign: 'center' }}>Stats</div>
+              <div style={{ textAlign: 'right' }}>EXP Score</div>
+            </div>
 
-                {/* Learner & Avatar */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+            {loading ? (
+              <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--lb-text-muted)' }}>
+                <div style={{ fontSize: '2rem', marginBottom: '0.5rem', animation: 'spin 1s linear infinite' }}>⏳</div>
+                <p style={{ fontWeight: 700 }}>Syncing latest global rankings...</p>
+              </div>
+            ) : entries.length === 0 ? (
+              <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--lb-text-muted)' }}>
+                <p style={{ fontWeight: 700, fontSize: '1rem' }}>No learners found.</p>
+              </div>
+            ) : (
+              visibleEntries.map((entry) => {
+                const isUser = currentUser && entry.uid === currentUser.uid;
+                return (
                   <div
+                    key={entry.uid}
+                    id={`leaderboard-row-${entry.uid}`}
                     style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '50%',
-                      backgroundColor: 'var(--ifm-color-primary)',
-                      color: 'white',
-                      display: 'flex',
+                      display: 'grid',
+                      gridTemplateColumns: '70px 1fr 140px 120px 140px',
+                      padding: '1rem 1.25rem',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 800,
-                      fontSize: '0.9rem',
-                      flexShrink: 0,
+                      borderBottom: '1px solid var(--lb-row-border)',
+                      backgroundColor: isUser ? 'rgba(56, 189, 248, 0.08)' : 'transparent',
+                      transition: 'background-color 0.15s ease',
                     }}
                   >
-                    {entry.displayName.charAt(0).toUpperCase()}
-                  </div>
-                  <div style={{ minWidth: 0 }}>
+                    {/* Rank # */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span
-                        style={{
-                          fontWeight: 700,
-                          fontSize: '0.95rem',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                        }}
-                      >
-                        {entry.displayName}
-                      </span>
-                      {isUser && (
-                        <span
-                          style={{
-                            backgroundColor: 'var(--ifm-color-primary)',
-                            color: 'white',
-                            fontSize: '0.65rem',
-                            fontWeight: 800,
-                            padding: '2px 5px',
-                            borderRadius: '4px',
-                          }}
-                        >
-                          YOU
+                      {entry.rankPosition === 1 ? (
+                        <span style={{ fontSize: '1.3rem' }}>🥇</span>
+                      ) : entry.rankPosition === 2 ? (
+                        <span style={{ fontSize: '1.3rem' }}>🥈</span>
+                      ) : entry.rankPosition === 3 ? (
+                        <span style={{ fontSize: '1.3rem' }}>🥉</span>
+                      ) : (
+                        <span style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--lb-text-primary)' }}>
+                          #{entry.rankPosition}
                         </span>
                       )}
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--ifm-color-emphasis-500)' }}>
-                      🔥 {entry.streak}d streak • 📖 {entry.readPagesCount} articles read
+
+                    {/* Learner & Avatar */}
+                    <Link
+                      to={`/profile?uid=${entry.uid}`}
+                      title={`View ${entry.displayName}'s Engineering Profile & Codex`}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        minWidth: 0,
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <UserAvatar
+                        photoURL={entry.photoURL || (isUser && currentUser?.photoURL ? currentUser.photoURL : undefined)}
+                        name={entry.displayName}
+                        size={38}
+                        border={isUser ? '2px solid var(--ifm-color-primary)' : '1.5px solid var(--lb-badge-border)'}
+                        boxShadow={isUser ? '0 0 10px rgba(56, 189, 248, 0.35)' : 'none'}
+                      />
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span
+                            className="leaderboard-username"
+                            style={{
+                              fontWeight: 700,
+                              fontSize: '0.95rem',
+                              color: 'var(--lb-text-primary)',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {entry.displayName}
+                          </span>
+                          {isUser && (
+                            <span
+                              style={{
+                                backgroundColor: 'var(--ifm-color-primary)',
+                                color: 'white',
+                                fontSize: '0.65rem',
+                                fontWeight: 800,
+                                padding: '2px 5px',
+                                borderRadius: '4px',
+                              }}
+                            >
+                              YOU
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--lb-text-muted)', fontWeight: 500 }}>
+                          🔥 {entry.streak}d streak • 📖 {entry.readPagesCount} articles read
+                        </div>
+                      </div>
+                    </Link>
+
+                    {/* Cosmic Rank */}
+                    <div style={{ textAlign: 'center' }}>
+                      <Link
+                        to={isUser ? '/profile' : `/profile?uid=${entry.uid}`}
+                        title={`View ${entry.displayName}'s Engineering Profile & Codex`}
+                        style={{
+                          display: 'inline-block',
+                          fontSize: '0.8rem',
+                          fontWeight: 700,
+                          padding: '4px 10px',
+                          borderRadius: '8px',
+                          backgroundColor: 'var(--lb-badge-bg)',
+                          color: 'var(--lb-badge-text)',
+                          border: '1px solid var(--lb-badge-border)',
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                          transition: 'transform 0.15s ease, background-color 0.15s ease',
+                        }}
+                      >
+                        {entry.rankBadge} Lv.{entry.level}
+                      </Link>
+                    </div>
+
+                    {/* Stats */}
+                    <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--lb-text-secondary)', fontWeight: 600 }}>
+                      <div>🧩 {entry.quizzesCorrect} quizzes</div>
+                      <div>💻 {entry.dsaSolved} DSA</div>
+                    </div>
+
+                    {/* EXP */}
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontWeight: 900, fontSize: '1.05rem', color: 'var(--lb-sky)' }}>
+                        {entry.timeframeExp.toLocaleString()}
+                      </span>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--lb-text-muted)', fontWeight: 600 }}>EXP</div>
                     </div>
                   </div>
-                </div>
+                );
+              })
+            )}
+          </div>
+        </div>
 
-                {/* Cosmic Rank */}
-                <div style={{ textAlign: 'center' }}>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      padding: '4px 10px',
-                      borderRadius: '8px',
-                      backgroundColor: 'var(--ifm-color-emphasis-100)',
-                      color: 'var(--ifm-color-emphasis-800)',
-                    }}
-                  >
-                    {entry.rankBadge} Lv.{entry.level}
-                  </span>
-                </div>
+        {/* View More / Pagination Control Footer */}
+        {!loading && entries.length > 0 && (hasMore || visibleCount > INITIAL_LIMIT) && (
+          <div
+            style={{
+              padding: '1.25rem 1.5rem',
+              backgroundColor: 'var(--lb-header-bg)',
+              borderTop: '1px solid var(--lb-row-border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '12px',
+            }}
+          >
+            <div style={{ fontSize: '0.85rem', color: 'var(--lb-text-secondary)', fontWeight: 600 }}>
+              Showing <strong style={{ color: 'var(--lb-text-primary)' }}>{visibleEntries.length}</strong> of{' '}
+              <strong style={{ color: 'var(--lb-text-primary)' }}>{entries.length}</strong> ranked architects
+            </div>
 
-                {/* Stats */}
-                <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--ifm-color-emphasis-700)' }}>
-                  <div>🧩 {entry.quizzesCorrect} quizzes</div>
-                  <div>💻 {entry.dsaSolved} DSA</div>
-                </div>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {hasMore && (
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((prev) => prev + 50)}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: '8px',
+                    border: '1.5px solid var(--ifm-color-primary)',
+                    backgroundColor: 'var(--ifm-color-primary)',
+                    color: 'white',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    boxShadow: '0 2px 8px rgba(56, 189, 248, 0.25)',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <span>⬇️</span>
+                  <span>View More Ranks (+{Math.min(50, remainingCount)})</span>
+                </button>
+              )}
 
-                {/* EXP */}
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontWeight: 900, fontSize: '1.05rem', color: 'var(--ifm-color-primary)' }}>
-                    {entry.timeframeExp.toLocaleString()}
-                  </span>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--ifm-color-emphasis-500)' }}>EXP</div>
-                </div>
-              </div>
-            );
-          })
+              {remainingCount > 50 && (
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount(entries.length)}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--lb-badge-border)',
+                    backgroundColor: 'var(--lb-card-bg)',
+                    color: 'var(--lb-text-primary)',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <span>⚡</span>
+                  <span>View All ({entries.length})</span>
+                </button>
+              )}
+
+              {visibleCount > INITIAL_LIMIT && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVisibleCount(INITIAL_LIMIT);
+                    const tableTop = document.getElementById('leaderboard-table-top');
+                    if (tableTop) tableTop.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--lb-badge-border)',
+                    backgroundColor: 'transparent',
+                    color: 'var(--lb-text-secondary)',
+                    fontWeight: 650,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <span>⬆️</span>
+                  <span>Show Top 50 Only</span>
+                </button>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

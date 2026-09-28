@@ -66,8 +66,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Indexing & Query Optimization",
-    "permalink": "/technical-knowledge/database/indexing-query-optimization"
+    "title": "PostgreSQL BRIN Index (Block Range Index): 99% Smaller Than B-Tree",
+    "permalink": "/technical-knowledge/database/postgresql-brin-index-guide"
   },
   "next": {
     "title": "Performance & Monitoring",

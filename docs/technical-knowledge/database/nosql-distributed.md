@@ -11,6 +11,7 @@ import CapTriangleDiagram from '@site/src/components/CapTriangleDiagram';
 import CapDecisionMatrixDiagram from '@site/src/components/CapDecisionMatrixDiagram';
 import ConsistentHashingDiagram from '@site/src/components/ConsistentHashingDiagram';
 import ApacheCassandraArchitectureDiagram from '@site/src/components/ApacheCassandraArchitectureDiagram';
+import MongoReplicaSetDiagram from '@site/src/components/MongoReplicaSetDiagram';
 
 # NoSQL & Distributed Databases
 
@@ -756,22 +757,7 @@ Fix: increase `storage.wiredTiger.engineConfig.cacheSizeGB`, upgrade RAM, or arc
 
 ### Replication: Replica Sets
 
-```
-       ┌──────────────────────────────────────────┐
-       │              Replica Set                  │
-       │                                           │
-       │  ┌─────────┐   Replication    ┌────────┐  │
-       │  │ Primary │ ──────────────► │Secondary│  │
-       │  │ (writes)│    oplog         │(reads) │  │
-       │  └────┬────┘                 └────────┘  │
-       │       │ oplog                            │
-       │       ▼                      ┌────────┐  │
-       │  ┌─────────┐                 │Arbiter │  │
-       │  │Secondary│ ◄─────────────  │(votes) │  │
-       │  │         │                 └────────┘  │
-       │  └─────────┘                             │
-       └──────────────────────────────────────────┘
-```
+<MongoReplicaSetDiagram />
 
 - **oplog** (operations log): a capped collection on the primary recording every write as an idempotent operation
 - **Replication lag**: secondaries apply oplog entries asynchronously — lag can be seconds to minutes under heavy load

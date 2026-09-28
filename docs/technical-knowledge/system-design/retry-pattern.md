@@ -416,7 +416,7 @@ With this ordering:
 - If retries continue to fail, the circuit breaker counts failures.
 - When the failure rate threshold is breached, the circuit breaker opens — future calls fail immediately without triggering retries, giving the downstream service time to recover.
 
-For a detailed treatment of circuit breaker states, thresholds, and half-open behavior, see the **[Circuit Breaker Pattern](./circuit-breaker.md)** guide.
+For a detailed treatment of circuit breaker states, thresholds, and half-open behavior, see the **[Circuit Breaker Pattern](./circuit-breaker-pattern.md)** guide.
 
 ---
 
@@ -569,9 +569,7 @@ Ribbon) that re-selects an instance on each retry attempt.
 
 ## 🔗 Related Concepts
 
-- [Circuit Breaker Pattern](./circuit-breaker.md)
-- [Bulkhead Pattern](./bulkhead.md)
-- [Timeout Pattern](./timeout.md)
-- [Idempotency in APIs](./idempotency.md)
-- [Rate Limiting](./rate-limiting.md)
-- [Resilience4j Reference](./resilience4j.md)
+- [Circuit Breaker Pattern](./circuit-breaker-pattern.md)
+- [Bulkhead Pattern](./bulkhead-pattern.md)
+- [Idempotency in Distributed Systems](../banking/idempotency.md)
+- [Rate Limiting Algorithms](./rate-limiting-algorithms.md)

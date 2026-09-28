@@ -6,6 +6,8 @@ description: "Essential Java Collections Framework interview questions covering 
 tags: [java, interview, collections, core-java]
 ---
 
+import CollectionsHierarchyDiagram from '@site/src/components/CollectionsHierarchyDiagram';
+
 # Java Collections Framework Interview Questions & Answers
 
 These questions cover essential and tricky concepts of the Java Collections Framework with senior-level depth.
@@ -14,26 +16,7 @@ These questions cover essential and tricky concepts of the Java Collections Fram
 
 The Java Collections Framework is organized into a well-defined hierarchy of interfaces and implementations:
 
-```
-                     Iterable<E>
-                         │
-                    Collection<E>
-                    ┌────┼────────────┐
-                    │    │            │
-                 List<E> Set<E>    Queue<E>
-                    │    │            │
-              ┌─────┤    ├─────┐     ├──── Deque<E>
-              │     │    │     │     │
-         ArrayList  │  HashSet │  PriorityQueue
-         LinkedList │  TreeSet │  ArrayDeque
-         Vector     │  LinkedHashSet
-                    │
-                    │   (Separate hierarchy)
-                    │        Map<K,V>
-                    │    ┌────┼────────┐
-                    │  HashMap  TreeMap  LinkedHashMap
-                    │  Hashtable  ConcurrentHashMap
-```
+<CollectionsHierarchyDiagram />
 
 ### Key interfaces:
 * **List:** Ordered collection allowing duplicates and index-based access. Maintains insertion order.

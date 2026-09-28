@@ -6,11 +6,13 @@ export default function SidecarPatternDiagram() {
   return (
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/>
           <line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
         </svg>
-        <span>Sidecar Pattern Architecture (Kubernetes Pod Isolation)</span>
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>
+          Sidecar Pattern Architecture (Kubernetes Pod Linux Namespaces)
+        </span>
       </div>
 
       <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg" style={{ padding: '20px', borderRadius: '12px', marginBottom: '16px' }}>
@@ -44,8 +46,8 @@ export default function SidecarPatternDiagram() {
           </g>
 
           {/* Localhost Communication Arrows */}
-          <path id="path-app-sidecar" d="M 250 120 L 350 120" stroke="#34d399" strokeWidth="2" strokeDasharray="4,4" markerEnd="url(#arrow-green)" />
-          <path id="path-sidecar-app" d="M 350 140 L 250 140" stroke="#38bdf8" strokeWidth="2" strokeDasharray="4,4" markerEnd="url(#arrow-blue)" />
+          <path id="path-app-sidecar" d="M 250 120 L 345 120" stroke="#34d399" strokeWidth="2" markerEnd="url(#arrow-green)" className="interactive-diagram-flowing-path" />
+          <path id="path-sidecar-app" d="M 350 140 L 255 140" stroke="#38bdf8" strokeWidth="2" markerEnd="url(#arrow-blue)" className="interactive-diagram-flowing-path" />
           <text x="300" y="112" textAnchor="middle" fill="#34d399" fontSize="10" fontWeight="700">127.0.0.1:8080</text>
 
           {/* Sidecar Container */}

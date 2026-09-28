@@ -1,0 +1,610 @@
+[
+  {
+    "slug": "consistency-and-cap-theorem",
+    "title": "Consistency Models and the CAP Theorem",
+    "desc": "The CAP theorem demystified, PACELC",
+    "h2s": [
+      "Mental model in five lines",
+      "The CAP Theorem",
+      "PACELC: Beyond CAP",
+      "The Consistency Spectrum",
+      "Design Choices: Implementing Consistency",
+      "Real-World Implementations",
+      "Common Pitfalls",
+      "How to Choose"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "distributed-consensus",
+    "title": "Distributed Consensus",
+    "desc": "A practitioner",
+    "h2s": [
+      "Mental model",
+      "Why consensus is hard: FLP and its escape hatches",
+      "Paxos: the foundation",
+      "Raft: designed for understandability",
+      "Quorum systems",
+      "Byzantine fault tolerance",
+      "Consensus in production: choosing a system",
+      "Common production pitfalls"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "time-and-ordering",
+    "title": "Time and Ordering in Distributed Systems",
+    "desc": "How distributed systems establish event ordering without a global clock \u2014 physical synchronisation (NTP, PTP, TrueTime), logical and hybrid clocks (Lamport, vector, HLC), broadcast ordering, and ID schemes (Snowflake, UUIDv7), grounded in the Spanner, CockroachDB, Dynamo, and Discord papers.",
+    "h2s": [
+      "Mental model",
+      "Why distributed time is hard",
+      "Physical clock synchronisation",
+      "Logical clocks",
+      "Hybrid Logical Clocks",
+      "Ordering guarantees and broadcast protocols",
+      "Time-sortable IDs",
+      "Real-world implementations"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "failure-modes-and-resilience",
+    "title": "Failure Modes and Resilience Patterns",
+    "desc": "A taxonomy of distributed system failures \u2014 from fail-stop crashes to insidious gray failures \u2014 paired with layered resilience patterns like circuit breakers, bulkheads, and load shedding, including their own failure modes.",
+    "h2s": [
+      "Mental model",
+      "Failure taxonomy",
+      "Detection",
+      "Resilience patterns",
+      "Blast-radius isolation",
+      "Chaos engineering",
+      "Common pitfalls",
+      "Practical takeaways"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "rate-limiting-strategies",
+    "title": "Rate Limiting Strategies: Token Bucket, Leaky Bucket, and Sliding Window",
+    "desc": "Five rate limiting algorithms compared \u2014 token bucket, leaky bucket, fixed window, sliding window log, and sliding window counter \u2014 with how AWS API Gateway, Stripe, Cloudflare, GitHub, and NGINX deploy them, plus distributed coordination patterns using Redis and Lua.",
+    "h2s": [
+      "Abstract",
+      "Token Bucket",
+      "Leaky Bucket",
+      "Fixed Window Counter",
+      "Sliding Window Log",
+      "Sliding Window Counter",
+      "Choosing an algorithm",
+      "Distributed Rate Limiting"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "circuit-breaker-patterns",
+    "title": "Circuit Breaker Patterns for Resilient Systems",
+    "desc": "State machines, count vs time-based detection, thread-pool vs semaphore isolation, half-open recovery, the Hystrix \u2192 Resilience4j \u2192 adaptive-concurrency arc, and the cell-based-architecture critique that makes the whole pattern controversial.",
+    "h2s": [
+      "Why the pattern exists",
+      "State machine",
+      "Per-request flow",
+      "Detection strategies",
+      "Isolation models",
+      "Scoping: per-service or per-host?",
+      "The Shopify Semian case study",
+      "Real-world implementations"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "capacity-planning-and-estimation",
+    "title": "Capacity Planning and Back-of-the-Envelope Estimates",
+    "desc": "Reference latency numbers, powers of two, and estimation techniques for QPS, storage, bandwidth, and server counts \u2014 turning vague requirements into concrete infrastructure math.",
+    "h2s": [
+      "Mental Model",
+      "Reference Numbers Every Engineer Should Know",
+      "Core Estimation Techniques",
+      "Worked Examples",
+      "Design Choices: When Estimates Drive Architecture",
+      "Common Pitfalls",
+      "Communicating Estimates",
+      "What This Article Doesn\u2019t Cover"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "storage-choices-sql-vs-nosql",
+    "title": "Storage Choices: SQL vs NoSQL",
+    "desc": "A decision framework for picking SQL, NoSQL, or NewSQL \u2014 driven by data model, access patterns, consistency budget, and the operational reality your team can actually carry. Covers relational, document, key-value, wide-column, and graph stores with cited production case studies.",
+    "h2s": [
+      "Mental model",
+      "The database landscape",
+      "Design choice 1: data model",
+      "Design choice 2: consistency",
+      "Design choice 3: scaling strategy",
+      "Design choice 4: operational reality",
+      "Polyglot persistence",
+      "Real-world case studies"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "sharding-and-replication",
+    "title": "Sharding and Replication",
+    "desc": "Two orthogonal axes of database scaling \u2014 sharding (hash, range, consistent hash, directory) for write throughput and replication (single-leader, multi-leader, leaderless) for availability \u2014 with production patterns from CockroachDB, Cassandra, DynamoDB, and Vitess.",
+    "h2s": [
+      "Abstract",
+      "Sharding Strategies",
+      "Replication Models",
+      "Synchronous vs. Asynchronous Replication",
+      "Read/Write Routing",
+      "Consistency and Replication Lag",
+      "How to Choose",
+      "Resharding and Data Migration"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "indexing-and-query-optimization",
+    "title": "Indexing and Query Optimization",
+    "desc": "B-trees, hash indexes, LSM trees, composite index design, and query planner cost models \u2014 covering how databases choose between index scans and sequential scans, plus maintenance strategies for production systems.",
+    "h2s": [
+      "Mental model",
+      "Index Data Structures",
+      "Specialized Index Types",
+      "Composite Index Design",
+      "Query Planner Behavior",
+      "Write Amplification and Index Overhead",
+      "Index Bloat and Maintenance",
+      "Monitoring and Diagnostics"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "transactions-and-acid",
+    "title": "Transactions and ACID Properties",
+    "desc": "ACID properties from implementation to practice \u2014 covering WAL, MVCC, and locking for single-node transactions, isolation level semantics across major databases, distributed protocols (2PC, Spanner",
+    "h2s": [
+      "Abstract",
+      "ACID Properties Deep Dive",
+      "Isolation Level Implementations",
+      "Distributed Transactions",
+      "Alternatives to Distributed Transactions",
+      "Real-World Examples and Trade-offs",
+      "How to Choose",
+      "Common Pitfalls"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "caching-fundamentals-and-strategies",
+    "title": "Caching Fundamentals and Strategies",
+    "desc": "Read patterns, write policies, invalidation strategies, eviction algorithms, and cache topologies \u2014 explained from CPU L1 through globally distributed CDNs, with primary-source numbers from Netflix, Salesforce, and Facebook.",
+    "h2s": [
+      "Mental model",
+      "Why caching works: the principle of locality",
+      "Read patterns",
+      "Design choices: write policies",
+      "Design choices: invalidation",
+      "Design choices: replacement algorithms",
+      "Design choices: distributed cache topology",
+      "Failure modes (plan for these)"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "load-balancers-architecture",
+    "title": "Load Balancer Architecture: L4 vs L7, Algorithms, and TLS",
+    "desc": "L4 vs L7 load balancing, algorithm selection (round robin, least connections, consistent hash, P2C, Maglev), TLS termination strategies, health checking and graceful drain, and two-tier patterns from Envoy, HAProxy, AWS, Netflix, Google, and Cloudflare.",
+    "h2s": [
+      "Mental model",
+      "L4 vs L7",
+      "Algorithms",
+      "Health checking",
+      "TLS termination",
+      "Session affinity",
+      "Production patterns",
+      "Common pitfalls"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "cdn-architecture-and-caching",
+    "title": "CDN Architecture and Edge Caching",
+    "desc": "CDN request routing via DNS and Anycast, cache key design, TTL and invalidation trade-offs, tiered caching with origin shields, and edge compute \u2014 with examples from Cloudflare and CloudFront.",
+    "h2s": [
+      "Mental Model",
+      "Request Routing Mechanisms",
+      "Cache Key Design",
+      "TTL Strategies and Trade-offs",
+      "Cache Invalidation Strategies",
+      "Origin Shielding and Tiered Caching",
+      "Edge Compute",
+      "Signed URLs and Signed Cookies"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "api-gateway-patterns",
+    "title": "API Gateway Patterns: Routing, Auth, and Policies",
+    "desc": "Design choices for API gateways covering routing strategies, JWT and API key authentication, rate limiting algorithms, BFF and service-mesh interplay, with cited production data from Netflix, Stripe, Canva, AWS, and Kong.",
+    "h2s": [
+      "Mental model",
+      "Gateway responsibilities",
+      "Architecture patterns",
+      "Design choices and trade-offs",
+      "Real-world implementations",
+      "Common pitfalls",
+      "Performance",
+      "API versioning"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "service-discovery-and-registry",
+    "title": "Service Discovery and Registry Patterns",
+    "desc": "How services find each other when instance locations change continuously \u2014 client-side, server-side, and service mesh discovery patterns, registry technologies like ZooKeeper, etcd, Consul, and Eureka, and the freshness-vs-stability trade-offs behind each approach.",
+    "h2s": [
+      "Mental Model",
+      "Discovery Models",
+      "Registration and Heartbeat Lifecycle",
+      "Registry Design and Technologies",
+      "Health Checking Patterns",
+      "DNS-Based Discovery Trade-offs",
+      "Security Considerations",
+      "Failure Modes and Split-Brain"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "dns-deep-dive",
+    "title": "DNS Deep Dive",
+    "desc": "An infrastructure-level survey of DNS \u2014 resolution mechanics, record types, TTL and caching, DNS-based load balancing, DNSSEC and DoH/DoT/DoQ, and failover patterns. The starting point for the broader DNS series.",
+    "h2s": [
+      "Mental model",
+      "DNS resolution process",
+      "Record types and design rationale",
+      "TTL strategies and trade-offs",
+      "DNS-based load balancing",
+      "DNS security",
+      "DNS failover and health checks",
+      "Real-world examples"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "queues-and-pubsub",
+    "title": "Queues and Pub/Sub: Decoupling and Backpressure",
+    "desc": "Queues distribute work, topics broadcast events. Compare point-to-point, pub/sub, and hybrid consumer-group patterns \u2014 with delivery semantics, ordering, backpressure, and production lessons from Kafka, RabbitMQ, SQS, Pulsar, and NATS.",
+    "h2s": [
+      "Mental Model",
+      "Messaging Patterns",
+      "Delivery Semantics",
+      "Message Ordering",
+      "Backpressure and Flow Control",
+      "Retry and Dead Letter Queues",
+      "Idempotency Patterns",
+      "Scaling Consumers"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "event-driven-architecture",
+    "title": "Event-Driven Architecture",
+    "desc": "When events beat synchronous calls, and how to get the patterns right \u2014 saga orchestration vs. choreography, the transactional outbox, schema evolution, eventual-consistency UX, and the hidden operational bill, with production numbers from LinkedIn, Uber, and Netflix.",
+    "h2s": [
+      "What you should already know",
+      "Mental model",
+      "Message taxonomy: events are not the only thing on the wire",
+      "Production reality, in numbers",
+      "When events beat requests",
+      "Distributed transactions: the saga pattern",
+      "The transactional outbox: bridging state and events",
+      "Schema evolution: events outlive their producers"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "rpc-and-api-design",
+    "title": "RPC and API Design",
+    "desc": "REST, gRPC, and GraphQL compared at the wire \u2014 design constraints, streaming, and load-balancing behavior \u2014 plus production-grade guidance on versioning, pagination, rate limiting, and machine-readable contracts.",
+    "h2s": [
+      "Mental model",
+      "REST: constraints, not a protocol",
+      "gRPC: contracts, framing, and streams",
+      "GraphQL: shifting query shape to the client",
+      "API versioning",
+      "Pagination",
+      "Rate limiting",
+      "Machine-readable contracts"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "crdt-for-collaborative-systems",
+    "title": "CRDTs for Collaborative Systems",
+    "desc": "Deep dive into Conflict-free Replicated Data Types \u2014 state-based, op-based, and delta-state variants \u2014 covering the join-semilattice math behind guaranteed convergence, sequence CRDTs for collaborative text, production deployments at Figma, Yjs, Automerge, and Riak, and how to choose between CRDTs, OT, and the newer event-graph approach (Eg-walker).",
+    "h2s": [
+      "Mental model",
+      "Why naive solutions fail",
+      "CRDT variants in detail",
+      "Common CRDT data structures",
+      "Sequence CRDTs for collaborative text",
+      "Production implementations",
+      "Operational concerns",
+      "CRDT vs Operational Transformation"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "operational-transformation",
+    "title": "Operational Transformation",
+    "desc": "How Operational Transformation enables real-time collaborative editing \u2014 TP1/TP2 correctness, why client-server beats peer-to-peer in practice, and why most published OT algorithms were later proven incorrect.",
+    "h2s": [
+      "Mental model",
+      "The problem OT solves",
+      "Pattern overview",
+      "Design variants",
+      "Production implementations",
+      "OT vs CRDTs",
+      "Implementation guide",
+      "Common pitfalls"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "distributed-locking",
+    "title": "Distributed Locking",
+    "desc": "How distributed locks actually work across Redis, ZooKeeper, etcd, and Chubby \u2014 covering lease-based expiration, the Redlock controversy, fencing tokens, and when you need correctness locks versus efficiency locks.",
+    "h2s": [
+      "Mental Model",
+      "The Problem",
+      "Lease-Based Locking",
+      "Design Paths",
+      "Fencing Tokens",
+      "The Redlock Controversy",
+      "Production Implementations",
+      "Lock-Free Alternatives"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "exactly-once-delivery",
+    "title": "Exactly-Once Delivery",
+    "desc": "Why true exactly-once delivery is impossible and how production systems approximate it \u2014 at-least-once delivery composed with idempotency keys, broker dedup windows, transactional consumers, and the outbox pattern.",
+    "h2s": [
+      "Mental Model",
+      "The Problem",
+      "Delivery Semantics",
+      "Design Paths",
+      "Production Implementations",
+      "Common Pitfalls",
+      "Implementation Guide",
+      "Conclusion"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "event-sourcing-deep-dive",
+    "title": "Event Sourcing",
+    "desc": "Storing state as immutable events instead of mutable rows \u2014 covering stream design, snapshot strategies, projection patterns, schema evolution via upcasting, and the practical trade-offs that determine when event sourcing fits.",
+    "h2s": [
+      "Mental model",
+      "Why CRUD and bolt-on audit tables fall short",
+      "The pattern in code",
+      "Design paths",
+      "Snapshots",
+      "Event schema evolution",
+      "Projections and read models",
+      "Choosing an event store"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "change-data-capture",
+    "title": "Change Data Capture",
+    "desc": "Log-based, trigger-based, and polling-based CDC approaches compared, with Debezium implementation details, Kafka integration patterns, and the trade-offs that make log-based CDC the production standard.",
+    "h2s": [
+      "Mental Model",
+      "The Problem CDC Solves",
+      "CDC Approaches",
+      "Log-Based CDC Internals",
+      "Design Paths",
+      "Production Implementations",
+      "Schema Evolution",
+      "Exactly-Once Semantics"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "database-migrations-at-scale",
+    "title": "Database Migrations at Scale",
+    "desc": "How to change database schemas without downtime using shadow-table tools (pt-osc, gh-ost, Spirit), the expand-contract pattern, and instant DDL \u2014 with decision frameworks for choosing the right approach based on table size and write volume.",
+    "h2s": [
+      "Mental model",
+      "Why the naive approaches fail",
+      "Design paths",
+      "Production implementations",
+      "Implementation guide",
+      "Common pitfalls",
+      "Conclusion",
+      "Appendix"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "multi-region-architecture",
+    "title": "Multi-Region Architecture",
+    "desc": "Navigate the trade-offs of active-passive, active-active, and cell-based multi-region architectures \u2014 covering data replication strategies, conflict resolution, and lessons from Netflix, Slack, and Uber.",
+    "h2s": [
+      "Abstract",
+      "The Problem",
+      "Design Paths",
+      "Data Replication Strategies",
+      "Conflict Resolution",
+      "Global Load Balancing",
+      "Production Implementations",
+      "Data Residency and Sovereignty"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "lru-cache-design",
+    "title": "LRU Cache Design: Eviction Strategies and Trade-offs",
+    "desc": "From the classic hash map + doubly linked list LRU to modern eviction strategies like 2Q, ARC, SIEVE, and W-TinyLFU \u2014 understand the trade-offs between recency, frequency, memory overhead, and concurrency in cache design.",
+    "h2s": [
+      "Abstract",
+      "The Classic: Understanding LRU",
+      "LRU Implementation: Achieving O(1) Operations",
+      "When LRU Fails: The Scan Problem",
+      "Design Choices: Scan-Resistant Algorithms",
+      "How to Choose",
+      "Real-World Applications",
+      "Production Implementations"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "unique-id-generation",
+    "title": "Unique ID Generation in Distributed Systems",
+    "desc": "How UUID v4, UUID v7, Snowflake, ULID, and KSUID trade off coordination, sortability, collision probability, and B-tree locality \u2014 with the RFC 9562 standardisation of UUID v7 (May 2024) and PostgreSQL 18",
+    "h2s": [
+      "The mental model",
+      "Why coordination is the real cost",
+      "How each format actually looks",
+      "Why time-ordered IDs win on B-trees",
+      "Trade-off matrices",
+      "Real-world deployments",
+      "Common pitfalls",
+      "How to choose"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "distributed-cache-design",
+    "title": "Distributed Cache Design",
+    "desc": "A deep guide to distributed caching \u2014 topologies, consistent hashing, invalidation, hot-key mitigation, and the operational patterns Meta, Uber, Twitter, and Discord publish about their production caches.",
+    "h2s": [
+      "Mental model",
+      "Cache topologies",
+      "Redis architecture",
+      "Memcached architecture",
+      "Consistent hashing deep dive",
+      "Cache invalidation strategies",
+      "Eviction policies",
+      "Hot keys"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "blob-storage-design",
+    "title": "Blob Storage Design",
+    "desc": "How object storage systems are actually built \u2014 chunking, content-defined deduplication, metadata-data separation, replication vs erasure coding (and LRC), tiering, garbage collection, and multipart uploads \u2014 with the trade-offs and failure modes that shape every layer.",
+    "h2s": [
+      "Thesis",
+      "Object vs block vs file storage",
+      "Chunking strategies",
+      "Deduplication",
+      "Metadata management",
+      "Replication and durability",
+      "Garbage collection",
+      "Multipart uploads"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "distributed-search-engine",
+    "title": "Distributed Search Engine",
+    "desc": "Inverted index internals, Lucene",
+    "h2s": [
+      "Mental model",
+      "The inverted index",
+      "Index partitioning strategies",
+      "Query processing and ranking",
+      "Hybrid retrieval: lexical + dense vector",
+      "Near-real-time indexing",
+      "Distributed query execution",
+      "Elasticsearch and OpenSearch architecture"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "distributed-logging-system",
+    "title": "Distributed Logging System",
+    "desc": "Designing a centralized logging pipeline from collection agents to tiered storage \u2014 covering data models, indexing trade-offs (Elasticsearch vs Loki vs ClickHouse), stream processing, and scaling lessons from Netflix",
+    "h2s": [
+      "Mental model",
+      "Log data model",
+      "Collection architecture",
+      "Buffer and stream processing",
+      "Storage engines",
+      "Indexing strategies",
+      "Query patterns",
+      "Scaling approaches"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "distributed-monitoring",
+    "title": "Distributed Monitoring Systems",
+    "desc": "Building observability infrastructure that scales \u2014 metric types and the cardinality problem, push vs. pull collection, time-series storage engines, trace sampling strategies, and SLO-based alerting with real-world numbers.",
+    "h2s": [
+      "Abstract",
+      "What to monitor: USE, RED, and the Four Golden Signals",
+      "Metrics: types and data models",
+      "Collection architecture: pull vs. push",
+      "Time-series database internals",
+      "Global view: federation, remote write, and downsampling tiers",
+      "Logs",
+      "Distributed tracing"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "task-scheduler-design",
+    "title": "Task Scheduler Design",
+    "desc": "Designing distributed task schedulers \u2014 coordination via database row locks vs. consensus, cron / interval / delay / event-triggered models, at-least-once + idempotency for effectively-once execution, heartbeat-based recovery, and how Airflow, Temporal, Celery, and Google",
+    "h2s": [
+      "Mental model",
+      "Scheduling models",
+      "Coordination mechanisms",
+      "Task storage",
+      "Delivery guarantees",
+      "Failure handling",
+      "Clock skew and time synchronisation",
+      "Handling concurrent executions"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "sharded-counters",
+    "title": "Sharded Counters",
+    "desc": "Scaling counters past single-key write bottlenecks using sharding (random, hash-based, time-based), aggregation strategies for O(1) reads, probabilistic structures (HyperLogLog, Count-Min Sketch), and CRDT counters (G-Counter, PN-Counter) for active-active replication \u2014 with production patterns from Firestore, DynamoDB, Netflix, Meta TAO, Twitter Manhattan, and Redis Active-Active.",
+    "h2s": [
+      "Mental model",
+      "Why a single counter melts",
+      "Axis 1: Shard layout",
+      "Axis 2: Aggregation timing",
+      "Axis 3: Consistency model",
+      "Probabilistic counting",
+      "Convergent counters (CRDTs)",
+      "Production architectures"
+    ],
+    "status": "ok"
+  },
+  {
+    "slug": "leaderboard-design",
+    "title": "Leaderboard Design",
+    "desc": "Design real-time leaderboards on Redis sorted sets - skiplist + hash table internals, ranking semantics, tie-breaking, score-range partitioning, and the hybrid exact / approximate path used at hyperscale.",
+    "h2s": [
+      "Why a relational database is the wrong default",
+      "Mental model: the ZSET dual structure",
+      "Ranking semantics: dense, sparse, unique",
+      "Tie-breaking: pick one and live with the trade-off",
+      "Time-windowed leaderboards",
+      "Friend leaderboards: intersecting a global ZSET",
+      "Scaling beyond a single Redis instance",
+      "Approximate ranking for the long tail"
+    ],
+    "status": "ok"
+  }
+]

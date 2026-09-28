@@ -16,19 +16,12 @@ export default {
     "firebaseMessagingSenderId": "14737596078",
     "firebaseAppId": "1:14737596078:web:ece78d5b899bb2ad05573f"
   },
-  "stylesheets": [
-    {
-      "href": "https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css",
-      "type": "text/css",
-      "integrity": "sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM",
-      "crossorigin": "anonymous"
-    }
-  ],
   "organizationName": "minhkhuong2404",
   "projectName": "docusaurus-knowledge-base-template",
   "onBrokenLinks": "warn",
   "clientModules": [
-    "./src/clientModules/gtagFix.ts"
+    "./src/clientModules/gtagFix.ts",
+    "./src/clientModules/scrollRestoration.ts"
   ],
   "future": {
     "v4": {
@@ -65,7 +58,12 @@ export default {
             null
           ],
           "rehypePlugins": [
-            null
+            [
+              null,
+              {
+                "strict": false
+              }
+            ]
           ]
         },
         "blog": false,
@@ -123,18 +121,67 @@ export default {
     "@docusaurus/theme-mermaid"
   ],
   "themeConfig": {
+    "image": "img/social-preview.png",
     "metadata": [
       {
         "name": "keywords",
-        "content": "development, blog, software, programming, engineering"
+        "content": "development, blog, software, programming, engineering, system design, java, distributed systems, leetcode"
       },
       {
         "name": "description",
-        "content": "A knowledge base for software engineers to share and document technical information."
+        "content": "Internal technical documentation and interview readiness knowledge base covering Distributed Systems, JVM Concurrency, Database Engine Internals, and Architecture."
       },
       {
         "name": "author",
         "content": "Khuong Lu"
+      },
+      {
+        "property": "og:title",
+        "content": "Engineering Knowledge Base"
+      },
+      {
+        "property": "og:description",
+        "content": "Deep-dive technical documentation on Distributed Systems, JVM Concurrency, Database Engine Internals & System Design."
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      },
+      {
+        "property": "og:url",
+        "content": "https://luminhkhuong.dev"
+      },
+      {
+        "property": "og:image",
+        "content": "https://luminhkhuong.dev/img/social-preview.png"
+      },
+      {
+        "property": "og:image:width",
+        "content": "1200"
+      },
+      {
+        "property": "og:image:height",
+        "content": "630"
+      },
+      {
+        "property": "og:image:alt",
+        "content": "Engineering Knowledge Base - Distributed Systems & System Design"
+      },
+      {
+        "name": "twitter:card",
+        "content": "summary_large_image"
+      },
+      {
+        "name": "twitter:title",
+        "content": "Engineering Knowledge Base"
+      },
+      {
+        "name": "twitter:description",
+        "content": "Deep-dive technical documentation on Distributed Systems, JVM Concurrency, Database Engine Internals & System Design."
+      },
+      {
+        "name": "twitter:image",
+        "content": "https://luminhkhuong.dev/img/social-preview.png"
       },
       {
         "name": "viewport",
@@ -150,6 +197,10 @@ export default {
       },
       {
         "name": "apple-mobile-web-app-capable",
+        "content": "yes"
+      },
+      {
+        "name": "mobile-web-app-capable",
         "content": "yes"
       },
       {
@@ -170,6 +221,10 @@ export default {
       }
     ],
     "headTags": [
+      {
+        "tagName": "script",
+        "innerHTML": "\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar preset = localStorage.getItem('kb_theme_preset') || 'emerald';\n\t\t\t\t\t\tdocument.documentElement.setAttribute('data-theme-preset', preset);\n\t\t\t\t\t} catch (e) {}\n\t\t\t\t"
+      },
       {
         "tagName": "script",
         "innerHTML": "\n\t\t\t\t\tif (typeof window !== 'undefined' && !window.gtag) {\n\t\t\t\t\t\twindow.dataLayer = window.dataLayer || [];\n\t\t\t\t\t\twindow.gtag = function() { window.dataLayer.push(arguments); };\n\t\t\t\t\t}\n\t\t\t\t"
@@ -215,7 +270,9 @@ export default {
         "tagName": "link",
         "attributes": {
           "rel": "stylesheet",
-          "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+          "media": "print",
+          "onload": "this.media='all'"
         }
       }
     ],
@@ -241,14 +298,18 @@ export default {
           "label": "Docs"
         },
         {
+          "to": "/hub",
+          "label": "Career Hub",
+          "position": "left"
+        },
+        {
           "to": "/arcade",
           "label": "Arcade",
           "position": "left"
         },
         {
-          "to": "/stats",
-          "label": "Stats",
-          "position": "left"
+          "type": "custom-themePalettePicker",
+          "position": "right"
         },
         {
           "type": "custom-userNavbarItem",
@@ -613,8 +674,8 @@ export default {
     },
     "colorMode": {
       "defaultMode": "dark",
-      "disableSwitch": true,
-      "respectPrefersColorScheme": false
+      "disableSwitch": false,
+      "respectPrefersColorScheme": true
     },
     "blog": {
       "sidebar": {
@@ -653,6 +714,7 @@ export default {
   ],
   "scripts": [],
   "headTags": [],
+  "stylesheets": [],
   "titleDelimiter": "|",
   "noIndex": false
 };

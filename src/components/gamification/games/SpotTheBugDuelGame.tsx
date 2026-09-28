@@ -1,8 +1,44 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useUserProgress } from '../../../context/UserProgressContext';
 import { triggerFireworks } from '../../../utils/fireworks';
+import { arcadeAudio } from '../../../utils/arcadeAudio';
 import { BUG_CHALLENGES, BugSnippetsChallenge } from '../../../data/spotTheBugData';
 import { fetchSpotTheBugQuestions, QuizQuestion } from '../../../services/googleSheetQuizService';
+import { Highlight, Prism } from 'prism-react-renderer';
+import prismTheme from '../../../theme/prismTheme';
+
+// Ensure Java support is registered in Prism if available
+if (typeof globalThis !== 'undefined') {
+  (globalThis as any).Prism = Prism;
+} else if (typeof window !== 'undefined') {
+  (window as any).Prism = Prism;
+}
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('prismjs/components/prism-java');
+} catch {
+  // fallback if already loaded or in browser bundle
+}
+
+import { sanitizeBugCode } from '../../../utils/sanitizeBugCode';
+export { sanitizeBugCode };
+
+function detectCodeLanguage(code: string, category: string): string {
+  const trimmed = code.trim();
+  if (category === 'database' || trimmed.startsWith('SELECT') || trimmed.startsWith('CREATE') || trimmed.startsWith('INSERT') || trimmed.startsWith('UPDATE') || trimmed.startsWith('DELETE') || trimmed.startsWith('ALTER')) {
+    return 'sql';
+  }
+  if (category === 'devops' && (trimmed.startsWith('apiVersion:') || trimmed.startsWith('services:') || trimmed.startsWith('version:'))) {
+    return 'yaml';
+  }
+  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+    return 'json';
+  }
+  if (trimmed.startsWith('#!/bin/bash') || trimmed.startsWith('kubectl ') || trimmed.startsWith('docker ')) {
+    return 'bash';
+  }
+  return 'java';
+}
 
 type CategoryKey =
   | 'all'
@@ -128,9 +164,10 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
 
             const diff = q.difficulty === 'Junior' ? 'Junior' : q.difficulty === 'Mid' ? 'Mid' : q.difficulty === 'Staff' ? 'Staff' : 'Senior';
             const diffColor = diff === 'Junior' ? '#38bdf8' : diff === 'Mid' ? '#34d399' : diff === 'Staff' ? '#a855f7' : '#f59e0b';
-            const codeContent = (q.codeSnippet && q.codeSnippet.trim().length > 0)
+            const rawCode = (q.codeSnippet && q.codeSnippet.trim().length > 0)
               ? q.codeSnippet.replace(/\\n/g, '\n')
               : '// No source snippet provided';
+            const codeContent = sanitizeBugCode(rawCode);
 
             return {
               id: q.id,
@@ -168,6 +205,12 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   // Filter challenges by category AND difficulty
   const filteredChallenges = useMemo(() => {
     let pool = selectedCategory === 'all' ? challenges : challenges.filter((c) => c.category === selectedCategory);
+    if (pool.length === 0) {
+      pool = selectedCategory === 'all' ? BUG_CHALLENGES : BUG_CHALLENGES.filter((c) => c.category === selectedCategory);
+    }
+    if (pool.length === 0) {
+      pool = BUG_CHALLENGES;
+    }
     if (selectedDifficulty === 'easy') {
       const match = pool.filter((c) => c.difficulty === 'Junior');
       if (match.length > 0) pool = match;
@@ -184,9 +227,10 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   const currentIdx = categoryIndexMap[selectedCategory] ?? 0;
   const safeIdx = filteredChallenges.length > 0 ? currentIdx % filteredChallenges.length : 0;
   const currentChallenge = filteredChallenges[safeIdx] || BUG_CHALLENGES[0];
+  const currentChallengeIndex = safeIdx;
 
   const shuffledOptions = useMemo(() => {
-    if (!currentChallenge) return [];
+    if (!currentChallenge || !Array.isArray(currentChallenge.options)) return [];
     return shuffle(currentChallenge.options);
   }, [currentChallenge]);
 
@@ -211,6 +255,10 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     return () => clearInterval(timer);
   }, [gameState, activeModeConfig.timerSecs]);
 
+  // Inspection tabs & Thread stepper
+  const [activeInspectorTab, setActiveInspectorTab] = useState<'code' | 'threads' | 'diff'>('code');
+  const [threadStep, setThreadStep] = useState<number>(0);
+
   const resetRoundState = () => {
     setChosenOptionId(null);
     setClickedLineNumber(null);
@@ -220,14 +268,18 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     setBreakpointHintUsed(false);
     setTimeWarpUsed(false);
     setTimeLeft(activeModeConfig.timerSecs || 30);
+    setActiveInspectorTab('code');
+    setThreadStep(0);
   };
 
   const handleStartGame = () => {
+    arcadeAudio.playLaser();
     setGameState('playing');
     resetRoundState();
   };
 
   const handleNextChallenge = () => {
+    arcadeAudio.playFlip();
     setCategoryIndexMap((prev) => ({
       ...prev,
       [selectedCategory]: (prev[selectedCategory] ?? 0) + 1,
@@ -237,6 +289,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   };
 
   const handleSkipChallenge = () => {
+    arcadeAudio.playBlip();
     handleNextChallenge();
   };
 
@@ -247,6 +300,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     setGameState('revealed');
 
     if (option.isCorrect) {
+      arcadeAudio.playCorrect();
       const lineBonus = lineIdentifiedBonus ? 50 : 0;
       const speedBonus = activeModeConfig.timerSecs ? Math.max(0, timeLeft * 2) : 10;
       const earnedScore = 100 + lineBonus + speedBonus;
@@ -255,10 +309,12 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
 
       setScore(newScore);
       setCombo(newCombo);
-      markBugSolved(currentChallenge.id);
+      if (currentChallenge?.id) {
+        markBugSolved(currentChallenge.id);
+      }
 
       const expGain = 25 + (newCombo > 2 ? 15 : 0);
-      addExp(expGain, `Spotted bug: ${currentChallenge.title}`);
+      addExp(expGain, `Spotted bug: ${currentChallenge?.title || 'Defect'}`);
       saveMiniGameScore('spot_bug', newScore);
 
       if (newCombo >= 3) {
@@ -266,6 +322,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
       }
       triggerFireworks(2000);
     } else {
+      arcadeAudio.playError();
       setCombo(0);
     }
   };
@@ -273,15 +330,18 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   const handleLineClick = (lineNum: number) => {
     if (gameState === 'revealed') return;
     setClickedLineNumber(lineNum);
-    if (lineNum === currentChallenge.buggyLineNumber) {
+    if (lineNum === currentChallenge?.buggyLineNumber) {
+      arcadeAudio.playCorrect();
       setLineIdentifiedBonus(true);
     } else {
+      arcadeAudio.playBlip();
       setLineIdentifiedBonus(false);
     }
   };
 
   const handleUseAnalyzer = () => {
     if (analyzerUsed || gameState === 'revealed') return;
+    arcadeAudio.playBlip();
     setAnalyzerUsed(true);
     const incorrectOptions = shuffledOptions.filter((o) => !o.isCorrect);
     const toEliminate = shuffle(incorrectOptions).slice(0, 2).map((o) => o.id);
@@ -290,19 +350,35 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
 
   const handleUseBreakpoint = () => {
     if (breakpointHintUsed || gameState === 'revealed') return;
+    arcadeAudio.playLaser();
     setBreakpointHintUsed(true);
-    setClickedLineNumber(currentChallenge.buggyLineNumber);
-    setLineIdentifiedBonus(true);
+    if (currentChallenge?.buggyLineNumber) {
+      setClickedLineNumber(currentChallenge.buggyLineNumber);
+      setLineIdentifiedBonus(true);
+    }
   };
 
-  const codeLines = useMemo(() => {
-    return currentChallenge.code.split('\n');
-  }, [currentChallenge.code]);
+  const handleUseTimeWarp = () => {
+    if (timeWarpUsed || gameState === 'revealed') return;
+    arcadeAudio.playLaser();
+    setTimeWarpUsed(true);
+    setTimeLeft((prev) => prev + 15);
+  };
+
+  const cleanedCode = useMemo(() => {
+    return sanitizeBugCode(currentChallenge?.code || '');
+  }, [currentChallenge?.code]);
+
+  const targetLanguage = useMemo(() => {
+    const detected = detectCodeLanguage(cleanedCode, currentChallenge?.category || 'concurrency');
+    return Prism.languages[detected] ? detected : (Prism.languages.java ? 'java' : 'clike');
+  }, [cleanedCode, currentChallenge?.category]);
 
   const activeCategoryTab = CATEGORY_TABS.find((c) => c.id === selectedCategory) || CATEGORY_TABS[0];
 
   return (
     <div
+      className="arcade-game-arena spot-bug-game"
       style={{
         background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 13, 22, 0.98) 100%)',
         borderRadius: '18px',
@@ -358,6 +434,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   <button
                     key={diff.id}
                     type="button"
+                    className={`arcade-pill-btn diff-btn diff-${diff.id}${isSelected ? ' selected' : ''}`}
                     onClick={() => setSelectedDifficulty(diff.id)}
                     style={{
                       padding: '6px 12px',
@@ -384,6 +461,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   <button
                     key={mode.id}
                     type="button"
+                    className={`arcade-pill-btn mode-btn mode-${mode.id}${isSelected ? ' selected' : ''}`}
                     onClick={() => setGameMode(mode.id)}
                     style={{
                       padding: '6px 10px',
@@ -413,18 +491,19 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
           {/* 🚀 START BUTTON */}
           <button
             type="button"
+            className="arcade-start-btn"
             disabled={isLoading}
             onClick={handleStartGame}
             style={{
               padding: '14px 44px',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+              background: 'linear-gradient(135deg, #f59e0b 0%, #fb923c 100%)',
               border: 'none',
               color: '#ffffff',
               fontWeight: 900,
               fontSize: '1.1rem',
               cursor: isLoading ? 'wait' : 'pointer',
-              boxShadow: '0 0 25px rgba(245, 158, 11, 0.5)',
+              boxShadow: '0 4px 20px rgba(245, 158, 11, 0.4)',
               transition: 'all 0.15s ease',
             }}
           >
@@ -449,7 +528,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
               marginBottom: '14px',
             }}
           >
-            {/* Arena & Difficulty */}
+            {/* Left: Setup & Category & Question Counter */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
               <button
                 type="button"
@@ -465,7 +544,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   cursor: 'pointer',
                 }}
               >
-                ⚙️ Arena Setup
+                ⚙️ Setup
               </button>
 
               <select
@@ -493,33 +572,18 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                 ))}
               </select>
 
-              <div style={{ display: 'flex', gap: '4px' }}>
-                {DIFFICULTY_TABS.map((diff) => {
-                  const isSelected = selectedDifficulty === diff.id;
-                  return (
-                    <button
-                      key={diff.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedDifficulty(diff.id);
-                        resetRoundState();
-                      }}
-                      style={{
-                        padding: '4px 8px',
-                        borderRadius: '6px',
-                        background: isSelected ? `${diff.color}25` : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${isSelected ? diff.color : 'rgba(255, 255, 255, 0.08)'}`,
-                        color: isSelected ? diff.color : 'rgba(255, 255, 255, 0.7)',
-                        fontSize: '0.74rem',
-                        fontWeight: 750,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      {diff.label}
-                    </button>
-                  );
-                })}
-              </div>
+              <span
+                style={{
+                  fontSize: '0.74rem',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
+                  background: 'rgba(56, 189, 248, 0.15)',
+                  color: '#38bdf8',
+                  fontWeight: 750,
+                }}
+              >
+                Bug {currentChallengeIndex + 1} / {filteredChallenges.length}
+              </span>
             </div>
 
             {/* Right: Lifelines & Timer & Score */}
@@ -551,17 +615,37 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                     style={{
                       padding: '4px 8px',
                       borderRadius: '6px',
-                      border: '1px solid rgba(56, 189, 248, 0.3)',
-                      background: breakpointHintUsed ? 'transparent' : 'rgba(56, 189, 248, 0.1)',
-                      color: breakpointHintUsed ? 'rgba(255, 255, 255, 0.3)' : '#38bdf8',
+                      border: '1px solid rgba(251, 191, 36, 0.3)',
+                      background: breakpointHintUsed ? 'transparent' : 'rgba(251, 191, 36, 0.1)',
+                      color: breakpointHintUsed ? 'rgba(255, 255, 255, 0.3)' : '#fbbf24',
                       fontSize: '0.74rem',
                       fontWeight: 700,
                       cursor: breakpointHintUsed ? 'not-allowed' : 'pointer',
                     }}
-                    title="Highlight Line Hint"
+                    title="Highlight Suspect Line"
                   >
-                    ⚡ Hint
+                    💡 Hint
                   </button>
+                  {gameMode !== 'zen' && (
+                    <button
+                      type="button"
+                      disabled={timeWarpUsed}
+                      onClick={handleUseTimeWarp}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        border: '1px solid rgba(52, 211, 153, 0.3)',
+                        background: timeWarpUsed ? 'transparent' : 'rgba(52, 211, 153, 0.1)',
+                        color: timeWarpUsed ? 'rgba(255, 255, 255, 0.3)' : '#34d399',
+                        fontSize: '0.74rem',
+                        fontWeight: 700,
+                        cursor: timeWarpUsed ? 'not-allowed' : 'pointer',
+                      }}
+                      title="Add 15 Seconds"
+                    >
+                      ⏳ +15s
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={handleSkipChallenge}
@@ -575,42 +659,56 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                       fontWeight: 700,
                       cursor: 'pointer',
                     }}
+                    title="Skip Question"
                   >
                     ⏭️ Skip
                   </button>
                 </>
               )}
 
-              {/* Timer */}
-              {activeModeConfig.timerSecs !== null && (
+              {combo >= 2 && (
                 <div
                   style={{
                     padding: '3px 8px',
                     borderRadius: '6px',
-                    background: timeLeft <= 5 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%)',
+                    border: '1px solid #f59e0b',
+                    color: '#fde68a',
+                    fontWeight: 900,
+                    fontSize: '0.78rem',
+                  }}
+                >
+                  🔥 {combo}x
+                </div>
+              )}
+
+              {gameMode !== 'zen' && (
+                <div
+                  style={{
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    background: timeLeft <= 5 ? 'rgba(239, 68, 68, 0.25)' : 'rgba(255, 255, 255, 0.05)',
                     border: `1px solid ${timeLeft <= 5 ? '#ef4444' : 'rgba(255, 255, 255, 0.1)'}`,
-                    color: timeLeft <= 5 ? '#ef4444' : '#ffffff',
+                    color: timeLeft <= 5 ? '#f87171' : '#fbbf24',
                     fontWeight: 800,
-                    fontSize: '0.8rem',
+                    fontSize: '0.78rem',
                   }}
                 >
                   ⏱️ {timeLeft}s
                 </div>
               )}
 
-              {/* Score */}
               <div
                 style={{
-                  padding: '3px 8px',
+                  padding: '4px 10px',
                   borderRadius: '6px',
-                  background: 'rgba(245, 158, 11, 0.15)',
-                  border: '1px solid rgba(245, 158, 11, 0.3)',
-                  color: '#f59e0b',
+                  background: 'rgba(52, 211, 153, 0.15)',
+                  color: '#34d399',
                   fontWeight: 800,
-                  fontSize: '0.8rem',
+                  fontSize: '0.78rem',
                 }}
               >
-                🏆 {score}
+                🏆 {score} pts
               </div>
             </div>
           </div>
@@ -619,7 +717,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
           <div style={{ marginBottom: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
               <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#ffffff' }}>
-                {currentChallenge.title}
+                {currentChallenge?.title || 'Code Challenge'}
               </div>
               <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                 {lineIdentifiedBonus && (
@@ -627,78 +725,293 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                     🎯 Line Precision Match!
                   </span>
                 )}
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: `${currentChallenge.difficultyColor}22`, color: currentChallenge.difficultyColor }}>
-                  {currentChallenge.difficulty}
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: `${currentChallenge?.difficultyColor || '#f59e0b'}22`, color: currentChallenge?.difficultyColor || '#f59e0b' }}>
+                  {currentChallenge?.difficulty || 'Senior'}
                 </span>
               </div>
             </div>
             <div style={{ fontSize: '0.84rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.4 }}>
-              {currentChallenge.scenario}
+              {currentChallenge?.scenario || ''}
             </div>
           </div>
 
-          {/* Monospace Code Box */}
-          <div
-            style={{
-              background: '#07090e',
-              borderRadius: '10px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              padding: '12px 14px',
-              fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-              fontSize: '0.82rem',
-              lineHeight: 1.5,
-              overflowX: 'auto',
-              marginBottom: '14px',
-            }}
-          >
-            <div style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '0.7rem', textTransform: 'uppercase', marginBottom: '6px', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Source Code (Click suspect line to verify defect):</span>
-              {clickedLineNumber && (
-                <span style={{ color: clickedLineNumber === currentChallenge.buggyLineNumber ? '#34d399' : '#fbbf24' }}>
-                  Line #{clickedLineNumber} {clickedLineNumber === currentChallenge.buggyLineNumber ? '✓ Match' : ''}
-                </span>
-              )}
-            </div>
-
-            {codeLines.map((line, idx) => {
-              const lineNum = idx + 1;
-              const isBuggy = (gameState === 'revealed' || breakpointHintUsed) && lineNum === currentChallenge.buggyLineNumber;
-              const isClicked = clickedLineNumber === lineNum;
-
-              let bg = 'transparent';
-              if (isBuggy) bg = 'rgba(239, 68, 68, 0.2)';
-              else if (isClicked) bg = 'rgba(245, 158, 11, 0.12)';
-
+          {/* Inspector Mode Tabs */}
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+            {[
+              { id: 'code', label: '💻 Code Inspector', icon: '🔍' },
+              { id: 'threads', label: '🔀 Step Race Condition', icon: '⚡' },
+              { id: 'diff', label: '✨ Senior Solution Diff', icon: '📝' },
+            ].map((tab) => {
+              const isSelected = activeInspectorTab === tab.id;
               return (
-                <div
-                  key={idx}
-                  onClick={() => handleLineClick(lineNum)}
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => {
+                    arcadeAudio.playBlip();
+                    setActiveInspectorTab(tab.id as any);
+                  }}
                   style={{
-                    display: 'flex',
-                    background: bg,
-                    borderRadius: '4px',
-                    padding: '1px 4px',
-                    cursor: gameState === 'playing' ? 'pointer' : 'default',
-                    transition: 'background 0.15s ease',
+                    padding: '5px 12px',
+                    borderRadius: '6px',
+                    background: isSelected ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                    border: `1px solid ${isSelected ? '#f59e0b' : 'rgba(255, 255, 255, 0.1)'}`,
+                    color: isSelected ? '#f59e0b' : 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '0.76rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    transition: 'all 0.15s ease',
                   }}
                 >
-                  <span
-                    style={{
-                      width: '32px',
-                      userSelect: 'none',
-                      color: isBuggy ? '#ef4444' : isClicked ? '#f59e0b' : 'rgba(255, 255, 255, 0.3)',
-                      fontWeight: isBuggy || isClicked ? 800 : 400,
-                    }}
-                  >
-                    {lineNum}
-                  </span>
-                  <span style={{ color: isBuggy ? '#fca5a5' : '#e2e8f0', whiteSpace: 'pre' }}>
-                    {line}
-                  </span>
-                </div>
+                  <span>{tab.label}</span>
+                </button>
               );
             })}
           </div>
+
+          {/* TAB 1: Code Editor Box */}
+          {activeInspectorTab === 'code' && (
+            <Highlight
+              theme={prismTheme}
+              code={cleanedCode}
+              language={targetLanguage}
+              prism={Prism}
+            >
+              {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                <div
+                  className={className}
+                  style={{
+                    ...style,
+                    background: '#0a0d16',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    padding: '12px 14px',
+                    fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                    fontSize: '0.82rem',
+                    lineHeight: 1.5,
+                    overflowX: 'auto',
+                    marginBottom: '14px',
+                    boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.5)',
+                  }}
+                >
+                  {/* Editor Header */}
+                  <div
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.45)',
+                      fontSize: '0.7rem',
+                      textTransform: 'uppercase',
+                      marginBottom: '8px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
+                      paddingBottom: '6px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
+                      <span style={{ marginLeft: '4px', fontWeight: 700, letterSpacing: '0.5px' }}>
+                        Source Editor ({targetLanguage.toUpperCase()}) — Click line to isolate bug:
+                      </span>
+                    </div>
+                    {clickedLineNumber && (
+                      <span
+                        style={{
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          fontSize: '0.72rem',
+                          fontWeight: 800,
+                          background: clickedLineNumber === currentChallenge?.buggyLineNumber ? 'rgba(52, 211, 153, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                          color: clickedLineNumber === currentChallenge?.buggyLineNumber ? '#34d399' : '#fbbf24',
+                          border: `1px solid ${clickedLineNumber === currentChallenge?.buggyLineNumber ? 'rgba(52, 211, 153, 0.4)' : 'rgba(245, 158, 11, 0.4)'}`,
+                        }}
+                      >
+                        Line #{clickedLineNumber} {clickedLineNumber === currentChallenge?.buggyLineNumber ? '✓ Match (+50 pts)' : 'Marked'}
+                      </span>
+                    )}
+                  </div>
+
+                  {tokens.map((lineTokens, idx) => {
+                    const lineNum = idx + 1;
+                    const isBuggy = (gameState === 'revealed' || breakpointHintUsed) && lineNum === currentChallenge?.buggyLineNumber;
+                    const isClicked = clickedLineNumber === lineNum;
+
+                    let bg = 'transparent';
+                    let borderLeft = '3px solid transparent';
+                    if (isBuggy) {
+                      bg = 'rgba(239, 68, 68, 0.22)';
+                      borderLeft = '3px solid #ef4444';
+                    } else if (isClicked) {
+                      bg = 'rgba(245, 158, 11, 0.15)';
+                      borderLeft = '3px solid #f59e0b';
+                    }
+
+                    const lineProps = getLineProps({ line: lineTokens, key: idx });
+
+                    return (
+                      <div
+                        {...lineProps}
+                        key={idx}
+                        onClick={() => handleLineClick(lineNum)}
+                        style={{
+                          ...lineProps.style,
+                          display: 'flex',
+                          alignItems: 'center',
+                          background: bg,
+                          borderLeft,
+                          borderRadius: '4px',
+                          padding: '1.5px 6px',
+                          cursor: gameState === 'playing' ? 'pointer' : 'default',
+                          transition: 'background 0.15s ease',
+                          minHeight: '22px',
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: '34px',
+                            userSelect: 'none',
+                            color: isBuggy ? '#ef4444' : isClicked ? '#f59e0b' : 'rgba(255, 255, 255, 0.3)',
+                            fontWeight: isBuggy || isClicked ? 800 : 400,
+                            fontSize: '0.78rem',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {lineNum}
+                        </span>
+                        <span style={{ whiteSpace: 'pre', flex: 1, fontFamily: 'inherit' }}>
+                          {lineTokens.map((token, key) => (
+                            <span {...getTokenProps({ token, key })} key={key} />
+                          ))}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </Highlight>
+          )}
+
+          {/* TAB 2: Visual Thread Interleaving Stepper */}
+          {activeInspectorTab === 'threads' && (
+            <div
+              style={{
+                marginBottom: '14px',
+                padding: '16px',
+                borderRadius: '12px',
+                background: '#0a0d16',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>🔀 Concurrency Stepper: Interleaved Thread Execution</span>
+                  <span style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8' }}>
+                    Step {threadStep + 1} of 5
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button
+                    type="button"
+                    disabled={threadStep === 0}
+                    onClick={() => {
+                      arcadeAudio.playBlip();
+                      setThreadStep((p) => Math.max(0, p - 1));
+                    }}
+                    style={{ padding: '4px 10px', borderRadius: '6px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', color: '#fff', fontSize: '0.74rem', fontWeight: 750, cursor: threadStep === 0 ? 'not-allowed' : 'pointer' }}
+                  >
+                    ◀ Prev Step
+                  </button>
+                  <button
+                    type="button"
+                    disabled={threadStep === 4}
+                    onClick={() => {
+                      arcadeAudio.playLaser();
+                      setThreadStep((p) => Math.min(4, p + 1));
+                    }}
+                    style={{ padding: '4px 10px', borderRadius: '6px', background: 'rgba(56, 189, 248, 0.25)', border: '1px solid #38bdf8', color: '#38bdf8', fontSize: '0.74rem', fontWeight: 750, cursor: threadStep === 4 ? 'not-allowed' : 'pointer' }}
+                  >
+                    Next Step ▶
+                  </button>
+                </div>
+              </div>
+
+              {/* Hardware Cores & Shared RAM Visualizer */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '12px' }}>
+                {/* Thread 1 Box */}
+                <div style={{ padding: '10px', borderRadius: '8px', background: threadStep === 1 || threadStep === 4 ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.03)', border: `1px solid ${threadStep === 1 || threadStep === 4 ? '#38bdf8' : 'rgba(255, 255, 255, 0.08)'}` }}>
+                  <div style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 800 }}>CPU Core 0 (Thread 1)</div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff', marginTop: '4px' }}>
+                    {threadStep === 0 ? 'STATUS: IDLE' : threadStep === 1 ? 'LOAD [val] ➔ R1 = 0' : threadStep === 2 || threadStep === 3 ? 'PREEMPTED (Waiting)' : threadStep === 4 ? 'RESUMED: STORE R1 (1) ➔ [val]' : 'COMPLETED'}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>
+                    Local Register R1: {threadStep >= 1 ? '0' : 'null'} {threadStep === 4 ? '(Stale!)' : ''}
+                  </div>
+                </div>
+
+                {/* Shared RAM Box */}
+                <div style={{ padding: '10px', borderRadius: '8px', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#f59e0b', fontWeight: 800 }}>Shared Heap Memory (RAM)</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 900, color: threadStep === 4 || threadStep === 5 ? '#ef4444' : '#fbbf24', marginTop: '4px' }}>
+                    val = {threadStep <= 2 ? 0 : 1}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>
+                    Expected: {threadStep >= 4 ? '2' : '0'}
+                  </div>
+                </div>
+
+                {/* Thread 2 Box */}
+                <div style={{ padding: '10px', borderRadius: '8px', background: threadStep === 2 || threadStep === 3 ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255, 255, 255, 0.03)', border: `1px solid ${threadStep === 2 || threadStep === 3 ? '#a855f7' : 'rgba(255, 255, 255, 0.08)'}` }}>
+                  <div style={{ fontSize: '0.7rem', color: '#a855f7', fontWeight: 800 }}>CPU Core 1 (Thread 2)</div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff', marginTop: '4px' }}>
+                    {threadStep === 0 || threadStep === 1 ? 'STATUS: WAITING' : threadStep === 2 ? 'LOAD [val] ➔ R2 = 0' : threadStep === 3 ? 'STORE R2 (1) ➔ [val]' : 'COMPLETED'}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>
+                    Local Register R2: {threadStep >= 2 ? (threadStep === 2 ? '0' : '1') : 'null'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Step Explanatory Banner */}
+              <div style={{ padding: '8px 12px', borderRadius: '8px', background: threadStep === 4 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.04)', border: `1px solid ${threadStep === 4 ? '#ef4444' : 'rgba(255, 255, 255, 0.1)'}`, fontSize: '0.8rem', color: threadStep === 4 ? '#fca5a5' : '#ffffff', lineHeight: 1.4 }}>
+                {threadStep === 0 && '👉 Initial state: Two parallel threads are dispatched without memory barriers or synchronizers.'}
+                {threadStep === 1 && '👉 Step 1: Thread 1 reads shared memory value 0 into CPU register R1.'}
+                {threadStep === 2 && '🚨 Step 2 (Context Switch): OS interrupts Thread 1 before writeback! Thread 2 reads the same un-updated value 0.'}
+                {threadStep === 3 && '👉 Step 3: Thread 2 increments R2 to 1 and writes it back to Main RAM (val = 1).'}
+                {threadStep === 4 && '💥 Hazard Exploded: Thread 1 wakes up with stale R1=0, increments to 1, and overwrites Thread 2\'s write! Total increments: 2, but val is 1 (Lost Update).'}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: Side-by-Side / Unified Solution Diff */}
+          {activeInspectorTab === 'diff' && (
+            <div
+              style={{
+                marginBottom: '14px',
+                padding: '14px',
+                borderRadius: '10px',
+                background: '#07090e',
+                border: '1px solid rgba(52, 211, 153, 0.3)',
+              }}
+            >
+              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#34d399', marginBottom: '8px', textTransform: 'uppercase' }}>
+                ✨ Verified Solution Diff (Line #{currentChallenge?.buggyLineNumber || 1}):
+              </div>
+              <div style={{ background: 'rgba(239, 68, 68, 0.12)', borderLeft: '3px solid #ef4444', padding: '6px 12px', borderRadius: '4px', marginBottom: '6px', fontFamily: 'monospace', fontSize: '0.8rem', color: '#fca5a5' }}>
+                - // Defective Line #{currentChallenge?.buggyLineNumber || 1}: Lacks thread-safety / atomicity
+              </div>
+              <div style={{ background: 'rgba(52, 211, 153, 0.12)', borderLeft: '3px solid #34d399', padding: '6px 12px', borderRadius: '4px', marginBottom: '10px', fontFamily: 'monospace', fontSize: '0.8rem', color: '#86efac' }}>
+                + {currentChallenge?.fixSnippet?.trim() || '// Recommended patch'}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.45 }}>
+                {currentChallenge?.rootCause || ''}
+              </div>
+            </div>
+          )}
 
           {/* Option Cards: 1 Option per Line */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>
@@ -738,6 +1051,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                 <button
                   key={opt.id}
                   type="button"
+                  className={`arcade-answer-btn ${isHovered ? 'hovered' : ''} ${isChosen ? (opt.isCorrect ? 'correct' : 'wrong') : ''}`}
                   disabled={isEliminated || isRevealed}
                   onMouseEnter={() => setHoveredOptionId(opt.id)}
                   onMouseLeave={() => setHoveredOptionId(null)}
@@ -766,6 +1080,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   }}
                 >
                   <span
+                    className="arcade-option-badge"
                     style={{
                       width: '24px',
                       height: '24px',
@@ -788,7 +1103,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   >
                     {letterBadge}
                   </span>
-                  <span style={{ flex: 1 }}>{opt.text}</span>
+                  <span className="arcade-option-text" style={{ flex: 1 }}>{opt.text}</span>
                 </button>
               );
             })}
@@ -805,11 +1120,51 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
               }}
             >
               <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 800, marginBottom: '4px' }}>
-                ⚡ Root Cause: Line #{currentChallenge.buggyLineNumber}
+                ⚡ Root Cause: Line #{currentChallenge?.buggyLineNumber || 1}
               </div>
               <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.85)', lineHeight: 1.45, marginBottom: '12px' }}>
-                {currentChallenge.rootCause}
+                {currentChallenge?.rootCause || ''}
               </div>
+
+              {currentChallenge.fixSnippet && (
+                <div style={{ marginBottom: '14px' }}>
+                  <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                    💡 Verified Senior Solution:
+                  </div>
+                  <Highlight
+                    theme={prismTheme}
+                    code={currentChallenge.fixSnippet.trim()}
+                    language={targetLanguage}
+                    prism={Prism}
+                  >
+                    {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                      <pre
+                        className={className}
+                        style={{
+                          ...style,
+                          background: '#07090e',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(52, 211, 153, 0.25)',
+                          padding: '10px 12px',
+                          fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                          fontSize: '0.8rem',
+                          lineHeight: 1.45,
+                          margin: 0,
+                          overflowX: 'auto',
+                        }}
+                      >
+                        {tokens.map((line, i) => (
+                          <div {...getLineProps({ line, key: i })} key={i}>
+                            {line.map((token, key) => (
+                              <span {...getTokenProps({ token, key })} key={key} />
+                            ))}
+                          </div>
+                        ))}
+                      </pre>
+                    )}
+                  </Highlight>
+                </div>
+              )}
               <button
                 type="button"
                 onClick={handleNextChallenge}

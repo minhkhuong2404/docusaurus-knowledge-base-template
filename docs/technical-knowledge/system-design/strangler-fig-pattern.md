@@ -5,6 +5,7 @@ sidebar_label: Strangler Fig
 description: Guide to the Strangler Fig pattern for migrating monoliths to microservices. Details bounded context mapping, Anti-Corruption Layer (ACL) Spring Boot code, dual-writing data sync, eventual consistency, and migration gotchas.
 tags: [system-design, microservices, migration, monolith, strangler-fig, reliability]
 ---
+import StranglerFigDiagram from '@site/src/components/StranglerFigDiagram';
 
 # Strangler Fig Pattern
 
@@ -18,20 +19,12 @@ It is named after the Australian strangler fig tree, which germinates in the bra
 
 Before writing any new services, you must identify where to cut the monolith. This requires finding the **domain seams** using Domain-Driven Design (DDD) principles:
 
-```text
-Spaghetti Monolith Database (Coupled)
-┌────────────────────────────────────────────────────────┐
-│  Customers JOIN Orders JOIN Shipments JOIN Payments    │
-└────────────────────────────────────────────────────────┘
-                           │
-                           ▼ Bounded Context Mapping (Target)
-┌────────────────────┐   ┌────────────────────┐   ┌────────────────────┐
-│   Customer Service │   │    Order Service   │   │   Payment Service  │
-│  ┌──────────────┐  │   │  ┌──────────────┐  │   │  ┌──────────────┐  │
-│  │ Customers DB │  │   │  │  Orders DB   │  │   │  │  Payments DB  │  │
-│  └──────────────┘  │   │  └──────────────┘  │   │  └──────────────┘  │
-└────────────────────┘   └────────────────────┘   └────────────────────┘
-```
+<StranglerFigDiagram />
+
+| Architecture Phase | Database Coupling Model | Traffic Routing & Boundary Strategy |
+|---|---|---|
+| **Legacy Monolith** | Single Coupled DB (`Customers JOIN Orders JOIN Payments`) | In-process method calls; high schema lock-in |
+| **Strangler Decomposition** | Isolated Bounded Contexts (`Customers DB`, `Orders DB`, `Payments DB`) | API Gateway / Router directs traffic; Anti-Corruption Layer (ACL) shields schema |
 
 ### Strategic Splitting Strategy:
 1. **Analyze Domain Volatility**: Identify parts of the monolith that undergo frequent changes (high feature velocity). Extracting these first yields immediate business value.

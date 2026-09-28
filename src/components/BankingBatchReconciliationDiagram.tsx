@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
 const ABA_RECORDS = [
-  { type: 'Record 0: Descriptive Record', len: '120 chars', desc: 'File header. Contains BSB of processing bank, financial institution name, user ID number, description of payments (e.g. PAYROLL), date of processing.' },
-  { type: 'Record 1: Detail Record', len: '120 chars', desc: 'Transaction record. Contains BSB, Account Number, Indicator (N/H), Transaction Code (13 debit, 50 credit), Amount, Title of Account, Lodgement Ref, Trace BSB & Account.' },
-  { type: 'Record 7: File Control Record', len: '120 chars', desc: 'File footer / checksum. Contains BSB filler, Total File Net Amount, Total File Credit Amount, Total File Debit Amount, Total Count of Detail Records.' }
+  { type: 'Record 0: Descriptive Record (Header)', len: '120 chars', desc: 'File header. Contains BSB of processing bank, financial institution name, user ID number, description of payments (e.g. PAYROLL), and date of processing.' },
+  { type: 'Record 1: Detail Record (Transactions)', len: '120 chars', desc: 'Individual transaction record. Contains destination BSB, Account Number, Indicator (N/H), Transaction Code (13 debit, 50 credit), Amount, Title of Account, Lodgement Ref, Trace BSB & Account.' },
+  { type: 'Record 7: File Control Record (Trailer)', len: '120 chars', desc: 'File footer / checksum. Contains BSB filler, Total File Net Amount, Total File Credit Amount, Total File Debit Amount, and Total Count of Detail Records for automated reconciliation.' }
 ];
 
 export default function BankingBatchReconciliationDiagram(): React.JSX.Element {
@@ -35,7 +35,7 @@ export default function BankingBatchReconciliationDiagram(): React.JSX.Element {
           <line x1="12" y1="17" x2="12" y2="21" />
         </svg>
         <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>
-          Batch BECS File Inspector, 3-Way Reconciliation & Intraday Liquidity Calculator
+          Batch BECS File Pipeline, 3-Way Reconciliation & Intraday Liquidity Calculator
         </span>
       </div>
 
@@ -43,7 +43,7 @@ export default function BankingBatchReconciliationDiagram(): React.JSX.Element {
         {/* Navigation Tabs */}
         <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
           {[
-            { id: 'aba', label: '📄 BECS ABA Batch File Monospace Schema Inspector', color: '#38bdf8' },
+            { id: 'aba', label: '📄 BECS ABA Batch File Pipeline & Record Structure', color: '#38bdf8' },
             { id: 'recon', label: '⚖️ 3-Way Reconciliation (Ledger vs Statement vs Rail)', color: '#34d399' },
             { id: 'liquidity', label: '🧮 Intraday Nostro Liquidity & EOD Sweep Calculator', color: '#fbbf24' }
           ].map(t => (
@@ -68,6 +68,89 @@ export default function BankingBatchReconciliationDiagram(): React.JSX.Element {
               {t.label}
             </button>
           ))}
+        </div>
+
+        {/* Animated Flow SVG Canvas */}
+        <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg" style={{ borderRadius: '10px', marginBottom: '14px', overflow: 'hidden' }}>
+          <svg viewBox="0 0 680 140" style={{ width: '100%', height: 'auto', display: 'block' }}>
+            <defs>
+              <marker id="recon-arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8" />
+              </marker>
+              <marker id="recon-arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#34d399" />
+              </marker>
+              <marker id="recon-arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#fbbf24" />
+              </marker>
+            </defs>
+
+            {activeTab === 'aba' && (
+              <g>
+                <rect x="25" y="40" width="160" height="60" rx="8" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+                <text x="105" y="66" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">Record 0: Header</text>
+                <text x="105" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Descriptive Block</text>
+
+                <line x1="185" y1="70" x2="260" y2="70" stroke="rgba(56,189,248,0.3)" strokeWidth="2" />
+                <line x1="185" y1="70" x2="260" y2="70" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#recon-arr-blue)" />
+
+                <rect x="265" y="40" width="180" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+                <text x="355" y="66" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">Record 1: Detail List</text>
+                <text x="355" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">N individual transactions</text>
+
+                <line x1="445" y1="70" x2="520" y2="70" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+                <line x1="445" y1="70" x2="520" y2="70" stroke="#34d399" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#recon-arr-green)" />
+
+                <rect x="525" y="40" width="130" height="60" rx="8" fill="rgba(251,191,36,0.12)" stroke="#fbbf24" strokeWidth="1.5" />
+                <text x="590" y="66" textAnchor="middle" fill="#fbbf24" fontSize="11" fontWeight="700">Record 7: Trailer</text>
+                <text x="590" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Control Total Hash</text>
+              </g>
+            )}
+
+            {activeTab === 'recon' && (
+              <g>
+                <rect x="25" y="40" width="140" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+                <text x="95" y="66" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">Core GL Ledger</text>
+                <text x="95" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Internal postings</text>
+
+                <line x1="165" y1="70" x2="260" y2="70" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+                <line x1="165" y1="70" x2="260" y2="70" stroke="#34d399" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#recon-arr-green)" />
+
+                <rect x="265" y="40" width="180" height="60" rx="8" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+                <text x="355" y="66" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">3-Way Match Engine</text>
+                <text x="355" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">EndToEndId / UETR</text>
+
+                <line x1="445" y1="70" x2="520" y2="70" stroke="rgba(56,189,248,0.3)" strokeWidth="2" />
+                <line x1="445" y1="70" x2="520" y2="70" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#recon-arr-blue)" />
+
+                <rect x="525" y="40" width="130" height="60" rx="8" fill="rgba(251,191,36,0.12)" stroke="#fbbf24" strokeWidth="1.5" />
+                <text x="590" y="66" textAnchor="middle" fill="#fbbf24" fontSize="11" fontWeight="700">camt.053 Statement</text>
+                <text x="590" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Central Bank Settlement</text>
+              </g>
+            )}
+
+            {activeTab === 'liquidity' && (
+              <g>
+                <rect x="25" y="40" width="150" height="60" rx="8" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+                <text x="100" y="66" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">Opening Balance</text>
+                <text x="100" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">${openingBal}M Nostro</text>
+
+                <line x1="175" y1="70" x2="250" y2="70" stroke="rgba(56,189,248,0.3)" strokeWidth="2" />
+                <line x1="175" y1="70" x2="250" y2="70" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#recon-arr-blue)" />
+
+                <rect x="255" y="40" width="180" height="60" rx="8" fill="rgba(251,191,36,0.12)" stroke="#fbbf24" strokeWidth="1.5" />
+                <text x="345" y="66" textAnchor="middle" fill="#fbbf24" fontSize="11" fontWeight="700">Intraday RTGS Flows</text>
+                <text x="345" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">+{inflow}M / -{outflow}M</text>
+
+                <line x1="435" y1="70" x2="510" y2="70" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+                <line x1="435" y1="70" x2="510" y2="70" stroke="#34d399" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#recon-arr-green)" />
+
+                <rect x="515" y="40" width="140" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+                <text x="585" y="66" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">EOD Closing Sweep</text>
+                <text x="585" y="83" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">${closingBal}M Final</text>
+              </g>
+            )}
+          </svg>
         </div>
 
         {/* Tab 1: ABA File Schema */}
@@ -103,7 +186,7 @@ export default function BankingBatchReconciliationDiagram(): React.JSX.Element {
 
             <div className="interactive-diagram-details-card details-blue" style={{ minHeight: '240px' }}>
               <div style={{ fontSize: '11px', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase', marginBottom: '6px' }}>
-                Fixed 120-Byte Monospace Schema Spec
+                Fixed 120-Byte Record Specification
               </div>
               <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--ifm-color-content)', marginBottom: '4px' }}>
                 {ABA_RECORDS[selectedRecord].type}
@@ -138,63 +221,78 @@ export default function BankingBatchReconciliationDiagram(): React.JSX.Element {
             <div style={{ background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', padding: '12px', borderRadius: '8px' }}>
               <div style={{ fontSize: '12px', fontWeight: 800, color: '#fbbf24', marginBottom: '4px' }}>3. Auto-Matching Engine</div>
               <div style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary)', lineHeight: 1.5 }}>
-                Matches transactions by UETR/EndToEndId. Flags un-matched items for ops investigation.
+                Rules engine matches on UETR, EndToEndId, Amount, Value Date, and Account numbers.
               </div>
             </div>
           </div>
         )}
 
-        {/* Tab 3: Liquidity Calculator */}
+        {/* Tab 3: Intraday Liquidity Calculator */}
         {activeTab === 'liquidity' && (
-          <div className="recon-grid" style={{ display: 'grid', gridTemplateColumns: '50% 50%', gap: '16px', alignItems: 'start' }}>
-            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ fontSize: '12px', fontWeight: 800, color: '#fbbf24', marginBottom: '12px' }}>
-                INTRADAY LIQUIDITY & NOSTRO BALANCER ($M AUD)
+          <div>
+            <div className="recon-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '14px' }}>
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: '10px', borderRadius: '8px' }}>
+                <div style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary)', marginBottom: '4px' }}>
+                  Opening Nostro Balance:
+                </div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#38bdf8' }}>${openingBal}M</div>
+                <input
+                  type="range"
+                  min={100}
+                  max={1000}
+                  step={50}
+                  value={openingBal}
+                  onChange={e => setOpeningBal(Number(e.target.value))}
+                  style={{ width: '100%', marginTop: '6px', accentColor: '#38bdf8' }}
+                />
               </div>
 
-              <div style={{ marginBottom: '10px' }}>
-                <label style={{ fontSize: '11px', color: 'var(--ifm-color-content)', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
-                  OPENING NOSTRO BALANCE: <span style={{ color: '#38bdf8' }}>${openingBal}M</span>
-                </label>
-                <input type="range" min="100" max="1000" step="50" value={openingBal} onChange={e => setOpeningBal(Number(e.target.value))} style={{ width: '100%', cursor: 'pointer' }} />
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: '10px', borderRadius: '8px' }}>
+                <div style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary)', marginBottom: '4px' }}>
+                  Intraday Inflows (+):
+                </div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#34d399' }}>+${inflow}M</div>
+                <input
+                  type="range"
+                  min={0}
+                  max={500}
+                  step={20}
+                  value={inflow}
+                  onChange={e => setInflow(Number(e.target.value))}
+                  style={{ width: '100%', marginTop: '6px', accentColor: '#34d399' }}
+                />
               </div>
 
-              <div style={{ marginBottom: '10px' }}>
-                <label style={{ fontSize: '11px', color: 'var(--ifm-color-content)', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
-                  INTRADAY INFLOWS (INBOUND SETTLEMENTS): <span style={{ color: '#34d399' }}>+${inflow}M</span>
-                </label>
-                <input type="range" min="10" max="500" step="10" value={inflow} onChange={e => setInflow(Number(e.target.value))} style={{ width: '100%', cursor: 'pointer' }} />
-              </div>
-
-              <div style={{ marginBottom: '10px' }}>
-                <label style={{ fontSize: '11px', color: 'var(--ifm-color-content)', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
-                  INTRADAY OUTFLOWS (OUTBOUND SETTLEMENTS): <span style={{ color: '#f87171' }}>-${outflow}M</span>
-                </label>
-                <input type="range" min="10" max="500" step="10" value={outflow} onChange={e => setOutflow(Number(e.target.value))} style={{ width: '100%', cursor: 'pointer' }} />
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: '10px', borderRadius: '8px' }}>
+                <div style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary)', marginBottom: '4px' }}>
+                  Intraday Outflows (-):
+                </div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#f87171' }}>-${outflow}M</div>
+                <input
+                  type="range"
+                  min={0}
+                  max={500}
+                  step={20}
+                  value={outflow}
+                  onChange={e => setOutflow(Number(e.target.value))}
+                  style={{ width: '100%', marginTop: '6px', accentColor: '#f87171' }}
+                />
               </div>
             </div>
 
-            <div className="interactive-diagram-details-card details-yellow">
-              <div style={{ fontSize: '12px', fontWeight: 800, color: '#fbbf24', marginBottom: '10px' }}>
-                EOD CLOSING POSITION & CENTRAL BANK SWEEP
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
-                  <span style={{ color: 'var(--ifm-color-content-secondary)' }}>Calculated Closing Position:</span>
-                  <span style={{ fontWeight: 800, color: '#38bdf8' }}>${closingBal}M</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
-                  <span style={{ color: 'var(--ifm-color-content-secondary)' }}>Target Reserve Requirement:</span>
-                  <span style={{ fontWeight: 800, color: '#a78bfa' }}>${targetReserve}M</span>
-                </div>
-              </div>
-
-              <div style={{ paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{
+              background: surplusDeficit >= 0 ? 'rgba(52,211,153,0.12)' : 'rgba(248,113,113,0.12)',
+              border: `1px solid ${surplusDeficit >= 0 ? '#34d399' : '#f87171'}`,
+              borderRadius: '8px',
+              padding: '12px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <div style={{ fontSize: '10px', color: 'var(--ifm-color-content-secondary)' }}>EOD LIQUIDITY STATUS</div>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: surplusDeficit >= 0 ? '#34d399' : '#f87171' }}>
-                    {surplusDeficit >= 0 ? `Surplus +$${surplusDeficit}M` : `Deficit -$${Math.abs(surplusDeficit)}M`}
+                  <div style={{ fontSize: '11px', fontWeight: 700, color: surplusDeficit >= 0 ? '#34d399' : '#f87171' }}>
+                    PROJECTED CLOSING BALANCE: ${closingBal}M (Target Reserve: ${targetReserve}M)
+                  </div>
+                  <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--ifm-color-content)', marginTop: '2px' }}>
+                    {surplusDeficit >= 0 ? `Surplus of +$${surplusDeficit}M ➔ Automatic Overnight MM Sweep` : `Deficit of -$${Math.abs(surplusDeficit)}M ➔ Trigger Intraday Liquidity Facility (ILF)`}
                   </div>
                 </div>
               </div>

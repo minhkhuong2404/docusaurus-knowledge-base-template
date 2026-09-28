@@ -397,37 +397,17 @@ private int atMostK(int[] nums, int k) {
 
 ### 5.1 The Decision Flowchart
 
-```
-                        START
-                          │
-        Does the problem involve a contiguous
-        subarray or substring?
-                          │
-                    ┌─ YES ┴─ NO ──────────────────────────────┐
-                    │                                          │
-                    ▼                                          ▼
-        Is the window size FIXED (given k)?         (Other: DP, HashMaps, etc.)
-                    │
-             ┌─ YES ┴─ NO ─────────────────────────────────────┐
-             │                                                 │
-             ▼                                                 │
-        Fixed-Size Sliding Window (Week 2)                     │
-             │                                                 │
-             └──────────────────────── (Variable-Size below) ──┘
-                                        │
-                          What is the optimization goal?
-                    ┌──────────┬──────────────┬───────────────┐
-                    │          │              │               │
-                    ▼          ▼              ▼               ▼
-               "Longest"  "Shortest"    "Count all"    "Exactly K"
-               "Maximum"  "Minimum"     valid windows  occurrences
-                    │          │              │               │
-                    ▼          ▼              ▼               ▼
-             Template 1  Template 2     count +=         Template 4:
-             shrink while shrink while  right-left+1    AtMostK -
-             INVALID      VALID         inside valid    AtMostK(K-1)
-             record after record before window          
-             shrink       shrink
+```mermaid
+flowchart TD
+    Start(["Input Problem"]) --> Q1{"Involves contiguous subarray<br/>or substring?"}
+    Q1 -- "Yes" --> Q2{"Is window size FIXED (given k)?"}
+    Q1 -- "No" --> Other["Other: DP, HashMaps, etc."]
+    Q2 -- "Yes" --> Fixed["Fixed-Size Sliding Window (Week 2) ✅"]
+    Q2 -- "No" --> Q3{"What is the optimization goal?"}
+    Q3 --> O1["'Longest' / 'Maximum' ➔<br/>Template 1 (shrink while INVALID)"]
+    Q3 --> O2["'Shortest' / 'Minimum' ➔<br/>Template 2 (shrink while VALID)"]
+    Q3 --> O3["'Count All Valid Windows' ➔<br/>count += (right - left + 1)"]
+    Q3 --> O4["'Exactly K Occurrences' ➔<br/>Template 4: atMost(K) - atMost(K-1)"]
 ```
 
 ---

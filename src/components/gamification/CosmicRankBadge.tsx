@@ -27,7 +27,7 @@ export default function CosmicRankBadge({
   size = 'md',
   showLevelPill = true,
   interactive = false,
-  disableFloat = false,
+  disableFloat = true,
 }: CosmicRankBadgeProps) {
   const rank = customRank || getRankForLevel(level);
   const cfg = SIZE_CONFIGS[size] || SIZE_CONFIGS.md;
@@ -59,7 +59,8 @@ export default function CosmicRankBadge({
         userSelect: 'none',
       }}
     >
-      <style>{`
+      {!shouldDisableFloat && (
+        <style>{`
         /* 🚀 GPU-Accelerated Floating (Uses pure translate3d) */
         @keyframes trophyHoverFloat-${power} {
           0%, 100% {
@@ -159,6 +160,7 @@ export default function CosmicRankBadge({
           background: linear-gradient(135deg, ${rank.color}25 0%, rgba(15, 23, 42, 0.98) 100%) !important;
         }
       `}</style>
+      )}
 
       {/* Main Relative Container for Trophy + Moving Sparkles */}
       <div
@@ -307,12 +309,14 @@ export default function CosmicRankBadge({
             background: 'transparent',
             border: 'none',
             boxShadow: 'none',
-            animation: isSuper
-              ? `superGodRainbowNeonGlow-${power} 5s linear infinite${shouldDisableFloat ? '' : `, trophyHoverFloat-${power} ${floatDurationSec}s ease-in-out infinite`}`
-              : `trophyDirectNeonPulse-${power} ${Math.max(2, 3.5 - power * 0.1)}s ease-in-out infinite${shouldDisableFloat ? '' : `, trophyHoverFloat-${power} ${floatDurationSec}s ease-in-out infinite`}`,
+            animation: shouldDisableFloat
+              ? 'none'
+              : isSuper
+              ? `superGodRainbowNeonGlow-${power} 5s linear infinite, trophyHoverFloat-${power} ${floatDurationSec}s ease-in-out infinite`
+              : `trophyDirectNeonPulse-${power} ${Math.max(2, 3.5 - power * 0.1)}s ease-in-out infinite, trophyHoverFloat-${power} ${floatDurationSec}s ease-in-out infinite`,
             cursor: interactive ? 'pointer' : 'default',
             zIndex: 3,
-            willChange: shouldDisableFloat ? 'opacity' : 'transform, opacity',
+            willChange: shouldDisableFloat ? 'auto' : 'transform, opacity',
           }}
         >
           {/* TIER 10: SUPER LEVEL GOD (Floating Imperial Crown) */}
@@ -323,9 +327,9 @@ export default function CosmicRankBadge({
                 top: `-${Math.round(finalBoxSize * 0.36)}px`,
                 fontSize: `${Math.round(cfg.box * 0.45)}px`,
                 filter: 'drop-shadow(0 0 10px #fbbf24)',
-                animation: `trophyHoverFloat-${power} 2s ease-in-out infinite`,
+                animation: shouldDisableFloat ? 'none' : `trophyHoverFloat-${power} 2s ease-in-out infinite`,
                 zIndex: 10,
-                willChange: 'transform',
+                willChange: shouldDisableFloat ? 'auto' : 'transform',
               }}
             >
               👑

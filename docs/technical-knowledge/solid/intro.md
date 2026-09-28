@@ -11,9 +11,13 @@ tags:
 - solid
 - intro
 ---
+import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
+
 # Introduction to SOLID Principles
 
 Welcome! This guide will walk you through the **SOLID principles** — five essential design principles that help you write Java code that is **clean, scalable, and easy to maintain**.
+
+<SolidPrinciplesDiagram initialPrinciple="overview" />
 
 ## 🤔 Why Should You Care?
 

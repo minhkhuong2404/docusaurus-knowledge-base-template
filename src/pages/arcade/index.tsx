@@ -1,15 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@theme/Layout';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import { useUserProgress } from '../../context/UserProgressContext';
 import OutageBossBattleGame from '../../components/gamification/games/OutageBossBattleGame';
 import ArchitecturePuzzleGame from '../../components/gamification/games/ArchitecturePuzzleGame';
 import SpotTheBugDuelGame from '../../components/gamification/games/SpotTheBugDuelGame';
-import FlashcardArenaGame from '../../components/gamification/games/FlashcardArenaGame';
+import SqlIndexOptimizerGame from '../../components/gamification/games/SqlIndexOptimizerGame';
+import { arcadeAudio } from '../../utils/arcadeAudio';
 
 export default function ArcadePage(): React.JSX.Element {
   const { gamification } = useUserProgress();
-  const [activeGame, setActiveGame] = useState<'boss' | 'puzzle' | 'bug' | 'flashcards'>('boss');
+  const [activeGame, setActiveGame] = useState<'boss' | 'puzzle' | 'bug' | 'sql_optimizer'>('boss');
+  const [isAudioMuted, setIsAudioMuted] = useState<boolean>(() => arcadeAudio.isMuted());
+  const [dailyStreak, setDailyStreak] = useState<number>(() => {
+    if (typeof window === 'undefined') return 3;
+    try {
+      const saved = localStorage.getItem('arcade_daily_streak');
+      return saved ? parseInt(saved, 10) : 3;
+    } catch {
+      return 3;
+    }
+  });
+
+  const toggleSound = () => {
+    const nextMute = arcadeAudio.toggleMute();
+    setIsAudioMuted(nextMute);
+    if (!nextMute) {
+      arcadeAudio.playCorrect();
+    }
+  };
+
+  const handleSelectGame = (gameId: 'boss' | 'puzzle' | 'bug' | 'sql_optimizer') => {
+    arcadeAudio.playFlip();
+    setActiveGame(gameId);
+  };
+
   const scores = gamification?.miniGameScores || {};
 
   return (
@@ -19,16 +44,41 @@ export default function ArcadePage(): React.JSX.Element {
       description="Learn distributed systems, Java concurrency, and system design by playing interactive educational games."
     >
       <div
+        className="arcade-page-container"
         style={{
           minHeight: '100vh',
-          background: 'linear-gradient(180deg, #090d16 0%, #0d1117 100%)',
+          background: 'var(--arcade-page-bg, linear-gradient(180deg, #090d16 0%, #0d1117 100%))',
           padding: '36px 20px 80px 20px',
-          color: '#ffffff',
+          color: 'var(--ifm-color-content, #ffffff)',
         }}
       >
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          {/* Clean Arcade Page Title Header */}
-          <div style={{ marginBottom: '28px', textAlign: 'center' }}>
+          {/* Header Controls & Title */}
+          <div style={{ marginBottom: '24px', textAlign: 'center', position: 'relative' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+              <button
+                type="button"
+                onClick={toggleSound}
+                title={isAudioMuted ? 'Unmute 8-bit Arcade Sound' : 'Mute Sound'}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: isAudioMuted ? 'rgba(239, 68, 68, 0.15)' : 'rgba(56, 189, 248, 0.15)',
+                  border: `1px solid ${isAudioMuted ? 'rgba(239, 68, 68, 0.4)' : 'rgba(56, 189, 248, 0.4)'}`,
+                  color: isAudioMuted ? '#f87171' : '#38bdf8',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <span>{isAudioMuted ? '🔇 Audio Muted' : '🔊 8-Bit Audio On'}</span>
+              </button>
+            </div>
+
             <h1
               style={{
                 margin: '0 0 8px 0',
@@ -52,14 +102,54 @@ export default function ArcadePage(): React.JSX.Element {
                 Galactic Engineering Arcade
               </span>
             </h1>
-            <p style={{ margin: 0, fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.7)', maxWidth: '680px', marginInline: 'auto' }}>
+            <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.7))', maxWidth: '680px', marginInline: 'auto' }}>
               Sharpen your distributed systems instincts, debug concurrency race conditions, and battle production outages through interactive simulations.
             </p>
+
+            {/* Daily On-Call Banner */}
+            <div
+              className="arcade-oncall-banner"
+              style={{
+                marginTop: '18px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '8px 16px',
+                borderRadius: '12px',
+                background: 'linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                fontSize: '0.82rem',
+                color: '#fde68a',
+              }}
+            >
+              <span style={{ fontSize: '1rem' }}>🔥</span>
+              <span>
+                <strong>Daily On-Call Rotation:</strong> Streak <strong>{dailyStreak} Days</strong> • Today's Mission:{' '}
+                <em>"P0 Thundering Herd Mitigation"</em>
+              </span>
+              <button
+                type="button"
+                className="arcade-oncall-btn"
+                onClick={() => handleSelectGame('boss')}
+                style={{
+                  background: 'rgba(245, 158, 11, 0.25)',
+                  border: '1px solid #f59e0b',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.72rem',
+                  padding: '3px 8px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                }}
+              >
+                Respond ➔
+              </button>
+            </div>
           </div>
 
           {/* Game Selection Cards */}
           <div style={{ marginBottom: '24px' }}>
-            <div style={{ fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255, 255, 255, 0.6)', marginBottom: '12px' }}>
+            <div style={{ fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.6))', marginBottom: '12px' }}>
               Select Educational Arena:
             </div>
 
@@ -75,15 +165,6 @@ export default function ArcadePage(): React.JSX.Element {
                   highScore: scores.boss_battle || 0,
                 },
                 {
-                  id: 'puzzle',
-                  title: 'Architecture Pipe Puzzle',
-                  tag: 'System Design Arena',
-                  icon: '⚙️',
-                  desc: 'Design Bitly, Netflix, Uber, Twitter, and Stripe pipelines with HelloInterview deep breakdowns.',
-                  color: '#38bdf8',
-                  highScore: scores.architecture_puzzle || 0,
-                },
-                {
                   id: 'bug',
                   title: 'Spot The Bug Duel',
                   tag: '30s Code Race',
@@ -93,20 +174,30 @@ export default function ArcadePage(): React.JSX.Element {
                   highScore: scores.spot_bug || 0,
                 },
                 {
-                  id: 'flashcards',
-                  title: 'Concept Flashcards',
-                  tag: 'Spaced Repetition',
-                  icon: '📇',
-                  desc: 'Master ACID isolation, Paxos vs Raft, CAP theorem, and JVM Metaspace in seconds.',
+                  id: 'puzzle',
+                  title: 'Architecture Pipe Puzzle',
+                  tag: 'System Design Arena',
+                  icon: '⚙️',
+                  desc: 'Design Bitly, Netflix, Uber, Twitter, and Stripe pipelines with HelloInterview deep breakdowns.',
+                  color: '#38bdf8',
+                  highScore: scores.architecture_puzzle || 0,
+                },
+                {
+                  id: 'sql_optimizer',
+                  title: 'SQL Index & Query Crusher',
+                  tag: 'Database Tuning',
+                  icon: '🗄️',
+                  desc: 'Analyze slow EXPLAIN plans, design B-Tree composite indices, and crush query cost by 99%.',
                   color: '#10b981',
-                  highScore: scores.flashcards || 0,
+                  highScore: scores.sql_optimizer || 0,
                 },
               ].map((game) => {
                 const isSelected = activeGame === game.id;
                 return (
                   <div
                     key={game.id}
-                    onClick={() => setActiveGame(game.id as any)}
+                    className={`arcade-game-card${isSelected ? ' selected' : ''}`}
+                    onClick={() => handleSelectGame(game.id as any)}
                     style={{
                       padding: '16px 18px',
                       borderRadius: '16px',
@@ -126,6 +217,7 @@ export default function ArcadePage(): React.JSX.Element {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                         <span style={{ fontSize: '1.8rem' }}>{game.icon}</span>
                         <span
+                          className={`arcade-game-tag tag-${game.id}`}
                           style={{
                             fontSize: '0.72rem',
                             fontWeight: 700,
@@ -140,16 +232,16 @@ export default function ArcadePage(): React.JSX.Element {
                         </span>
                       </div>
 
-                      <div style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '6px' }}>
+                      <div className="arcade-game-title" style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)', marginBottom: '6px' }}>
                         {game.title}
                       </div>
 
-                      <div style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.65)', lineHeight: 1.4 }}>
+                      <div className="arcade-game-desc" style={{ fontSize: '0.78rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))', lineHeight: 1.4 }}>
                         {game.desc}
                       </div>
                     </div>
 
-                    <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.5)' }}>
+                    <div className="arcade-game-footer" style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--sidebar-border, rgba(255, 255, 255, 0.06))', display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))' }}>
                       <span>High Score:</span>
                       <span style={{ color: game.color, fontWeight: 700 }}>{game.highScore} pts</span>
                     </div>
@@ -160,14 +252,14 @@ export default function ArcadePage(): React.JSX.Element {
           </div>
 
           {/* Active Game Arena */}
-          <div>
+          <div className="arcade-active-arena">
             <BrowserOnly fallback={<div style={{ padding: '40px', textAlign: 'center', color: 'rgba(255, 255, 255, 0.6)' }}>Loading Educational Arena...</div>}>
               {() => (
                 <>
                   {activeGame === 'boss' && <OutageBossBattleGame />}
-                  {activeGame === 'puzzle' && <ArchitecturePuzzleGame />}
                   {activeGame === 'bug' && <SpotTheBugDuelGame />}
-                  {activeGame === 'flashcards' && <FlashcardArenaGame />}
+                  {activeGame === 'puzzle' && <ArchitecturePuzzleGame />}
+                  {activeGame === 'sql_optimizer' && <SqlIndexOptimizerGame />}
                 </>
               )}
             </BrowserOnly>

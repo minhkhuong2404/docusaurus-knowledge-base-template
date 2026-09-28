@@ -38,27 +38,23 @@ Welcome to Week 3! After spending two weeks mastering arrays and strings (contig
 This is the single most important conceptual shift of Week 3. Understanding *why* the memory layout differs explains every performance trade-off that follows.
 
 **Array in memory — one contiguous block:**
-```
-Heap:
-┌────┬────┬────┬────┬────┐
-│ 10 │ 20 │ 30 │ 40 │ 50 │
-└────┴────┴────┴────┴────┘
-0x100 0x104 0x108 0x10C 0x110
 
-To get element[3]: base_addr + 3 * 4 = 0x100 + 12 = 0x10C  → O(1) ✅
-```
+| Index | Value | Heap Address Formula | Exact Physical Address | Access Complexity |
+|---|---|---|---|---|
+| `[0]` | `10` | `base_addr + (0 * 4)` | `0x100` | $O(1)$ Direct Pointer Arithmetic ✅ |
+| `[1]` | `20` | `base_addr + (1 * 4)` | `0x104` | $O(1)$ Direct Pointer Arithmetic ✅ |
+| `[2]` | `30` | `base_addr + (2 * 4)` | `0x108` | $O(1)$ Direct Pointer Arithmetic ✅ |
+| `[3]` | `40` | `base_addr + (3 * 4)` | `0x10C` | $O(1)$ Direct Pointer Arithmetic ✅ |
+| `[4]` | `50` | `base_addr + (4 * 4)` | `0x110` | $O(1)$ Direct Pointer Arithmetic ✅ |
 
-**Linked List in memory — scattered nodes:**
-```
-Heap:
-0x200          0x8A0          0x431          0x7F2
-┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
-│ val: 10  │   │ val: 20  │   │ val: 30  │   │ val: 40  │
-│ next:8A0 │──▶│ next:431 │──▶│ next:7F2 │──▶│ next:null│
-└──────────┘   └──────────┘   └──────────┘   └──────────┘
+**Linked List in memory — scattered non-contiguous nodes:**
 
-To get node[3]: must walk 0x200 → 0x8A0 → 0x431 → 0x7F2  → O(N) ❌
-```
+| Node | Current Node Address | Node Payload (`val`) | Next Pointer (`next`) | Traversal Step |
+|---|---|---|---|---|
+| **Head Node** | `0x200` | `10` | `0x8A0` | Start at `head` ($O(1)$) |
+| **Node 1** | `0x8A0` | `20` | `0x431` | Dereference `head.next` ($O(1)$ step) |
+| **Node 2** | `0x431` | `30` | `0x7F2` | Dereference pointer ($O(2)$ steps) |
+| **Tail Node** | `0x7F2` | `40` | `null` | Dereference pointer ($O(N)$ sequential walk) ❌ |
 
 Key takeaway: A Linked List trades random access speed for flexible insertion/deletion. There is no way to jump to the 3rd node without walking through the first two — the address of node `i` is not mathematically predictable.
 

@@ -1162,7 +1162,12 @@ SELECT * FROM accounts WHERE id = 1 LOCK IN SHARE MODE;
 
 -- Nowait option
 SELECT * FROM accounts WHERE id = 1 FOR UPDATE NOWAIT;
+
+-- Skip locked rows (MySQL 8+) for queue processing and parallel inventory reservations
+SELECT id FROM inventory_units WHERE item_id = 101 AND status = 'available' LIMIT 1 FOR UPDATE SKIP LOCKED;
 ```
+
+> **Deep Dive:** For a full architectural breakdown of how Shopify used `SELECT ... FOR UPDATE SKIP LOCKED` to scale flash sale inventory reservations to $5.1M GMV/minute with zero dual-write inconsistencies, see the dedicated [**Inventory Reservations at Scale: Why Shopify Moved from Redis to MySQL**](./inventory-reservation-system.md) guide.
 
 ### Application-Level Contention Handling
 

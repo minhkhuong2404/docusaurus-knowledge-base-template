@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-export default function DeploymentStrategiesDiagram() {
-  const [activeTab, setActiveTab] = useState<'bluegreen' | 'canary' | 'rolling'>('bluegreen');
+export default function DeploymentStrategiesDiagram({ initialStrategy }: { initialStrategy?: 'bluegreen' | 'canary' | 'rolling' | 'shadow' }) {
+  const [activeTab, setActiveTab] = useState<'bluegreen' | 'canary' | 'rolling' | 'shadow'>(initialStrategy || 'bluegreen');
 
   // Blue-Green States
   const [bgTraffic, setBgTraffic] = useState<'blue' | 'green'>('blue');
@@ -13,6 +13,9 @@ export default function DeploymentStrategiesDiagram() {
   // Rolling States
   const [rollingStep, setRollingStep] = useState<number>(0);
   const [rollingActive, setRollingActive] = useState(false);
+
+  // Shadow States
+  const [shadowSimulationRunning, setShadowSimulationRunning] = useState(true);
 
   useEffect(() => {
     if (!rollingActive) return;
@@ -39,17 +42,18 @@ export default function DeploymentStrategiesDiagram() {
   return (
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
         </svg>
-        <span>Zero-Downtime Deployment Strategies</span>
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>Zero-Downtime Deployment Strategies</span>
 
         {/* Tabs */}
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {([
             { id: 'bluegreen', label: 'Blue-Green', color: '#38bdf8' },
             { id: 'canary', label: 'Canary', color: '#fbbf24' },
-            { id: 'rolling', label: 'Rolling Update', color: '#34d399' }
+            { id: 'rolling', label: 'Rolling Update', color: '#34d399' },
+            { id: 'shadow', label: 'Shadow / Dark', color: '#a78bfa' }
           ] as const).map(t => (
             <button key={t.id} onClick={() => setActiveTab(t.id)} style={{
               padding: '6px 12px', borderRadius: '8px', border: 'none', cursor: 'pointer',
@@ -364,6 +368,79 @@ export default function DeploymentStrategiesDiagram() {
               ) : (
                 <div style={{ marginTop: '4px' }}>🔵 Click "Start Rolling Update" to trigger rollout.</div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'shadow' && (
+        <div style={{ display: 'grid', gridTemplateColumns: '55% 45%', gap: '16px', alignItems: 'start' }} className="deploy-layout">
+          <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg">
+            <svg viewBox="0 0 500 260" className="interactive-diagram">
+              <defs>
+                <marker id="arr-purple" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#a78bfa" />
+                </marker>
+              </defs>
+
+              {/* Client */}
+              <rect x="30" y="110" width="70" height="40" rx="8" fill="#38bdf818" stroke="#38bdf8" strokeWidth="1.5" />
+              <text x="65" y="135" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="bold">Clients</text>
+
+              {/* Ingress / Envoy Mirror */}
+              <rect x="140" y="70" width="100" height="120" rx="10" fill="#a78bfa15" stroke="#a78bfa" strokeWidth="1.8" />
+              <text x="190" y="105" textAnchor="middle" fill="#a78bfa" fontSize="11" fontWeight="bold">Ingress / Mesh</text>
+              <text x="190" y="125" textAnchor="middle" fill="#c4b5fd" fontSize="9">Traffic Mirror</text>
+              <text x="190" y="145" textAnchor="middle" fill="#94a3b8" fontSize="8">(Shadow Filter)</text>
+
+              {/* Client to Ingress */}
+              <path id="path-client-mesh" d="M 100 130 L 138 130" fill="none" stroke="#38bdf8" strokeWidth="2" markerEnd="url(#arr-blue)" />
+
+              {/* v1 Stable */}
+              <rect x="290" y="40" width="180" height="75" rx="8" fill="#34d39915" stroke="#34d399" strokeWidth="1.5" />
+              <text x="380" y="65" textAnchor="middle" fill="#34d399" fontSize="12" fontWeight="bold">v1 Stable (Primary)</text>
+              <text x="380" y="82" textAnchor="middle" fill="#e2e8f0" fontSize="9">100% Real Traffic • Reads & Writes DB</text>
+              <text x="380" y="98" textAnchor="middle" fill="#86efac" fontSize="8.5">✅ Returns Response to User</text>
+
+              {/* v2 Shadow */}
+              <rect x="290" y="145" width="180" height="75" rx="8" fill="#a78bfa15" stroke="#a78bfa" strokeWidth="1.5" strokeDasharray="3 3" />
+              <text x="380" y="170" textAnchor="middle" fill="#a78bfa" fontSize="12" fontWeight="bold">v2 Shadow (Dark Launch)</text>
+              <text x="380" y="187" textAnchor="middle" fill="#e2e8f0" fontSize="9">100% Mirrored Copy • Read-Only / Stubs</text>
+              <text x="380" y="203" textAnchor="middle" fill="#fca5a5" fontSize="8.5">❌ Responses Silently Discarded</text>
+
+              {/* Path to v1 */}
+              <path id="path-to-v1" d="M 240 110 L 288 78" fill="none" stroke="#34d399" strokeWidth="2" markerEnd="url(#arr-emerald)" />
+              <circle r="3" fill="#34d399" className="interactive-diagram-flowing-dot">
+                <animateMotion dur="1.2s" repeatCount="indefinite">
+                  <mpath href="#path-to-v1" />
+                </animateMotion>
+              </circle>
+
+              {/* Path to v2 */}
+              <path id="path-to-v2" d="M 240 150 L 288 182" fill="none" stroke="#a78bfa" strokeWidth="2" strokeDasharray="2 2" markerEnd="url(#arr-purple)" />
+              <circle r="3" fill="#a78bfa" className="interactive-diagram-flowing-dot">
+                <animateMotion dur="1.2s" repeatCount="indefinite">
+                  <mpath href="#path-to-v2" />
+                </animateMotion>
+              </circle>
+            </svg>
+          </div>
+
+          <div className="interactive-diagram-details-card" style={{ borderColor: '#a78bfa50' }}>
+            <div className="interactive-diagram-card-header">
+              <h3 style={{ color: '#a78bfa' }}>Shadow Deployment (Dark Launch)</h3>
+            </div>
+            <p style={{ fontSize: '13px' }}>
+              Real live production traffic is asynchronously mirrored to the new version in parallel. Tests real-world performance under 100% load with <strong>zero risk to users</strong>.
+            </p>
+
+            <div style={{ margin: '14px 0', padding: '10px', background: 'rgba(0,0,0,0.3)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <strong style={{ color: '#a78bfa', fontSize: '11.5px', display: 'block', marginBottom: '4px' }}>🛡️ Safety Guardrails:</strong>
+              <div style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: 1.5 }}>
+                • <strong>Read-Only DB access:</strong> Or dedicated shadow DB clone.<br/>
+                • <strong>Write Sandboxing:</strong> Downstream payment APIs and message publishers must be stubbed or mocked.<br/>
+                • <strong>Response Discarding:</strong> Envoy/Istio drops v2 responses after comparing latency and output diffs.
+              </div>
             </div>
           </div>
         </div>

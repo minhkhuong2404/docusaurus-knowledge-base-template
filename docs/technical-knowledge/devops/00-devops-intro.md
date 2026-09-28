@@ -71,6 +71,7 @@ Dependencies bundled inside the image — no "works on my machine"
 | 13 | [kubectl Command Reference](/technical-knowledge/devops/kubectl-commands) | 🟡 Intermediate |
 | 14 | [Helm — Package Manager for Kubernetes](/technical-knowledge/devops/helm) | 🔴 Advanced |
 | 15 | [Interview Questions](/technical-knowledge/devops/devops-interview-questions) | 🎯 All Levels |
+| 22 | [CI/CD Fundamentals & GitHub Actions](/technical-knowledge/devops/cicd-github-actions) | 🟢 Beginner to 🟡 Intermediate |
 
 ---
 
@@ -83,10 +84,11 @@ Week 1 — Docker Basics
   ├─ Writing Dockerfiles → build your first image
   └─ Docker CLI Commands → run, inspect, debug
 
-Week 2 — Docker in Practice
+Week 2 — Docker in Practice & CI/CD
   ├─ Docker Networking → connect services
   ├─ Docker Volumes → persist data
-  └─ Docker Compose → run multi-service apps locally
+  ├─ Docker Compose → run multi-service apps locally
+  └─ CI/CD Pipelines → GitHub Actions automated testing & image build
 
 Week 3 — Kubernetes Basics
   ├─ Install minikube / kind
@@ -103,6 +105,7 @@ Week 4 — Kubernetes in Practice
 Week 5+ — Production Topics
   ├─ Kubernetes Security → RBAC, policies
   ├─ Helm → package and deploy applications
+  ├─ GitOps & ArgoCD → automated K8s synchronization
   └─ Interview Questions → test your knowledge
 ```
 

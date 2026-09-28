@@ -24,16 +24,35 @@ import EpollTriggerModeDiagram from '@site/src/components/EpollTriggerModeDiagra
 
 # Nginx Internals & Architecture
 
-**Nginx** (pronounced "engine-x") is an open-source, high-performance HTTP server, reverse proxy, load balancer, and TCP/UDP proxy. Originally designed by Igor Sysoev in 2004 to solve the **C10K problem** — handling 10,000 concurrent client connections on a single server — Nginx achieved this through an asynchronous, event-driven architecture that avoids the thread-per-connection model entirely.
+**Nginx** (pronounced *"engine-x"*) is an open-source, ultra-high-performance HTTP server, reverse proxy, and load balancer. Originally written by Igor Sysoev in 2004 to conquer the **C10K problem** (handling 10,000 concurrent client connections on a single commodity server), NGINX revolutionized web infrastructure by replacing traditional *thread-per-connection* architectures with an asynchronous, non-blocking **event-driven epoll loop**.
 
-Today Nginx powers over 30% of the world's busiest websites and is the de-facto choice for reverse proxying, TLS termination, and static asset serving at scale.
+Today, NGINX powers over a third of the world's busiest web services, serving as the frontline gateway for TLS termination, reverse proxy routing, static asset acceleration, and microservice load balancing.
 
 ---
 
-## 1. The C10K Problem — Why Nginx Exists
+## 1. The Core Mental Model: Why NGINX is Fast
+
+```
+Traditional Web Server (Apache MPM Prefork/Worker):
+10,000 Connections ➔ 10,000 OS Threads ➔ ~20GB+ RAM (2-8MB stack/thread) + Severe CPU Context Thrashing
+
+NGINX Asynchronous Event Loop:
+10,000 Connections ➔ 1 Single-Threaded Worker Process (1 CPU Core) ➔ ~25MB RAM (~2.5KB/connection) + 0 CPU Idle Cost
+```
 
 <NginxArchitectureDiagram />
 
+### Key Architectural Concepts That Make NGINX "Click"
+
+1. **Non-Blocking OS Event Notifications (`epoll` / `kqueue`):** Instead of dedicating a thread that blocks waiting for a slow client to send HTTP bytes, NGINX registers tens of thousands of file descriptors with the Linux kernel's `epoll` subsystem. The worker process sleeps until the kernel fires an interrupt stating: *"Socket #482 has 1,024 bytes ready to read."* The worker reads the bytes, handles the state machine, and moves immediately to the next ready socket.
+2. **Reverse Proxy vs. Forward Proxy:**
+   - **Forward Proxy (Client-Facing):** Sits in front of client browsers (e.g. corporate VPN/gateway) to hide client IPs, filter outbound traffic, and bypass content restrictions.
+   - **Reverse Proxy (Server-Facing):** Sits in front of internal microservices to hide backend IPs, terminate SSL/TLS, compress responses, cache assets, and distribute traffic across upstream clusters.
+3. **Zero-Copy Static File Delivery (`sendfile`):** With `sendfile on;`, NGINX serves static files directly from the OS page cache to the network card via Direct Memory Access (DMA), avoiding 4 context switches and 2 in-memory CPU buffer copies per request.
+
+---
+
+## 2. Master-Worker Process Architecture
 
 ### The Master Process
 

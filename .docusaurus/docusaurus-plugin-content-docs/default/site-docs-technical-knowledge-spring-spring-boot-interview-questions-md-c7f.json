@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Spring Boot — Advanced Topics",
-    "permalink": "/technical-knowledge/spring/spring-boot-advanced"
+    "title": "Kubernetes & Spring Boot 3.x — Zero-Downtime Graceful Shutdown",
+    "permalink": "/technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime"
   },
   "next": {
     "title": "Spring Framework: Overview",

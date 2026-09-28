@@ -15,6 +15,7 @@ tags: [system-design, overview, architecture, interview-prep]
 
 | Topic | Description |
 |---|---|
+| [🎯 45 Problem Breakdowns](/technical-knowledge/system-design/problem-breakdowns) | Master syllabus of 45 real-world FAANG interview problems with deep architectural designs |
 | [Architecture Fundamentals](/technical-knowledge/system-design/architecture-fundamentals) | CAP theorem, consistency models, trade-offs |
 | [Capacity Planning & Estimation](/technical-knowledge/system-design/capacity-planning) | Back-of-envelope math, traffic/storage estimation |
 | [Interview Framework](/technical-knowledge/system-design/interview-framework) | Structured approach to design interviews |
@@ -32,13 +33,15 @@ tags: [system-design, overview, architecture, interview-prep]
 | [API Design](/technical-knowledge/system-design/api-design) | REST, gRPC, GraphQL, versioning |
 | [Distributed Systems](/technical-knowledge/system-design/distributed-systems) | Consensus, leader election, clock sync |
 | [Security Patterns](/technical-knowledge/system-design/security-patterns) | AuthN/AuthZ, rate limiting, zero trust |
+| [60 Days of System Design](/technical-knowledge/system-design/60-days-of-system-design) | Structured 60-day syllabus categorized into 7 modules + 12 high-impact scenario breakdowns |
 | [Common Interview Questions](/technical-knowledge/system-design/common-interview-questions) | Full question bank with discussion points |
 
 ## How to Use This Guide
 
-1. **For interviews** — Start with the [Interview Framework](/technical-knowledge/system-design/interview-framework), then study each pattern topic.
-2. **For production systems** — Jump directly to the relevant pattern topic.
-3. **For review** — Use the [Common Interview Questions](/technical-knowledge/system-design/common-interview-questions) page as a self-test.
+1. **For structured study** — Follow the [60 Days of System Design](/technical-knowledge/system-design/60-days-of-system-design) roadmap for a comprehensive 7-module curriculum with scenario deep-dives.
+2. **For interviews** — Start with the [Interview Framework](/technical-knowledge/system-design/interview-framework), then practice with [Common Interview Questions](/technical-knowledge/system-design/common-interview-questions).
+3. **For production systems** — Jump directly to the relevant pattern topic below.
+4. **For review** — Test yourself on trade-offs and edge cases using the scenario breakdowns.
 
 ## Key Principles to Internalize
 

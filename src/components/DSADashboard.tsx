@@ -491,15 +491,15 @@ export default function DSADashboard() {
 
         {/* Categories Badges */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-          <div style={{ background: 'rgba(74, 222, 128, 0.06)', border: '1px solid rgba(74, 222, 128, 0.2)', padding: '0.5rem 1rem', borderRadius: '10px', display: 'flex', gap: '0.5rem' }}>
+          <div className="dsa-stat-pill easy" style={{ background: 'rgba(74, 222, 128, 0.06)', border: '1px solid rgba(74, 222, 128, 0.2)', padding: '0.5rem 1rem', borderRadius: '10px', display: 'flex', gap: '0.5rem' }}>
             <span style={{ color: '#4ade80', fontWeight: 600 }}>🟢 Easy:</span>
             <span style={{ fontWeight: 700 }}>{easySolved} / {easyTotal}</span>
           </div>
-          <div style={{ background: 'rgba(251, 191, 36, 0.06)', border: '1px solid rgba(251, 191, 36, 0.2)', padding: '0.5rem 1rem', borderRadius: '10px', display: 'flex', gap: '0.5rem' }}>
+          <div className="dsa-stat-pill medium" style={{ background: 'rgba(251, 191, 36, 0.06)', border: '1px solid rgba(251, 191, 36, 0.2)', padding: '0.5rem 1rem', borderRadius: '10px', display: 'flex', gap: '0.5rem' }}>
             <span style={{ color: '#fbbf24', fontWeight: 600 }}>🟡 Medium:</span>
             <span style={{ fontWeight: 700 }}>{mediumSolved} / {mediumTotal}</span>
           </div>
-          <div style={{ background: 'rgba(248, 113, 113, 0.06)', border: '1px solid rgba(248, 113, 113, 0.2)', padding: '0.5rem 1rem', borderRadius: '10px', display: 'flex', gap: '0.5rem' }}>
+          <div className="dsa-stat-pill hard" style={{ background: 'rgba(248, 113, 113, 0.06)', border: '1px solid rgba(248, 113, 113, 0.2)', padding: '0.5rem 1rem', borderRadius: '10px', display: 'flex', gap: '0.5rem' }}>
             <span style={{ color: '#f87171', fontWeight: 600 }}>🔴 Hard:</span>
             <span style={{ fontWeight: 700 }}>{hardSolved} / {hardTotal}</span>
           </div>
@@ -731,6 +731,7 @@ export default function DSADashboard() {
                     <Link
                       to={`/technical-knowledge/dsa/${group.weekSlug}`}
                       onClick={(e) => e.stopPropagation()}
+                      className="dsa-lesson-doc-badge"
                       style={{
                         marginLeft: '0.5rem',
                         fontSize: '0.78rem',
@@ -754,15 +755,18 @@ export default function DSADashboard() {
                     </Link>
                   </div>
 
-                  <span style={{
-                    padding: '3px 10px',
-                    borderRadius: '20px',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
-                    backgroundColor: groupIsCompleted ? 'rgba(74, 222, 128, 0.12)' : 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))',
-                    color: groupIsCompleted ? '#4ade80' : 'var(--ifm-color-content-secondary, #8f9cae)',
-                    border: groupIsCompleted ? '1px solid rgba(74, 222, 128, 0.25)' : '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.06))',
-                  }}>
+                  <span
+                    className={`dsa-week-progress-pill ${groupIsCompleted ? 'completed' : ''}`}
+                    style={{
+                      padding: '3px 10px',
+                      borderRadius: '20px',
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      backgroundColor: groupIsCompleted ? 'rgba(74, 222, 128, 0.12)' : 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))',
+                      color: groupIsCompleted ? '#4ade80' : 'var(--ifm-color-content-secondary, #8f9cae)',
+                      border: groupIsCompleted ? '1px solid rgba(74, 222, 128, 0.25)' : '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.06))',
+                    }}
+                  >
                     {groupSolvedCount} / {groupTotalCount} Solved
                   </span>
                 </div>
@@ -807,6 +811,7 @@ export default function DSADashboard() {
                                   type="button"
                                   onClick={() => toggleSolved(p.id)}
                                   title={isSolved ? 'Mark as Unsolved' : 'Mark as Solved'}
+                                  className={`dsa-status-btn ${isSolved ? 'solved' : 'unsolved'}`}
                                   style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',
@@ -854,29 +859,32 @@ export default function DSADashboard() {
 
                               {/* Difficulty Badge */}
                               <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02))' }}>
-                                <span style={{
-                                  padding: '3px 8px',
-                                  borderRadius: '6px',
-                                  fontSize: '0.75rem',
-                                  fontWeight: 700,
-                                  backgroundColor: p.difficulty === 'Easy' 
-                                    ? 'rgba(74, 222, 128, 0.1)' 
-                                    : p.difficulty === 'Medium' 
-                                      ? 'rgba(251, 191, 36, 0.1)' 
-                                      : 'rgba(248, 113, 113, 0.1)',
-                                  color: p.difficulty === 'Easy' 
-                                    ? '#4ade80' 
-                                    : p.difficulty === 'Medium' 
-                                      ? '#fbbf24' 
-                                      : '#f87171',
-                                  border: `1px solid ${
-                                    p.difficulty === 'Easy' 
-                                       ? 'rgba(74, 222, 128, 0.2)' 
-                                       : p.difficulty === 'Medium' 
-                                         ? 'rgba(251, 191, 36, 0.2)' 
-                                         : 'rgba(248, 113, 113, 0.2)'
-                                  }`
-                                }}>
+                                <span
+                                  className={`dsa-diff-badge dsa-diff-${p.difficulty.toLowerCase()}`}
+                                  style={{
+                                    padding: '3px 8px',
+                                    borderRadius: '6px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 700,
+                                    backgroundColor: p.difficulty === 'Easy' 
+                                      ? 'rgba(74, 222, 128, 0.1)' 
+                                      : p.difficulty === 'Medium' 
+                                        ? 'rgba(251, 191, 36, 0.1)' 
+                                        : 'rgba(248, 113, 113, 0.1)',
+                                    color: p.difficulty === 'Easy' 
+                                      ? '#4ade80' 
+                                      : p.difficulty === 'Medium' 
+                                        ? '#fbbf24' 
+                                        : '#f87171',
+                                    border: `1px solid ${
+                                      p.difficulty === 'Easy' 
+                                         ? 'rgba(74, 222, 128, 0.2)' 
+                                         : p.difficulty === 'Medium' 
+                                           ? 'rgba(251, 191, 36, 0.2)' 
+                                           : 'rgba(248, 113, 113, 0.2)'
+                                    }`
+                                  }}
+                                >
                                   {p.difficulty}
                                 </span>
                               </td>
@@ -888,6 +896,7 @@ export default function DSADashboard() {
                                     <Link
                                       key={c}
                                       to={getCompanyLink(c)}
+                                      className="dsa-company-badge"
                                       style={{
                                         padding: '2px 6px',
                                         borderRadius: '4px',

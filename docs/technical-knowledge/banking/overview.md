@@ -227,23 +227,15 @@ Is the payment domestic?
 
 Every payment — inbound or outbound — passes through these controls:
 
-```
-Payment Instruction
-       │
-       ▼
-┌──────────────────────────────────────────────────────┐
-│ 1. DUPLICATE CHECK         (TxId / EndToEndId)       │
-│ 2. SCHEMA VALIDATION       (XSD / business rules)    │
-│ 3. AUTHENTICATION          (customer / system auth)  │
-│ 4. SANCTIONS SCREENING     (OFAC, UN, DFAT, AUSTRAC) │
-│ 5. FRAUD ASSESSMENT        (rules + ML model)        │
-│ 6. AML / TM CHECK          (transaction monitoring)  │
-│ 7. BALANCE / LIMIT CHECK   (outbound only)           │
-└──────────────────────────────────────────────────────┘
-       │
-       ▼
-  Process Payment
-```
+| Checkpoint Order | Risk / Compliance Control | Target Identifiers & Payload | Failure Disposition & Impact |
+|---|---|---|---|
+| **1. Duplicate Check** | Idempotency Key & MsgId | `MsgId`, `TxId`, `EndToEndId` within 48h deduplication cache | Immediate rejection with `DUPL` error code. |
+| **2. Schema Validation** | Structural & Semantic Check | ISO 20022 XSD syntax, valid BIC/BSB format, currency codes | Rejects with `NARR` or validation error response. |
+| **3. Authentication** | Identity & Access Control | OAuth 2.0 mTLS cert, digital signatures, customer MFA token | HTTP 401/403 or signature mismatch rejection. |
+| **4. Sanctions Screening** | Global Watchlist Match | OFAC, UN, DFAT, DFAT Consolidated list (Debtor/Creditor/BICs) | Immediate payment freeze; compliance referral. |
+| **5. Fraud Assessment** | Behavioral & Velocity Analysis | Device fingerprint, IP geo-velocity, historical profile ML score | Step-up OTP challenge, delay, or fraud block. |
+| **6. AML / TM Check** | Anti-Money Laundering Rules | Structuring detection (&lt;$10K), mule heuristics, pass-through | Straight-Through Processing continues; analyst SMR case raised. |
+| **7. Balance / Limit Check** | Financial Solvency (Outbound) | Available balance, customer daily limits, overdraft allowance | Rejection with `AM04` (Insufficient Funds). |
 
 ---
 

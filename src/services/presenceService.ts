@@ -18,8 +18,24 @@ export interface UserPresence {
 }
 
 const PRESENCE_COLLECTION = 'presence';
-const HEARTBEAT_INTERVAL_MS = 45 * 1000; // 45 seconds
-const ACTIVE_THRESHOLD_MS = 3 * 60 * 1000; // Considered online if active in the last 3 minutes
+const HEARTBEAT_INTERVAL_MS = 45 * 1000; // 45 seconds (standard desktop)
+const SLOW_HEARTBEAT_INTERVAL_MS = 180 * 1000; // 3 minutes (slow 2G/3G / Save-Data mobile)
+const ACTIVE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes threshold for offline determination
+
+/**
+ * Detects whether the current device is on a slow, 2G/3G, or metered connection.
+ */
+export function isSlowOrMeteredConnection(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+  if (!conn) return false;
+  return (
+    conn.saveData === true ||
+    conn.effectiveType === 'slow-2g' ||
+    conn.effectiveType === '2g' ||
+    conn.effectiveType === '3g'
+  );
+}
 
 /**
  * Updates the user's heartbeat in Firestore presence collection.
@@ -90,18 +106,37 @@ export function subscribeToOnlineUsers(
     presenceCol,
     (snapshot) => {
       const now = Date.now();
-      const onlineUsers: UserPresence[] = [];
+      const userMap = new Map<string, UserPresence>();
 
       snapshot.forEach((docSnap) => {
         const data = docSnap.data() as UserPresence;
         // Check if user was active recently (within active threshold)
         if (data && (now - (data.lastActiveAt || 0) < ACTIVE_THRESHOLD_MS) && data.isOnline !== false) {
-          onlineUsers.push(data);
+          // Normalize identity key by email (if present) or UID/document ID
+          const identityKey = data.email ? data.email.trim().toLowerCase() : (data.uid || docSnap.id);
+          const existing = userMap.get(identityKey);
+          // If multiple sessions exist for the same user identity, keep the freshest heartbeat
+          if (!existing || (data.lastActiveAt || 0) > (existing.lastActiveAt || 0)) {
+            userMap.set(identityKey, data);
+          }
         }
       });
 
+      const onlineUsers = Array.from(userMap.values());
       // Sort by EXP descending
       onlineUsers.sort((a, b) => (b.exp || 0) - (a.exp || 0));
+
+      // Debug logging to inspect who is online (enabled in dev or via window.__debugPresence)
+      if (typeof window !== 'undefined' && (process.env.NODE_ENV !== 'production' || (window as any).__debugPresence)) {
+        console.log(`[Presence] ${onlineUsers.length} online user(s):`, onlineUsers.map((u) => ({
+          name: u.displayName,
+          email: u.email,
+          uid: u.uid,
+          lastActiveSecAgo: Math.round((now - (u.lastActiveAt || 0)) / 1000),
+          currentRoute: u.currentRoute,
+        })));
+      }
+
       onUpdate(onlineUsers);
     },
     (err) => {
@@ -127,12 +162,13 @@ export function startPresenceTracker(
   // Initial heartbeat
   updateUserHeartbeat(user, resolveExp(), window.location.pathname);
 
-  // Periodic heartbeat
+  // Periodic heartbeat with dynamic backoff for slow networks / Save-Data
+  const activeInterval = isSlowOrMeteredConnection() ? SLOW_HEARTBEAT_INTERVAL_MS : HEARTBEAT_INTERVAL_MS;
   const intervalId = setInterval(() => {
     if (document.visibilityState === 'visible') {
       updateUserHeartbeat(user, resolveExp(), window.location.pathname);
     }
-  }, HEARTBEAT_INTERVAL_MS);
+  }, activeInterval);
 
   // Tab visibility listener
   const handleVisibilityChange = () => {

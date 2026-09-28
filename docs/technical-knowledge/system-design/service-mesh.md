@@ -6,6 +6,8 @@ description: Deep-dive into Service Mesh architecture — Envoy internals, xDS A
 tags: [system-design, microservices, service-mesh, kubernetes, istio, envoy, mtls, traffic-management]
 ---
 
+import ServiceMeshDiagram from '@site/src/components/ServiceMeshDiagram';
+
 # Service Mesh
 
 A **Service Mesh** is a dedicated infrastructure layer that handles **secure, observable, and reliable service-to-service communication** in microservices deployments — shifting network concerns (mTLS, retries, circuit breaking, traffic shaping) out of application code and into infrastructure-managed sidecar proxies.
@@ -38,34 +40,7 @@ With Service Mesh:
 
 ## Architecture: Control Plane vs. Data Plane
 
-```mermaid
-graph TB
-    subgraph ControlPlane["Control Plane (Istiod)"]
-        Pilot["Pilot\n(xDS Config Distribution)"]
-        Citadel["Citadel\n(Certificate Authority)"]
-        Galley["Galley\n(Config Validation)"]
-    end
-
-    subgraph DataPlane["Data Plane (Kubernetes Pods)"]
-        subgraph PodA["Pod A: Order Service"]
-            AppA["Spring Boot App\n:8080"]
-            EnvoyA["Envoy Proxy\n(iptables intercept)"]
-        end
-        subgraph PodB["Pod B: Payment Service"]
-            AppB["Spring Boot App\n:8080"]
-            EnvoyB["Envoy Proxy\n(iptables intercept)"]
-        end
-    end
-
-    Pilot -- "xDS API (gRPC)\nLDS/RDS/CDS/EDS" --> EnvoyA
-    Pilot -- "xDS API (gRPC)\nLDS/RDS/CDS/EDS" --> EnvoyB
-    Citadel -- "mTLS certificates\n(SVID/SPIFFE)" --> EnvoyA
-    Citadel -- "mTLS certificates\n(SVID/SPIFFE)" --> EnvoyB
-
-    AppA -- "HTTP :8080\n(plain, localhost only)" --> EnvoyA
-    EnvoyA -- "mTLS :443\n(encrypted, mutual auth)" --> EnvoyB
-    EnvoyB -- "HTTP :8080\n(plain, localhost only)" --> AppB
-```
+<ServiceMeshDiagram />
 
 ### Data Plane: Envoy Proxy
 

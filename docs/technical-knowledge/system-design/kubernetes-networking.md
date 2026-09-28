@@ -5,6 +5,7 @@ sidebar_label: K8s Networking
 description: Comprehensive guide to Kubernetes networking concepts, including Container Network Interface (CNI), Service Types, Kube-proxy, and Ingress.
 tags: [system-design, microservices, networking, kubernetes, cni]
 ---
+import KubernetesNetworkingDiagram from '@site/src/components/KubernetesNetworkingDiagram';
 
 # Kubernetes Networking
 
@@ -16,26 +17,7 @@ Kubernetes imposes a flat, software-defined network model where every Pod (the b
 
 Kubernetes breaks down networking into four distinct routing categories:
 
-```text
-               ┌────────────────────────────────────────────────────────┐
-               │              Ingress (Outside to Cluster)              │
-               └──────────────────────────┬─────────────────────────────┘
-                                          │
-                                          ▼
-               ┌────────────────────────────────────────────────────────┐
-               │             Service VIP (Cluster-Internal)             │
-               └──────────────────────────┬─────────────────────────────┘
-                                          │
-                                          ▼
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │ Pod-to-Pod Routing (Cross-Node CNI tunnel)                               │
-  │                                                                          │
-  │     [ Pod A (10.244.1.5) ]                           [ Pod B (10.244.2.8) ]│
-  │             │                                                ▲           │
-  │             ▼                                                │           │
-  │       [ Node 1 VM ] ══════════ Overlay Network ════════► [ Node 2 VM ]   │
-  └──────────────────────────────────────────────────────────────────────────┘
-```
+<KubernetesNetworkingDiagram />
 
 1. **Container-to-Container**: Containers inside the same Pod share the same network namespace and communicate via `localhost`.
 2. **Pod-to-Pod**: Every Pod has an IP. Pods communicate directly across nodes without Network Address Translation (NAT) via the **CNI (Container Network Interface)** plugin.

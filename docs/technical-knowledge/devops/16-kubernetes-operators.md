@@ -163,6 +163,13 @@ Both package and deploy applications, but they solve different problems.
 
 ---
 
+### Compare Next
+- [Dynamic Admission Webhooks (Mutating & Validating)](./16a-kubernetes-admission-webhooks.md)
+- [GitOps with ArgoCD](./17-gitops-argocd.md)
+- [Observability Stack](./18-devops-observability.md)
+
+---
+
 ## Interview Questions
 
 ### Q: What separates an Operator from a basic controller?

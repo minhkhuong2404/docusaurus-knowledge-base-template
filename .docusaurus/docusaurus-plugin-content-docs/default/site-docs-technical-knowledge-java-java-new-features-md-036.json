@@ -47,8 +47,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Java I/O: Streams, NIO & I/O Models",
-    "permalink": "/technical-knowledge/java/java-io"
+    "title": "Off-Heap Memory & FFM API: High-Performance Native Memory in Modern Java (Java 22+)",
+    "permalink": "/technical-knowledge/java/java-off-heap-ffm-api"
   },
   "next": {
     "title": "Java Interview Questions & Answers",

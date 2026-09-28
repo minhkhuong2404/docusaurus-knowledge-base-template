@@ -23,6 +23,9 @@ import KafkaStreamsStateStoreDiagram from '@site/src/components/KafkaStreamsStat
 import KafkaStreamsWindowJoinDiagram from '@site/src/components/KafkaStreamsWindowJoinDiagram';
 import KafkaStreamsTopologyMigrationRunbookDiagram from '@site/src/components/KafkaStreamsTopologyMigrationRunbookDiagram';
 import KafkaStreamsRebalanceStormDurationDiagram from '@site/src/components/KafkaStreamsRebalanceStormDurationDiagram';
+import KafkaStreamsTopologyResilienceDiagram from '@site/src/components/KafkaStreamsTopologyResilienceDiagram';
+import KafkaStreamsFailoverRecoveryDiagram from '@site/src/components/KafkaStreamsFailoverRecoveryDiagram';
+import KafkaStreamsExactlyOnceDiagram from '@site/src/components/KafkaStreamsExactlyOnceDiagram';
 
 # Kafka Streams — Complete Deep Dive
 
@@ -142,20 +145,6 @@ Source Nodes    →    Processor Nodes (transforms)    →    Sink Nodes
 ### Topology Visualization
 
 <KafkaStreamsTopologyDiagram initialTab="DSL_DAG" />
-
-```
-[orders-raw topic]        [product-catalog topic]
-       │                         │
-  [Source Node]             [GlobalTable Source]
-       │                         │
-  [Filter: valid]                │
-       │                         │
-  [MapValues: enrich] ◄──── [GlobalKTable join]
-       │
-  [Branch: high-value / standard]
-       │                  │
-  [Sink: vip-orders]  [Sink: standard-orders]
-```
 
 ### Topology Definition (DSL + Processor API)
 
@@ -420,6 +409,115 @@ If you must deploy via rolling updates without downtime or `application.id` chan
   // Sub-topology 1 remains stable at index 1!
   builder.stream("payments-raw", ...);
   ```
+
+---
+
+#### How to Keep Services Alive During Topology Mismatches & Rebalances
+
+When a topology mismatch or assignment collision occurs (e.g. during rolling updates, accidental sub-topology reordering, or schema mismatch), standard Java streams applications can easily enter an **uncontrolled CrashLoopBackOff**, taking down the entire service container.
+
+Use the following three architectural guardrails to prevent crashes and ensure graceful degradation:
+
+<KafkaStreamsTopologyResilienceDiagram />
+
+---
+
+##### 1. Decouple Kubernetes Liveness vs. Readiness Probes (The Golden Rule)
+
+The #1 root cause of cluster death during rolling updates is an improperly configured Kubernetes Liveness probe:
+
+- **❌ Anti-Pattern (Coupled Probe)**: Pointing the Liveness probe at `kafkaStreams.state() == RUNNING`. During a rebalance storm or partition validation clash, the state is `REBALANCING` or `ERROR`. Kubernetes fails the liveness check and sends `SIGKILL` to the pod. The restarted pod rejoins and triggers *another* rebalance, locking the entire cluster in an infinite CrashLoopBackOff!
+- **✅ Best Practice (Decoupled Probes)**:
+  - **Liveness Probe (`/health/live`)**: Checks JVM process health and memory only (always returns `200 OK` while the JVM is up).
+  - **Readiness Probe (`/health/ready`)**: Checks `kafkaStreams.state() == RUNNING` (returns `503 Service Unavailable` during rebalances).
+
+```java
+@Component
+public class KafkaStreamsHealthIndicator implements HealthIndicator {
+    private final KafkaStreams kafkaStreams;
+
+    public KafkaStreamsHealthIndicator(KafkaStreams kafkaStreams) {
+        this.kafkaStreams = kafkaStreams;
+    }
+
+    @Override
+    public Health health() {
+        KafkaStreams.State state = kafkaStreams.state();
+        
+        // Readiness logic: Stops external HTTP traffic during rebalance, but NEVER kills container
+        if (state == KafkaStreams.State.RUNNING) {
+            return Health.up().withDetail("state", state).build();
+        } else if (state == KafkaStreams.State.REBALANCING) {
+            return Health.status("REBALANCING").withDetail("state", state).build();
+        } else {
+            return Health.down().withDetail("state", state).build();
+        }
+    }
+}
+```
+
+---
+
+##### 2. Intercept Errors via `StreamsUncaughtExceptionHandler` (KIP-663)
+
+By default, an uncaught topology exception kills the `StreamThread`. When all stream threads die, the `KafkaStreams` instance terminates.
+
+Use `setUncaughtExceptionHandler` to catch topology and partition assignment errors explicitly:
+
+```java
+kafkaStreams.setUncaughtExceptionHandler(throwable -> {
+    log.error("💥 Uncaught exception in Kafka Streams thread: ", throwable);
+
+    // If it's a topology or partition assignment mismatch during a rolling rollout:
+    if (isTopologyMismatch(throwable)) {
+        log.warn("⚠️ Topology mismatch detected. Retrying thread to allow rolling upgrade to finish...");
+        // Spawns a fresh thread to rejoin group gracefully
+        return StreamThreadExceptionResponse.REPLACE_THREAD;
+    }
+
+    // Default safety behavior: replace crashed thread
+    return StreamThreadExceptionResponse.REPLACE_THREAD;
+});
+
+private boolean isTopologyMismatch(Throwable throwable) {
+    String msg = throwable.getMessage();
+    return msg != null && (
+        msg.contains("TaskAssignmentException") ||
+        msg.contains("unexpected topic-partition") ||
+        msg.contains("Missing source topic")
+    );
+}
+```
+
+---
+
+##### 3. Multi-Engine JVM Isolation (Independent `KafkaStreams` Objects)
+
+If a service handles multiple sub-topologies (e.g. Orders and Payments), do not merge them into a single `StreamsBuilder`. Instead, instantiate **two independent `KafkaStreams` instances** within the same Spring Boot / JVM application:
+
+```java
+@Configuration
+public class MultiStreamEngineConfig {
+
+    @Bean(name = "orderStreams")
+    public KafkaStreams orderStreams(StreamsBuilder ordersBuilder) {
+        // App ID: "order-enrichment-service"
+        KafkaStreams streams = new KafkaStreams(ordersBuilder.build(), orderProps);
+        streams.start();
+        return streams;
+    }
+
+    @Bean(name = "paymentStreams")
+    public KafkaStreams paymentStreams(StreamsBuilder paymentsBuilder) {
+        // App ID: "payment-processing-service"
+        KafkaStreams streams = new KafkaStreams(paymentsBuilder.build(), paymentProps);
+        streams.start();
+        return streams;
+    }
+}
+```
+
+* **Blast Radius Isolation**: A failure, rebalance storm, or topology mismatch in `orderStreams` leaves `paymentStreams` and your HTTP REST API controllers **100% online and healthy**.
 
 ---
 
@@ -741,24 +839,11 @@ Every persistent state store has a corresponding **changelog topic** — a compa
 
 ### How the Changelog Works
 
-```
-State store write path:
-  aggregate(key="user-123", value=summary) 
-      │
-      ├──► RocksDB: put("user-123", summary)
-      └──► Changelog topic: append record (key="user-123", value=summary)
+<KafkaStreamsStateStoreDiagram initialTab="layers" />
 
-Compaction:
-  Kafka's log compaction retains only the latest record per key
-  → Changelog size is bounded by the number of distinct keys, not total events
-  → Deleted keys (tombstones with null value) are eventually purged
-
-State recovery:
-  On task assignment after crash:
-    Read checkpoint file → find last committed offset in changelog
-    Replay changelog from that offset → rebuild RocksDB state
-    → Processing resumes from the last committed position
-```
+- **Dual Write Path**: When state is modified via `put(K, V)` or `aggregate()`, it is staged in the in-memory write cache, flushed to local RocksDB on disk, and simultaneously appended to the internal Kafka changelog topic.
+- **Log Compaction**: The changelog topic uses `cleanup.policy=compact`, retaining only the latest value for each key. Total changelog size is bounded by the number of distinct keys rather than total historic events. Tombstones (`null` values) delete old entries during log cleaner cycles.
+- **Deterministic Recovery**: On task reassignment after a node crash, the new host inspects the local `.checkpoint` file and replays uncommitted records from the changelog to restore full state.
 
 ### Changelog Topic Configuration
 
@@ -786,60 +871,19 @@ Materialized.as("ephemeral-store")
 
 ## 8. Failure Recovery Deep Dive
 
+<KafkaStreamsFailoverRecoveryDiagram />
+
 Understanding exactly what happens when a Kafka Streams instance fails is essential for designing systems with acceptable recovery windows.
 
 ### Timeline of a Crash and Recovery
 
-```
-Normal operation:
-  Instance A: Tasks [0, 1, 2] — processing, state in RocksDB, changelog synced
-
-t=0s   Instance A crashes (OOM, hardware failure, network partition)
-
-t=0s–30s  Kafka consumer group coordinator detects session timeout
-           (session.timeout.ms = 30s by default)
-
-t=30s  Group coordinator triggers rebalance
-       Processing on all other instances PAUSES during rebalance
-
-t=35s  Rebalance completes:
-       Tasks [0, 1, 2] from Instance A reassigned to Instance B
-
-t=35s  Instance B starts restoring state for Tasks [0, 1, 2]:
-       - Reads checkpoint file (records last committed RocksDB offset)
-       - Replays changelog topic from checkpoint offset
-       - Applies changelog records to RocksDB until caught up
-       
-t=35s + recovery_window:  State fully restored → processing resumes
-
-recovery_window = (changelog records since checkpoint) / (replay throughput)
-
-Example:
-  10 million records in changelog since last checkpoint
-  Kafka Streams replays at ~1 million records/second
-  Recovery time: ~10 seconds
-
-Example (no checkpoint, cold restore):
-  State store has 1 billion keys, 100 GB total
-  Must replay entire changelog from beginning
-  At 100 MB/s network: 100 GB / 100 MB/s = ~1000 seconds = ~17 minutes
-```
+When an instance fails (e.g. OOM, node reboot, or network partition), the Kafka Consumer Group Coordinator detects the missing heartbeat after `session.timeout.ms` (30s) and triggers a cluster rebalance to reassign tasks to healthy nodes.
 
 ### The Checkpoint File
 
 <KafkaStreamsStateStoreDiagram initialTab="checkpoint" />
 
 Kafka Streams writes a `.checkpoint` file in the state directory periodically. It records the Kafka offset in the changelog topic up to which RocksDB state is guaranteed durable.
-
-```
-/var/kafka-streams/state/order-processing-app/
-  0_0/                    ← Task 0, Sub-topology 0
-    order-summary-store/  ← State store directory (RocksDB)
-      000003.sst
-      000004.log
-      MANIFEST-000001
-    .checkpoint           ← Contains changelog offset: {"order-summary-store-changelog": {"0": 45231}}
-```
 
 **Key insight**: if RocksDB data on disk is up to offset 45231, and the changelog has 47500 records total, recovery only needs to replay 2269 records — not the full history.
 
@@ -907,56 +951,11 @@ props.put(StreamsConfig.NUM_STANDBY_REPLICAS_CONFIG, 1);
 
 ## 10. Exactly-Once Semantics
 
-### The Problem: Default At-Least-Once Behavior
-
-Without exactly-once guarantees, a Kafka Streams failure can produce duplicate output:
-
-```
-Processing cycle without exactly-once:
-  1. Read record from "orders-raw" (offset 100)
-  2. Process: update state store, produce output to "processed-orders"
-  3. Output sent to Kafka ✅ (committed to "processed-orders")
-  4. Crash before committing consumer offset
-
-  Restart:
-  5. Re-reads from offset 100 (last committed = 99)
-  6. Processes record again → produces SECOND output to "processed-orders"
-  7. Downstream receives duplicate output record ❌
-```
+<KafkaStreamsExactlyOnceDiagram />
 
 ### Exactly-Once V2 (`EXACTLY_ONCE_V2`)
 
 Kafka Streams wraps each read-process-write cycle in a **Kafka transaction**. Output records AND consumer offset commits are atomic:
-
-```
-With EXACTLY_ONCE_V2 (Kafka 2.5+):
-
-  Per stream thread (not per task — V2 optimization):
-    beginTransaction()
-    
-    for each input record:
-      - Process record
-      - Write output to producer buffer (staged — not yet committed)
-      - Update state store (staged in RocksDB)
-    
-    commitTransaction():
-      - Flush state store to RocksDB + checkpoint
-      - Commit output records to Kafka (atomic)
-      - Commit consumer offsets to Kafka (atomic with output)
-    
-    If crash before commitTransaction():
-      - Transaction aborted
-      - Output records invisible to read_committed consumers
-      - Consumer offset not advanced
-      - On restart: re-reads same input records, re-processes
-      - Downstream sees at-most-one output ← exactly-once achieved
-
-  Zombie fencing:
-    If a stale instance (old process) tries to continue writing after being evicted:
-    - New instance has higher producer epoch
-    - Broker rejects old epoch's writes with FencedLeaderEpochException
-    - No duplicate output from zombie producers
-```
 
 ```yaml
 # Required consumer configuration for downstream consumers

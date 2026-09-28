@@ -6,6 +6,8 @@ description: Deep dive into Feature Toggles — 4 toggle types, trunk-based deve
 tags: [system-design, microservices, deployment, devops, continuous-delivery, feature-flags, java, spring-boot]
 ---
 
+import FeatureToggleArchitectureDiagram from '@site/src/components/FeatureToggleArchitectureDiagram';
+
 # Feature Toggles (Feature Flags)
 
 A **Feature Toggle** (also called a **Feature Flag**) is a technique that lets you enable or disable a feature in production **without deploying new code** — by changing a configuration value in a running system.
@@ -43,6 +45,8 @@ This is the foundation of **trunk-based development** and **continuous delivery*
 
 ## 🔑 The 4 Types of Feature Toggles
 
+<FeatureToggleArchitectureDiagram initialTab="types" />
+
 Understanding the type helps you decide the appropriate lifecycle and who manages the flag:
 
 | Type | Lifetime | Owner | Example |
@@ -58,19 +62,7 @@ Understanding the type helps you decide the appropriate lifecycle and who manage
 
 ## 🏗️ How Feature Toggles Work
 
-```mermaid
-graph TD
-    Request["Incoming Request<br>(User ID, Country, Plan)"]
-    Evaluator["Flag Evaluator"]
-    ConfigStore["Flag Config Store<br>(LaunchDarkly / Redis / DB)"]
-
-    Request --> Evaluator
-    Evaluator -->|"Check: is 'bulk-discount'<br>enabled for userId=123?"| ConfigStore
-    ConfigStore -->|"Rules: 5% rollout<br>+ country=US allowed"| Evaluator
-
-    Evaluator -->|"userId 123 → hash mod 100 = 7 → 7 < 5 → FALSE"| OldPath["⬜ Old Code Path<br>(no discount)"]
-    Evaluator -->|"userId 456 → hash mod 100 = 3 → 3 < 5 → TRUE"| NewPath["✅ New Code Path<br>(15% bulk discount)"]
-```
+<FeatureToggleArchitectureDiagram initialTab="evaluator" />
 
 The key to a **stable rollout** is consistent hashing: the same user always gets the same toggle result. `hash(userId + flagName) % 100` ensures user 123 always sees the same variant.
 
@@ -293,6 +285,8 @@ public class CheckoutTracker {
 ---
 
 ## 📊 Toggle Lifecycle & Scheduled Cleanup
+
+<FeatureToggleArchitectureDiagram initialTab="canary" />
 
 The hardest discipline in feature flags is **removing them after their purpose is served**.
 

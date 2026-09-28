@@ -66,8 +66,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "PostgreSQL Heap Storage Architecture & Internals",
-    "permalink": "/technical-knowledge/database/postgresql-heap-storage-architecture"
+    "title": "WAL, Replication & 2 AM Disk-Full Playbook",
+    "permalink": "/technical-knowledge/database/postgresql-wal-replication-lag-playbook"
   },
   "next": {
     "title": "NoSQL & Distributed Databases",

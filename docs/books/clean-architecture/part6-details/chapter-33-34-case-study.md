@@ -48,37 +48,14 @@ Each use case is a separate class. Each actor's use cases form a cluster.
 
 ### Component Architecture
 
-```
-┌──────────────────────────────────────────────────┐
-│                 Views (UI)                       │
-│  VideoView  CatalogView  PurchaseView  AdminView │
-└─────────────────┬────────────────────────────────┘
-                  │ depends on
-┌─────────────────▼────────────────────────────────┐
-│              Presenters                          │
-│  VideoPresenter  CatalogPresenter  etc.          │
-└─────────────────┬────────────────────────────────┘
-                  │ depends on
-┌─────────────────▼────────────────────────────────┐
-│              Use Cases                           │
-│  ViewCatalog  PurchaseVideo  StreamVideo  etc.   │
-└─────────────────┬────────────────────────────────┘
-                  │ depends on
-┌─────────────────▼────────────────────────────────┐
-│           Entities (Domain)                      │
-│     Video    License    Catalog    Purchase       │
-└──────────────────────────────────────────────────┘
-                  ↑
-┌─────────────────┴────────────────────────────────┐
-│             Gateways (interfaces)                │
-│  VideoGateway  LicenseGateway  PaymentGateway    │
-└─────────────────┬────────────────────────────────┘
-                  │ implemented by
-┌─────────────────▼────────────────────────────────┐
-│           Infrastructure                        │
-│  JpaVideoRepo  StripePayment  S3VideoStore       │
-└──────────────────────────────────────────────────┘
-```
+| Architecture Tier | Components & Classes | Dependency Flow | Inversion & Isolation Rule |
+|---|---|---|---|
+| **1. Views (UI)** | `VideoView`, `CatalogView`, `PurchaseView`, `AdminView` | Depends on Presenters | Presentation layer: renders view models without knowing use cases. |
+| **2. Presenters** | `VideoPresenter`, `CatalogPresenter`, `PurchasePresenter` | Depends on Use Cases | Formats use case output into UI-friendly view models. |
+| **3. Use Cases** | `ViewCatalog`, `PurchaseVideo`, `StreamVideo` | Depends on Entities & Gateways | Application policies: orchestrates domain models and gateway interfaces. |
+| **4. Entities (Domain)** | `Video`, `License`, `Catalog`, `Purchase` | **Zero Dependencies** | Core enterprise business rules and domain invariants. |
+| **5. Gateways (SPI)** | `VideoGateway`, `LicenseGateway`, `PaymentGateway` | Lives in Use Case layer | Decouples use cases from persistence/external API details. |
+| **6. Infrastructure** | `JpaVideoRepo`, `StripePaymentGateway`, `S3VideoStore` | Implements Gateways | Lowest-level detail: swapped or upgraded without breaking business code. |
 
 All dependencies point inward. Entities know nothing about gateways. Use cases know nothing about presenters. Infrastructure knows only about the gateway interfaces it implements.
 

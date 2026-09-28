@@ -506,14 +506,13 @@ PostgreSQL implements MVCC via **Heap Tuple Versioning**. Every table row update
 
 Every physical tuple on disk contains a 23-byte header preceding the user columns:
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                               HeapTupleHeaderData (23 Bytes)                           │
-├───────────────┬───────────────┬────────────────┬─────────────┬─────────────────────────┤
-│ xmin          │ xmax          │ cmin / cmax    │ t_ctid      │ t_infomask              │
-│ (4 Bytes)     │ (4 Bytes)     │ (4 Bytes)      │ (6 Bytes)   │ (2 Bytes Flags)         │
-└───────────────┴───────────────┴────────────────┴─────────────┴─────────────────────────┘
-```
+| Header Field | Byte Size | Description & Concurrency Purpose |
+|---|---|---|
+| `xmin` | 4 Bytes | Transaction ID (XID) that inserted/created this tuple version. |
+| `xmax` | 4 Bytes | Transaction ID (XID) that deleted or updated this tuple (`0` if live and unlocked). |
+| `cmin / cmax` | 4 Bytes | Intra-transaction Command ID counter distinguishing statement execution order within a single transaction. |
+| `t_ctid` | 6 Bytes | Physical `(page_number, tuple_index)` tuple ID pointing to self or the newer version in an update chain. |
+| `t_infomask` | 2 Bytes | Bitmask status flags (`HEAP_XMIN_COMMITTED`, `HEAP_XMAX_INVALID`, `HEAP_HOT_UPDATED`). |
 
 - **`xmin`**: Transaction ID that inserted/created this tuple version.
 - **`xmax`**: Transaction ID that deleted or updated this tuple version (set to `0` if live and un-deleted).

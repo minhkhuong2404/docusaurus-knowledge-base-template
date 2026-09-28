@@ -1,352 +1,173 @@
 ---
 id: docker-networking
-title: Docker Networking
+title: Docker Networking Under the Hood
 sidebar_label: Docker Networking
-description: Complete guide to Docker networking — bridge, host, overlay, and none drivers, container DNS resolution, port publishing, creating custom networks, and connecting containers across Compose services.
-tags: [docker, networking, bridge, overlay, dns, port-mapping, docker-compose, intermediate]
+description: Complete guide to Docker networking — veth pairs, docker0 bridge mechanics, iptables SNAT/DNAT port forwarding, user-defined bridge DNS resolution, and network drivers.
+tags: [docker, networking, bridge, veth, iptables, nat, dns, port-mapping, intermediate, senior]
 ---
 
 import DockerArchitectureDiagram from '@site/src/components/DockerArchitectureDiagram';
 
-# Docker Networking
+# Docker Networking Under the Hood
 
-> Containers are isolated by default. Networking is how they talk to each other and the outside world.
-
----
-
-## Network Drivers Overview
+> **The Core Reality:** Docker does not invent networking. It orchestrates existing Linux kernel networking primitives: **Network Namespaces (`netns`)**, **Virtual Ethernet Pairs (`veth`)**, **Software Bridges (`bridge`)**, and **`iptables` packet filtering / NAT rules**.
 
 <DockerArchitectureDiagram initialTab="network" />
 
-| Driver | Scope | Use Case |
+---
+
+## 1. How the Default Bridge (`docker0`) Actually Works
+
+When Docker daemon starts on a Linux host, it creates a virtual software bridge called **`docker0`** and assigns it a private subnet (typically `172.17.0.1/16`).
+
+```
+Docker Bridge Architecture:
+┌────────────────────────────────────────────────────────────────────────┐
+│ Linux Host Operating System (Root Network Namespace)                   │
+│                                                                        │
+│  Physical NIC (eth0: 192.168.1.50) ◄──► iptables (SNAT / DNAT)         │
+│                               ▲                                        │
+│                               │ IP Forwarding                          │
+│                               ▼                                        │
+│                    [ docker0 Bridge (172.17.0.1/16) ]                  │
+│                        ▲                    ▲                          │
+│                        │                    │                          │
+│                   veth7a1b9c           veth3d4e5f                      │
+└────────────────────────┼────────────────────┼──────────────────────────┘
+             (Virtual Cable)              (Virtual Cable)
+                         ▼                    ▼
+┌────────────────────────┼──────────┐ ┌───────┼──────────────────────────┐
+│ Container A (netns 1)  │          │ │ Container B (netns 2)            │
+│ eth0 (172.17.0.2)      │          │ │ eth0 (172.17.0.3)                │
+└───────────────────────────────────┘ └──────────────────────────────────┘
+```
+
+### Step-by-Step Container Network Initialization
+When you run `docker run -d --name web nginx`:
+1. **Network Namespace**: The kernel creates a private network namespace (`netns`) for the container with its own loopback (`lo`), routing table, and firewall rules.
+2. **Virtual Ethernet Pair (`veth`)**: Docker creates a pair of connected virtual network interfaces (like a virtual Ethernet cable).
+   - One end stays in the host root namespace and is attached to the `docker0` bridge (named `vethXXXX`).
+   - The other end is pushed into the container's network namespace and renamed to **`eth0`**.
+3. **IP Allocation**: Docker allocates an IP from the `docker0` pool (e.g., `172.17.0.2`) and assigns `172.17.0.1` as the container's default gateway.
+
+---
+
+## 2. Packet Flow: How Traffic Actually Travels
+
+### Scenario A: Inter-Container Communication (Same Bridge)
+When Container A (`172.17.0.2`) sends a packet to Container B (`172.17.0.3`):
+1. Container A checks its local routing table; `172.17.0.3` is on the same `/16` subnet.
+2. Container A broadcasts an **ARP request** asking for the MAC address of `172.17.0.3`.
+3. The ARP packet travels out `eth0`, through the `veth` pair, into the `docker0` bridge.
+4. `docker0` functions like a Layer 2 hardware switch: it floods the ARP request to all attached `veth` interfaces.
+5. Container B answers with its virtual MAC address.
+6. Container A sends IP packets directly to Container B via Layer 2 switching on `docker0` without ever touching physical interfaces.
+
+### Scenario B: Outbound Traffic to Internet (SNAT / IP Masquerading)
+When a container calls an external API (`curl https://api.stripe.com`):
+1. The destination IP is outside `172.17.0.0/16`, so the container routes the packet to its default gateway: `172.17.0.1` (`docker0`).
+2. Linux kernel packet forwarding (`net.ipv4.ip_forward=1`) routes the packet from `docker0` toward the host's physical network card (`eth0`).
+3. **Source NAT (SNAT)**: The private IP `172.17.0.2` is not routable on the public internet. Before the packet leaves `eth0`, the kernel's `iptables` NAT table applies the **MASQUERADE** rule:
+
+```bash
+# Docker's automatic iptables SNAT rule:
+iptables -t nat -A POSTROUTING -s 172.17.0.0/16 ! -o docker0 -j MASQUERADE
+```
+
+4. The host rewrites the source IP from `172.17.0.2` to the host's public/LAN IP (`192.168.1.50`). When Stripe responds, the host unwinds the NAT table and forwards the reply back to the container.
+
+### Scenario C: Inbound Traffic & Port Publishing (DNAT)
+When you run `docker run -d -p 8080:80 nginx`:
+1. External client sends traffic to host port: `192.168.1.50:8080`.
+2. **Destination NAT (DNAT)**: The host kernel intercepts the packet in the `PREROUTING` chain and forwards it into the custom `DOCKER` iptables chain:
+
+```bash
+# Docker's automatic iptables DNAT rule:
+iptables -t nat -A DOCKER -p tcp --dport 8080 -j DNAT --to-destination 172.17.0.2:80
+```
+
+3. The packet destination IP is rewritten from `192.168.1.50:8080` to `172.17.0.2:80`.
+4. The kernel routes the packet across `docker0` to the container's `eth0`.
+
+---
+
+## 3. User-Defined Bridge vs Default Bridge (DNS Resolution)
+
+```bash
+# Create an isolated user-defined bridge network:
+docker network create my-app-net
+```
+
+| Networking Capability | Default `bridge` (`docker0`) | User-Defined Bridge (`my-app-net`) |
 |---|---|---|
-| **bridge** | Single host | Default. Containers on same host communicate. |
-| **host** | Single host | Container shares host's network stack. |
-| **overlay** | Multi-host | Docker Swarm / multi-node communication. |
-| **none** | Single host | Complete network isolation. |
-| **macvlan** | Single host | Assign MAC address — container looks like physical device. |
-| **ipvlan** | Single host | IP-level control without MAC assignment. |
-
----
-
-## Bridge Network (Default)
-
-When you run `docker run myapp`, Docker attaches it to the default `bridge` network.
+| **Automatic DNS Resolution** | ❌ **No**: Must link via legacy `--link` or connect by raw IP | ✅ **Yes**: Automatic container name & alias DNS resolution |
+| **Embedded DNS Server** | ❌ None (uses host `/etc/resolv.conf`) | ✅ Dedicated DNS server running on **`127.0.0.11`** |
+| **Network Isolation** | ❌ All unassigned containers share `docker0` | ✅ Complete network segment isolation |
+| **Hot-Plug NICs** | ❌ Must recreate container to connect | ✅ `docker network connect/disconnect` on live containers |
 
 ```
-Host Machine
-  ├─ eth0 (172.31.0.1) — real network interface
-  └─ docker0 (172.17.0.1) — virtual bridge
-       ├─ container-A (172.17.0.2)
-       ├─ container-B (172.17.0.3)
-       └─ container-C (172.17.0.4)
-```
-
-```bash
-# Inspect the default bridge
-docker network inspect bridge
-
-# Containers on default bridge can reach each other by IP
-# but NOT by name — name-based DNS only works on user-defined bridges
-
-# Test connectivity between containers
-docker run -d --name container-a nginx
-docker run --rm -it ubuntu bash
-  $ ping 172.17.0.2   # Works (by IP)
-  $ ping container-a  # FAILS on default bridge — no DNS
-```
-
-### User-Defined Bridge Networks (Recommended)
-
-```bash
-# Create custom network
-docker network create --driver bridge my-network
-
-# Attach containers at run time
-docker run -d --name api    --network my-network myapp:1.0.0
-docker run -d --name db     --network my-network postgres:16
-docker run -d --name cache  --network my-network redis:7-alpine
-
-# Now containers can communicate by SERVICE NAME
-docker exec -it api bash
-  $ ping db      # ✅ Works — DNS resolves "db" to db's IP
-  $ ping cache   # ✅ Works
-  $ curl http://api:8080/health  # ✅ Works
-```
-
-**User-defined bridge vs default bridge:**
-| Feature | Default bridge | User-defined bridge |
-|---|---|---|
-| DNS (by name) | ❌ | ✅ |
-| Automatic DNS | ❌ | ✅ |
-| Network isolation | ❌ (all containers share) | ✅ (only connected containers) |
-| Configurable CIDR | ❌ | ✅ |
-
----
-
-## Host Network
-
-Container shares the host's network namespace. No NAT. Best performance.
-
-```bash
-docker run --network host nginx
-# nginx listens on port 80 of the HOST directly
-# No -p flag needed (or possible)
-```
-
-```
-Host Network Mode:
-  ┌──────────────────────────────────────┐
-  │  Host OS                              │
-  │  eth0: 192.168.1.100                  │
-  │                                       │
-  │  Container (--network host)           │
-  │  Shares:  192.168.1.100 — same IP!    │
-  └──────────────────────────────────────┘
-```
-
-**Use cases:** High-performance networking, where NAT overhead matters (monitoring agents, network tools).  
-**Limitation:** Only available on Linux hosts. Not available on Docker Desktop (macOS/Windows).
-
----
-
-## None Network
-
-Complete network isolation. No interfaces except loopback.
-
-```bash
-docker run --network none myapp
-# Container has no network access at all
-# Useful for: batch processing, security-sensitive workloads
+Embedded DNS Resolution Flow (User-Defined Network):
+Container "api"                                    Docker Daemon DNS
+      │                                                   │
+      │─── 1. DNS Query: "A db" ─────────────────────────►│ (UDP 127.0.0.11:53)
+      │                                                   │
+      │◄── 2. DNS Answer: "db -> 172.18.0.3" ─────────────│ (Resolved via container name)
+      │                                                   │
+      │─── 3. TCP Connect: 172.18.0.3:5432 ───────────────► Container "db"
 ```
 
 ---
 
-## Port Publishing
+## 4. Docker Network Drivers
 
-```
-Host Machine                Container
-   :8080 ──────────────────→ :8080
-   :5432 ──────────────────→ :5432
-```
+| Driver | Scope | Architecture & Behavior | Best Used For |
+|---|---|---|---|
+| **`bridge`** | Single Host | Default software bridge + `veth` pairs + `iptables` NAT. | Standard microservices running on a single host. |
+| **`host`** | Single Host | Bypasses `veth` and `docker0`. Container shares the host network namespace directly. Zero NAT overhead. | Ultra-low latency workloads (e.g. trading, high-volume streaming). |
+| **`none`** | Single Host | Disables all network interfaces except `lo` (127.0.0.1). Completely air-gapped. | Secure batch compute, isolated cryptographic token generation. |
+| **`macvlan`** | Single Host | Assigns a physical MAC address to container `eth0`. Container appears as a distinct physical machine on physical LAN. | Legacy enterprise apps expecting direct Layer 2 switch presence. |
+| **`overlay`** | Multi-Host | Uses VXLAN (UDP port 4789) encapsulation to connect containers across multiple Docker Swarm host nodes. | Multi-host Docker Swarm clusters (superseded by Kubernetes CNI). |
+
+---
+
+## 5. Practical Production Diagnostics
 
 ```bash
-# -p host_port:container_port
-docker run -p 8080:8080 myapp        # Bind on all interfaces
-docker run -p 127.0.0.1:8080:8080 myapp  # Localhost only (secure)
-docker run -p 0.0.0.0:8080:8080 myapp    # All interfaces (explicit)
-docker run -p 8080:8080/udp myapp         # UDP port
+# 1. Inspect container IP, gateway, and MAC address:
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}} (Gateway: {{.Gateway}}){{end}}' my-container
 
-# -P: publish ALL EXPOSE'd ports to random host ports
-docker run -P myapp
-docker port myapp   # → 0.0.0.0:32768 → 8080/tcp
+# 2. Inspect active Docker iptables rules:
+sudo iptables -t nat -L DOCKER -n -v
 
-# Multiple ports
-docker run -p 8080:8080 -p 9090:9090 -p 5701:5701 myapp
-```
+# 3. Check veth interfaces attached to docker0 bridge:
+brctl show docker0
+# or with modern iproute2:
+ip link show master docker0
 
-### View Port Mappings
-```bash
-docker port my-api
-# 8080/tcp -> 0.0.0.0:8080
-# 9090/tcp -> 0.0.0.0:9090
-
-docker ps --format "table {{.Names}}\t{{.Ports}}"
+# 4. Test embedded DNS resolution from inside a container:
+docker run --rm --network my-app-net busybox nslookup db
 ```
 
 ---
 
-## DNS Resolution in Docker
+## Interview Questions & Answers
 
-Docker has a built-in DNS server at `127.0.0.11` for user-defined networks.
+### Q1. How does Docker isolate container network stacks on the same physical host?
+> Docker utilizes **Linux Network Namespaces (`netns`)**. When a container starts, the kernel creates an independent network namespace containing its own routing table, loopback interface, iptables chains, and socket port space. Docker creates a **virtual ethernet pair (`veth`)**: one end attaches to the host bridge `docker0` as `vethXXXX`, while the peer end is placed inside the container namespace and renamed `eth0`.
 
-```
-Container "api" wants to reach "db":
-  1. api → DNS query for "db" → Docker internal DNS (127.0.0.11)
-  2. Docker DNS → resolves "db" to its container IP
-  3. api → connects to db's IP
+### Q2. What happens under the hood when you publish a port with `-p 8080:80`?
+> Docker sets up a **Destination NAT (DNAT)** rule in the Linux kernel `iptables` NAT table under the `DOCKER` chain:
+> `iptables -t nat -A DOCKER -p tcp --dport 8080 -j DNAT --to-destination <container_ip>:80`
+> When an incoming TCP packet arrives on host port 8080, netfilter rewrites the destination IP from the host's IP to the container's private IP (`172.17.0.X:80`) and forwards it across the `docker0` bridge.
 
-Container aliases:
-docker run --network my-net --network-alias primary-db postgres
-docker run --network my-net --network-alias primary-db --network-alias pg postgres
-# Both "primary-db" and "pg" resolve to the same container
-```
+### Q3. Why can containers resolve each other by name on a custom bridge but not on the default `docker0` bridge?
+> On the default `docker0` bridge, Docker does not provide internal DNS for backwards compatibility; containers inherit the host's `/etc/resolv.conf` and can only communicate via IP or deprecated `--link` flags. When you create a **user-defined bridge**, Docker automatically spins up an internal DNS server listening on **`127.0.0.11:53`** inside each container's namespace, dynamically mapping container names and network aliases to their current IP addresses.
 
 ---
 
-## Overlay Network (Multi-Host / Docker Swarm)
+## Related Pages
 
-Used when containers run on **different physical or virtual machines**.
-
-```
-Machine A                   Machine B
-  container-1                 container-2
-  container-3
-      ↓                           ↓
-  overlay network (VXLAN tunnel across hosts)
-      └─── container-1 ←──────────→ container-2 ───┘
-           (transparent — looks like same network)
-```
-
-```bash
-# Only available in Docker Swarm mode
-docker swarm init
-docker network create --driver overlay --attachable my-overlay
-docker service create --network my-overlay myapp
-```
-
----
-
-## Container-to-Container Communication Patterns
-
-### Pattern 1: Shared User-Defined Network
-```bash
-docker network create app-net
-
-docker run -d \
-  --name postgres \
-  --network app-net \
-  -e POSTGRES_PASSWORD=secret \
-  postgres:16-alpine
-
-docker run -d \
-  --name api \
-  --network app-net \
-  -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/mydb \
-  myapp:1.0.0
-# "api" resolves "postgres" by name → connects to DB container
-```
-
-### Pattern 2: Connect Container to Multiple Networks
-```bash
-docker network create frontend-net
-docker network create backend-net
-
-docker run -d --name nginx --network frontend-net nginx
-docker run -d --name api --network backend-net myapp
-
-# Connect api to both networks
-docker network connect frontend-net api
-# Now: nginx can reach api (frontend-net), api can reach db (backend-net)
-# nginx cannot reach db directly (different network)
-```
-
----
-
-## Networking in Docker Compose
-
-Docker Compose automatically creates a network and uses service names as DNS hostnames.
-
-```yaml
-# docker-compose.yml
-services:
-  api:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
-      SPRING_REDIS_HOST: redis
-    networks:
-      - backend
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: mydb
-      POSTGRES_PASSWORD: secret
-    networks:
-      - backend
-    # NOT exposed to host — only accessible within backend network
-
-  redis:
-    image: redis:7-alpine
-    networks:
-      - backend
-    # NOT exposed to host
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"       # ← Only nginx exposed to internet
-    networks:
-      - frontend
-      - backend        # ← nginx is in both networks (bridges them)
-
-networks:
-  frontend:            # Internet-facing
-  backend:             # Internal only
-    internal: true     # No internet access from backend network
-```
-
-```
-Internet → nginx (frontend + backend) → api (backend) → postgres (backend)
-                                                       → redis (backend)
-Internet CANNOT reach postgres or redis directly — they're on internal backend network only.
-```
-
----
-
-## Useful Networking Commands
-
-```bash
-# See which network a container is on
-docker inspect my-api --format '{{json .NetworkSettings.Networks}}' | jq
-
-# Get container IP in a specific network
-docker inspect my-api \
-  --format '{{.NetworkSettings.Networks.my-network.IPAddress}}'
-
-# List all networks
-docker network ls
-
-# See all containers connected to a network
-docker network inspect my-network \
-  --format '{{range .Containers}}{{.Name}} {{.IPv4Address}}{{"\n"}}{{end}}'
-
-# Test DNS from inside container
-docker exec -it api sh -c "nslookup postgres"
-docker exec -it api sh -c "wget -qO- http://postgres:5432"
-docker exec -it api sh -c "nc -zv postgres 5432"  # Check port open
-```
-
----
-
-## Troubleshooting Network Issues
-
-```bash
-# Container can't reach another by name?
-# → Check they're on the SAME user-defined network
-docker inspect container-a | grep NetworkMode
-docker inspect container-b | grep NetworkMode
-
-# Container can't reach internet?
-# → Check DNS config inside container
-docker exec container-a cat /etc/resolv.conf
-docker exec container-a ping 8.8.8.8    # IP works?
-docker exec container-a ping google.com  # DNS works?
-
-# Port not accessible from host?
-docker ps | grep 8080                   # Is port mapped?
-docker port my-api                      # What host port?
-# Check if binding to 127.0.0.1 (localhost only) vs 0.0.0.0
-
-# Inspect full network config
-docker network inspect bridge
-```
-
----
-
-## Interview Questions
-
-1. What is the default Docker network driver and what are its limitations?
-2. What is the difference between a user-defined bridge and the default bridge?
-3. How do containers resolve each other by name?
-4. When would you use `--network host` mode?
-5. What does `-p 127.0.0.1:8080:8080` do vs `-p 8080:8080`?
-6. How does Docker Compose handle networking between services?
-7. How do you isolate the database container so it's not accessible from the internet in a Docker Compose setup?
-8. What is an overlay network and when is it needed?
+- [Docker Fundamentals](./01-docker-fundamentals.md)
+- [VMs vs Docker vs Kubernetes](./00a-vm-docker-k8s-explained.md)
+- [Docker Compose Multi-Container Orchestration](./06-docker-compose.md)
+- [Kubernetes Networking & CNI](./10-kubernetes-networking.md)

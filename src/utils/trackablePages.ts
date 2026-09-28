@@ -22,11 +22,13 @@ export function isTrackableArticle(href?: string | null): boolean {
   if (!href) return false;
   const path = href.toLowerCase().trim();
 
-  // 1. EXCLUDE Daily Quizzes, Arcade, Stats, LeetCode Daily, and General Interview Framework
+  // 1. EXCLUDE Daily Quizzes, Arcade, Stats, Profile, LeetCode Daily, and General Interview Framework
   if (
     path.includes('quiz') ||
     path.includes('arcade') ||
     path.startsWith('/arcade') ||
+    path.includes('profile') ||
+    path.startsWith('/profile') ||
     path.includes('stats') ||
     path.startsWith('/stats') ||
     path.includes('leetcode-daily') ||

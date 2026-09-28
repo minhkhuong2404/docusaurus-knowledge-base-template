@@ -178,23 +178,31 @@ class OrderControllerIntegrationTest {
 
 ---
 
+### System & End-to-End (E2E) Testing
+
+System tests evaluate the entire integrated application as a whole against complete functional and non-functional requirements (real databases, Kafka brokers, caches, and HTTP clients). External 3rd party services are stubbed using tools like WireMock.
+
+---
+
+## 📦 Testing Paradigms: Black-Box vs White-Box vs Grey-Box
+
+Testing can also be categorized by the **degree of internal code visibility**:
+
+| Paradigm | Internal Code Knowledge | Refactoring Resilience | Primary Focus |
+|---|---|---|---|
+| **Black-Box Testing** | None (Opaque box) | 🛡️ **Highest** (Immune to internal refactoring) | Specification, API contracts, user journeys, NFRs |
+| **White-Box Testing** | Full (Source code, classes, memory) | ⚠️ **Low** (Breaks on internal code changes) | Branch/line coverage, internal algorithms, loops |
+| **Grey-Box Testing** | Partial (DB schema, architecture) | ⚖️ **Moderate** | API data integrity, security, distributed transactions |
+
+> 🚀 **Deep Dive**: For a complete analysis of Equivalence Partitioning (EP), Boundary Value Analysis (BVA), Non-Functional Requirements (NFR) testing, and Testcontainers architecture, see **[Black-Box & System Testing Guide](./blackbox-and-system-testing.md)**.
+
+---
+
 ## 🧠 Deep Dive: Mocking vs Stubbing vs Spying
 
 Understanding the difference is critical for writing effective tests.
 
-```
-┌────────────────────────────────────────────────────────────┐
-│                    Test Doubles                             │
-├──────────┬────────────────────────────────────────────────┤
-│ Dummy    │ Passed around but never used. Satisfies params. │
-│ Stub     │ Returns pre-programmed answers. No verification.│
-│ Mock     │ Records calls. You VERIFY interactions.         │
-│ Spy      │ Wraps real object. Real methods run unless      │
-│          │ explicitly stubbed.                              │
-│ Fake     │ Working implementation with shortcuts            │
-│          │ (e.g., in-memory DB instead of PostgreSQL).      │
-└──────────┴────────────────────────────────────────────────┘
-```
+<TestingPyramidDoublesDiagram initialTab="doubles" />
 
 ### Side-by-Side Comparison
 

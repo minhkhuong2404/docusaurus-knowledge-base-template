@@ -66,11 +66,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Schema Migrations",
-    "permalink": "/technical-knowledge/database/schema-migrations"
+    "title": "Database Schema Anti-Patterns",
+    "permalink": "/technical-knowledge/database/production-database-antipatterns-hygiene"
   },
   "next": {
-    "title": "Query Planner & Optimizer",
-    "permalink": "/technical-knowledge/database/query-planner-optimizer"
+    "title": "MySQL Indexing Vượt Qua Dấu Bằng: ORDER BY, Range Scans, ICP & Deferred Joins",
+    "permalink": "/technical-knowledge/database/mysql-indexing-beyond-equality"
   }
 }

@@ -6,6 +6,8 @@ description: Advanced IAM concepts for DVA-C02. Evaluation logic, SCPs, permissi
 tags: [iam, security, scp, cross-account, federation, cognito, dva-c02]
 ---
 
+import AwsIamPolicyEvaluationDiagram from '@site/src/components/AwsIamPolicyEvaluationDiagram';
+
 # Advanced IAM & Security
 
 > IAM is arguably the most complex and critical service in AWS. These advanced topics appear frequently on the DVA-C02 exam.
@@ -16,31 +18,7 @@ tags: [iam, security, scp, cross-account, federation, cognito, dva-c02]
 
 When AWS evaluates an API request, it follows a strict order:
 
-```
-┌─────────────────────────────────────────────────────────┐
-│ 1. Default: All requests start as DENIED               │
-├─────────────────────────────────────────────────────────┤
-│ 2. Explicit Deny check (ANY policy)                    │
-│    → If found: DENY immediately ✋                      │
-├─────────────────────────────────────────────────────────┤
-│ 3. Service Control Policy (SCP)                        │
-│    → If doesn't allow: DENY ✋                          │
-├─────────────────────────────────────────────────────────┤
-│ 4. Resource-Based Policy                               │
-│    → If allows AND same account: ALLOW ✅              │
-│    → If allows AND cross-account: continue checking    │
-├─────────────────────────────────────────────────────────┤
-│ 5. Permissions Boundary                                │
-│    → If doesn't allow: DENY ✋                          │
-├─────────────────────────────────────────────────────────┤
-│ 6. Session Policy (if AssumeRole)                      │
-│    → If doesn't allow: DENY ✋                          │
-├─────────────────────────────────────────────────────────┤
-│ 7. Identity-Based Policy                               │
-│    → If allows: ALLOW ✅                               │
-│    → If not: DENY ✋ (implicit deny)                    │
-└─────────────────────────────────────────────────────────┘
-```
+<AwsIamPolicyEvaluationDiagram />
 
 **Key rule**: For an action to be allowed, ALL applicable policy types must allow it. ONE explicit Deny anywhere = denied.
 
@@ -94,14 +72,11 @@ A Permissions Boundary sets the **maximum** permissions. It does NOT grant permi
 
 ### Effective Permissions = Intersection
 
-```
-Identity Policy          Permission Boundary         Effective
-┌──────────────┐        ┌──────────────┐            ┌──────────────┐
-│ s3:*         │        │ s3:Get*      │            │ s3:Get*      │
-│ dynamodb:*   │   ∩    │ dynamodb:*   │     =      │ dynamodb:*   │
-│ lambda:*     │        │              │            │              │
-└──────────────┘        └──────────────┘            └──────────────┘
-```
+| Policy Type | Declared Allowed Actions | Set Logic | Effective Runtime Result |
+|---|---|---|---|
+| **Identity-Based Policy** | `s3:*`, `dynamodb:*`, `lambda:*` | Requested Privileges | — |
+| **Permissions Boundary** | `s3:Get*`, `dynamodb:*` | **$\cap$ Maximum Allow Ceiling** | — |
+| **Effective Permissions** | `s3:Get*`, `dynamodb:*` | **$Identity \cap Boundary$** | `lambda:*` and `s3:Put*` are **strictly blocked**! |
 
 ### Delegated Administration Use Case
 

@@ -1,6 +1,12 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  getFirestore,
+  Firestore,
+} from 'firebase/firestore';
 import siteConfig from '@generated/docusaurus.config';
 
 const customFields = (siteConfig.customFields || {}) as Record<string, string | undefined>;
@@ -25,6 +31,22 @@ if (typeof window !== 'undefined') {
   });
 }
 
-export const db = getFirestore(app);
+// Initialize Firestore with multi-tab IndexedDB persistence for instantaneous offline/slow-network access
+let firestoreDb: Firestore;
+if (typeof window !== 'undefined') {
+  try {
+    firestoreDb = initializeFirestore(app, {
+      localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager(),
+      }),
+    });
+  } catch (_e) {
+    firestoreDb = getFirestore(app);
+  }
+} else {
+  firestoreDb = getFirestore(app);
+}
+
+export const db = firestoreDb;
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });

@@ -82,14 +82,12 @@ LIMIT 10;
 
 <DatabaseJoinAlgorithmsDiagram />
 
-```
-Table A         Table B
-┌───────┐       ┌───────┐
-│  1    │       │  1    │
-│  2    │       │  3    │
-│  3    │       │  4    │
-└───────┘       └───────┘
-```
+| Table A Key | Table B Key | Matched in Inner Join? |
+|---|---|---|
+| `1` | `1` | ✅ Match (Key 1) |
+| `2` | — | ❌ No match in B |
+| `3` | `3` | ✅ Match (Key 3) |
+| — | `4` | ❌ No match in A |
 
 | Join Type | Returns |
 |-----------|---------|

@@ -73,6 +73,44 @@ public int findKthLargest(int[] nums, int k) {
     }
     return minHeap.peek(); // the k-th largest
 }
+
+// Top K Frequent Elements
+public int[] topKFrequent(int[] nums, int k) {
+    Map<Integer, Integer> map = new HashMap<>();
+    for (int n : nums) map.put(n, map.getOrDefault(n, 0) + 1);
+
+    // Min-heap ordered by element frequency
+    PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+
+    for (int key : map.keySet()) {
+        pq.offer(new int[]{key, map.get(key)});
+        if (pq.size() > k) pq.poll();
+    }
+
+    int[] res = new int[k];
+    int i = k - 1;
+    while (!pq.isEmpty()) res[i--] = pq.poll()[0];
+    return res;
+}
+
+// Merge K Sorted Lists
+public ListNode mergeKLists(ListNode[] lists) {
+    if (lists == null || lists.length == 0) return null;
+
+    PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) -> a.val - b.val);
+    for (ListNode node : lists) {
+        if (node != null) pq.offer(node);
+    }
+
+    ListNode dummy = new ListNode(0), curr = dummy;
+    while (!pq.isEmpty()) {
+        ListNode node = pq.poll();
+        curr.next = node;
+        curr = curr.next;
+        if (node.next != null) pq.offer(node.next);
+    }
+    return dummy.next;
+}
 ```
 
 **Why min-heap for "top K largest"?**

@@ -129,26 +129,7 @@ Chunk processing is the heart of Spring Batch. Instead of processing one record 
 
 ### The chunk lifecycle
 
-```
-┌─────────────────────────── One Transaction ──────────────────────────────┐
-│                                                                           │
-│  Read item 1 ──→ [item1]                                                  │
-│  Read item 2 ──→ [item1, item2]                                           │
-│  ...                                                                      │
-│  Read item 100 ─→ [item1 ... item100]   ← chunk size reached             │
-│                         │                                                 │
-│                   ItemProcessor                                           │
-│              (transforms each item)                                       │
-│                         │                                                 │
-│                   [output1 ... output100]                                 │
-│                         │                                                 │
-│                   ItemWriter                                              │
-│              (bulk INSERT all 100 at once)                                │
-│                         │                                                 │
-│                   COMMIT ✅                                                │
-└───────────────────────────────────────────────────────────────────────────┘
-Repeat until ItemReader returns null (source exhausted)
-```
+<SpringBatchArchDiagram initialTab="chunk_lifecycle" />
 
 **Key property:** if the `ItemWriter` throws an exception mid-chunk, the **entire chunk of 100 rolls back** — not the entire job. The job can then retry or skip that chunk and continue from the next one.
 
@@ -643,6 +624,8 @@ public Job importJob(JobRepository repo, Step step, JobCompletionListener listen
 
 A single-threaded job reading 50 million rows with a 200ms processor per item takes 115 days. Senior engineers know when and how to scale.
 
+<SpringBatchArchDiagram initialTab="scaling_patterns" />
+
 ### Pattern 1 — Multi-threaded Step
 
 Run multiple threads executing the chunk lifecycle in parallel within a single step. Each thread reads → processes → writes its own chunk independently.
@@ -849,6 +832,8 @@ spring:
 ## Chunk Transaction Boundaries
 
 Understanding what happens at the JVM and database level during a chunk transaction is essential for diagnosing performance problems.
+
+<SpringBatchArchDiagram initialTab="chunk_calculator" />
 
 ### What a chunk transaction controls
 

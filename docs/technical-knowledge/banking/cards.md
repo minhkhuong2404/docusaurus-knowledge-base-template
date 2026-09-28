@@ -61,42 +61,14 @@ Single network acts as both Issuer and Acquirer, controlling the entire payment 
 
 ## Card Transaction Flow (4-Party, Online)
 
-```
-Customer taps/swipes card at merchant
-        │
-        ▼
-POS Terminal
-        │  Authorization Request
-        ▼
-Acquiring Bank (Merchant's Bank)
-        │  Forward auth request
-        ▼
-Card Scheme Network (Visa/MC)
-        │  Route to issuer
-        ▼
-Issuing Bank (Customer's Bank)
-        │  Check: valid card? sufficient funds? fraud check?
-        ▼
-   ┌────┴────┐
-   │         │
-APPROVE    DECLINE
-   │
-   ▼
-Auth Response back through chain:
-Issuing Bank → Scheme → Acquirer → Terminal → Customer
-
-APPROVED:
-  ├── Terminal prints/displays "APPROVED"
-  ├── Issuing Bank places HOLD on account
-  └── Merchant receives auth code
-
-SETTLEMENT (end of day or next day):
-  ├── Merchant submits batch of auth codes
-  ├── Acquirer sends to scheme
-  ├── Scheme routes to issuers
-  ├── Issuers convert holds to final debits
-  └── Net settlement via scheme (next business day)
-```
+| Step / Stage | Acting Participant | Message / Payload | Settlement & Ledger Impact |
+|---|---|---|---|
+| **1. Presentment** | Customer ➔ POS Terminal | Card Tap / EMV Chip read | Encrypted PAN and track-2 data read. |
+| **2. Auth Routing** | Terminal ➔ Acquiring Bank | ISO 8583 / ISO 20022 Auth Request | Merchant's bank forwards to Visa/Mastercard scheme. |
+| **3. Scheme Switch** | Card Scheme Network | Dual-message routing | Switches authorization to the customer's card issuer. |
+| **4. Issuance Check** | Issuing Bank (Customer's Bank) | Balance, CVV, PIN & Fraud scoring | **APPROVED**: Places temporary authorization hold on customer's account balance. |
+| **5. Response Loop** | Issuer ➔ Scheme ➔ Acquirer ➔ POS | Auth Response Code (00 = Approved) | POS terminal prints receipt; merchant receives auth code. |
+| **6. Batch Settlement** | Merchant ➔ Acquirer ➔ Scheme | End-of-day clearing batch | Scheme nets multi-party obligations; issuer converts holds into permanent posted debits. |
 
 ---
 

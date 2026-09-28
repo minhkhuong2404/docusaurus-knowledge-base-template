@@ -93,21 +93,7 @@ Check if user_id might exist?
 
 A Bloom filter uses **k independent hash functions** to map elements into **m bit positions** in a bit array.
 
-```
-Insertion:
-┌─────────────────────────────────────┐
-│ Bit Array (initially all 0s)        │
-├─────────────────────────────────────┤
-│ [0][0][0][1][0][1][0][1][0][0][...]│
-│        ↑         ↑         ↑
-│        hash1     hash2     hash3
-└─────────────────────────────────────┘
-
-Insert "user_123":
-  hash1("user_123") % m = 3  → set bit[3] = 1
-  hash2("user_123") % m = 5  → set bit[5] = 1
-  hash3("user_123") % m = 7  → set bit[7] = 1
-```
+<BloomFilterCoreConceptDiagram />
 
 ### Lookup Process
 

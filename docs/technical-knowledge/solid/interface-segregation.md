@@ -9,10 +9,14 @@ tags:
 - solid
 - interface-segregation
 ---
+import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
+
 # I — Interface Segregation Principle
 
 > **"No client should be forced to depend on methods it does not use."**
 > — Robert C. Martin
+
+<SolidPrinciplesDiagram initialPrinciple="ISP" />
 
 ---
 
@@ -160,14 +164,12 @@ No empty methods. No forced implementations. ✅
 
 Look at your interface from each **client's** perspective:
 
-```
-Interface: UserService (10 methods)
-├── WebController uses:    getProfile, updateProfile, getDashboardStats, getActivityLog
-├── MobileController uses: getProfile, getMobileSettings, registerPushToken
-└── AdminController uses:  getProfile, updateProfile, deleteUser, exportData
+**Monolithic Interface: `UserService` (10 methods)**
+- 🌐 **WebController uses:** `getProfile`, `updateProfile`, `getDashboardStats`, `getActivityLog`
+- 📱 **MobileController uses:** `getProfile`, `getMobileSettings`, `registerPushToken`
+- 🛡️ **AdminController uses:** `getProfile`, `updateProfile`, `deleteUser`, `exportData`
 
-→ Three clients, three different subsets → split into 3+ interfaces!
-```
+> **Architectural Conclusion:** Three distinct clients require three different subsets ➔ split into 3 role-focused interfaces!
 
 ---
 

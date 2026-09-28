@@ -646,26 +646,13 @@ public class SanctionsScreeningService {
 
 ## Screening in the Payment Lifecycle
 
-```
-                ┌────────────────────────────────────┐
-                │    SCREENING TOUCHPOINTS            │
-                ├────────────────────────────────────┤
-  Onboarding ──►│ 1. KYC onboarding screen           │
-                │    (customer + UBOs + directors)    │
-                ├────────────────────────────────────┤
-  Outbound   ──►│ 2. Pre-payment screen               │
-  Payment       │    (all parties in pain.001)        │
-                ├────────────────────────────────────┤
-  Inbound    ──►│ 3. Inbound payment screen          │
-  Payment       │    (all parties in pacs.008)        │
-                ├────────────────────────────────────┤
-  Scheduled  ──►│ 4. Periodic re-screen              │
-  Batch         │    (existing customer base)         │
-                ├────────────────────────────────────┤
-  List Update──►│ 5. Delta screen on list change     │
-                │    (re-screen against new entries)  │
-                └────────────────────────────────────┘
-```
+| Ingestion Trigger | Screening Touchpoint Stage | Evaluated Entity Data | Regulatory Objective & Action |
+|---|---|---|---|
+| **Customer Onboarding** | **1. KYC Onboarding Screen** | Individual full names, aliases, Ultimate Beneficial Owners (UBOs $\ge 25\%$), directors, corporate entities | Blocks account opening if hit against OFAC / DFAT designated person lists. |
+| **Outbound Payment** | **2. Pre-Payment Screen** | Debtor, Creditor, Intermediary BICs, remittance free-text info (`pain.001` / `pacs.008`) | Real-time inline intercept; holds payment prior to clearing transmission. |
+| **Inbound Payment** | **3. Inbound Payment Screen** | Originating debtor, ordering institution, creditor details in incoming `pacs.008` | Blocks funds posting to recipient account if matched against sanctions list. |
+| **Scheduled Batch** | **4. Periodic Re-screen** | Entire active customer base against updated designated lists | Daily/weekly batch job detecting status shifts of existing account holders. |
+| **List Update Trigger** | **5. Delta List Screen** | Delta differences in newly published OFAC SDN or UN Security Council lists | Immediate re-screening of customer master file against newly added entities. |
 
 ---
 

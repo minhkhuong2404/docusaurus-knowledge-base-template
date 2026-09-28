@@ -17,6 +17,8 @@ tags:
   - domain-2
 ---
 
+import AwsIamCrossAccountRoleDiagram from '@site/src/components/AwsIamCrossAccountRoleDiagram';
+
 # IAM – Identity & Access Management
 
 > **Exam Weight**: Domain 2 (Security) — 26% of exam  
@@ -202,16 +204,7 @@ Call AWS APIs with temp credentials (auto-expire)
 
 ### Cross-Account Role Assumption
 
-```
-Account A (Source)                Account B (Target)
-┌──────────────────┐             ┌──────────────────────────┐
-│ EC2 Instance     │─AssumeRole─▶│ CrossAccountRole         │
-│ with Role A      │             │ Trust Policy:            │
-│                  │             │   Principal: Account A   │
-│                  │◀─TempCreds──│ Permissions:             │
-│                  │             │   s3:GetObject on bucket │
-└──────────────────┘             └──────────────────────────┘
-```
+<AwsIamCrossAccountRoleDiagram />
 
 ### Java SDK — Assuming a Role
 

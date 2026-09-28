@@ -842,6 +842,30 @@ POST /actuator/circuitbreakers/paymentService/close
 | Financial / payment calls (must not double-charge) | Strict: low threshold (40%), `COUNT_BASED`, long `waitDuration` (60s), mandatory fallback queues debit for retry |
 | Internal service call (notifications, recommendations) | Lenient: high threshold (70%), `TIME_BASED`, short `waitDuration` (10s), graceful degradation fallback |
 | Synchronous blocking HTTP calls | `SEMAPHORE` bulkhead + circuit breaker + `TimeLimiter` |
-| High-concurrency non-blocking calls | `THREADPOOL` bulkhead + circuit breaker |
-| Service with bursty traffic patterns | `TIME_BASED` sliding window to avoid stale burst failures skewing rates |
 | Startup / warming period sensitivity | High `minimumNumberOfCalls` (20+) to avoid early false trips |
+
+---
+
+## Advanced Architecture: Shopify Semian & Adaptive Concurrency Limits
+
+### 1. The Multi-Process Pitfall: The Shopify Semian Case Study
+In enterprise platforms running multi-process application servers (e.g., Ruby Puma/Unicorn, Python Gunicorn, or Node.js cluster mode), an in-memory circuit breaker lives in **each independent OS worker process**:
+- If 100 worker processes each require 5 failures to trip the circuit breaker, the downstream database or Redis cluster must endure **$100 \times 5 = 500$ failing requests** before all workers stop!
+- Under high concurrency, 500 stalled queries with 5-second socket timeouts hold 500 worker threads hostage, causing complete upstream HTTP gateway saturation.
+
+**The Semian Solution (Shopify)**:
+Shopify created **Semian**, an open-source library that wraps native C client drivers (MySQL, Redis, Net::HTTP) and uses **Linux IPC Shared Memory Semaphores**. When any worker observes failures, it updates the shared IPC state, tripping the circuit breaker atomically across **all local OS worker processes simultaneously**.
+
+---
+
+### 2. Beyond Static Thresholds: Adaptive Concurrency Limits (Netflix)
+Traditional circuit breakers are **reactive**: they require calls to fail or breach fixed static duration timeouts (e.g., `slowCallDurationThreshold = 2000ms`) before tripping.
+
+Netflix pioneered a proactive approach via **Adaptive Concurrency Limits** (based on Little's Law and the TCP Vegas congestion avoidance algorithm):
+
+$$\text{Little's Law:} \quad L = \lambda \times W \quad (\text{Concurrency} = \text{Throughput} \times \text{Latency})$$
+
+- **The Problem with Static Thresholds**: As downstream load increases, queueing delay builds up inside the server before timeouts occur. By the time static thresholds trip, the downstream server has thousands of requests queued in memory.
+- **The Gradient / Vegas Algorithm**: The client continuously tracks the baseline minimum round-trip time ($\text{RTT}_{\text{no-load}}$). When current $\text{RTT}$ starts rising above baseline due to queuing delay, the client dynamically throttles its in-flight request limit:
+  $$\text{Limit}_{t+1} = \text{Limit}_t \times \frac{\text{RTT}_{\text{no-load}}}{\text{RTT}_{\text{actual}}}$$
+- This sheds excess load **before** thread pools exhaust, completely avoiding the catastrophic latency cliffs that circuit breakers were designed to survive.

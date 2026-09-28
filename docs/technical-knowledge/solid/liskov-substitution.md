@@ -9,10 +9,14 @@ tags:
 - solid
 - liskov-substitution
 ---
+import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
+
 # L — Liskov Substitution Principle
 
 > **"Objects of a subclass should be replaceable with objects of the superclass without breaking the application."**
 > — Barbara Liskov, 1987
+
+<SolidPrinciplesDiagram initialPrinciple="LSP" />
 
 ---
 

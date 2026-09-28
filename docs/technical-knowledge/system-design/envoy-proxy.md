@@ -5,6 +5,7 @@ sidebar_label: Envoy Proxy
 description: Complete guide to Envoy Proxy, its architecture, dynamic configuration via xDS API, static setups, and system-design benefits.
 tags: [system-design, microservices, networking, proxy, envoy]
 ---
+import EnvoyProxyDiagram from '@site/src/components/EnvoyProxyDiagram';
 
 # Envoy Proxy
 
@@ -16,22 +17,7 @@ tags: [system-design, microservices, networking, proxy, envoy]
 
 Unlike traditional proxies (like Nginx) that require manual configuration rewrites and process reloads to pick up changes, Envoy is built to configure itself dynamically at runtime. It implements a set of streaming gRPC APIs called the **xDS APIs**:
 
-```text
-┌────────────────────────────────────────────────────────┐
-│                      Control Plane                     │
-│                      (e.g. Istio)                      │
-└──────────────────────────┬─────────────────────────────┘
-                           │ Dynamic Updates (gRPC Streaming)
-                           ▼ xDS APIs
-┌────────────────────────────────────────────────────────┐
-│                    Envoy Data Plane                    │
-│                                                        │
-│   ┌───────────────┐     ┌──────────────┐     ┌─────┐   │
-│  Incoming ───────►│  Listeners    │ ───►│  Filters     │ ───►│Clust│ ──► Out
-│   Traffic         │ (Port Binding)│     │  (TLS/HTTP)  │     │(IPs)│
-│                   └───────────────┘     └──────────────┘     └─────┘   │
-└────────────────────────────────────────────────────────┘
-```
+<EnvoyProxyDiagram />
 
 - **LDS (Listener Discovery Service)**: Configures ports and addresses Envoy binds to for incoming traffic.
 - **RDS (Route Discovery Service)**: Configures HTTP header matching, paths, redirects, and virtual hosts.

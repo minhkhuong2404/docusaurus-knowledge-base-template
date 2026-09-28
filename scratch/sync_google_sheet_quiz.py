@@ -78,7 +78,7 @@ def fetch_csv_from_url(url):
 def fetch_sheet_tab_csv(spreadsheet_id, sheet_name):
     encoded_name = urllib.parse.quote(sheet_name)
     urls = [
-        f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/gviz/tq?tqx=out:csv&sheet={encoded_name}",
+        f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/gviz/tq?tqx=out:csv&headers=1&sheet={encoded_name}",
         f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/export?format=csv&sheet={encoded_name}",
         f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/pub?output=csv&sheet={encoded_name}"
     ]

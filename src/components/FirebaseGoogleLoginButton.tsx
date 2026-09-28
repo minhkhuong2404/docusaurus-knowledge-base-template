@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { signInWithPopup, User } from 'firebase/auth';
 import { auth, googleProvider } from '../config/firebase';
+import { setCachedUserProfile } from '../context/UserProgressContext';
 
 interface FirebaseGoogleLoginButtonProps {
   onSuccess?: (user: User) => void;
@@ -21,6 +22,9 @@ export default function FirebaseGoogleLoginButton({
     setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
+      if (result?.user) {
+        setCachedUserProfile(result.user);
+      }
       if (onSuccess) {
         onSuccess(result.user);
       }

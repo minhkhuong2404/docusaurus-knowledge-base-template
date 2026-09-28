@@ -36,52 +36,24 @@ A **memo credit** increases the Ledger Balance (the customer sees it) but does n
 
 An inbound payment instruction arrives via a payment scheme (SWIFT, NPP, BECS, SEPA, Fedwire, etc.) and enters the bank's payment processing engine.
 
-```
-Inbound Message (e.g., pacs.008 / MT103 / BECS file)
-          │
-          ▼
-  ┌────────────────────┐
-  │  Message Parsing   │  ← Parse ISO 20022 / SWIFT MT fields
-  └────────────────────┘
-          │
-          ▼
-  ┌────────────────────┐
-  │  Duplicate Check   │  ← Idempotency key: End-to-End ID + scheme + amount + date
-  └────────────────────┘
-          │
-          ▼
-  ┌──────────────────────────┐
-  │  Beneficiary Resolution  │  ← Resolve account number → internal account ID
-  └──────────────────────────┘
-          │
-          ▼
-  ┌──────────────────────────┐
-  │  Account Eligibility     │  ← Account open? Product accepts credits? Not frozen?
-  └──────────────────────────┘
-          │
-          ▼
-  ┌──────────────────────────┐
-  │  Compliance Screening    │  ← Sanctions (OFAC/AUSTRAC), AML rules, legal holds
-  └──────────────────────────┘
-          │
-          ▼
-  ┌──────────────────────────┐
-  │  Posting Decision        │  ← Memo Credit or Hard Credit? (based on settlement status)
-  └──────────────────────────┘
-```
+| Pipeline Step | Validation Stage | Rule Check & Evaluation Logic | Failure Action & Exception Code |
+|---|---|---|---|
+| **1. Message Parsing** | Syntax & Protocol | Parses ISO 20022 `pacs.008`, SWIFT MT103, or BECS direct entry ABA records. | Malformed syntax rejection |
+| **2. Duplicate Check** | Deduplication Cache | Evaluates composite idempotency key (`EndToEndId` + Scheme + Amount + Date). | Idempotent duplicate bypass / ack |
+| **3. Beneficiary Resolution** | Account Directory | Maps public BSB/Account or PayID proxy to internal CBS ledger account ID. | `AC01` (Incorrect Account Number) |
+| **4. Account Eligibility** | Account Status | Verifies account state (Active vs Dormant/Closed/Blocked) and product credit permissions. | `AC04` (Closed Account) / `AC06` (Blocked) |
+| **5. Compliance Screening** | Regulatory Filters | Real-time screening against OFAC/DFAT sanctions, AML rules, and court garnishee orders. | Immediate payment freeze & referral |
+| **6. Posting Decision** | Settlement Engine | Determines whether to post a **Memo Credit** (pending settlement) or **Hard Credit** (RTGS settled). | Routing to suspense vs settled ledger |
 
 ### Phase 2 — Memo Credit (Pending / Uncleared Funds)
 
 When an inbound payment instruction arrives but settlement has not yet been confirmed, the bank posts a **memo credit** — also called a pending credit, uncleared credit, or provisional credit depending on the product and scheme.
 
-```
-Customer Account (Ledger View):
-  ┌────────────────────────────────────────────────────┐
-  │ Ledger Balance:    $10,500  (shows memo credit)    │
-  │ Available Balance: $10,000  (memo not spendable)   │
-  │ Pending Credits:   +$500   [UNCLEARED]             │
-  └────────────────────────────────────────────────────┘
-```
+| Balance Component | Amount | Availability Status | Accounting Meaning |
+|---|---|---|---|
+| **Booked Ledger Balance** | **$10,500** | Recorded in system | Total account position including uncleared deposits. |
+| **Available Balance** | **$10,000** | **Immediately Spendable** | Funds free from memo holds and overdraft restrictions. |
+| **Pending / Memo Credits** | **+$500** | *Uncleared hold* | Provisional credit pending interbank ESA settlement confirmation. |
 
 **What happens internally:**
 - The transaction is written to a **suspense ledger** or **clearing account**, not directly to the customer's settled position.
@@ -98,22 +70,11 @@ Customer Account (Ledger View):
 
 Settlement occurs when the bank's Exchange Settlement Account (ESA) at the central bank is credited — at that point, the funds are irrevocably the receiving bank's. For real-time gross settlement (RTGS) systems, this happens transaction-by-transaction; for deferred net settlement (DNS), it happens at the end of a settlement cycle.
 
-```
-Central Bank RTGS Settlement:
-  ┌─────────────────────────┐       ┌──────────────────────────────┐
-  │  Sending Bank ESA       │──────►│  Receiving Bank ESA          │
-  │  Dr $500 (decreases)    │       │  Cr $500 (increases)         │
-  └─────────────────────────┘       └──────────────────────────────┘
-                                              │
-                                              ▼
-                                   Settlement Notification
-                                   received by core banking
-                                              │
-                                              ▼
-                                    Release memo hold →
-                                    Post Hard Credit →
-                                    Update Available Balance
-```
+| Participant / System | ESA Settlement Transaction | Balance Movement | Core Banking Notification & Action |
+|---|---|---|---|
+| **Sending Bank** | Debited at Central Bank RBA | **- $500.00** (Dr) | Sending bank reserves reduced irrevocably. |
+| **Receiving Bank** | Credited at Central Bank RBA | **+ $500.00** (Cr) | Settlement notification received via RTGS gateway. |
+| **Core Banking System** | Hard Credit Execution | Memo hold released | **Available Balance updated to $10,500**; customer SMS dispatched. |
 
 ### Phase 4 — Hard Credit (Cleared / Available Funds)
 
@@ -125,14 +86,11 @@ Once settlement is confirmed:
 4. A customer notification (push notification, SMS, email) is typically triggered.
 5. The **booking date** and **value date** are finalized and recorded against the transaction.
 
-```
-Customer Account (Post Hard Credit):
-  ┌────────────────────────────────────────────────────┐
-  │ Ledger Balance:    $10,500                         │
-  │ Available Balance: $10,500  ← now matches ledger   │
-  │ Pending Credits:   $0                              │
-  └────────────────────────────────────────────────────┘
-```
+| Balance Component | Amount | Availability Status | Accounting Meaning |
+|---|---|---|---|
+| **Booked Ledger Balance** | **$10,500** | Irrevocably Settled | Account position backed by confirmed central bank reserves. |
+| **Available Balance** | **$10,500** | **Fully Spendable** | Matches ledger balance exactly; memo hold released. |
+| **Pending Credits** | **$0** | Cleared | Zero pending uncleared balances remaining. |
 
 ---
 
@@ -319,25 +277,12 @@ End-to-End IDs are set by the originating customer, not by the bank. Malicious o
 
 ### Replay Handling Flow
 
-```
-Inbound notification received
-         │
-         ▼
-  Look up idempotency_key in processed_transactions table
-         │
-    ┌────┴────┐
-    │  Found  │  ← Duplicate — return original transaction ID, do NOT post again
-    └─────────┘
-         │
-    ┌────┴────┐
-    │  New    │  ← Insert with status=PROCESSING (atomic, with unique constraint)
-    └─────────┘
-         │
-         ▼
-  Execute posting
-         │
-  Update status=COMPLETED / FAILED
-```
+| Idempotency Key Status | Database Operation | Concurrency Protection | Handler Action & Output |
+|---|---|---|---|
+| **`Found` (Duplicate)** | `SELECT WHERE idempotency_key = ?` | Read-only idempotent check | Replay detected: bypass posting, return stored original transaction ID and status. |
+| **`New` (Atomic Insert)** | `INSERT INTO processed_transactions (key, status='PROCESSING')` | **Database UNIQUE constraint** | Lock acquired atomically. Concurrent identical requests trigger unique key violation and wait. |
+| **`Execution`** | Execute double-entry ledger posting | Row-level locking on account | Moves funds from clearing ledger to customer ledger. |
+| **`Terminal Status`** | `UPDATE status = 'COMPLETED'` | Transaction commit | Releases lock; returns 200 OK / 201 Created to caller. |
 
 The `PROCESSING` state with an atomic insert (enforced by a unique constraint on the idempotency key) ensures that even under concurrent retries, only one thread can proceed to posting. All others will hit a unique constraint violation and return the in-progress or completed result.
 

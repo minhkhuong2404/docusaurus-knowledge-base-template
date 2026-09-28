@@ -49,7 +49,7 @@
     "permalink": "/technical-knowledge/spring/spring-boot-bootstrap-yml"
   },
   "next": {
-    "title": "Spring Boot: Interview Questions",
-    "permalink": "/technical-knowledge/spring/spring-boot-interview-questions"
+    "title": "Kubernetes & Spring Boot 3.x — Zero-Downtime Graceful Shutdown",
+    "permalink": "/technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime"
   }
 }

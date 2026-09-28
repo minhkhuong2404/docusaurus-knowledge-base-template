@@ -39,28 +39,12 @@ The **New Payments Platform (NPP)** is Australia's **real-time, data-rich paymen
 
 ## NPP Architecture
 
-```
-                        ┌─────────────────────────┐
-                        │  NPP Australia (NPPA)   │
-                        │  Basic Infrastructure   │
-                        │  (BI) — ISO 20022 Hub   │
-                        └────────────┬────────────┘
-                                     │
-              ┌──────────────────────┼──────────────────────┐
-              │                      │                      │
-     ┌────────▼──────────┐  ┌───────▼─────────┐  ┌────────▼──────────┐
-     │    Bank A         │  │    Bank B        │  │    Bank C         │
-     │  (Direct          │  │  (Direct         │  │  (Indirect via    │
-     │   Participant)    │  │   Participant)   │  │   Bank A)         │
-     └───────────────────┘  └─────────────────┘  └───────────────────┘
-              │                                            
-              ▼
-     ┌───────────────────┐
-     │ RBA Fast          │
-     │ Settlement        │
-     │ Service (FSS)     │
-     └───────────────────┘
-```
+| Infrastructure Entity | Role & Connectivity Type | ISO 20022 Responsibilities | Settlement Interface |
+|---|---|---|---|
+| **NPPA Basic Infrastructure (BI)** | Central Hub & Switching Network | SWIFT-operated distributed messaging network routing ISO 20022 `pacs.008` messages between PAGs. | Coordinates settlement triggers with RBA. |
+| **Direct Participant (Bank A, B)** | Full clearing and settlement member | Connects directly to BI via Payment Access Gateway (PAG); hosts Exchange Settlement Account (ESA). | Settles directly via RBA FSS. |
+| **Indirect Participant (Bank C)** | Tier-2 Sponsor Banking Customer | Uses Direct Participant's PAG and ESA to route NPP payments on behalf of retail/business clients. | Settles via Sponsor Bank's balance ledger. |
+| **RBA Fast Settlement Service (FSS)** | Real-Time Gross Settlement Engine | Sub-service of the Reserve Bank of Australia executing 24/7 line-by-line settlement between bank ESAs. | Deducts Debtor Bank ESA and credits Creditor Bank ESA in &lt;1 second. |
 
 ---
 

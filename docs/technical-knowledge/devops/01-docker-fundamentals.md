@@ -8,122 +8,93 @@ tags: [docker, containers, images, registry, beginner, fundamentals]
 
 import DockerArchitectureDiagram from '@site/src/components/DockerArchitectureDiagram';
 import DevOpsManifestSpecDiagram from '@site/src/components/DevOpsManifestSpecDiagram';
+import VmDockerK8sComparisonDiagram from '@site/src/components/VmDockerK8sComparisonDiagram';
 
 # Docker Fundamentals
 
-## What is a Container?
+## What is a Container? (Demystified)
 
-A container is a **lightweight, isolated process** that packages an application with everything it needs to run — code, runtime, libraries, and config — so it behaves identically everywhere.
+> **The Core Mental Model:** A container is **not a mini-virtual machine**. There is no guest operating system kernel or hypervisor. **A container is simply a standard Linux process isolated by the host kernel.**
 
-<DockerArchitectureDiagram initialTab="engine" />
+When you run `docker run -d -p 80:80 nginx`, the Linux host starts a regular process called `nginx`. However, the Docker daemon wraps that process inside three Linux kernel isolation primitives:
+1. **Linux Namespaces:** Controls what the process can **SEE** (its own private process tree, network interfaces, and filesystem).
+2. **Control Groups (cgroups):** Controls what the process can **CONSUME** (maximum CPU percentage, memory limits, and I/O rates).
+3. **OverlayFS Union Filesystem:** Layers read-only image layers under a thin read-write scratch layer.
+
+<DockerArchitectureDiagram initialTab="internals" />
 
 ---
 
-## Docker Image Manifest (OCI) & Kubernetes Spec Architecture
+## The 3 Foundations of Linux Container Isolation
 
-<DevOpsManifestSpecDiagram initialTab="docker" />
+### 1. Linux Namespaces (Visibility & Scoping)
+Namespaces provide process-level virtualization by creating independent partitions for system resources:
+
+| Namespace | Linux Flag | What It Isolates | Container Behavior |
+|---|---|---|---|
+| **PID** | `CLONE_NEWPID` | Process IDs | The container process sees itself as `PID 1`. It cannot see any other process running on the host or other containers. |
+| **NET** | `CLONE_NEWNET` | Network stack | Container gets its own private `lo` loopback (127.0.0.1), IP routing table, and virtual ethernet pair (`veth`) attached to `docker0` bridge. |
+| **MNT** | `CLONE_NEWNS` | Filesystem mount points | Roots the container into its private filesystem, hiding `/home`, `/etc`, and `/var` of the host. |
+| **IPC** | `CLONE_NEWIPC` | Inter-process communication | Prevents container processes from accessing shared memory segments, semaphores, or message queues of the host. |
+| **UTS** | `CLONE_NEWUTS` | Hostname and domain | Allows setting a container-specific hostname (`--hostname web-01`) without modifying the host machine's name. |
+| **USER** | `CLONE_NEWUSER` | User and group IDs | Maps container `root` (UID 0) to an unprivileged UID (e.g. UID 10001) on the host, preventing host root escalation. |
+
+### 2. Control Groups (cgroups) (Resource Guardrails)
+While namespaces prevent a container from snooping on the host, **cgroups** prevent a "noisy neighbor" container from crashing the host:
+- `docker run -m 512m --cpus="1.5"` creates a cgroup directory in `/sys/fs/cgroup/memory/docker/<container_id>`.
+- If memory usage exceeds 512MB, the Linux kernel's Out-Of-Memory (OOM) killer terminates that container process without affecting the host or other containers.
+
+### 3. OverlayFS (Layered Union Mount & Copy-on-Write)
+Docker images are built as immutable, stacked layers using a union filesystem:
+- **LowerDir (Read-Only):** The immutable base OS (e.g., Alpine/Debian) and installed runtime packages.
+- **UpperDir (Read/Write):** A thin ephemeral layer created when the container starts. Any new files or edits are written here (Copy-on-Write).
+- **MergedDir:** The unified filesystem view that the container process actually sees.
+
+```
+OverlayFS Architecture:
+┌────────────────────────────────────────────────────────┐
+│ MergedDir: Unified view presented to container process │
+├────────────────────────────────────────────────────────┤
+│ UpperDir: Ephemeral Read-Write layer (/tmp, modified)  │
+├────────────────────────────────────────────────────────┤
+│ LowerDir Layer 3: COPY app.jar (Read-Only)             │
+│ LowerDir Layer 2: RUN apt-get install (Read-Only)      │
+│ LowerDir Layer 1: FROM debian:bookworm (Read-Only)     │
+└────────────────────────────────────────────────────────┘
+```
+
+---
+
+## The Container Runtime Hierarchy (Under the Hood)
+
+When you execute `docker run`, Docker delegates execution down a modular stack governed by Open Container Initiative (OCI) standards:
+
+```
+User CLI: "docker run"
+    │
+    ▼ REST API / Unix Socket (/var/run/docker.sock)
+[ Docker Daemon (dockerd) ]
+    │ (High-level: manages networking, volumes, CLI parsing)
+    ▼ gRPC
+[ containerd ]
+    │ (Supervises containers, image pulls, storage snapshots)
+    ▼
+[ containerd-shim ] ──(Surrogate parent process; enables daemonless containers)
+    │
+    ▼ CLI invocation
+[ runc ] ──(Low-level OCI runtime: invokes clone(), unshare(), pivot_root)
+    │
+    ▼ (runc exits after spawning)
+[ Container Process (e.g. nginx PID 1) ]
+```
+
+- **Why `containerd-shim` exists**: The shim acts as a lightweight daemonless babysitter process. It holds stdout/stderr pipes open and waits on the container's exit code. This allows `dockerd` and `containerd` to crash or be upgraded **without terminating running containers**!
 
 ---
 
 ## Containers vs Virtual Machines
 
-```
-Virtual Machine                     Container
-┌──────────────────────┐            ┌──────────────────────┐
-│  App A               │            │  App A   │  App B     │
-├──────────────────────┤            ├──────────┼────────────┤
-│  Guest OS (Linux)    │            │  Libs    │  Libs      │
-├──────────────────────┤            ├──────────┴────────────┤
-│  Hypervisor          │            │  Container Runtime    │
-├──────────────────────┤            │  (Docker Engine)      │
-│  Host OS             │            ├───────────────────────┤
-├──────────────────────┤            │  Host OS (Linux)      │
-│  Hardware            │            ├───────────────────────┤
-└──────────────────────┘            │  Hardware             │
-                                    └───────────────────────┘
-Size:   GBs                         Size:   MBs
-Boot:   Minutes                     Boot:   Milliseconds
-Isolation: Full OS boundary         Isolation: Linux namespaces + cgroups
-```
-
-| Feature | VM | Container |
-|---|---|---|
-| OS | Full guest OS | Shares host kernel |
-| Boot time | 1–2 minutes | < 1 second |
-| Image size | GB range | MB range |
-| Isolation | Strongest (hypervisor) | Strong (namespaces) |
-| Performance overhead | Higher | Near-native |
-| Use case | Different OS needs, strong isolation | Microservices, fast scaling |
-
-> Containers use **Linux namespaces** (isolate processes, filesystem, network) and **cgroups** (limit CPU, memory) — not a separate OS kernel.
-
----
-
-## Docker Architecture
-
-```
-┌──────────────────────────────────────────────────────────┐
-│  Docker Client (CLI)                                      │
-│  docker build · docker run · docker push                  │
-└────────────────────┬─────────────────────────────────────┘
-                     │ REST API (unix socket / TCP)
-┌────────────────────▼─────────────────────────────────────┐
-│  Docker Daemon (dockerd)                                   │
-│  ┌────────────┐  ┌─────────────┐  ┌────────────────────┐  │
-│  │  Images    │  │  Containers │  │  Networks/Volumes  │  │
-│  └────────────┘  └─────────────┘  └────────────────────┘  │
-│           Uses: containerd → runc (OCI runtime)            │
-└──────────────────────────────────────────────────────────┘
-                     │ pull/push
-┌────────────────────▼─────────────────────────────────────┐
-│  Registry (Docker Hub / ECR / GCR / Nexus)                │
-└──────────────────────────────────────────────────────────┘
-```
-
-### Components
-| Component | Role |
-|---|---|
-| **Docker CLI** | Command-line tool you type commands into |
-| **Docker Daemon** | Background service that manages containers |
-| **containerd** | Container lifecycle manager (lower level than Docker) |
-| **runc** | OCI-compliant container runtime (actually runs processes) |
-| **Registry** | Remote store for Docker images |
-
----
-
-## Images and Layers
-
-An image is built from **read-only layers** stacked on top of each other.
-
-```dockerfile
-FROM eclipse-temurin:21-jre-alpine   ← Layer 1: Base OS + JRE
-RUN apk add curl                      ← Layer 2: Add curl package
-COPY app.jar /app/app.jar             ← Layer 3: Your application JAR
-```
-
-```
-Layer 3: app.jar         ← changes most often (yours)
-Layer 2: curl installed  ← changes occasionally
-Layer 1: JRE Alpine      ← changes rarely (base)
-```
-
-### Why Layers Matter
-- **Caching:** If Layer 1 and 2 haven't changed, Docker reuses them from cache — only Layer 3 is rebuilt. Dramatically speeds up builds.
-- **Sharing:** Multiple images sharing the same base layer only store it once on disk.
-- **Immutability:** Layers are read-only. Running a container adds a thin **writable layer** on top — the image itself is never modified.
-
-```
-Running container:
-  ┌─────────────────────────────┐
-  │  Writable layer (container) │ ← temporary, lost when container removed
-  ├─────────────────────────────┤
-  │  Layer 3: app.jar           │ read-only
-  ├─────────────────────────────┤
-  │  Layer 2: curl              │ read-only
-  ├─────────────────────────────┤
-  │  Layer 1: JRE Alpine        │ read-only
-  └─────────────────────────────┘
-```
+<VmDockerK8sComparisonDiagram />
 
 ---
 

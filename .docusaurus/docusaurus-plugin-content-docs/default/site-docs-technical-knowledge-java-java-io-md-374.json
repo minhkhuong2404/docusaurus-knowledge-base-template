@@ -51,7 +51,7 @@
     "permalink": "/technical-knowledge/java/java-gc"
   },
   "next": {
-    "title": "Java New Features: Java 8 through Java 21+",
-    "permalink": "/technical-knowledge/java/java-new-features"
+    "title": "Off-Heap Memory & FFM API: High-Performance Native Memory in Modern Java (Java 22+)",
+    "permalink": "/technical-knowledge/java/java-off-heap-ffm-api"
   }
 }

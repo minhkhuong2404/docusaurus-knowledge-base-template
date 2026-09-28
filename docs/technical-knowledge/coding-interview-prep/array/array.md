@@ -125,6 +125,80 @@ public boolean isAnagram(int[] a, int[] b) {
 }
 ```
 
+### 4. Running Minimum (Best Time to Buy and Sell Stock)
+
+Maintain the minimum price seen so far to calculate maximum potential profit in a single pass:
+
+```java
+public int maxProfit(int[] prices) {
+    int min = Integer.MAX_VALUE, maxProfit = 0;
+    for (int price : prices) {
+        min = Math.min(min, price);
+        maxProfit = Math.max(maxProfit, price - min);
+    }
+    return maxProfit;
+}
+// Time: O(n) | Space: O(1)
+```
+
+### 5. Kadane's Algorithm (Maximum Subarray Sum)
+
+Decide at each element whether to append to the running subarray or start a new subarray:
+
+```java
+public int maxSubArray(int[] nums) {
+    int maxSoFar = nums[0], curr = 0;
+    for (int num : nums) {
+        curr = Math.max(num, curr + num);
+        maxSoFar = Math.max(maxSoFar, curr);
+    }
+    return maxSoFar;
+}
+// Time: O(n) | Space: O(1)
+```
+
+### 6. Three-Step Reversal (Rotate Array by K)
+
+Rotate array right by $k$ steps in-place by reversing the entire array, then reversing the two sub-halves:
+
+```java
+public void rotate(int[] nums, int k) {
+    k = k % nums.length;
+    reverse(nums, 0, nums.length - 1); // 1. Reverse entire array
+    reverse(nums, 0, k - 1);           // 2. Reverse first k elements
+    reverse(nums, k, nums.length - 1); // 3. Reverse remaining elements
+}
+
+private void reverse(int[] nums, int l, int r) {
+    while (l < r) {
+        int temp = nums[l];
+        nums[l++] = nums[r];
+        nums[r--] = temp;
+    }
+}
+// Time: O(n) | Space: O(1)
+```
+
+### 7. Merge Two Sorted Arrays
+
+Merge two sorted arrays linearly with two read pointers and one write pointer:
+
+```java
+public int[] merge(int[] a, int[] b) {
+    int n = a.length, m = b.length;
+    int[] res = new int[n + m];
+    int i = 0, j = 0, k = 0;
+
+    while (i < n && j < m) {
+        res[k++] = (a[i] <= b[j]) ? a[i++] : b[j++];
+    }
+    while (i < n) res[k++] = a[i++];
+    while (j < m) res[k++] = b[j++];
+    return res;
+}
+// Time: O(n + m) | Space: O(n + m)
+```
+
 ---
 
 ## Worked Example: Find Duplicate Number

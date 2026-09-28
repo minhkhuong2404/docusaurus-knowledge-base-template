@@ -71,6 +71,10 @@ import {
   resetAllQuizProgressInFirestore,
   saveGamificationToFirestore,
   QuizStateItem,
+  formatStudyTime,
+  saveTimeSpentDeltaToFirestore,
+  saveThemePreferenceToFirestore,
+  ThemePreference,
 } from '../services/userProgressService';
 import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '../utils/trackablePages';
 import {
@@ -126,6 +130,7 @@ interface UserProgressContextType {
   unlockPremium: (key: string) => Promise<boolean>;
   revokePremium: () => Promise<void>;
   resetQuizProgress: () => Promise<void>;
+  saveThemePreference: (preset: string, colorMode: 'light' | 'dark') => Promise<void>;
 
   // 🎮 Gamification APIs
   gamification: GamificationState;
@@ -137,6 +142,10 @@ interface UserProgressContextType {
   saveMiniGameScore: (gameId: string, score: number) => void;
   toast: GamificationToast | null;
   dismissToast: () => void;
+
+  // ⏱️ Active Online Presence
+  totalTimeOnlineSeconds: number;
+  formatTimeOnline: (seconds?: number) => string;
 }
 
 const UserProgressContext = createContext<UserProgressContextType>({
@@ -160,6 +169,7 @@ const UserProgressContext = createContext<UserProgressContextType>({
   unlockPremium: async () => false,
   revokePremium: async () => {},
   resetQuizProgress: async () => {},
+  saveThemePreference: async () => {},
 
   gamification: defaultGamificationState,
   addExp: () => {},
@@ -170,9 +180,50 @@ const UserProgressContext = createContext<UserProgressContextType>({
   saveMiniGameScore: () => {},
   toast: null,
   dismissToast: () => {},
+
+  totalTimeOnlineSeconds: 0,
+  formatTimeOnline: () => '0m',
 });
 
 const getStorageKey = (uid?: string | null) => `user_progress_cache_${uid || 'guest'}`;
+
+export interface CachedUserProfile {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+}
+
+export const CACHED_USER_KEY = 'cached_auth_user';
+
+export function getCachedUserProfile(): CachedUserProfile | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(CACHED_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function setCachedUserProfile(user: User | null | CachedUserProfile) {
+  if (typeof window === 'undefined') return;
+  try {
+    if (user) {
+      const data: CachedUserProfile = {
+        uid: user.uid,
+        email: user.email || null,
+        displayName: user.displayName || null,
+        photoURL: user.photoURL || null,
+      };
+      localStorage.setItem(CACHED_USER_KEY, JSON.stringify(data));
+    } else {
+      localStorage.removeItem(CACHED_USER_KEY);
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+}
 
 function loadCachedProgress(uid?: string | null): UserProgressData | null {
   if (typeof window === 'undefined') return null;
@@ -276,6 +327,12 @@ function mergeQuizProgress(localData: UserProgressData, remoteData: UserProgress
       dailyQuests: remoteGame.dailyQuests?.date === getTodayDateString() ? remoteGame.dailyQuests : localGame.dailyQuests,
       miniGameScores: mergedMiniGameScores,
     },
+    totalTimeOnlineSeconds: Math.max(
+      localData.totalTimeOnlineSeconds || 0,
+      remoteData.totalTimeOnlineSeconds || 0
+    ),
+    timeTrackingSeeded: remoteData.timeTrackingSeeded || localData.timeTrackingSeeded || false,
+    themePreference: remoteData.themePreference || localData.themePreference,
   };
 }
 
@@ -285,7 +342,11 @@ import { evaluateLeaderboardStandings } from '../services/leaderboardRewardServi
 export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const cached = getCachedUserProfile();
+    return cached ? (cached as unknown as User) : null;
+  });
   const [adminEmails, setAdminEmails] = useState<string[]>(() => getAdminEmails());
   const [toast, setToast] = useState<GamificationToast | null>(null);
 
@@ -300,11 +361,12 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [currentUser, adminEmails]);
 
   useEffect(() => {
+    if (!currentUser?.email) return;
     const unsubscribe = subscribeToAdminEmails((latestEmails) => {
       setAdminEmails(latestEmails);
     });
     return () => unsubscribe();
-  }, []);
+  }, [currentUser?.email]);
 
   const addAdminEmail = async (email: string) => {
     const res = await saveAdminEmail(email, currentUser?.email);
@@ -323,23 +385,62 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const [progress, setProgressState] = useState<UserProgressData>(() => {
-    const cached = loadCachedProgress();
-    return cached || defaultUserProgress;
+    if (typeof window === 'undefined') return defaultUserProgress;
+    const cachedUser = getCachedUserProfile();
+    if (cachedUser) {
+      const cached = loadCachedProgress(cachedUser.uid);
+      if (cached) return cached;
+    } else {
+      const guestCache = loadCachedProgress('guest');
+      if (guestCache) return guestCache;
+    }
+    return defaultUserProgress;
   });
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    const cachedUser = getCachedUserProfile();
+    return !cachedUser && !loadCachedProgress('guest');
+  });
   const [totalArticlesCount, setTotalArticlesCountState] = useState<number>(() => {
     if (typeof window === 'undefined') return TOTAL_TRACKABLE_ARTICLES_DEFAULT;
     try {
-      const saved = localStorage.getItem('total_articles_count');
-      const parsed = saved ? parseInt(saved, 10) : 0;
-      if (parsed > 0 && parsed <= 2000) {
-        return parsed;
-      }
-      return TOTAL_TRACKABLE_ARTICLES_DEFAULT;
+      const savedCount = localStorage.getItem('total_articles_count');
+      const parsed = savedCount ? parseInt(savedCount, 10) : 0;
+      if (parsed > 0 && parsed <= 2000) return parsed;
     } catch {
-      return TOTAL_TRACKABLE_ARTICLES_DEFAULT;
+      // Ignore
     }
+    return TOTAL_TRACKABLE_ARTICLES_DEFAULT;
   });
+
+  // Re-verify cached profile and sync background progress on mount
+  useEffect(() => {
+    const cachedUser = getCachedUserProfile();
+    if (cachedUser) {
+      setCurrentUser((prev) => prev || (cachedUser as unknown as User));
+      const cached = loadCachedProgress(cachedUser.uid);
+      if (cached) {
+        setProgressState(cached);
+      }
+      setIsLoading(false);
+    } else {
+      const guestCache = loadCachedProgress('guest');
+      if (guestCache) {
+        setProgressState(guestCache);
+      }
+      setIsLoading(false);
+    }
+
+    try {
+      const savedCount = localStorage.getItem('total_articles_count');
+      const parsed = savedCount ? parseInt(savedCount, 10) : 0;
+      if (parsed > 0 && parsed <= 2000) {
+        setTotalArticlesCountState(parsed);
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, []);
 
   const setTotalArticlesCount = useCallback((count: number) => {
     if (count > 0 && count <= 2000) {
@@ -786,16 +887,23 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+      setCachedUserProfile(user);
       if (user) {
         const cachedUserProgress = loadCachedProgress(user.uid);
         if (cachedUserProgress) {
           setProgressState((prev) => mergeQuizProgress(prev, cachedUserProgress));
         }
 
-        ensureUserDocExists(user).catch((err) => {
-          console.error('Failed auto-syncing user doc on login:', err);
-        });
+        // Only ensure user doc exists ONCE per browser session to prevent redundant getDoc+setDoc cascades
+        const sessionKey = `user_doc_verified_${user.uid}_${user.photoURL ? 'with_photo' : 'no_photo'}`;
+        if (typeof window !== 'undefined' && !sessionStorage.getItem(sessionKey)) {
+          sessionStorage.setItem(sessionKey, '1');
+          ensureUserDocExists(user).catch((err) => {
+            console.error('Failed auto-syncing user doc on login:', err);
+          });
+        }
       } else {
+        setCachedUserProfile(null);
         const guestCache = loadCachedProgress('guest');
         setProgressState(guestCache || defaultUserProgress);
         setIsLoading(false);
@@ -806,9 +914,13 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser?.uid) return;
 
-    setIsLoading(true);
+    // If cached data already exists, don't stall UI with loading spinner
+    const hasCached = !!loadCachedProgress(currentUser.uid);
+    if (!hasCached) {
+      setIsLoading(true);
+    }
     const unsubscribeDoc = subscribeToUserProgress(currentUser.uid, (remoteData) => {
       setProgressState((localPrev) => {
         const merged = mergeQuizProgress(localPrev, remoteData);
@@ -819,7 +931,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     return () => unsubscribeDoc();
-  }, [currentUser]);
+  }, [currentUser?.uid]);
 
   // Keep EXP ref updated for heartbeat without restarting interval on every exp change
   const expRef = useRef(progress.gamification?.exp || 0);
@@ -827,63 +939,166 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Start Real-Time Presence Heartbeat for Active User
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser?.uid) return;
     const unsubPresence = startPresenceTracker(currentUser, () => expRef.current);
     return () => unsubPresence();
   }, [currentUser?.uid]);
 
-  // Evaluate & Grant Concluded Weekly & Monthly Leaderboard Standings Rewards
-  useEffect(() => {
-    if (!currentUser || isLoading) return;
+  // ── Active Online Dwell Time Tracking ────────────────────────────────────
+  const lastActiveTimestampRef = useRef<number>(Date.now());
+  const unsyncedFirestoreSecondsRef = useRef<number>(0);
+  const localBufferSecondsRef = useRef<number>(0);
+  const currentUserRef = useRef<User | null>(currentUser);
+  currentUserRef.current = currentUser;
 
-    const claimed = progress.gamification?.claimedPeriodRewards || [];
-    evaluateLeaderboardStandings(currentUser.uid, currentUser.email, claimed).then((rewards) => {
-      if (rewards.length === 0) return;
-
-      let totalBonusExp = 0;
-      const newClaimedKeys = [...claimed];
-      const newAchievements = new Set(progress.gamification?.unlockedAchievements || []);
-
-      rewards.forEach((r) => {
-        totalBonusExp += r.expReward;
-        newClaimedKeys.push(r.periodKey);
-        newAchievements.add(r.achievementId);
-
-        showToast({
-          type: 'achievement',
-          title: `🏆 ${r.title} (Rank #${r.rankPosition})`,
-          subtitle: `Concluded ${r.periodType} in the top tier! +${r.expReward} EXP granted.`,
-          icon: r.icon,
-          exp: r.expReward,
-        });
+  // Flush any pending accumulated study seconds to Firestore
+  const flushStudyTimeDelta = useCallback(() => {
+    const delta = unsyncedFirestoreSecondsRef.current;
+    if (delta <= 0) return;
+    const uid = currentUserRef.current?.uid;
+    unsyncedFirestoreSecondsRef.current = 0;
+    if (uid) {
+      saveTimeSpentDeltaToFirestore(uid, delta).catch((err) => {
+        console.warn('Failed to sync study time to Firestore:', err);
       });
+    }
+  }, []);
 
-      triggerFireworks(5000);
+  // Flush on tab hide, unload, or user switch
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
 
-      setProgress((prev) => {
-        const game = prev.gamification || defaultGamificationState;
-        const nextExp = (game.exp || 0) + totalBonusExp;
-        const nextLevel = getLevelFromExp(nextExp);
+    const handleActivity = () => {
+      lastActiveTimestampRef.current = Date.now();
+    };
 
-        const updatedGame: GamificationState = {
-          ...game,
-          exp: nextExp,
-          level: nextLevel,
-          unlockedAchievements: Array.from(newAchievements),
-          claimedPeriodRewards: Array.from(new Set(newClaimedKeys)),
-        };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        flushStudyTimeDelta();
+      }
+    };
 
-        if (currentUser) {
-          saveGamificationToFirestore(currentUser.uid, updatedGame).catch(console.error);
+    const handleBeforeUnload = () => {
+      flushStudyTimeDelta();
+    };
+
+    const events = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'];
+    events.forEach((evt) => {
+      window.addEventListener(evt, handleActivity, { passive: true });
+    });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      events.forEach((evt) => {
+        window.removeEventListener(evt, handleActivity);
+      });
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      flushStudyTimeDelta();
+    };
+  }, [flushStudyTimeDelta]);
+
+  // Main 1-second active ticker
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const IDLE_TIMEOUT_MS = 2.5 * 60 * 1000; // 2.5 minutes of inactivity pauses counting
+
+    const timer = setInterval(() => {
+      if (typeof document === 'undefined') return;
+
+      const isVisible = document.visibilityState === 'visible';
+      const hasFocus = typeof document.hasFocus === 'function' ? document.hasFocus() : true;
+      const isNotIdle = Date.now() - lastActiveTimestampRef.current < IDLE_TIMEOUT_MS;
+
+      // Only count active dwell time if tab is visible, focused, and user interacted recently
+      if (isVisible && hasFocus && isNotIdle) {
+        unsyncedFirestoreSecondsRef.current += 1;
+        localBufferSecondsRef.current += 1;
+
+        // Update local React state every 5 seconds to provide responsive UI without 1Hz re-rendering overhead
+        if (localBufferSecondsRef.current >= 5) {
+          const step = localBufferSecondsRef.current;
+          localBufferSecondsRef.current = 0;
+          setProgressState((prev) => {
+            const nextSec = (prev.totalTimeOnlineSeconds || 0) + step;
+            const next = { ...prev, totalTimeOnlineSeconds: nextSec };
+            saveCachedProgress(next);
+            return next;
+          });
         }
 
-        return {
-          ...prev,
-          gamification: updatedGame,
-        };
-      });
-    }).catch(console.error);
-  }, [currentUser, isLoading]);
+        // Flush accumulated seconds to Firestore every 30 seconds
+        if (unsyncedFirestoreSecondsRef.current >= 30) {
+          flushStudyTimeDelta();
+        }
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+      flushStudyTimeDelta();
+    };
+  }, [flushStudyTimeDelta]);
+
+  // Evaluate & Grant Concluded Weekly & Monthly Leaderboard Standings Rewards
+  // Defer by 5 seconds so it NEVER delays initial page load or login
+  useEffect(() => {
+    if (!currentUser?.uid || isLoading) return;
+
+    const timer = setTimeout(() => {
+      const claimed = progress.gamification?.claimedPeriodRewards || [];
+      evaluateLeaderboardStandings(currentUser.uid, currentUser.email, claimed).then((rewards) => {
+        if (!rewards || rewards.length === 0) return;
+
+        let totalBonusExp = 0;
+        const newClaimedKeys = [...claimed];
+        const newAchievements = new Set(progress.gamification?.unlockedAchievements || []);
+
+        rewards.forEach((r) => {
+          totalBonusExp += r.expReward;
+          newClaimedKeys.push(r.periodKey);
+          newAchievements.add(r.achievementId);
+
+          showToast({
+            type: 'achievement',
+            title: `🏆 ${r.title} (Rank #${r.rankPosition})`,
+            subtitle: `Concluded ${r.periodType} in the top tier! +${r.expReward} EXP granted.`,
+            icon: r.icon,
+            exp: r.expReward,
+          });
+        });
+
+        triggerFireworks(5000);
+
+        setProgress((prev) => {
+          const game = prev.gamification || defaultGamificationState;
+          const nextExp = (game.exp || 0) + totalBonusExp;
+          const nextLevel = getLevelFromExp(nextExp);
+
+          const updatedGame: GamificationState = {
+            ...game,
+            exp: nextExp,
+            level: nextLevel,
+            unlockedAchievements: Array.from(newAchievements),
+            claimedPeriodRewards: Array.from(new Set(newClaimedKeys)),
+          };
+
+          if (currentUser) {
+            saveGamificationToFirestore(currentUser.uid, updatedGame).catch(console.error);
+          }
+
+          return {
+            ...prev,
+            gamification: updatedGame,
+          };
+        });
+      }).catch(console.error);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [currentUser?.uid, isLoading]);
 
   const [manuallyUnmarkedPages, setManuallyUnmarkedPages] = useState<Set<string>>(new Set());
 
@@ -905,11 +1120,22 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     return true;
   };
 
+  const readPagesSet = useMemo(() => {
+    const set = new Set<string>();
+    const list = progress.readPages;
+    if (list && list.length > 0) {
+      for (let i = 0; i < list.length; i++) {
+        const norm = normalizePagePath(list[i]);
+        if (norm) set.add(norm);
+      }
+    }
+    return set;
+  }, [progress.readPages]);
+
   const isPageRead = useCallback((pagePath: string): boolean => {
     if (!pagePath) return false;
-    const norm = normalizePagePath(pagePath);
-    return (progress.readPages || []).some((p) => normalizePagePath(p) === norm);
-  }, [progress.readPages]);
+    return readPagesSet.has(normalizePagePath(pagePath));
+  }, [readPagesSet]);
 
   const isManuallyUnmarked = useCallback((pagePath: string): boolean => {
     if (!pagePath) return false;
@@ -920,7 +1146,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   const togglePageRead = useCallback(async (pagePath: string): Promise<void> => {
     if (!pagePath) return;
     const norm = normalizePagePath(pagePath);
-    const isCurrentlyRead = (progress.readPages || []).some((p) => normalizePagePath(p) === norm);
+    const isCurrentlyRead = readPagesSet.has(norm);
     const isReadNow = !isCurrentlyRead;
 
     setManuallyUnmarkedPages((prev) => {
@@ -957,7 +1183,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     const norm = normalizePagePath(pagePath);
     if (manuallyUnmarkedPages.has(norm)) return;
 
-    const isAlreadyRead = (progress.readPages || []).some((p) => normalizePagePath(p) === norm);
+    const isAlreadyRead = readPagesSet.has(norm);
     const isNewToday = recordArticleReadSession(norm);
 
     if (!isAlreadyRead) {
@@ -978,7 +1204,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
       recordActivity('read_article', 1);
       addExp(10, 'Re-read Technical Article');
     }
-  }, [manuallyUnmarkedPages, progress.readPages, setProgress, addExp, recordActivity, currentUser]);
+  }, [manuallyUnmarkedPages, readPagesSet, setProgress, addExp, recordActivity, currentUser]);
 
   const saveQuiz = useCallback(async (
     quizKey: string,
@@ -1063,6 +1289,23 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [currentUser, setProgress]);
 
+  const saveThemePreference = useCallback(async (preset: string, colorMode: 'light' | 'dark'): Promise<void> => {
+    setProgress((prev) => ({
+      ...prev,
+      themePreference: {
+        preset,
+        colorMode,
+        updatedAt: new Date().toISOString(),
+      },
+    }));
+
+    if (currentUser?.uid) {
+      saveThemePreferenceToFirestore(currentUser.uid, preset, colorMode).catch((err) => {
+        console.error('Background Firestore saveThemePreference error:', err);
+      });
+    }
+  }, [currentUser, setProgress]);
+
   const saveDSA = useCallback(async (solved: string[], starred: string[]): Promise<void> => {
     const prevSolved = progress.dsaProgress?.solvedProblems || [];
     const newSolvedCount = Math.max(0, solved.length - prevSolved.length);
@@ -1086,6 +1329,10 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const gamification = progress.gamification || defaultGamificationState;
 
+  const formatTimeOnline = useCallback((seconds?: number) => {
+    return formatStudyTime(seconds !== undefined ? seconds : (progress.totalTimeOnlineSeconds || 0));
+  }, [progress.totalTimeOnlineSeconds]);
+
   const contextValue = useMemo(() => ({
     currentUser,
     progress,
@@ -1107,6 +1354,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     unlockPremium,
     revokePremium,
     resetQuizProgress,
+    saveThemePreference,
 
     gamification,
     addExp,
@@ -1117,6 +1365,9 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     saveMiniGameScore,
     toast,
     dismissToast,
+
+    totalTimeOnlineSeconds: progress.totalTimeOnlineSeconds || 0,
+    formatTimeOnline,
   }), [
     currentUser,
     progress,
@@ -1138,6 +1389,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     unlockPremium,
     revokePremium,
     resetQuizProgress,
+    saveThemePreference,
     gamification,
     addExp,
     boostToGodLevel,
@@ -1147,6 +1399,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     saveMiniGameScore,
     toast,
     dismissToast,
+    formatTimeOnline,
   ]);
 
   return (

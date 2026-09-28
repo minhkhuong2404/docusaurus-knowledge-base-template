@@ -556,6 +556,26 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "non-technical-knowledge/agile-scrum/estimation-metrics",
+              "path": "/non-technical-knowledge/agile-scrum/estimation-metrics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/agile-scrum/intro",
+              "path": "/non-technical-knowledge/agile-scrum/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/agile-scrum/scrum-framework",
+              "path": "/non-technical-knowledge/agile-scrum/scrum-framework",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/agile-scrum/ways-of-working",
+              "path": "/non-technical-knowledge/agile-scrum/ways-of-working",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "non-technical-knowledge/sdlc/deployment/deployment-configuration-verification",
               "path": "/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification",
               "sidebar": "tutorialSidebar"
@@ -676,13 +696,33 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/ai-agents/loop-engineering",
+              "path": "/technical-knowledge/ai-agents/loop-engineering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/ai-agents/mcp-and-agentic-ai",
+              "path": "/technical-knowledge/ai-agents/mcp-and-agentic-ai",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/ai-agents/overview",
               "path": "/technical-knowledge/ai-agents/overview",
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/ai-agents/prompt-caching",
+              "path": "/technical-knowledge/ai-agents/prompt-caching",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/ai-agents/prompt-engineering",
               "path": "/technical-knowledge/ai-agents/prompt-engineering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/ai-agents/rag-fundamentals",
+              "path": "/technical-knowledge/ai-agents/rag-fundamentals",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -753,6 +793,11 @@
             {
               "id": "technical-knowledge/aws/containers/ecs-ecr",
               "path": "/technical-knowledge/aws/containers/ecs-ecr",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/core-infrastructure-architecture",
+              "path": "/technical-knowledge/aws/core-infrastructure-architecture",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1171,6 +1216,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/coding-interview-prep/dsa-patterns-handbook",
+              "path": "/technical-knowledge/coding-interview-prep/dsa-patterns-handbook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/coding-interview-prep/dynamic-programming/dynamic-programming",
               "path": "/technical-knowledge/coding-interview-prep/dynamic-programming/",
               "sidebar": "tutorialSidebar"
@@ -1306,6 +1356,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/exporting-large-datasets-streaming-internals",
+              "path": "/technical-knowledge/database/exporting-large-datasets-streaming-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/full-text-search",
               "path": "/technical-knowledge/database/full-text-search",
               "sidebar": "tutorialSidebar"
@@ -1321,8 +1376,33 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/long-transactions-undo-mdl-meltdown",
+              "path": "/technical-knowledge/database/long-transactions-undo-mdl-meltdown",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/mysql-deadlocks-gap-locks-internals",
+              "path": "/technical-knowledge/database/mysql-deadlocks-gap-locks-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/mysql-indexing-beyond-equality",
+              "path": "/technical-knowledge/database/mysql-indexing-beyond-equality",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/nosql-distributed",
               "path": "/technical-knowledge/database/nosql-distributed",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals",
+              "path": "/technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive",
+              "path": "/technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1331,8 +1411,38 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/postgresql-brin-index-guide",
+              "path": "/technical-knowledge/database/postgresql-brin-index-guide",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/postgresql-checkpoint-wal-tuning",
+              "path": "/technical-knowledge/database/postgresql-checkpoint-wal-tuning",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/postgresql-heap-storage-architecture",
               "path": "/technical-knowledge/database/postgresql-heap-storage-architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/postgresql-update-locking-mechanics",
+              "path": "/technical-knowledge/database/postgresql-update-locking-mechanics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/postgresql-wal-replication-lag-playbook",
+              "path": "/technical-knowledge/database/postgresql-wal-replication-lag-playbook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/production-database-antipatterns-hygiene",
+              "path": "/technical-knowledge/database/production-database-antipatterns-hygiene",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/query-optimization-beyond-indexes-upsert-traps",
+              "path": "/technical-knowledge/database/query-optimization-beyond-indexes-upsert-traps",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1496,6 +1606,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/devops/cicd-github-actions",
+              "path": "/technical-knowledge/devops/cicd-github-actions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/devops/devops-interview-questions",
               "path": "/technical-knowledge/devops/devops-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -1553,6 +1668,11 @@
             {
               "id": "technical-knowledge/devops/kubectl-commands",
               "path": "/technical-knowledge/devops/kubectl-commands",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubernetes-admission-webhooks",
+              "path": "/technical-knowledge/devops/kubernetes-admission-webhooks",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5011,6 +5131,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/engineering-practices/how-to-become-senior-developer",
+              "path": "/technical-knowledge/engineering-practices/how-to-become-senior-developer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/git/advanced/bisect",
               "path": "/technical-knowledge/git/advanced/bisect",
               "sidebar": "tutorialSidebar"
@@ -5481,6 +5606,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-functional-interfaces-factory",
+              "path": "/technical-knowledge/java/java-functional-interfaces-factory",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-fundamentals",
               "path": "/technical-knowledge/java/java-fundamentals",
               "sidebar": "tutorialSidebar"
@@ -5526,6 +5656,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-off-heap-ffm-api",
+              "path": "/technical-knowledge/java/java-off-heap-ffm-api",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-oop",
               "path": "/technical-knowledge/java/java-oop",
               "sidebar": "tutorialSidebar"
@@ -5548,6 +5683,11 @@
             {
               "id": "technical-knowledge/java/java-virtual-threads",
               "path": "/technical-knowledge/java/java-virtual-threads",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/production-oom-debugging-guide",
+              "path": "/technical-knowledge/java/production-oom-debugging-guide",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6010,6 +6150,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/redis/redis-lua-scripting-distributed-locks",
+              "path": "/technical-knowledge/redis/redis-lua-scripting-distributed-locks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/redis/redis-overview",
               "path": "/technical-knowledge/redis/redis-overview",
               "sidebar": "tutorialSidebar"
@@ -6160,6 +6305,21 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/splunk/splunk-advanced-spl-recipes",
+              "path": "/technical-knowledge/splunk/splunk-advanced-spl-recipes",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/splunk/splunk-eval-and-time-bucketing",
+              "path": "/technical-knowledge/splunk/splunk-eval-and-time-bucketing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/splunk/splunk-fundamentals",
+              "path": "/technical-knowledge/splunk/splunk-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/hibernate-association-best-practices",
               "path": "/technical-knowledge/spring/hibernate-association-best-practices",
               "sidebar": "tutorialSidebar"
@@ -6172,6 +6332,11 @@
             {
               "id": "technical-knowledge/spring/jpa-hibernate-lifecycle-methods",
               "path": "/java/jpa-hibernate-lifecycle-methods",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime",
+              "path": "/technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6275,6 +6440,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/60-days-of-system-design",
+              "path": "/technical-knowledge/system-design/60-days-of-system-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/advanced-consensus-bft",
               "path": "/technical-knowledge/system-design/advanced-consensus-bft",
               "sidebar": "tutorialSidebar"
@@ -6330,6 +6500,21 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/case-studies-architecture-scaling",
+              "path": "/technical-knowledge/system-design/case-studies-architecture-scaling",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/case-studies-data-migrations",
+              "path": "/technical-knowledge/system-design/case-studies-data-migrations",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/case-studies-outages-reliability",
+              "path": "/technical-knowledge/system-design/case-studies-outages-reliability",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/cdc",
               "path": "/technical-knowledge/system-design/cdc",
               "sidebar": "tutorialSidebar"
@@ -6345,6 +6530,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/concurrency-async-threading-models",
+              "path": "/technical-knowledge/system-design/concurrency-async-threading-models",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/consistent-hashing-deep-dive",
               "path": "/technical-knowledge/system-design/consistent-hashing-deep-dive",
               "sidebar": "tutorialSidebar"
@@ -6357,6 +6547,11 @@
             {
               "id": "technical-knowledge/system-design/cqrs",
               "path": "/technical-knowledge/system-design/cqrs",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/crdt-collaborative-systems",
+              "path": "/technical-knowledge/system-design/crdt-collaborative-systems",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6435,6 +6630,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/inventory-reservation-system",
+              "path": "/technical-knowledge/system-design/inventory-reservation-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/kubernetes-networking",
               "path": "/technical-knowledge/system-design/kubernetes-networking",
               "sidebar": "tutorialSidebar"
@@ -6457,6 +6657,11 @@
             {
               "id": "technical-knowledge/system-design/long-running-tasks",
               "path": "/technical-knowledge/system-design/long-running-tasks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/media-systems-and-testing",
+              "path": "/technical-knowledge/system-design/media-systems-and-testing",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6490,8 +6695,248 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/opentelemetry-sampling-strategies",
+              "path": "/technical-knowledge/system-design/opentelemetry-sampling-strategies",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/outbox-pattern",
               "path": "/technical-knowledge/system-design/outbox-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/platform-delivery-reliability",
+              "path": "/technical-knowledge/system-design/platform-delivery-reliability",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/ad-click-aggregator",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/ad-click-aggregator",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/bitly",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/bitly",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/camelcamelcamel",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/camelcamelcamel",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/chatgpt",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/chatgpt",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/cookie-consent",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/cookie-consent",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/distributed-cache",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/distributed-cache",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/distributed-file-system",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/distributed-file-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/distributed-rate-limiter",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/distributed-rate-limiter",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/dropbox",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/dropbox",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/email-system",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/email-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/fb-live-comments",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/fb-live-comments",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/fb-news-feed",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/fb-news-feed",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/fb-post-search",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/fb-post-search",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/flash-sale",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/flash-sale",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-calendar",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-calendar",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-docs",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-docs",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-maps",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-maps",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-news",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-news",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-search",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-search",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/gopuff",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/gopuff",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/index",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/instagram",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/instagram",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/issue-tracker",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/issue-tracker",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/job-scheduler",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/job-scheduler",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/key-value-store",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/key-value-store",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/leetcode",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/leetcode",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/metrics-monitoring",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/metrics-monitoring",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/netflix",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/netflix",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/notification-system",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/notification-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/online-auction",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/online-auction",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/online-chess",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/online-chess",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/pastebin",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/pastebin",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/payment-system",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/payment-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/robinhood",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/robinhood",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/search-autocomplete",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/search-autocomplete",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/spotify",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/spotify",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/strava",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/strava",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/ticketmaster",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/ticketmaster",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/tinder",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/tinder",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/top-k",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/top-k",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/uber",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/uber",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/web-crawler",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/web-crawler",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/whatsapp",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/whatsapp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/yelp",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/yelp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/youtube",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/youtube",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6560,6 +7005,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/sharded-counters-and-leaderboards",
+              "path": "/technical-knowledge/system-design/sharded-counters-and-leaderboards",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/sharding-partitioning",
               "path": "/technical-knowledge/system-design/sharding-partitioning",
               "sidebar": "tutorialSidebar"
@@ -6575,6 +7025,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/time-and-ordering-and-unique-ids",
+              "path": "/technical-knowledge/system-design/time-and-ordering-and-unique-ids",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/two-phase-commit",
               "path": "/technical-knowledge/system-design/two-phase-commit",
               "sidebar": "tutorialSidebar"
@@ -6582,6 +7037,16 @@
             {
               "id": "technical-knowledge/system-design/webhook",
               "path": "/technical-knowledge/system-design/webhook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/what-breaks-at-scale",
+              "path": "/technical-knowledge/system-design/what-breaks-at-scale",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/test/blackbox-and-system-testing",
+              "path": "/technical-knowledge/test/blackbox-and-system-testing",
               "sidebar": "tutorialSidebar"
             },
             {

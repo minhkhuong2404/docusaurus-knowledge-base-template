@@ -8,7 +8,8 @@ tags: [interview-prep, questions, system-design, faang, practice]
 
 # Common System Design Interview Questions
 
-> Each question includes key discussion points, not just the answer. Interviewers want to see your **thought process**.
+> Each question includes key discussion points, not just the answer. Interviewers want to see your **thought process**.  
+> Looking for a day-by-day curriculum? Check out the [60 Days of System Design Study Guide](./60-days-of-system-design) for a 7-module roadmap and 12 scenario breakdowns.
 
 ---
 

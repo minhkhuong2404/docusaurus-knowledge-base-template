@@ -16,21 +16,12 @@ While Elasticsearch manages storage and search, **Logstash** and **Kibana** comp
 
 Logstash operates as an event-driven processing pipeline, structured into three primary stages: **Inputs** → **Filters** → **Outputs**.
 
-```
-                ┌────────────────────────┐
-                │        INPUTS          │  ◄── Beats, TCP/UDP, Kafka, HTTP
-                └──────────┬─────────────┘
-                           │
-                 [Persistent Queue (PQ)]    ◄── Prevents data loss during peaks
-                           │
-                ┌──────────┴─────────────┐
-                │        FILTERS         │  ◄── Grok, Mutate, Date, GeoIP
-                └──────────┬─────────────┘
-                           │
-                ┌──────────┴─────────────┐
-                │        OUTPUTS         │  ◄── Elasticsearch, S3, Email, Slack
-                └────────────────────────┘
-```
+| Pipeline Stage | Mechanism & Plugins | Primary Responsibilities | Resilience & Buffer Feature |
+|---|---|---|---|
+| **1. INPUTS** | Beats, TCP/UDP, Kafka, HTTP, File | Ingests raw telemetry and structured events from multiple heterogeneous producers concurrently. | Ingest backpressure signalling |
+| **Buffer Layer** | **Persistent Queue (PQ)** | Spools in-flight events to persistent disk chunks before passing to workers. | **Zero data loss on process crash**; absorbs upstream traffic spikes without crashing. |
+| **2. FILTERS** | Grok, Mutate, Date, GeoIP, Dissect | Parses unstructured strings, extracts regex tokens, coerces timestamps, enriches IP geography. | Thread-safe parallel pipeline worker threads |
+| **3. OUTPUTS** | Elasticsearch, Amazon S3, Webhooks, Slack | Batches bulk index requests to Elasticsearch or routes dead letters to secondary storage. | Automatic retry loops and dead-letter queues (DLQ) |
 
 ### 1. Persistent Queues (PQ)
 By default, Logstash buffers events in memory. If the process crashes, data is lost. Enabling **Persistent Queues** writes incoming events to disk buffers before processing.

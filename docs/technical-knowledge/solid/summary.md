@@ -9,21 +9,13 @@ tags:
 - solid
 - summary
 ---
+import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
+
 # ✅ Summary & Cheat Sheet
 
 Congratulations! You've learned all 5 SOLID principles. Here's everything at a glance.
 
----
-
-## 🗺️ The Big Picture
-
-```
-S — Single Responsibility  →  One class, one job
-O — Open/Closed            →  Extend, don't modify
-L — Liskov Substitution    →  Subclasses keep parent's promise
-I — Interface Segregation  →  Small, focused interfaces
-D — Dependency Inversion   →  Depend on interfaces, not concretions
-```
+<SolidPrinciplesDiagram initialPrinciple="overview" />
 
 ---
 

@@ -5,31 +5,48 @@ import { getRankForLevel, getExpProgressInCurrentLevel } from '../../data/gamifi
 import { subscribeToOnlineUsers } from '../../services/presenceService';
 import CosmicRankBadge from './CosmicRankBadge';
 
-const GamificationModal = React.lazy(() => import('./GamificationModal'));
+
+// Singleton presence listener across all route navigations
+let globalOnlineCount = 1;
+const globalOnlineListeners = new Set<(count: number) => void>();
+let globalPresenceUnsub: (() => void) | null = null;
+let globalPresenceTimer: ReturnType<typeof setTimeout> | null = null;
+
+function ensureGlobalOnlinePresence() {
+  if (typeof window === 'undefined') return;
+  if (globalPresenceUnsub || globalPresenceTimer) return;
+
+  globalPresenceTimer = setTimeout(() => {
+    globalPresenceTimer = null;
+    globalPresenceUnsub = subscribeToOnlineUsers((users) => {
+      globalOnlineCount = users.length || 1;
+      globalOnlineListeners.forEach((callback) => callback(globalOnlineCount));
+    });
+  }, 1000);
+}
 
 export default function NavbarGamificationHUD() {
   const { gamification } = useUserProgress();
-  const [showModal, setShowModal] = useState(false);
-  const [modalTab, setModalTab] = useState<'quests' | 'trophies' | 'ranks'>('quests');
-  const [onlineCount, setOnlineCount] = useState<number>(1);
+  const [onlineCount, setOnlineCount] = useState<number>(() => globalOnlineCount);
 
   const exp = gamification?.exp || 0;
   const { currentLevel, expInLevel, neededInLevel } = getExpProgressInCurrentLevel(exp);
   const rank = getRankForLevel(currentLevel);
   const streak = gamification?.streak?.currentStreak || 0;
 
-  // Real-time listener for total online count (no individual details exposed)
+  // Real-time listener for total online count (persistent across route transitions)
   useEffect(() => {
-    const unsub = subscribeToOnlineUsers((users) => {
-      setOnlineCount(users.length || 1);
-    });
-    return () => unsub();
+    ensureGlobalOnlinePresence();
+    const handleUpdate = (nextCount: number) => setOnlineCount(nextCount);
+    globalOnlineListeners.add(handleUpdate);
+    if (globalOnlineCount !== onlineCount) {
+      setOnlineCount(globalOnlineCount);
+    }
+    return () => {
+      globalOnlineListeners.delete(handleUpdate);
+    };
   }, []);
 
-  const handleOpen = (tab: 'quests' | 'trophies' | 'ranks' = 'quests') => {
-    setModalTab(tab);
-    setShowModal(true);
-  };
 
   return (
     <>
@@ -42,11 +59,10 @@ export default function NavbarGamificationHUD() {
         }}
       >
         {/* Consolidated Gamification Level/Streak Pill */}
-        <button
-          type="button"
+        <Link
+          to="/profile"
           className="gamification-hud-pill"
-          onClick={() => handleOpen('quests')}
-          title={`Active Streak: ${streak}d • Level ${currentLevel} ${rank.title} (${expInLevel}/${neededInLevel} EXP). Click for Mission Control.`}
+          title={`Active Streak: ${streak}d • Level ${currentLevel} ${rank.title} (${expInLevel}/${neededInLevel} EXP). Click to view your Profile & Codex.`}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -54,14 +70,15 @@ export default function NavbarGamificationHUD() {
             padding: '3px 10px',
             height: '30px',
             borderRadius: '10px',
-            background: `linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%)`,
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            color: '#ffffff',
+            background: 'var(--hud-pill-bg, linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%))',
+            border: '1px solid var(--sidebar-border, rgba(255, 255, 255, 0.12))',
+            color: 'var(--ifm-color-content, #ffffff)',
             fontSize: '12px',
             fontWeight: 700,
+            textDecoration: 'none',
             cursor: 'pointer',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-            transition: 'all 0.2s ease',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+            transition: 'background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
           }}
         >
           {streak > 0 && (
@@ -77,7 +94,7 @@ export default function NavbarGamificationHUD() {
             <CosmicRankBadge level={currentLevel} rank={rank} size="xs" showLevelPill={false} hideOrbitRing={true} disableFloat={true} />
             <span className="gamification-hud-num" style={{ color: rank.color, fontWeight: 800 }}>{currentLevel}</span>
           </div>
-        </button>
+        </Link>
 
         {/* Real-time Total Online Users Counter (Count Only) */}
         <div
@@ -89,9 +106,9 @@ export default function NavbarGamificationHUD() {
             padding: '3px 9px',
             height: '30px',
             borderRadius: '10px',
-            backgroundColor: 'rgba(52, 211, 153, 0.12)',
-            border: '1px solid rgba(52, 211, 153, 0.3)',
-            color: '#34d399',
+            backgroundColor: 'var(--sidebar-active-bg, rgba(52, 211, 153, 0.12))',
+            border: '1px solid var(--sidebar-border, rgba(52, 211, 153, 0.3))',
+            color: 'var(--brand-green, #34d399)',
             fontSize: '11.5px',
             fontWeight: 700,
             userSelect: 'none',
@@ -102,8 +119,8 @@ export default function NavbarGamificationHUD() {
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              backgroundColor: '#34d399',
-              boxShadow: '0 0 6px #34d399',
+              backgroundColor: 'var(--brand-green, #34d399)',
+              boxShadow: '0 0 6px var(--brand-green, #34d399)',
               animation: 'pulse 1.8s infinite',
             }}
           />
@@ -133,16 +150,6 @@ export default function NavbarGamificationHUD() {
           🏆
         </Link>
       </div>
-
-      {showModal && (
-        <React.Suspense fallback={null}>
-          <GamificationModal
-            isOpen={showModal}
-            onClose={() => setShowModal(false)}
-            initialTab={modalTab}
-          />
-        </React.Suspense>
-      )}
     </>
   );
 }

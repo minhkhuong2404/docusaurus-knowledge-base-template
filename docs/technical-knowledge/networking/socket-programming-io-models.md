@@ -261,3 +261,9 @@ socket.setReceiveBufferSize(65536);  // SO_RCVBUF: receive buffer size
 
 ### Q8. What is the difference between Spring MVC and Spring WebFlux from an I/O perspective?
 > Spring MVC uses blocking I/O: one thread-per-request from a thread pool (default: Tomcat, 200 threads). When a request blocks (DB query, HTTP call), the thread waits — limiting throughput to ~200 concurrent long-running requests. Spring WebFlux uses non-blocking I/O via Netty: a small event-loop thread pool handles all I/O; blocking never occurs on those threads. Better for high-concurrency, I/O-bound workloads. WebFlux is more complex — avoid blocking calls (JDBC, synchronous libs) or they'll starve the event loop.
+
+---
+
+:::tip Master Architecture Guide
+For a complete conceptual breakdown comparing **Sync vs Async**, **Blocking vs Non-blocking (the 2×2 Matrix)**, **Concurrency vs Parallelism**, and **Async vs Multi-threading Models** with interactive diagrams, see the master guide: [Concurrency, Asynchrony, Blocking & Threading Models](../system-design/concurrency-async-threading-models.md).
+:::

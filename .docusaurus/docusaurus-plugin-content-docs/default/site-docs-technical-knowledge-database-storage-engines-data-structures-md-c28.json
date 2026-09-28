@@ -72,8 +72,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Transactions & Concurrency Control",
-    "permalink": "/technical-knowledge/database/transactions-concurrency"
+    "title": "Long Transactions & The MDL Cascade",
+    "permalink": "/technical-knowledge/database/long-transactions-undo-mdl-meltdown"
   },
   "next": {
     "title": "PostgreSQL Heap Storage Architecture & Internals",

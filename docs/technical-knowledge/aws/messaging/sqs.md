@@ -18,6 +18,8 @@ tags:
   - domain-1
 ---
 
+import SqsVisibilityTimeoutDiagram from '@site/src/components/SqsVisibilityTimeoutDiagram';
+
 # Amazon SQS (Simple Queue Service)
 
 > **Core concept**: SQS **decouples** producers from consumers. Messages wait safely in the queue even if the consumer is down or slow.
@@ -93,19 +95,7 @@ sqsClient.sendMessage(SendMessageRequest.builder()
 
 ## Visibility Timeout
 
-```
-Producer → [Message in Queue]
-                │
-Consumer receives message → message INVISIBLE for 30s (default)
-                │
-┌───────────────┴──────────────────────────┐
-│ Consumer finishes in < 30s?              │
-│   ✅ Delete message → DONE              │
-│   ❌ Timeout → message reappears        │
-│              → ANOTHER consumer picks up │
-│              → DUPLICATE PROCESSING!     │
-└──────────────────────────────────────────┘
-```
+<SqsVisibilityTimeoutDiagram />
 
 ### Setting Visibility Timeout
 

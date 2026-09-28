@@ -6,6 +6,8 @@ description: Patterns for delivering real-time data to clients including WebSock
 tags: [real-time, websocket, sse, long-polling, push-notifications, kafka, streaming]
 ---
 
+import RealTimeTransportsDiagram from '@site/src/components/RealTimeTransportsDiagram';
+
 # Real-Time Updates
 
 > "Real-time" means **low latency delivery of state changes** to clients. The right mechanism depends on directionality, scale, and latency requirements.
@@ -13,6 +15,8 @@ tags: [real-time, websocket, sse, long-polling, push-notifications, kafka, strea
 ---
 
 ## Comparison of Delivery Mechanisms
+
+<RealTimeTransportsDiagram initialTransport="websocket" />
 
 | Mechanism | Direction | Latency | Overhead | Best For |
 |---|---|---|---|---|
@@ -26,12 +30,9 @@ tags: [real-time, websocket, sse, long-polling, push-notifications, kafka, strea
 
 ## Short Polling
 
-Client repeatedly asks "any updates?"
+<RealTimeTransportsDiagram initialTransport="short-polling" />
 
-```
-Client: GET /messages?since=1234  (every 5 seconds)
-Server: 200 OK [messages] or 204 No Content
-```
+Client repeatedly asks "any updates?"
 
 **Problems**: Wastes resources even when no data. High QPS amplification.  
 **When to use**: Simplest implementation, very infrequent updates (e.g., status check).
@@ -40,14 +41,9 @@ Server: 200 OK [messages] or 204 No Content
 
 ## Long Polling
 
-Server holds request open until data is available or timeout.
+<RealTimeTransportsDiagram initialTransport="long-polling" />
 
-```
-Client → GET /updates (request held)
-  ... server waits for new data ...
-Server ← 200 OK [new data]  (after event or 30s timeout)
-Client → immediately re-connects
-```
+Server holds request open until data is available or timeout.
 
 **Pros**: Lower QPS than short polling. Simpler than WebSocket.  
 **Cons**: One connection per client, high-memory server-side, latency on reconnect.
@@ -72,6 +68,8 @@ public DeferredResult<ResponseEntity<List<Update>>> getUpdates(
 ---
 
 ## Server-Sent Events (SSE)
+
+<RealTimeTransportsDiagram initialTransport="sse" />
 
 HTTP/1.1 persistent connection, server pushes text events.
 
@@ -113,12 +111,9 @@ public void notifyUser(Long userId, Object payload) {
 
 ## WebSocket
 
-Full-duplex, persistent TCP connection. True bidirectional.
+<RealTimeTransportsDiagram initialTransport="websocket" />
 
-```
-HTTP Upgrade Handshake → WS persistent connection
-Client ↔ Server (messages at any time, both directions)
-```
+Full-duplex, persistent TCP connection. True bidirectional.
 
 ### Spring Boot WebSocket
 ```java

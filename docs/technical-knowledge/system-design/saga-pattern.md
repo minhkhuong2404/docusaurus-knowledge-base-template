@@ -1120,8 +1120,8 @@ record.headers()
 
 - [Two-Phase Commit (2PC)](./two-phase-commit.md) — Synchronous alternative with strong consistency
 - [Outbox Pattern](./outbox-pattern.md) — Reliable event publishing inside saga steps
-- [Idempotency in Distributed Systems](./idempotency.md) — Key prerequisite for safe saga retries
+- [Idempotency in Distributed Systems](../banking/idempotency.md) — Key prerequisite for safe saga retries
 - [Dead Letter Queue (DLQ)](./dead-letter-queue.md) — Handling permanently failed saga messages
-- [Compensating Transactions](./compensating-transactions.md) — Deeper design patterns for reversible operations
-- [Event Sourcing](./event-sourcing.md) — Natural complement to saga orchestration
+- [Distributed Transactions](./distributed-transactions.md) — Deeper design patterns for reversible operations
+- [Event-Driven Microservices](./event-driven-microservices.md) — Natural complement to saga orchestration
 - [CQRS Pattern](./cqrs.md) — Read model design for eventually consistent saga state

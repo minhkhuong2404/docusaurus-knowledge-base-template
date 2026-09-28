@@ -48,31 +48,12 @@ Australia's CoP implementation is integrated into the **NPP PayID** system:
 
 ### How PayID CoP Works
 
-```
-Customer enters: BSB 062-000 / Account 12345678 / Name "John Smith"
-                 (or: PayID phone "0412 345 678")
-        │
-        ▼
-Originating Bank → NPPA PayID Directory
-        │ Query: Who owns BSB/account or PayID?
-        ▼
-NPPA resolves PayID → returns registered name "JOHN SMITH"
-        │
-        ▼
-Originating Bank compares:
-  Customer entered: "John Smith"
-  Registered name:  "JOHN SMITH"
-        │
-  ┌─────┴─────────────────────────────────┐
-  │         Fuzzy name matching           │
-  │  "John Smith" vs "JOHN SMITH"  → MATCH (case-insensitive) │
-  │  "Jon Smith"  vs "JOHN SMITH"  → CLOSE MATCH (1 edit distance) │
-  │  "Jane Smith" vs "JOHN SMITH"  → NO MATCH │
-  └───────────────────────────────────────┘
-        │
-        ▼
-Customer shown result before they authorise
-```
+| Input Name Provided by Payer | Official Name in Directory / Bank Record | Match Score & Logic | CoP Disposition & Action |
+|---|---|---|---|
+| `"John Smith"` | `"JOHN SMITH"` | **100% (Case-Insensitive Exact Match)** | **Match (Green)**: Payment proceeds with zero friction. |
+| `"Jon Smith"` | `"JOHN SMITH"` | **88% (Levenshtein Distance = 1)** | **Close Match (Amber)**: Prompt payer: *"Did you mean John Smith?"* |
+| `"J Smith Pty Ltd"` | `"John Smith Proprietary Limited"` | **92% (Legal Entity Abbreviation Expansion)** | **Match (Green)**: Resolved via acronym/token dictionary. |
+| `"Jane Smith"` | `"JOHN SMITH"` | **35% (Different First Name)** | **No Match (Red)**: Warning: *"Recipient name does not match. Risk of scam."* |
 
 ### PayID Registration = CoP Enablement
 

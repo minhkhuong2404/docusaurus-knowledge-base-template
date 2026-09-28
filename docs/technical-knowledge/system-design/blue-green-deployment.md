@@ -6,6 +6,8 @@ description: Deep dive into Blue-Green Deployment — zero-downtime releases, in
 tags: [system-design, microservices, deployment, devops, kubernetes, continuous-delivery, zero-downtime]
 ---
 
+import DeploymentStrategiesDiagram from '@site/src/components/DeploymentStrategiesDiagram';
+
 # Blue-Green Deployment
 
 **Blue-Green Deployment** is a release strategy that maintains **two identical production environments** — Blue (current live) and Green (new version) — and switches traffic from one to the other instantaneously, enabling **zero-downtime releases** and **instant rollback** within 30 seconds.
@@ -48,54 +50,7 @@ Time 15:  Load balancer switch: Blue → LIVE (< 30 seconds)
 
 ## 🏗️ Architecture
 
-```mermaid
-graph TD
-    LB["Load Balancer / Kubernetes Service<br>Traffic Router"]
-    
-    subgraph Blue["🔵 Blue Environment (v1 — LIVE)"]
-        B1[Pod 1 v1]
-        B2[Pod 2 v1]
-        B3[Pod 3 v1]
-        B4[Pod 4 v1]
-    end
-    
-    subgraph Green["🟢 Green Environment (v2 — STAGING IN PROD)"]
-        G1[Pod 1 v2]
-        G2[Pod 2 v2]
-        G3[Pod 3 v2]
-        G4[Pod 4 v2]
-    end
-
-    Users([👥 Users]) --> LB
-    LB -->|100% traffic| Blue
-    LB -.->|0% traffic<br>test traffic only| Green
-    
-    SmokeTests([🧪 Smoke Tests]) --> Green
-```
-
-After the switch:
-```mermaid
-graph TD
-    LB["Load Balancer / Kubernetes Service"]
-    
-    subgraph Blue["🔵 Blue Environment (v1 — STANDBY)"]
-        B1[Pod 1 v1]
-        B2[Pod 2 v1]
-        B3[Pod 3 v1]
-        B4[Pod 4 v1]
-    end
-    
-    subgraph Green["🟢 Green Environment (v2 — LIVE)"]
-        G1[Pod 1 v2]
-        G2[Pod 2 v2]
-        G3[Pod 3 v2]
-        G4[Pod 4 v2]
-    end
-
-    Users([👥 Users]) --> LB
-    LB -->|100% traffic| Green
-    LB -.->|0% traffic<br>rollback target| Blue
-```
+<DeploymentStrategiesDiagram initialStrategy="bluegreen" />
 
 ---
 

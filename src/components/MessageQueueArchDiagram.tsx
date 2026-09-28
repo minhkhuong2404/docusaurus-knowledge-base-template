@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 
-type MQTab = 'PREVENTION' | 'AT_LEAST_ONCE' | 'SCALING';
+type MQTab = 'DECOUPLING' | 'PREVENTION' | 'AT_LEAST_ONCE' | 'SCALING';
 
 interface MQDetails {
   title: string;
-  type: 'purple' | 'cyan' | 'green';
+  type: 'purple' | 'cyan' | 'green' | 'amber';
   overview: string;
   bullets: string[];
 }
 
 const MQ_DATA: Record<MQTab, MQDetails> = {
+  DECOUPLING: {
+    title: 'Producer-Consumer Asynchronous Decoupling',
+    type: 'cyan',
+    overview: 'Separates user-facing ingestion (100ms) from heavy asynchronous processing (6,000ms image resizing & moderation).',
+    bullets: [
+      'Producer (Web Server): Saves raw file metadata, enqueues a lightweight job payload, and immediately responds 200 OK to the client.',
+      'Queue Buffer: Stores messages safely, preventing sudden traffic spikes (50k/s) from overwhelming downstream systems.',
+      'Consumer (Worker Pool): Reads messages at a steady pace, allocating CPU/memory without starving web servers.'
+    ]
+  },
   PREVENTION: {
     title: 'Duplicate Worker Prevention Mechanics',
     type: 'purple',
@@ -40,7 +50,7 @@ const MQ_DATA: Record<MQTab, MQDetails> = {
   }
 };
 
-export default function MessageQueueArchDiagram({ defaultTab = 'PREVENTION' }: { defaultTab?: MQTab }): React.JSX.Element {
+export default function MessageQueueArchDiagram({ defaultTab = 'DECOUPLING' }: { defaultTab?: MQTab }): React.JSX.Element {
   const [tab, setTab] = useState<MQTab>(defaultTab);
   const [prevMode, setPrevMode] = useState<'SQS' | 'KAFKA'>('SQS');
 
@@ -60,16 +70,31 @@ export default function MessageQueueArchDiagram({ defaultTab = 'PREVENTION' }: {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>📊</span>
-            <span style={{ color: tab === 'PREVENTION' ? '#a855f7' : tab === 'AT_LEAST_ONCE' ? '#2dd4bf' : '#4ade80' }}>
-              Message Queue: {tab === 'PREVENTION' ? 'Prevention' : tab === 'AT_LEAST_ONCE' ? 'At-Least-Once' : 'Scaling'}
+            <span style={{ color: tab === 'DECOUPLING' ? '#2dd4bf' : tab === 'PREVENTION' ? '#a855f7' : tab === 'AT_LEAST_ONCE' ? '#38bdf8' : '#4ade80' }}>
+              Message Queue: {tab === 'DECOUPLING' ? 'Decoupling' : tab === 'PREVENTION' ? 'Prevention' : tab === 'AT_LEAST_ONCE' ? 'At-Least-Once' : 'Scaling'}
             </span>
           </h3>
         </div>
 
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          <button 
+            onClick={() => setTab('DECOUPLING')}
+            style={{
+              background: tab === 'DECOUPLING' ? 'rgba(45, 212, 191, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+              border: tab === 'DECOUPLING' ? '1px solid #2dd4bf' : '1px solid rgba(255, 255, 255, 0.05)',
+              borderRadius: '4px',
+              color: tab === 'DECOUPLING' ? '#2dd4bf' : '#94a3b8',
+              cursor: 'pointer',
+              padding: '4px 10px',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              transition: 'all 0.2s ease'
+            }}
+          >
+            Async Decoupling
+          </button>
           <button 
             onClick={() => setTab('PREVENTION')}
             style={{
@@ -89,10 +114,10 @@ export default function MessageQueueArchDiagram({ defaultTab = 'PREVENTION' }: {
           <button 
             onClick={() => setTab('AT_LEAST_ONCE')}
             style={{
-              background: tab === 'AT_LEAST_ONCE' ? 'rgba(45, 212, 191, 0.2)' : 'rgba(255, 255, 255, 0.03)',
-              border: tab === 'AT_LEAST_ONCE' ? '1px solid #2dd4bf' : '1px solid rgba(255, 255, 255, 0.05)',
+              background: tab === 'AT_LEAST_ONCE' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+              border: tab === 'AT_LEAST_ONCE' ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.05)',
               borderRadius: '4px',
-              color: tab === 'AT_LEAST_ONCE' ? '#2dd4bf' : '#94a3b8',
+              color: tab === 'AT_LEAST_ONCE' ? '#38bdf8' : '#94a3b8',
               cursor: 'pointer',
               padding: '4px 10px',
               fontSize: '0.8rem',
@@ -116,7 +141,7 @@ export default function MessageQueueArchDiagram({ defaultTab = 'PREVENTION' }: {
               transition: 'all 0.2s ease'
             }}
           >
-            Scaling
+            Scaling Ceiling
           </button>
         </div>
       </div>
@@ -127,9 +152,52 @@ export default function MessageQueueArchDiagram({ defaultTab = 'PREVENTION' }: {
           <defs>
             <marker id="arrow-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#a855f7" /></marker>
             <marker id="arrow-cyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#2dd4bf" /></marker>
+            <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#38bdf8" /></marker>
             <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#4ade80" /></marker>
             <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#f87171" /></marker>
           </defs>
+
+          {tab === 'DECOUPLING' && (
+            <g>
+              {/* Producer */}
+              <g transform="translate(30, 45)">
+                <rect width="160" height="90" rx="8" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+                <text x="80" y="28" fill="#38bdf8" fontSize="12" fontWeight="700" textAnchor="middle">Producer (Web App)</text>
+                <text x="80" y="48" fill="#cbd5e1" fontSize="9.5" textAnchor="middle">Upload Ingestion</text>
+                <text x="80" y="66" fill="#86efac" fontSize="9" textAnchor="middle">⚡ 100ms Response</text>
+              </g>
+
+              {/* Path Producer -> Queue */}
+              <path id="path-prod-q" d="M 195 90 L 265 90" fill="none" stroke="#38bdf8" strokeWidth="2" markerEnd="url(#arrow-blue)" className="interactive-diagram-flowing-path" />
+              <text x="230" y="80" fill="#38bdf8" fontSize="8" fontWeight="700" textAnchor="middle">Enqueue Job</text>
+
+              {/* Queue Buffer */}
+              <g transform="translate(275, 35)">
+                <rect width="150" height="110" rx="8" fill="rgba(45, 212, 191, 0.15)" stroke="#2dd4bf" strokeWidth="2" />
+                <text x="75" y="26" fill="#2dd4bf" fontSize="12" fontWeight="800" textAnchor="middle">Message Queue</text>
+                <text x="75" y="42" fill="#cbd5e1" fontSize="8.5" textAnchor="middle">(Storage Buffer)</text>
+
+                {/* Buffered message items */}
+                <rect x="18" y="52" width="114" height="18" rx="3" fill="rgba(15, 23, 42, 0.8)" stroke="rgba(45, 212, 191, 0.4)" />
+                <text x="75" y="65" fill="#86efac" fontSize="8" textAnchor="middle">✉️ Job #456 (Pending)</text>
+
+                <rect x="18" y="76" width="114" height="18" rx="3" fill="rgba(15, 23, 42, 0.8)" stroke="rgba(45, 212, 191, 0.4)" />
+                <text x="75" y="89" fill="#94a3b8" fontSize="8" textAnchor="middle">✉️ Job #455 (Buffered)</text>
+              </g>
+
+              {/* Path Queue -> Consumer */}
+              <path id="path-q-cons" d="M 430 90 L 495 90" fill="none" stroke="#2dd4bf" strokeWidth="2" markerEnd="url(#arrow-cyan)" className="interactive-diagram-flowing-path" />
+              <text x="462" y="80" fill="#2dd4bf" fontSize="8" fontWeight="700" textAnchor="middle">Pull Job</text>
+
+              {/* Consumer */}
+              <g transform="translate(505, 45)">
+                <rect width="150" height="90" rx="8" fill="rgba(74, 222, 128, 0.12)" stroke="#4ade80" strokeWidth="1.5" />
+                <text x="75" y="28" fill="#4ade80" fontSize="12" fontWeight="700" textAnchor="middle">Consumer (Worker)</text>
+                <text x="75" y="48" fill="#cbd5e1" fontSize="9.5" textAnchor="middle">Image Resizing &amp; AI</text>
+                <text x="75" y="66" fill="#fef08a" fontSize="9" textAnchor="middle">⏳ 6,000ms Heavy Task</text>
+              </g>
+            </g>
+          )}
 
           {tab === 'PREVENTION' && (
             /* CONFLICT PREVENTION TAB */

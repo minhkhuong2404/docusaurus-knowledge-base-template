@@ -426,35 +426,19 @@ public int singleNumber(int[] nums) {
 
 ### 5.1 The Decision Flowchart
 
-```
-                        START
-                          │
-            Does the problem involve finding
-            a unique/missing/duplicate number
-            with O(1) space constraint?
-                          │
-                    ┌─ YES ┴─ NO ──────────────────────────────────┐
-                    │                                              │
-                    ▼                                              ▼
-          Every element appears N times        Is this a "check all subsets"
-          except one which appears M times?    problem with N ≤ 20?
-                    │                                              │
-             ┌─ YES ┴─ NO ─────────────┐                    ┌─ YES ┴─ NO
-             │                        │                     │
-             ▼                        ▼                     ▼
-          N=2, M=1:              N=3, M=1:           Bitmask loop
-          XOR all               Bit count            (Template 4)
-          (Template 3)          mod 3, or
-                                state machine
-                                (Template 6)
-                                              │
-                          Does the problem involve:
-                    ┌──────────┬──────────────┬───────────────┐
-                    │          │              │               │
-                    ▼          ▼              ▼               ▼
-              "Power of 2"  "Count 1s"  "Exponentiation" "Count primes"
-              n & (n-1)==0  Kernighan    Fast Pow          Sieve of
-                            (Template 1) (Template 5)     Eratosthenes
+```mermaid
+flowchart TD
+    Start(["Input Problem"]) --> Q1{"Find unique/missing/duplicate<br/>with O(1) space?"}
+    Q1 -- "Yes" --> Q2{"Every element appears N times<br/>except one appearing M times?"}
+    Q1 -- "No" --> Q3{"Check all subsets with N ≤ 20?"}
+    Q2 -- "N=2, M=1" --> XOR["XOR All Elements (Template 3) ✅"]
+    Q2 -- "N=3, M=1" --> BitCount["Bit Count mod 3 or State Machine (Template 6) ✅"]
+    Q3 -- "Yes" --> Bitmask["Bitmask Loop (Template 4) ✅"]
+    Q3 -- "No" --> SpecialOps{"Specific Bit Operations?"}
+    SpecialOps --> B1["'Power of 2' ➔ n & (n - 1) == 0"]
+    SpecialOps --> B2["'Count 1s' ➔ Brian Kernighan (Template 1)"]
+    SpecialOps --> B3["'Fast Exponentiation' ➔ Fast Pow (Template 5)"]
+    SpecialOps --> B4["'Count Primes' ➔ Sieve of Eratosthenes"]
 ```
 
 ---

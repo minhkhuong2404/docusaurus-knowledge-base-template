@@ -1,0 +1,8 @@
+{
+  "label": "⚡ Splunk & SPL",
+  "position": 7,
+  "link": {
+    "type": "generated-index",
+    "description": "Master guide to Splunk and Search Processing Language (SPL) — from pipeline architecture and fast filtering to eval expressions, time bucketing (span/bin), streamstats/eventstats, and production SRE observability queries."
+  }
+}

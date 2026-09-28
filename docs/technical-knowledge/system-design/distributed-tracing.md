@@ -5,6 +5,7 @@ sidebar_label: Distributed Tracing
 description: Deep dive into Distributed Tracing for microservices using OpenTelemetry, W3C TraceContext, Spring Boot 3 Micrometer, and Jaeger.
 tags: [system-design, microservices, observability, tracing, open-telemetry]
 ---
+import DistributedTracingDiagram from '@site/src/components/DistributedTracingDiagram';
 
 # Distributed Tracing
 
@@ -35,15 +36,7 @@ Trace (Global Request Journey - Trace ID: abc123xyz)
 
 A production tracing pipeline is rarely "app → Jaeger" directly. The standard pattern uses the **OpenTelemetry Collector** as an intermediary:
 
-```text
-┌──────────────┐     OTLP/gRPC      ┌──────────────────────┐     OTLP     ┌─────────────┐
-│ Spring Boot  │ ─────────────────► │  OTel Collector       │ ───────────► │   Jaeger /  │
-│ (Micrometer) │   (batched spans)  │  (batch, sample,       │              │   Tempo     │
-└──────────────┘                    │   redact PII, route)   │              └─────────────┘
-                                     └──────────────────────┘
-                                              │
-                                              └──► metrics backend (span metrics connector)
-```
+<DistributedTracingDiagram initialTab="pipeline" />
 
 Sending spans directly from every pod to the backend couples your app's uptime to the tracing backend's uptime and makes it hard to change sampling policy without redeploying services. The Collector decouples this: it buffers, retries, redacts sensitive attributes, and can fan out to multiple backends (e.g., Jaeger for exploration + a span-metrics connector for RED metrics) without touching application code.
 
@@ -228,6 +221,10 @@ Sampling is the difference between an affordable tracing system and a storage bi
 | **Tail-based** | Collector buffers the *entire* trace, then decides after seeing all spans (e.g., "keep if any span errored or p99 latency exceeded") | Guarantees you keep error and slow traces | Requires buffering the full trace in the Collector (memory cost), and all spans of a trace must route to the same Collector instance |
 
 A common production setup: head-based sampling at 5–10% for baseline visibility, combined with tail-based sampling rules in the OTel Collector that always keep traces containing an error span or exceeding a latency threshold — so you get statistical coverage plus guaranteed capture of the traces that actually matter for debugging.
+
+:::tip Deep Dive Guide
+For a comprehensive architectural breakdown of **Tail-based Sampling with OpenTelemetry Collector**, Two-Tier Routing with `loadbalancing` exporter, RAM/OOM protection, and real-world failure case studies, see the dedicated guide: [OpenTelemetry Sampling Strategies (Tail-based vs Head-based)](./opentelemetry-sampling-strategies.md).
+:::
 
 ---
 
