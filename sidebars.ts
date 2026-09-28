@@ -648,8 +648,10 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/kafka/core/kafka-overview',
+								'technical-knowledge/kafka/core/kafka-vs-rabbitmq',
 								'technical-knowledge/kafka/core/topic',
 								'technical-knowledge/kafka/core/partition',
+								'technical-knowledge/kafka/core/kafka-partitioning-strategies',
 								'technical-knowledge/kafka/core/scaling-partitions',
 								'technical-knowledge/kafka/core/kafka-broker',
 								'technical-knowledge/kafka/core/replication',

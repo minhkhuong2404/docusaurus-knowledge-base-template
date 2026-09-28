@@ -1,9 +1,4 @@
-| Layer Level | Layer Content & Command | Access Mode | Persistence & Lifecycle |
-|---|---|---|---|
-| **Top Layer** | Container Scratch Space (`/tmp`, modified configs, logs) | **Read-Write** | Ephemeral: destroyed automatically when container is removed. |
-| **Layer 3** | `COPY app.jar /app/app.jar` | **Read-Only** | Cached immutable layer shared across all instances running this image. |
-| **Layer 2** | `RUN apk add curl` | **Read-Only** | System dependencies cached by layer checksum. |
-| **Layer 1** | `FROM eclipse-temurin:21-jre-alpine` | **Read-Only** | Base OS Alpine kernel userspace + JRE binary footprint. |---
+---
 id: docker-fundamentals
 title: Docker Fundamentals
 sidebar_label: Docker Fundamentals
@@ -49,28 +44,57 @@ While namespaces prevent a container from snooping on the host, **cgroups** prev
 - `docker run -m 512m --cpus="1.5"` creates a cgroup directory in `/sys/fs/cgroup/memory/docker/<container_id>`.
 - If memory usage exceeds 512MB, the Linux kernel's Out-Of-Memory (OOM) killer terminates that container process without affecting the host or other containers.
 
-### 3. OverlayFS (Layered Union Mount)
+### 3. OverlayFS (Layered Union Mount & Copy-on-Write)
 Docker images are built as immutable, stacked layers using a union filesystem:
 - **LowerDir (Read-Only):** The immutable base OS (e.g., Alpine/Debian) and installed runtime packages.
 - **UpperDir (Read/Write):** A thin ephemeral layer created when the container starts. Any new files or edits are written here (Copy-on-Write).
 - **MergedDir:** The unified filesystem view that the container process actually sees.
 
+```
+OverlayFS Architecture:
+┌────────────────────────────────────────────────────────┐
+│ MergedDir: Unified view presented to container process │
+├────────────────────────────────────────────────────────┤
+│ UpperDir: Ephemeral Read-Write layer (/tmp, modified)  │
+├────────────────────────────────────────────────────────┤
+│ LowerDir Layer 3: COPY app.jar (Read-Only)             │
+│ LowerDir Layer 2: RUN apt-get install (Read-Only)      │
+│ LowerDir Layer 1: FROM debian:bookworm (Read-Only)     │
+└────────────────────────────────────────────────────────┘
+```
+
 ---
 
-## Docker Image Manifest (OCI) & Kubernetes Spec Architecture
+## The Container Runtime Hierarchy (Under the Hood)
 
-<DevOpsManifestSpecDiagram initialTab="docker" />
+When you execute `docker run`, Docker delegates execution down a modular stack governed by Open Container Initiative (OCI) standards:
+
+```
+User CLI: "docker run"
+    │
+    ▼ REST API / Unix Socket (/var/run/docker.sock)
+[ Docker Daemon (dockerd) ]
+    │ (High-level: manages networking, volumes, CLI parsing)
+    ▼ gRPC
+[ containerd ]
+    │ (Supervises containers, image pulls, storage snapshots)
+    ▼
+[ containerd-shim ] ──(Surrogate parent process; enables daemonless containers)
+    │
+    ▼ CLI invocation
+[ runc ] ──(Low-level OCI runtime: invokes clone(), unshare(), pivot_root)
+    │
+    ▼ (runc exits after spawning)
+[ Container Process (e.g. nginx PID 1) ]
+```
+
+- **Why `containerd-shim` exists**: The shim acts as a lightweight daemonless babysitter process. It holds stdout/stderr pipes open and waits on the container's exit code. This allows `dockerd` and `containerd` to crash or be upgraded **without terminating running containers**!
 
 ---
 
 ## Containers vs Virtual Machines
 
-<VmDockerK8sComparisonDiagram />| Layer Level | Layer Content & Command | Access Mode | Persistence & Lifecycle |
-|---|---|---|---|
-| **Top Layer** | Container Scratch Space (`/tmp`, modified configs, logs) | **Read-Write** | Ephemeral: destroyed automatically when container is removed. |
-| **Layer 3** | `COPY app.jar /app/app.jar` | **Read-Only** | Cached immutable layer shared across all instances running this image. |
-| **Layer 2** | `RUN apk add curl` | **Read-Only** | System dependencies cached by layer checksum. |
-| **Layer 1** | `FROM eclipse-temurin:21-jre-alpine` | **Read-Only** | Base OS Alpine kernel userspace + JRE binary footprint. |
+<VmDockerK8sComparisonDiagram />
 
 ---
 

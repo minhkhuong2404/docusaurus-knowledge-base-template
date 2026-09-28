@@ -173,8 +173,6 @@ import KafkaInterviewScenarioDiagram from '@site/src/components/KafkaInterviewSc
 >   - 20 consumers $\to$ 12 active consumers, while **8 instances sit completely idle** as hot standbys.
 > - To increase consumer parallelism beyond 12 workers, you must increase the partition count of the topic.
 
----
-
 ### Scenario 6: Does Kafka TRULY guarantee "Exactly-Once Processing"?
 > **The Interview Trap Answer**: *"Yes, Kafka has `processing.guarantee=exactly_once_v2`."* (Junior answer).
 > 
@@ -185,8 +183,41 @@ import KafkaInterviewScenarioDiagram from '@site/src/components/KafkaInterviewSc
 
 ---
 
+### Scenario 7: An interviewer asks: "What happens if Kafka goes down?" How do you respond?
+> **The Principal Architect Response**:
+> *"I gently clarify the failure boundary. Kafka is architected as an **always-available, horizontally distributed commit log**. In an enterprise production deployment across multiple Availability Zones with a replication factor of 3 ($1 \text{ leader} + 2 \text{ followers}$) and KRaft metadata quorum, an entire cluster-wide outage is exceedingly rare unless there is a catastrophic global cloud provider networking failure."*
+> 
+> *"Instead, what is far more realistic and critical to design for in an interview are **localized component failures**:*
+> 1. *Broker Leader Hardware Failure*: The KRaft controller instantly detects the loss via heartbeat timeout and promotes an In-Sync Replica (ISR) follower to leader with zero data loss (`acks=all` + `min.insync.replicas=2`).
+> 2. *Consumer Instance Crash*: The Group Coordinator detects `session.timeout.ms` expiration and triggers a rebalance to reassign orphaned partitions to surviving consumers.
+> 3. *Producer Network Partition*: The producer buffers records in memory (`RecordAccumulator`) and retries automatically with idempotent sequence numbers once connectivity is restored.*
+
+---
+
+### Scenario 8: How do you handle viral events and Hot Partitions in Kafka (e.g. Nike LeBron James ad in Ad Click Aggregator)?
+> In an **Ad Click Aggregator** where click events are partitioned by `ad_id`, a viral campaign (e.g., Nike LeBron James ad during the NBA Finals) causes 90% of global traffic to map to a single partition (`abs(murmur2("nike_ad")) % num_partitions`). This overwhelms the broker's disk I/O and creates an intractable consumer lag bottleneck.
+> 
+> **The 4 Production Solutions**:
+> 1. **Omit the Key (Default Sticky Partitioner)**: If ordering is not strictly required (e.g., calculating aggregate click sums where addition is associative and commutative), remove the key. Kafka's sticky partitioner batches records and distributes them evenly across all partitions.
+> 2. **Random Salting with Two-Stage Aggregation**: Append a random integer suffix (`ad_id + "#salt=" + random(10)`) to spread the viral ad across 10 partitions. Downstream stream processing workers (Flink or Kafka Streams) run a two-stage aggregation: local tumbling window by salted key, followed by a global merge by original `ad_id`.
+> 3. **Compound Key Partitioning**: Combine the entity ID with an independent variable that distributes evenly, such as `ad_id + "#" + user_region` or `ad_id + "#" + (user_id % 16)`.
+> 4. **Producer Backpressure**: The ingestion API monitors partition consumer lag and throttles incoming client requests via HTTP 429 when lag breaches safety thresholds.
+
+---
+
+### Scenario 9: Can Kafka store videos or large images? (The Claim Check Pattern)
+> **Never store large binary blobs directly in Kafka**. Kafka is engineered for small event payloads (1 KB to 100 KB). Large payloads (> 1 MB) pollute the OS Page Cache, cause massive JVM garbage collection pauses, and degrade throughput.
+> 
+> Instead, implement the **Claim Check Pattern**:
+> 1. The client uploads the raw video or image directly to object storage (**Amazon S3** or Google Cloud Storage) via a presigned URL.
+> 2. The API service publishes a tiny metadata record (< 1 KB) to Kafka containing the S3 URI pointer and processing parameters.
+> 3. Downstream worker pools (e.g., transcoding workers in a YouTube system design) pull the pointer from Kafka and stream chunks directly from S3.
+
+---
+
 ## Related Pages
+- [Kafka vs Traditional Queues (RabbitMQ & AWS SQS)](../core/kafka-vs-rabbitmq.md)
+- [Kafka Partitioning Strategies & Best Practices](../core/kafka-partitioning-strategies.md)
+- [Consumer Lag, Poison Messages & Retry Topics](../consumer/consumer-lag.md)
 - [Kafka Exactly-Once Semantics Deep Dive](../advanced/exactly-once.md)
-- [Deduplication in Distributed Messaging (State Store vs Redis)](../advanced/exactly-once-vs-dedup.md)
-- [Event-Driven Microservices Architecture](../../system-design/event-driven-microservices.md)
 - [Kafka Producer & Consumer Internals Q&A](./interview-producer-consumer.md)

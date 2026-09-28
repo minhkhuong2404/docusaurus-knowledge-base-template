@@ -139,3 +139,39 @@ tags:
 **Q15: What is the difference between `commitSync()` and `commitAsync()`?**
 
 > `commitSync()` blocks until the commit succeeds or throws a retriable exception — guaranteed to commit but adds latency. `commitAsync()` is non-blocking — submits the commit request and continues. If it fails, it does NOT automatically retry (because a later commit may have already succeeded, and retrying could overwrite it). Best practice: use `commitAsync()` in the poll loop for performance, and call `commitSync()` in the shutdown hook to ensure the final batch is committed.
+
+---
+
+**Q16: Why doesn't Kafka support native per-message consumer retries, and how do you implement non-blocking retries?**
+
+> Kafka's fundamental architecture is an immutable, append-only sequential commit log with a single monotonically increasing offset cursor per partition. Unlike AWS SQS or RabbitMQ, which maintain state per individual message, Kafka cannot skip offset #42, mark it as "unacknowledged", and process #43 while waiting to retry #42.
+>
+> If a consumer attempts an in-place retry (e.g. sleeping inside the thread), it causes **Head-of-Line (HoL) Blocking**: all subsequent records on that partition are halted, and if processing exceeds `max.poll.interval.ms`, the consumer is evicted, triggering a rebalance storm.
+>
+> **The Enterprise Solution**: Implement **Non-Blocking Retry Topics**:
+> 1. Publish the failed record to a delayed retry topic (`topic-retry-10s`) with headers tracking attempt count and original offset.
+> 2. Immediately commit the original offset on the main topic, freeing the thread to process succeeding records at wire speed.
+> 3. Dedicated retry consumer groups poll the retry topics with appropriate backoff delays.
+> 4. If all retry attempts fail, publish to a **Dead Letter Queue (`topic-dlq`)** for SRE triage.
+
+---
+
+**Q17: When should a consumer commit its offsets in an event processing pipeline?**
+
+> Offsets must **only be committed AFTER all external, durable side-effects are finalized**.
+>
+> For instance, in a distributed Web Crawler:
+> - **Anti-Pattern**: Committing the URL offset immediately upon downloading the HTML into memory. If the consumer crashes before saving the HTML to S3 or a database, the URL is permanently skipped without being indexed (data loss).
+> - **Best Practice**: Commit the offset only after Amazon S3 returns HTTP 200 OK. If the consumer crashes beforehand, the partition rebalance safely delivers the URL to another worker (at-least-once).
+> - **The 2-Phase Pattern**: Keep consumer tasks minimal. Split monolithic workflows into discrete stages connected by intermediate Kafka topics (e.g., Phase 1: Download HTML to S3; Phase 2: Parse DOM links). This prevents repeating heavy computation if a crash occurs late in the pipeline.
+
+---
+
+**Q18: What is the Claim Check Pattern in Kafka and why is it used for large media files (e.g. YouTube transcoding)?**
+
+> Kafka's maximum throughput and sub-millisecond latencies depend on the Linux OS Page Cache and Zero-Copy `sendfile()` network transfers. Large payloads (> 1 MB, such as video files, raw audio, or images) pollute the page cache, trigger frequent stop-the-world JVM garbage collection cycles during buffer allocation, and overwhelm broker network buffers.
+>
+> The **Claim Check Pattern** decouples payload storage from event orchestration:
+> 1. The client uploads the raw blob directly to distributed object storage (**Amazon S3** or Google Cloud Storage) via a presigned URL.
+> 2. Once durable, an event producer publishes a lightweight JSON record (< 1 KB) to Kafka containing the S3 URI pointer and processing metadata.
+> 3. Downstream worker pools (e.g. video transcoders) consume the pointer from Kafka and stream binary data directly from S3.

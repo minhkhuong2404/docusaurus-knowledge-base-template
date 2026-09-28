@@ -62,77 +62,98 @@ Everything in Kubernetes is stored in etcd:
 - **Back this up** — losing etcd = losing your cluster
 
 ### kube-scheduler
-Decides **which Node** a newly created Pod should run on.
+Decides **which Node** a newly created Pod should run on through a two-phase pipeline:
 
 ```
-New Pod created (no Node assigned)
-       ↓
-Scheduler evaluates each Node:
-  ✓ Does it have enough CPU and memory?
-  ✓ Does it satisfy node selectors / affinity?
-  ✓ Are there any taints that block it?
-  ✓ Is it the least loaded node?
-       ↓
-Assigns Pod to best Node → writes to API server
+Unscheduled Pod (spec.nodeName is empty)
+                     │
+                     ▼
+       ┌───────────────────────────┐
+       │   Phase 1: Filtering      │  Eliminates incompatible nodes (e.g., insufficient CPU/RAM,
+       │      (Predicates)         │  taints without tolerations, port conflicts, nodeSelector mismatch)
+       └─────────────┬─────────────┘
+                     │ (Candidate Nodes)
+                     ▼
+       ┌───────────────────────────┐
+       │   Phase 2: Scoring        │  Ranks feasible nodes from 0 to 100 based on weighted strategies
+       │      (Priorities)         │  (e.g., ImageLocality, NodeResourcesBalancedAllocation, Spread)
+       └─────────────┬─────────────┘
+                     │ (Top Scoring Node)
+                     ▼
+       ┌───────────────────────────┐
+       │   Phase 3: Binding        │  Writes binding back to kube-apiserver: spec.nodeName = "node-02"
+       └───────────────────────────┘
 ```
+
+- **Filtering (Predicates)**: Checks hard constraints. Nodes lacking requested CPU/RAM, nodes missing required labels (`nodeSelector`), or nodes with un-tolerated taints are discarded.
+- **Scoring (Priorities)**: Ranks surviving candidates. Prefers nodes that already have the container image cached (`ImageLocality`), nodes that balance CPU and memory usage evenly, or nodes that spread pods across failure domains (Availability Zones).
+- **Binding**: Creates a `Binding` object via `kube-apiserver`, populating the Pod's `spec.nodeName`. The scheduler itself does not touch worker nodes directly.
 
 ### kube-controller-manager
-Runs **control loops** — constantly reconciles desired state with actual state.
+Runs continuous **control loops** — constantly reconciles the actual state of the cluster with the desired state stored in `etcd`.
 
-| Controller | What it does |
-|---|---|
-| **ReplicaSet controller** | Ensures the right number of Pod replicas exist |
-| **Deployment controller** | Manages rolling updates |
-| **Node controller** | Monitors node health, evicts Pods from unhealthy nodes |
-| **Service Account controller** | Creates default service accounts in new namespaces |
-| **Endpoint controller** | Populates Service endpoints |
-| **Job controller** | Manages Job and CronJob execution |
-
-```
-Desired state: 3 replicas
-Actual state:  2 replicas (one died)
-       ↓
-ReplicaSet controller creates 1 new Pod → actual = desired
-```
-
-### cloud-controller-manager
-Integrates with cloud provider APIs (AWS, GCP, Azure) to provision load balancers, persistent volumes, etc.
+| Controller | What it does | Under-the-Hood Mechanism |
+|---|---|---|
+| **ReplicaSet controller** | Ensures exact number of Pod replicas exist | Watches Pod creation/deletion; creates or deletes Pods to balance `spec.replicas` |
+| **Deployment controller** | Manages declarative rollouts & rollbacks | Creates and orchestrates underlying ReplicaSets during rolling updates |
+| **Node lifecycle controller** | Monitors worker node health and handles evictions | Watches node heartbeat leases in `kube-node-lease`; marks nodes `NotReady` after 40s and initiates Pod evictions after default 300s |
+| **EndpointSlice controller** | Tracks healthy Pod IPs backing each Service | Populates `EndpointSlice` objects consumed by `kube-proxy` |
+| **Job / CronJob controller** | Manages batch and scheduled workloads | Spawns Pods to completion, tracking retry counts and exit codes |
 
 ---
 
 ## Worker Node Components
 
 ### kubelet
-The **agent** on every worker node. Talks to the API server and ensures containers are running as specified.
+The primary node daemon. Watches the API server for Pods assigned to its node and drives the local container runtime to achieve the Pod spec:
 
 ```
-API server tells kubelet: "Run this Pod spec"
-       ↓
-kubelet instructs container runtime (containerd/Docker)
-       ↓
-containerd pulls image + runs containers
-       ↓
-kubelet monitors health, reports back to API server
+kube-apiserver (Pod scheduled: spec.nodeName = "worker-01")
+                      │
+           Watch API stream notification
+                      ▼
+                   kubelet
+                      │
+         gRPC calls via CRI (Unix Domain Socket)
+                      ▼
+            Container Runtime (containerd / CRI-O)
+            ├── 1. Pull Image (ImageService)
+            ├── 2. Create Pod Sandbox & Pause Container (RuntimeService)
+            ├── 3. Execute CNI Plugins (Setup veth & IP)
+            └── 4. Launch Application Containers via runc
+                      │
+        Probing & Liveness / Readiness monitoring
+                      ▼
+kubelet reports PodStatus & Node Lease back to kube-apiserver
 ```
+
+- **CRI Integration**: Talks to container runtimes via standard gRPC over `/run/containerd/containerd.sock` or `/run/crio/crio.sock`.
+- **Pod Sandbox Lifecycle**: Always launches a lightweight **pause container** first to hold the shared network (`net`) and IPC namespaces before starting application containers.
+- **Health Probing**: Periodically executes liveness, readiness, and startup probes; triggers container restarts or EndpointSlice removal upon failure.
 
 ### kube-proxy
-Maintains **network rules** on each node to enable Service communication.
+Maintains node routing rules to direct Service traffic (ClusterIP, NodePort) to target Pod IPs:
 
 ```
-Service "my-api" → ClusterIP: 10.96.0.1:8080
-       ↓
-kube-proxy sets up iptables/IPVS rules:
-  Any packet to 10.96.0.1:8080 → forward to one of the backing Pods
+Service "orders-svc" (ClusterIP: 10.96.10.50:80)
+                      │
+       Client Pod initiates TCP connection
+                      ▼
+        Kernel Routing (programmed by kube-proxy)
+        ├── iptables Mode: Sequential rule evaluation with random probability selection
+        └── IPVS Mode: Linux IP Virtual Server kernel hash table (O(1) lookup latency)
+                      ▼
+Packet DNAT'd directly to target Pod IP: 10.244.2.14:8080
 ```
 
-### Container Runtime
-Runs the actual containers. Kubernetes supports any OCI-compliant runtime.
+### Container Runtime (CRI-Compliant)
+Executes the actual container processes inside isolated Linux namespaces and cgroups:
 
-| Runtime | Notes |
+| Runtime | Architecture & Characteristics |
 |---|---|
-| **containerd** | Default in most modern K8s distros |
-| **CRI-O** | Lightweight, RedHat-backed |
-| **Docker** | Deprecated as K8s runtime (K8s 1.24+) |
+| **containerd** | Industry standard, lightweight daemon spun off from Docker; executes containers via `containerd-shim` and `runc`. |
+| **CRI-O** | Purpose-built by Red Hat specifically for Kubernetes CRI; minimal footprint with zero extraneous tooling. |
+| **Docker (dockerd)** | **Deprecated as direct K8s runtime in v1.20, removed in v1.24**. Docker images remain 100% compatible via OCI format. |
 
 ---
 
@@ -221,24 +242,54 @@ kubectl delete -f deployment.yaml   # Delete what's in the file
 
 ## Reconciliation Loop (The Core Concept)
 
-```
-You define desired state in YAML
-        ↓
-kubectl apply → API server stores in etcd
-        ↓
-Controller Manager watches etcd
-        ↓
-"Current state ≠ Desired state"
-        ↓
-Controller takes action to close the gap
-        ↓
-Repeats forever (control loop)
+The fundamental design pattern of Kubernetes is the **Level-Triggered Reconciliation Loop**:
 
-Example:
-  You: "I want 3 replicas of my-api"
-  K8s: "I see 2 running" → creates 1 more
-  K8s: "I see 4 running" → deletes 1
-  K8s: "I see 3 running" → does nothing ✓
+```
+                  ┌──────────────────────────────┐
+                  │    Desired State in etcd     │
+                  │ (spec: replicas: 3, img: v2) │
+                  └──────────────┬───────────────┘
+                                 │
+                   Read desired  │  Write actual
+                                 ▼
++-------------------------------------------------------------------------+
+|                    Kube Controller Reconciliation Loop                  |
+|                                                                         |
+|   1. OBSERVE   ───► Query API server for current live cluster state     |
+|         │                                                               |
+|         ▼                                                               |
+|   2. ANALYZE   ───► Compute diff = (Desired State - Actual State)       |
+|         │                                                               |
+|         ▼                                                               |
+|   3. ACT       ───► Issue imperative mutations to close the delta       |
++-------------------------------------------------------------------------+
+```
+
+### Why Level-Triggered (Not Edge-Triggered)?
+- **Edge-Triggered (Event-based)**: Systems that act purely on changes (e.g. "Pod X died") risk permanent state desynchronization if an event is dropped due to a network partition or controller crash.
+- **Level-Triggered (State-based)**: Kubernetes controllers observe the *current level* (what exists right now) regardless of how many intermediate events occurred. If a controller restarts or network reconnects, the very next loop execution inspects `observedGeneration` vs `generation`, detects any divergence, and drives the cluster toward the target state.
+
+### End-to-End Self-Healing Lifecycle: Node Failure
+```
+[Worker Node 2 Dies]
+        │
+        ├── 0s: Node stops renewing heartbeat in kube-node-lease namespace
+        ├── 40s (node-monitor-grace-period):
+        │       Node Lifecycle Controller marks Node 2 as "NotReady"
+        │       Tolerations kick in (node.kubernetes.io/not-ready:NoExecute)
+        ├── 300s (pod-eviction-timeout):
+        │       Pods on Node 2 marked as Terminating
+        ├── +100ms:
+        │       ReplicaSet Controller observes: readyReplicas (2) < spec.replicas (3)
+        │       ReplicaSet Controller posts 1 new Pod spec to API server (spec.nodeName is null)
+        ├── +200ms:
+        │       kube-scheduler detects unbound Pod
+        │       Filtering: Eliminates Node 2 (NotReady)
+        │       Scoring: Evaluates Node 1 vs Node 3 (CPU/RAM headroom, spread)
+        │       Binding: Assigns Pod to Node 3
+        └── +2s:
+                kubelet on Node 3 invokes containerd CRI to pull image and launch container.
+                Cluster returns to desired state (3/3 replicas).
 ```
 
 ---
@@ -247,38 +298,71 @@ Example:
 
 | Tool | Best For | Notes |
 |---|---|---|
-| **minikube** | Learning, local dev | Single-node, easy setup |
-| **kind** | CI testing, local dev | K8s in Docker — very fast |
-| **k3s** | Lightweight production, edge | Full K8s, minimal resources |
-| **Docker Desktop** | macOS/Windows dev | One-click enable |
-| **MicroK8s** | Ubuntu dev | Snap-installed |
+| **minikube** | Learning, local dev | Single-node VM/container, easy setup |
+| **kind** | CI testing, multi-node dev | Runs K8s nodes as Docker containers — ultra fast bootstrap |
+| **k3s** | Lightweight production, edge/IoT | Full certified K8s, replaces etcd with SQLite/etcd, minimal RAM (~512MB) |
+| **Docker Desktop** | macOS/Windows dev | Single-click enable, embedded single-node cluster |
+| **MicroK8s** | Ubuntu dev & homelabs | Snap-installed, production-grade single or multi-node |
 
 ```bash
-# minikube
+# minikube quickstart
 minikube start --driver=docker --cpus=4 --memory=8g --kubernetes-version=v1.30.0
-minikube stop
-minikube delete
-minikube dashboard          # Open K8s dashboard in browser
+minikube status
+minikube dashboard          # Open K8s visual dashboard
 minikube tunnel             # Expose LoadBalancer services on localhost
 
-# kind
-kind create cluster --name dev
-kind create cluster --name dev --config kind-config.yaml  # Multi-node
+# kind (Kubernetes in Docker)
+kind create cluster --name dev --config kind-config.yaml  # Multi-node simulation
+kind get clusters
+kind load docker-image myapp:v1 --name dev               # Inject local Docker image without registry push
 kind delete cluster --name dev
-kind load docker-image myapp:latest --name dev  # Load local image
 ```
 
 ---
 
-## Interview Questions
+## Senior Architect Interview Questions & Deep Answers
 
-1. What are the components of the Kubernetes control plane and what does each do?
-2. What is etcd and why is it critical?
-3. What is the role of the kubelet on a worker node?
-4. Explain the Kubernetes reconciliation loop.
-5. What is kube-proxy and what does it do?
-6. What is a Namespace in Kubernetes?
-7. What is the difference between imperative and declarative resource management?
-8. What happens when a node dies — how does Kubernetes recover?
-9. What is the kube-scheduler responsible for?
-10. Why was Docker deprecated as a Kubernetes container runtime?
+### 1. What are the components of the Kubernetes control plane and what does each do?
+- **`kube-apiserver`**: Stateless REST gateway and sole component that directly talks to `etcd`. Handles authentication, authorization (RBAC), admission controllers (Mutating/Validating webhooks), and schema validation.
+- **`etcd`**: Distributed B-Tree key-value store using the Raft consensus algorithm. Serves as the single source of truth for all cluster declarative state.
+- **`kube-scheduler`**: Assigns unscheduled Pods to optimal worker nodes via a two-stage pipeline: **Filtering** (Predicates) and **Scoring** (Priorities).
+- **`kube-controller-manager`**: Bundles continuous control loops (Deployment, ReplicaSet, Node Lifecycle, EndpointSlice) that drive actual cluster state toward desired state.
+- **`cloud-controller-manager`**: Abstracts cloud-provider-specific logic (provisioning AWS NLB/ALBs, EBS storage volumes, or VPC routes).
+
+### 2. What is etcd and why is it critical?
+`etcd` is a strongly consistent (CP under CAP theorem) distributed key-value store that stores the complete cluster metadata and spec history. If `etcd` loses quorum (e.g. 2 nodes fail in a 3-node cluster), the control plane becomes read-only and no new pods can be scheduled, updated, or deleted. Worker node data planes (running containers) will continue operating, but cluster orchestration is completely paralyzed.
+
+### 3. What is the role of the kubelet on a worker node?
+The `kubelet` is the node agent that registers the node with the API server, watches for Pod assignments (`spec.nodeName == this_node`), and commands the local container runtime via gRPC over the Container Runtime Interface (CRI). It orchestrates the pause container, network namespaces, volume mounts, executes liveness/readiness probes, and continuously reports `PodStatus` and node heartbeat leases back to the control plane.
+
+### 4. Explain the Kubernetes reconciliation loop.
+It is an infinite level-triggered control loop operating on: **Observe $\to$ Analyze $\to$ Act**. Rather than reacting only to discrete transient events, the controller continuously observes the live cluster state, computes the difference relative to the desired specification in `etcd`, and invokes declarative or imperative API mutations to eliminate the delta. This guarantees idempotency and self-healing even after process crashes or dropped network packets.
+
+### 5. What is kube-proxy and what does it do?
+`kube-proxy` is a network daemon running on each worker node responsible for implementing the `Service` abstraction (Virtual IPs). It watches the API server for `Service` and `EndpointSlice` updates and translates traffic destined for a Service's `ClusterIP` to one of its healthy backend Pod IPs using either:
+- **`iptables` mode**: Creates sequential packet filter rules with random weight probabilities (can cause CPU latency bottlenecks at 10,000+ services).
+- **`IPVS` mode**: Uses Linux kernel Netfilter hash tables with $O(1)$ lookup complexity, supporting sophisticated load-balancing algorithms (Round Robin, Least Connection).
+
+### 6. What is a Namespace in Kubernetes?
+A Namespace is a logical partition within a single physical Kubernetes cluster that provides a scope for object names, resource quotas (`ResourceQuota`), limit ranges (`LimitRange`), and Role-Based Access Control (`RoleBinding`). It does **not** provide network isolation by default; Pods across different namespaces can communicate freely unless restricted by explicit `NetworkPolicy` rules.
+
+### 7. What is the difference between imperative and declarative resource management?
+- **Imperative** (`kubectl run`, `kubectl create`): Tells Kubernetes *what actions to execute* step-by-step. Hard to track in Git, non-idempotent, prone to configuration drift.
+- **Declarative** (`kubectl apply -f manifest.yaml`): Tells Kubernetes *what end state you desire*. The API server uses 3-way merge patching (comparing local file, live cluster state, and last-applied configuration annotation), enabling GitOps, peer-reviewed infrastructure code, and idempotent convergence.
+
+### 8. What happens when a node dies — how does Kubernetes recover?
+1. The dead node fails to renew its lease in `kube-node-lease`.
+2. After `node-monitor-grace-period` (default 40s), the Node Lifecycle Controller transitions the node status to `NotReady`.
+3. After `pod-eviction-timeout` (default 5 minutes), the controller sets a deletion timestamp on the node's pods.
+4. The workload controllers (e.g. `ReplicaSet`) notice missing healthy replicas and submit replacement Pod objects to the API server without a `nodeName`.
+5. `kube-scheduler` schedules these replacement Pods to surviving healthy nodes with adequate resource headroom.
+6. Once scheduled, `kubelet` on the destination node pulls images, mounts volumes, and starts the pods, restoring required capacity.
+
+### 9. What is the kube-scheduler responsible for?
+The `kube-scheduler` assigns unscheduled Pods to the most appropriate worker node without executing the workload itself. It does this via:
+1. **Filtering**: Discards nodes that do not satisfy hard constraints (insufficient allocatable CPU/RAM, unscheduled taints, node affinity rules, port conflicts).
+2. **Scoring**: Assigns a score (0–100) to each surviving node using weighted priority functions (`NodeResourcesBalancedAllocation`, `ImageLocalityPriority`, Pod topology spread).
+3. **Binding**: Sends a `Binding` API request to the API server setting `spec.nodeName` to the winning node.
+
+### 10. Why was Docker deprecated as a Kubernetes container runtime?
+Docker daemon (`dockerd`) was built as an end-user developer tool, not a raw container runtime. It communicated via REST API rather than the Kubernetes gRPC Container Runtime Interface (CRI), requiring the Kubernetes project to maintain a heavy in-tree translation layer called **`dockershim`** inside `kubelet`. In Kubernetes 1.24, `dockershim` was removed to eliminate redundant translation hops, reduce cluster node memory/CPU bloat, and allow `kubelet` to interface directly with dedicated CRI runtimes (`containerd` or `CRI-O`). Images built using Docker adhere to the OCI specification and run unmodified on modern Kubernetes clusters.
