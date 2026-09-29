@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/networking/application-protocols-reference",
-  "title": "Application Protocols Reference",
-  "description": "SSH, SMTP, FTP, MQTT, AMQP, LDAP, NTP and other essential application-layer protocols — how they work and when to use them.",
+  "title": "Network & Application Protocols Reference — The Complete Protocol Guide",
+  "description": "Comprehensive reference for all essential network and application protocols — TCP/IP, UDP, DNS, DHCP, HTTP/HTTPS, QUIC, WebSocket, SSH, FTP/SFTP, SMTP/IMAP, TLS 1.3, BGP, MQTT, and AMQP.",
   "source": "@site/docs/technical-knowledge/networking/application-protocols-reference.md",
   "sourceDirName": "technical-knowledge/networking",
   "slug": "/technical-knowledge/networking/application-protocols-reference",
@@ -16,8 +16,63 @@
     },
     {
       "inline": true,
+      "label": "protocols",
+      "permalink": "/tags/protocols"
+    },
+    {
+      "inline": true,
+      "label": "tcp",
+      "permalink": "/tags/tcp"
+    },
+    {
+      "inline": true,
+      "label": "udp",
+      "permalink": "/tags/udp"
+    },
+    {
+      "inline": true,
+      "label": "dns",
+      "permalink": "/tags/dns"
+    },
+    {
+      "inline": true,
+      "label": "dhcp",
+      "permalink": "/tags/dhcp"
+    },
+    {
+      "inline": true,
+      "label": "http",
+      "permalink": "/tags/http"
+    },
+    {
+      "inline": true,
+      "label": "https",
+      "permalink": "/tags/https"
+    },
+    {
+      "inline": true,
+      "label": "quic",
+      "permalink": "/tags/quic"
+    },
+    {
+      "inline": true,
+      "label": "websocket",
+      "permalink": "/tags/websocket"
+    },
+    {
+      "inline": true,
       "label": "ssh",
       "permalink": "/tags/ssh"
+    },
+    {
+      "inline": true,
+      "label": "ftp",
+      "permalink": "/tags/ftp"
+    },
+    {
+      "inline": true,
+      "label": "sftp",
+      "permalink": "/tags/sftp"
     },
     {
       "inline": true,
@@ -26,8 +81,13 @@
     },
     {
       "inline": true,
-      "label": "ftp",
-      "permalink": "/tags/ftp"
+      "label": "tls",
+      "permalink": "/tags/tls"
+    },
+    {
+      "inline": true,
+      "label": "bgp",
+      "permalink": "/tags/bgp"
     },
     {
       "inline": true,
@@ -38,21 +98,6 @@
       "inline": true,
       "label": "amqp",
       "permalink": "/tags/amqp"
-    },
-    {
-      "inline": true,
-      "label": "protocols",
-      "permalink": "/tags/protocols"
-    },
-    {
-      "inline": true,
-      "label": "reference",
-      "permalink": "/tags/reference"
-    },
-    {
-      "inline": true,
-      "label": "application-layer",
-      "permalink": "/tags/application-layer"
     }
   ],
   "version": "current",
@@ -61,18 +106,28 @@
   "sidebarPosition": 15,
   "frontMatter": {
     "id": "application-protocols-reference",
-    "title": "Application Protocols Reference",
-    "description": "SSH, SMTP, FTP, MQTT, AMQP, LDAP, NTP and other essential application-layer protocols — how they work and when to use them.",
+    "title": "Network & Application Protocols Reference — The Complete Protocol Guide",
+    "sidebar_label": "Application Protocols",
+    "description": "Comprehensive reference for all essential network and application protocols — TCP/IP, UDP, DNS, DHCP, HTTP/HTTPS, QUIC, WebSocket, SSH, FTP/SFTP, SMTP/IMAP, TLS 1.3, BGP, MQTT, and AMQP.",
     "tags": [
       "networking",
-      "ssh",
-      "smtp",
-      "ftp",
-      "mqtt",
-      "amqp",
       "protocols",
-      "reference",
-      "application-layer"
+      "tcp",
+      "udp",
+      "dns",
+      "dhcp",
+      "http",
+      "https",
+      "quic",
+      "websocket",
+      "ssh",
+      "ftp",
+      "sftp",
+      "smtp",
+      "tls",
+      "bgp",
+      "mqtt",
+      "amqp"
     ],
     "sidebar_position": 15
   },

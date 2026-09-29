@@ -97,13 +97,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-f13": {
+  "/-fda": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-235": {
+  "/-8d2": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -339,10 +339,6 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-app-fraud-628-cd9"
   },
-  "/tags/application-layer-cdc": {
-    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
-    "__props": "__props---tags-application-layer-596-a2f"
-  },
   "/tags/appspec-8e3": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-appspecbef-1d9"
@@ -495,6 +491,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-aws-sdk-997-4de"
   },
+  "/tags/aws-sqs-500": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-aws-sqs-6-e-5-993"
+  },
   "/tags/awsvpc-d77": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-awsvpca-5-b-92f"
@@ -578,10 +578,6 @@
   "/tags/bearer-token-f4e": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-bearer-tokenea-5-570"
-  },
-  "/tags/beats-cf1": {
-    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
-    "__props": "__props---tags-beats-72-a-27c"
   },
   "/tags/becs-89a": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -690,6 +686,10 @@
   "/tags/blue-green-2b2": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-blue-greenac-7-941"
+  },
+  "/tags/bm-25-522": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-bm-25778-94c"
   },
   "/tags/books-450": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1835,6 +1835,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-dfsfef-01f"
   },
+  "/tags/dhcp-79d": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-dhcp-224-b0f"
+  },
   "/tags/diagnostics-cf7": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-diagnostics-966-1a4"
@@ -2882,6 +2886,10 @@
   "/tags/ifti-851": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-iftiff-0-40f"
+  },
+  "/tags/images-9e3": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-images-32-b-597"
   },
   "/tags/immutability-e9f": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -4231,10 +4239,6 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-outbox-patternb-06-0b8"
   },
-  "/tags/overlay-ca1": {
-    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
-    "__props": "__props---tags-overlay-2-f-0-8e6"
-  },
   "/tags/overloading-ee1": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-overloadingacf-044"
@@ -4943,6 +4947,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-refresh-token-74-e-3d5"
   },
+  "/tags/registry-dcf": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-registry-4-fc-537"
+  },
   "/tags/regression-testing-3b7": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-regression-testingeda-65b"
@@ -5062,6 +5070,10 @@
   "/tags/retry-policies-624": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-retry-policies-780-1af"
+  },
+  "/tags/retry-topics-cb2": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-retry-topics-34-c-d99"
   },
   "/tags/returns-ec8": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -5406,6 +5418,10 @@
   "/tags/settlement-a7f": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-settlement-788-22d"
+  },
+  "/tags/sftp-91f": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-sftp-47-b-0af"
   },
   "/tags/shape-008": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -6355,6 +6371,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-versionsddf-a90"
   },
+  "/tags/veth-257": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-vethe-06-0d8"
+  },
   "/tags/vibe-coding-e6e": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-vibe-coding-70-d-d67"
@@ -6659,7 +6679,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-ae8": {
+  "/-1e4": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -11438,7 +11458,7 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-core-kafka-overview-643-a75"
   },
-  "/technical-knowledge/kafka/core/kafka-partitioning-strategies-b04": {
+  "/technical-knowledge/kafka/core/kafka-partitioning-strategies-89e": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-core-kafka-partitioning-strategiesc-37-34b"
   },
@@ -11446,7 +11466,7 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-core-kafka-producers-consumers-16-e-0ec"
   },
-  "/technical-knowledge/kafka/core/kafka-vs-rabbitmq-f24": {
+  "/technical-knowledge/kafka/core/kafka-vs-rabbitmq-1d0": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-core-kafka-vs-rabbitmqa-9-f-a6e"
   },

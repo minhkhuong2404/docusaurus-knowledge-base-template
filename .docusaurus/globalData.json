@@ -5809,7 +5809,8 @@
             },
             {
               "id": "technical-knowledge/kafka/core/kafka-partitioning-strategies",
-              "path": "/technical-knowledge/kafka/core/kafka-partitioning-strategies"
+              "path": "/technical-knowledge/kafka/core/kafka-partitioning-strategies",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/core/kafka-producers-consumers",
@@ -5817,7 +5818,8 @@
             },
             {
               "id": "technical-knowledge/kafka/core/kafka-vs-rabbitmq",
-              "path": "/technical-knowledge/kafka/core/kafka-vs-rabbitmq"
+              "path": "/technical-knowledge/kafka/core/kafka-vs-rabbitmq",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/core/kraft-vs-zookeeper",

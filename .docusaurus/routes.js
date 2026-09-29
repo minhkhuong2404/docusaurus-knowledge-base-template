@@ -79,11 +79,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'f13'),
+    component: ComponentCreator('/', 'fda'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '235'),
+        component: ComponentCreator('/', '8d2'),
         routes: [
           {
             path: '/tags',
@@ -376,11 +376,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/application-layer',
-            component: ComponentCreator('/tags/application-layer', 'cdc'),
-            exact: true
-          },
-          {
             path: '/tags/appspec',
             component: ComponentCreator('/tags/appspec', '8e3'),
             exact: true
@@ -571,6 +566,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/aws-sqs',
+            component: ComponentCreator('/tags/aws-sqs', '500'),
+            exact: true
+          },
+          {
             path: '/tags/awsvpc',
             component: ComponentCreator('/tags/awsvpc', 'd77'),
             exact: true
@@ -673,11 +673,6 @@ export default [
           {
             path: '/tags/bearer-token',
             component: ComponentCreator('/tags/bearer-token', 'f4e'),
-            exact: true
-          },
-          {
-            path: '/tags/beats',
-            component: ComponentCreator('/tags/beats', 'cf1'),
             exact: true
           },
           {
@@ -813,6 +808,11 @@ export default [
           {
             path: '/tags/blue-green',
             component: ComponentCreator('/tags/blue-green', '2b2'),
+            exact: true
+          },
+          {
+            path: '/tags/bm-25',
+            component: ComponentCreator('/tags/bm-25', '522'),
             exact: true
           },
           {
@@ -2246,6 +2246,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/dhcp',
+            component: ComponentCreator('/tags/dhcp', '79d'),
+            exact: true
+          },
+          {
             path: '/tags/diagnostics',
             component: ComponentCreator('/tags/diagnostics', 'cf7'),
             exact: true
@@ -3553,6 +3558,11 @@ export default [
           {
             path: '/tags/ifti',
             component: ComponentCreator('/tags/ifti', '851'),
+            exact: true
+          },
+          {
+            path: '/tags/images',
+            component: ComponentCreator('/tags/images', '9e3'),
             exact: true
           },
           {
@@ -5241,11 +5251,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/overlay',
-            component: ComponentCreator('/tags/overlay', 'ca1'),
-            exact: true
-          },
-          {
             path: '/tags/overloading',
             component: ComponentCreator('/tags/overloading', 'ee1'),
             exact: true
@@ -6131,6 +6136,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/registry',
+            component: ComponentCreator('/tags/registry', 'dcf'),
+            exact: true
+          },
+          {
             path: '/tags/regression-testing',
             component: ComponentCreator('/tags/regression-testing', '3b7'),
             exact: true
@@ -6278,6 +6288,11 @@ export default [
           {
             path: '/tags/retry-policies',
             component: ComponentCreator('/tags/retry-policies', '624'),
+            exact: true
+          },
+          {
+            path: '/tags/retry-topics',
+            component: ComponentCreator('/tags/retry-topics', 'cb2'),
             exact: true
           },
           {
@@ -6708,6 +6723,11 @@ export default [
           {
             path: '/tags/settlement',
             component: ComponentCreator('/tags/settlement', 'a7f'),
+            exact: true
+          },
+          {
+            path: '/tags/sftp',
+            component: ComponentCreator('/tags/sftp', '91f'),
             exact: true
           },
           {
@@ -7896,6 +7916,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/veth',
+            component: ComponentCreator('/tags/veth', '257'),
+            exact: true
+          },
+          {
             path: '/tags/vibe-coding',
             component: ComponentCreator('/tags/vibe-coding', 'e6e'),
             exact: true
@@ -8277,7 +8302,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'ae8'),
+            component: ComponentCreator('/', '1e4'),
             routes: [
               {
                 path: '/aws',
@@ -15427,8 +15452,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-partitioning-strategies',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-partitioning-strategies', 'b04'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-partitioning-strategies', '89e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-producers-consumers',
@@ -15437,8 +15463,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-vs-rabbitmq',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-vs-rabbitmq', 'f24'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-vs-rabbitmq', '1d0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/kafka/core/kraft-vs-zookeeper',

@@ -1,8 +1,8 @@
 {
-  "id": "1807",
-  "title": "Evaluate the Bracket Pairs of a String",
-  "url": "https://leetcode.com/problems/evaluate-the-bracket-pairs-of-a-string/",
-  "difficulty": "medium",
-  "topic": "Array, Hash Table, String",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-26."
+  "id": "1614",
+  "title": "Maximum Nesting Depth of the Parentheses",
+  "url": "https://leetcode.com/problems/maximum-nesting-depth-of-the-parentheses/",
+  "difficulty": "easy",
+  "topic": "String, Stack, Bracket Sequences",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-28."
 }
