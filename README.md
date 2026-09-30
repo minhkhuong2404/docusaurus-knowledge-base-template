@@ -30,6 +30,17 @@ The documentation is grouped into structured learning paths, including:
 
 Each path typically starts with an overview, then moves into fundamentals, advanced concepts, and interview-focused practice.
 
+## 🎧 Study With Me & Focus Music Player
+
+The knowledge base features an ambient floating **Study With Me** audio companion equipped with viral **YouTube Study Streams** (Pomodoro, Lofi Beats, Deep Work, Peaceful Piano), **Spotify Focus Playlists**, cycle-tracked Pomodoro timer, and a real-time **[Novatorem](https://github.com/minhkhuong2404/novatorem)-inspired Equalizer Spectrum Wave**:
+
+&nbsp;<div align="center">
+  <a href="https://github.com/minhkhuong2404/novatorem">
+    <img src="https://novatorem.vercel.app/api/orchestrator?background_type=blur_dark&border_color=ffffff" alt="Novatorem Music Visualizer" />
+  </a>
+</div>
+<br/>
+
 ## Tech Stack
 
 - Docusaurus `3.9.2`

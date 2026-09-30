@@ -97,13 +97,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-fda": {
+  "/-e72": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-8d2": {
+  "/-b74": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -6679,7 +6679,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-1e4": {
+  "/-9bc": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -7757,6 +7757,10 @@
   "/technical-knowledge/banking/testing_banking-1fc": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-banking-testing-banking-36-f-625"
+  },
+  "/technical-knowledge/become-senior-developer/7-coding-laws-a51": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-become-senior-developer-7-coding-laws-2-cf-a90"
   },
   "/technical-knowledge/coding-interview-prep/array/-304": {
     "__comp": "__comp---theme-doc-item-178-a40",
@@ -10909,10 +10913,6 @@
   "/technical-knowledge/elasticsearch/logstash-kibana-integration-da2": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-elasticsearch-logstash-kibana-integration-007-6bc"
-  },
-  "/technical-knowledge/engineering-practices/how-to-become-senior-developer-721": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---technical-knowledge-engineering-practices-how-to-become-senior-developer-7-ef-a6f"
   },
   "/technical-knowledge/git-eae": {
     "__comp": "__comp---theme-doc-item-178-a40",

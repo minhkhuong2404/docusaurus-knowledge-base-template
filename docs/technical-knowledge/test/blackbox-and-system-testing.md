@@ -7,14 +7,13 @@ tags: [testing, black-box, system-testing, e2e, bva, equivalence-partitioning, t
 ---
 
 import BlackboxSystemTestingDiagram from '@site/src/components/BlackboxSystemTestingDiagram';
+import DistributedTestingCoverageDiagram from '@site/src/components/DistributedTestingCoverageDiagram';
 
 # Black-Box & System Testing
 
 ---
 
 In software engineering, testing is often divided into levels (Unit, Integration, System, Acceptance) and approaches (Black-Box, White-Box, Grey-Box). While unit and integration testing inspect internal components and code structures, **Black-Box Testing** and **System Testing** represent the ultimate validation of software: verifying that an integrated, running system satisfies business requirements, user expectations, and non-functional constraints from the outside world.
-
-<BlackboxSystemTestingDiagram />
 
 ---
 
@@ -30,23 +29,7 @@ The test suite interacts exclusively with the software through its public extern
 - Graphical user interfaces (Web, Mobile, Desktop)
 - Publicly exposed APIs or library contracts
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                    BLACK-BOX TEST HARNESS                    │
-│                                                              │
-│   Input Stimulus                 Observed Response           │
-│   [ HTTP POST /orders ] ───────> [ HTTP 201 Created ]        │
-│                                  [ Event: OrderPlaced ]      │
-└──────────────┬───────────────────────────────▲───────────────┘
-               │                               │
-               ▼                               │
-┌──────────────────────────────────────────────────────────────┐
-│                  OPAQUE APPLICATION BOUNDARY                 │
-│                                                              │
-│   ??? Classes, Algorithms, Cache, DB Tables, Threads ???     │
-│   (Internal implementation is completely invisible)          │
-└──────────────────────────────────────────────────────────────┘
-```
+<BlackboxSystemTestingDiagram initialTab="blackbox" />
 
 ### Why Does Black-Box Testing Exist?
 
@@ -87,15 +70,7 @@ Understanding the precise differences between the three primary testing paradigm
 
 Testing every possible permutation of input data is mathematically impossible (input space is virtually infinite). Black-box testing relies on rigorous mathematical techniques to reduce millions of potential inputs to a small, high-yield set of test cases:
 
-```
-Input Range: Age (18 to 65 allowed)
-─────────────────────────────────────────────────────────────────────────────
-Invalid Low       | Valid Equivalent Partition (18 to 65) | Invalid High
-(... 15, 16, 17)  | [18] ── (19 ... 64) ── [65]           | (66, 67, 68 ...)
-                  ▲   ▲                    ▲   ▲
-                  │   │                    │   │
-                  └───┴────────────────────┴───┴── Boundaries tested by BVA!
-```
+<BlackboxSystemTestingDiagram initialTab="bva" />
 
 ### 1. Equivalence Partitioning (EP)
 Equivalence Partitioning divides the input domain of a program into finite classes of data (**partitions**) such that all values within a partition are assumed to be processed in the exact same manner.
@@ -144,22 +119,7 @@ Modern applications are stateful finite state machines (e.g. Order status: `CREA
 ### What is System Testing?
 In the classic **V-Model**, software development progresses from requirements down to coding, while testing ascends from granular code verification up to holistic validation:
 
-```
-REQUIREMENTS & DESIGN                           TESTING LEVELS
-═════════════════════                           ══════════════
-Business Requirements ────────────────────────> User Acceptance Testing (UAT)
-   │                                                 ▲
-   ▼                                                 │
-System Requirements (SRS) ────────────────────> SYSTEM TESTING  <── (Validates Entire System!)
-   │                                                 ▲
-   ▼                                                 │
-Architecture & Component Design ──────────────> Integration Testing
-   │                                                 ▲
-   ▼                                                 │
-Detailed Class Logic ─────────────────────────> Unit Testing
-   │                                                 ▲
-   └─────────────── Coding & Compilation ────────────┘
-```
+<BlackboxSystemTestingDiagram initialTab="vmodel" />
 
 **System Testing** is the phase where the **entire, integrated software system** is evaluated as a cohesive whole against the **System Requirements Specification (SRS)**.
 
@@ -186,18 +146,7 @@ In distributed architectures and cloud-native systems, individual components fre
 
 System testing is not merely "running the app and clicking around." A production-grade system testing strategy evaluates both **Functional** and **Non-Functional Requirements (NFRs)**:
 
-```
-                           SYSTEM TESTING SCOPE
-                                    │
-         ┌──────────────────────────┴──────────────────────────┐
-         ▼                                                     ▼
-FUNCTIONAL VALIDATION                                NON-FUNCTIONAL VALIDATION (NFR)
-• End-to-End Business Journeys                       • Performance & Load Testing
-• Cross-Service Data Integrity                       • Stress & Soak (Endurance) Testing
-• Asynchronous Event Pipelines                       • Chaos & Resilience Testing
-• Error Recovery & Compensation (Sagas)              • Security & Penetration Testing
-• Disaster Recovery (RTO / RPO)                      • Observability & Distributed Tracing
-```
+<BlackboxSystemTestingDiagram initialTab="system" />
 
 ### 1. Functional End-to-End (E2E) Testing
 Validates complete user and data journeys across multiple microservices, datastores, and message queues.
@@ -321,24 +270,7 @@ When a service integrates **synchronous HTTP REST APIs**, **asynchronous Kafka c
 
 Measuring comprehensive coverage across this distributed hybrid architecture requires a **multi-dimensional coverage model**:
 
-```
-                  DISTRIBUTED SERVICE COVERAGE MODEL
-                                   │
-       ┌───────────────────────────┼───────────────────────────┐
-       ▼                           ▼                           ▼
-1. HTTP / API COVERAGE     2. KAFKA EVENT COVERAGE    3. KAFKA STREAMS TOPOLOGY
-• OpenAPI Spec Endpoint    • Schema Evolution Matrix  • TopologyTestDriver DAG
-• HTTP Status Codes        • Poison Pill / DLQ Path   • Windowed Join Branches
-• Query/Header Permutation • Idempotent Deduplication • RocksDB State Restore
-• Pact Contract Coverage   • Consumer Rebalance Edge  • Punctuation / Wall Clock
-       │                           │                           │
-       └───────────────────────────┼───────────────────────────┘
-                                   ▼
-          4. UNIFIED CODE INSTRUMENTATION (JACOCO AGENT)
-          • On-the-fly JVM bytecode instrumentation inside containers
-          • TCP Execution data dumps during black-box E2E flows
-          • Unified Report: jacoco-ut.exec + jacoco-it.exec
-```
+<DistributedTestingCoverageDiagram />
 
 ---
 
@@ -363,25 +295,14 @@ In microservices, breaking changes happen when provider responses violate consum
 
 Asynchronous messaging involves distinct failure modes that synchronous HTTP never encounters. Event coverage must verify both **payload schemas** and **broker interaction scenarios**.
 
-```
-                KAFKA EVENT & SCENARIO COVERAGE MATRIX
-┌───────────────────────┬─────────────────────────────────────────────────────┐
-│ Scenario Category     │ What Must Be Covered & Asserted                     │
-├───────────────────────┼─────────────────────────────────────────────────────┤
-│ 1. Schema Evolution   │ Backward/Forward compatibility in Schema Registry   │
-│                       │ (Avro / Protobuf / JSON Schema).                    │
-│ 2. Poison Pill / DLQ  │ Malformed JSON/Avro payload triggers Dead Letter    │
-│                       │ Queue (DLQ) without crashing consumer threads.      │
-│ 3. Idempotent Dedupe  │ Duplicate message delivery (same event ID) triggers │
-│                       │ deduplication logic; no double charge/insert.       │
-│ 4. Header Metadata    │ Propagation of W3C TraceContext (traceparent),      │
-│                       │ tenant IDs, and correlation IDs across hops.        │
-│ 5. Error & Retries    │ Retry backoff topic flow (topic-retry-1 ➔ 2 ➔ DLQ)   │
-│                       │ on transient database connection failures.          │
-│ 6. Out-of-Order Events│ Late-arriving events handled via optimistic lock or │
-│                       │ state timestamp validation.                         │
-└───────────────────────┴─────────────────────────────────────────────────────┘
-```
+| Scenario Category | What Must Be Covered & Asserted |
+|---|---|
+| **1. Schema Evolution** | Backward/Forward compatibility in Schema Registry (Avro / Protobuf / JSON Schema). |
+| **2. Poison Pill / DLQ** | Malformed JSON/Avro payload triggers Dead Letter Queue (DLQ) without crashing consumer threads. |
+| **3. Idempotent Dedupe** | Duplicate message delivery (same event ID) triggers deduplication logic; no double charge/insert. |
+| **4. Header Metadata** | Propagation of W3C TraceContext (`traceparent`), tenant IDs, and correlation IDs across hops. |
+| **5. Error & Retries** | Retry backoff topic flow (`topic-retry-1` ➔ `2` ➔ `DLQ`) on transient database connection failures. |
+| **6. Out-of-Order Events** | Late-arriving events handled via optimistic lock or state timestamp validation. |
 
 #### How to Test & Measure Event Coverage:
 - **Testcontainers Kafka**: Execute black-box tests using a disposable Confluent Kafka container. Publish malformed messages, duplicate messages, and valid events, asserting messages landing on output topics and DLQ topics.
@@ -463,20 +384,7 @@ When you run true black-box or system tests, your test runner (e.g. Maven runnin
 
 #### How to Collect E2E Coverage with JaCoCo Remote Agent:
 
-```
-┌─────────────────────────┐                   ┌───────────────────────────────┐
-│     TEST RUNNER         │                   │  RUNNING SERVICE CONTAINER    │
-│  (RestAssured / Kafka)  │                   │  (Spring Boot + KafkaStream)  │
-│                         │   1. HTTP / Kafka │                               │
-│  Sends HTTP Requests ───┼──────────────────>│  Executes business logic      │
-│  Produces Kafka Records │                   │  Records hits in byte-memory  │
-│                         │                   │                               │
-│                         │   2. Dump Signal  │  -javaagent:jacocoagent.jar   │
-│  JaCoCo CLI / Client ───┼──────────────────>│  =output=tcpserver,port=6300  │
-│                         │<──────────────────│                               │
-│  Saves jacoco-it.exec   │   3. Stream Dump  │  Emits execution session data │
-└─────────────────────────┘                   └───────────────────────────────┘
-```
+<DistributedTestingCoverageDiagram initialDimension="jacoco" />
 
 #### Step-by-Step Implementation:
 1. **Attach JaCoCo Agent to the Application Container**:

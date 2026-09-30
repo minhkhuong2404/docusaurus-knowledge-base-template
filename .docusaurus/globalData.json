@@ -1186,6 +1186,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/become-senior-developer/7-coding-laws",
+              "path": "/technical-knowledge/become-senior-developer/7-coding-laws",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/coding-interview-prep/array/array",
               "path": "/technical-knowledge/coding-interview-prep/array/",
               "sidebar": "tutorialSidebar"
@@ -5128,11 +5133,6 @@
             {
               "id": "technical-knowledge/elasticsearch/logstash-kibana-integration",
               "path": "/technical-knowledge/elasticsearch/logstash-kibana-integration",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/engineering-practices/how-to-become-senior-developer",
-              "path": "/technical-knowledge/engineering-practices/how-to-become-senior-developer",
               "sidebar": "tutorialSidebar"
             },
             {

@@ -24,15 +24,18 @@ const sidebars: SidebarsConfig = {
 			label: '💼 General Interview Framework'
 		},
 		{
-			type: 'doc',
-			id: 'technical-knowledge/engineering-practices/how-to-become-senior-developer',
-			label: '🏆 7 Senior Coding Laws'
-		},
-		{
 			type: 'category',
 			label: '🛠️Technical Knowledge',
 			collapsed: false,
 			items: [
+				{
+					type: 'category',
+					label: '🏆 Become Senior Developer',
+					collapsed: true,
+					items: [
+						'technical-knowledge/become-senior-developer/7-coding-laws'
+					]
+				},
 				{
 					type: 'category',
 					label: '☕ Java',

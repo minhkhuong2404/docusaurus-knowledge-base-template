@@ -79,11 +79,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'fda'),
+    component: ComponentCreator('/', 'e72'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '8d2'),
+        component: ComponentCreator('/', 'b74'),
         routes: [
           {
             path: '/tags',
@@ -8302,7 +8302,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '1e4'),
+            component: ComponentCreator('/', '9bc'),
             routes: [
               {
                 path: '/aws',
@@ -9905,6 +9905,12 @@ export default [
               {
                 path: '/technical-knowledge/banking/testing_banking',
                 component: ComponentCreator('/technical-knowledge/banking/testing_banking', '1fc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/become-senior-developer/7-coding-laws',
+                component: ComponentCreator('/technical-knowledge/become-senior-developer/7-coding-laws', 'a51'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14633,12 +14639,6 @@ export default [
               {
                 path: '/technical-knowledge/elasticsearch/logstash-kibana-integration',
                 component: ComponentCreator('/technical-knowledge/elasticsearch/logstash-kibana-integration', 'da2'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/engineering-practices/how-to-become-senior-developer',
-                component: ComponentCreator('/technical-knowledge/engineering-practices/how-to-become-senior-developer', '721'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
