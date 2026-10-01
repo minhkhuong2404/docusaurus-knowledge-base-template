@@ -3274,6 +3274,239 @@ public class DatabaseAccessLimiter {
         interviewTip: 'Làm thế nào để phát hiện xem mã nguồn có đang bị dính lỗi Pinning Thread hay không? Trả lời: "Bật cờ JVM: -Djdk.tracePinnedThreads=full khi chạy ứng dụng Java 21. Khi có bất kỳ Virtual Thread nào bị ghim vào Carrier Thread do dính synchronized block hoặc Native call lúc I/O blocking, JVM sẽ tự động in stack trace chi tiết để ta tìm đúng vị trí class cần refactor sang ReentrantLock".'
       }
     ]
+  },
+  {
+    id: 'entry-level-career-survival',
+    title: 'Cẩm Nang Sinh Tồn & Bứt Phá Intern / Fresher',
+    icon: '🚀',
+    accentColor: '#10b981',
+    tagline: 'Phương pháp STAR phỏng vấn, kỹ năng đọc hiểu codebase triệu dòng, văn hóa PR và nghệ thuật gỡ rối khi đi làm',
+    topics: [
+      {
+        id: 'star-behavioral-mastery',
+        title: '1. Chiến Lược Vượt Qua Vòng Phỏng Vấn Hành Vi Bằng Phương Pháp STAR',
+        badge: 'Chinh Phục HR & EM',
+        summary: 'Phương pháp STAR (Situation - Task - Action - Result) giúp bạn trả lời các câu hỏi tình huống mạch lạc, có chiều sâu, tôn vinh tinh thần đồng đội và năng lực giải quyết vấn đề bằng số liệu.',
+        explanation: `Trong các buổi phỏng vấn vị trí Intern, Fresher và Junior, các Giám đốc Kỹ thuật (Engineering Manager - EM) và HR không chỉ quan sát kiến thức kỹ thuật thuần túy, mà họ quan sát **tiềm năng phát triển (Growth Mindset)**, khả năng giao tiếp, thái độ hợp tác và phản ứng dưới áp lực.
+
+Khung phản xạ **STAR** chuẩn mực:
+1. **S - Situation (Bối cảnh 15%):** Nêu ngắn gọn bối cảnh dự án, công nghệ sử dụng, và mục tiêu ban đầu.
+2. **T - Task (Nhiệm vụ 15%):** Rào cản, thách thức kỹ thuật hoặc mâu thuẫn nảy sinh mà bạn được giao giải quyết.
+3. **A - Action (Hành động 55% - Trọng tâm):** Bạn đã suy nghĩ gì? Thu thập dữ liệu gì? Đã chủ động trao đổi với ai? Đã viết script thử nghiệm như thế nào? (Tuyệt đối không nói "chúng em làm", hãy nói rõ "em đã trực tiếp làm gì").
+4. **R - Result (Kết quả 15%):** Thành quả đo lường được (số liệu % thời gian, coverage test, hoặc sự đồng thuận của team) và **bài học sâu sắc** bạn đúc kết được.`,
+        asciiDiagram: `[CẤU TRÚC TRẢ LỜI PHỎNG VẤN HÀNH VI CHUẨN STAR]
+┌────────────────────────────────────────────────────────┐
+│ Situation (15%): Bối cảnh dự án / đề tài đồ án         │
+└───────────────────────────┬────────────────────────────┘
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│ Task (15%): Thách thức kỹ thuật hoặc mâu thuẫn nảy sinh│
+└───────────────────────────┬────────────────────────────┘
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│ Action (55%): HÀNH ĐỘNG CỦA BẠN (Dữ liệu, Benchmark)   │
+│ - Không tranh cãi cảm tính, dùng thực nghiệm chứng minh│
+│ - Lắng nghe góc nhìn của đối phương, tìm điểm chung    │
+└───────────────────────────┬────────────────────────────┘
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│ Result (15%): Kết quả số liệu + BÀI HỌC KINH NGHIỆM    │
+└────────────────────────────────────────────────────────┘`,
+        badCodeTitle: '❌ Thói quen trả lời cảm tính, đổ lỗi và thiếu số liệu',
+        badCode: `// ❌ CÁCH TRẢ LỜI KHIẾN PHỎNG VẤN VIÊN ĐÁNH TRƯỢT:
+"Khi làm bài tập lớn, bạn làm cùng nhóm em lười lắm, không chịu tìm hiểu Redis.
+Bạn ấy cứ đòi lưu giỏ hàng vào MySQL làm chậm cả hệ thống.
+Em bảo bạn ấy không nghe nên em tự làm một mình luôn bằng Redis,
+cuối cùng nộp bài thì được 9 điểm nhưng hai đứa ghét nhau từ đó!"`,
+        goodCodeTitle: '✅ Trả lời chuẩn STAR: Tôn trọng đồng đội, dựa trên Benchmark thực nghiệm',
+        goodCode: `// ✅ CÁCH TRẢ LỜI ĐIỂM 10 THEO CHUẨN STAR:
+"Trong đồ án Backend E-commerce (S), nhóm em cần lưu trữ giỏ hàng tạm thời cho 200 users (T).
+Bạn phụ trách DB muốn dùng bảng MySQL cart_items cho tiện, còn em đề xuất dùng Redis Hash.
+Nhận thấy tranh luận bằng lời nói khó thuyết phục (A), em chủ động tạo 1 nhánh test và dùng
+Apache Bench bắn thử 500 concurrent requests đo lường:
+- Phương án MySQL: Độ trễ trung bình 180ms, CPU server tăng vọt 70% do lock dòng.
+- Phương án Redis Hash: Độ trễ chỉ 8ms, CPU ổn định ở mức 12%.
+Em mang biểu đồ so sánh này trình bày với bạn trong buổi họp nhóm chiều hôm đó.
+Bạn hoàn toàn bị thuyết phục bởi số liệu thực nghiệm và nhóm đã thống nhất dùng Redis (R).
+Qua trải nghiệm đó, em học được bài học quý giá: Trong kỹ thuật, số liệu đo lường khách quan
+luôn là tiếng nói hòa giải và định hướng tốt nhất cho tinh thần đồng đội."`,
+        interviewTip: 'Nếu phỏng vấn viên hỏi: "Em đã từng mắc sai lầm nào nghiêm trọng trong dự án chưa?", đừng bao giờ trả lời: "Dạ em chưa từng mắc lỗi gì". Người không mắc lỗi là người chưa từng làm việc thực tế! Hãy kể về một lần bạn vô tình gây ra bug (ví dụ quên đánh index hoặc dính N+1 query), bạn đã dũng cảm nhận trách nhiệm, phối hợp cùng mọi người xử lý ra sao và bạn đã bổ sung checklist kiểm tra như thế nào để không bao giờ lặp lại.'
+      },
+      {
+        id: 'codebase-navigation-first-weeks',
+        title: '2. Tuyệt Kỹ Đọc Hiểu Codebase Triệu Dòng Của Doanh Nghiệp Trong 2 Tuần Đầu',
+        badge: 'Kỹ Năng Onboarding',
+        summary: 'Cách dùng bản đồ request, phím tắt IntelliJ và công cụ phân tích để nhanh chóng nắm bắt luồng nghiệp vụ của một dự án lớn mà không bị ngợp.',
+        explanation: `Khi mới bước chân vào công ty, bạn sẽ được cấp quyền clone một repository khổng lồ gồm hàng trăm class, hàng chục module Maven và cả triệu dòng code. Sai lầm phổ biến nhất của các bạn mới là **mở từng file từ trên xuống dưới để đọc như đọc tiểu thuyết** ➔ Kết quả là sau 2 ngày sẽ rơi vào trạng thái kiệt sức, hoang mang và không đọng lại được gì!
+
+Chiến lược **Truy Vết Theo Luồng Request (Request-Driven Navigation)**:
+1. **Bắt đầu từ Domain & Entity:** Mở thư mục chứa các class \`@Entity\` hoặc xem sơ đồ cơ sở dữ liệu (ERD). Hiểu các danh từ nghiệp vụ chính (User, Order, Payment, Merchant, Product) là hiểu được 60% bài toán kinh doanh của công ty.
+2. **Theo vết 1 luồng HTTP Request điển hình:** Chọn tính năng cốt lõi (ví dụ \`POST /api/v1/orders\`). Dùng phím tắt IntelliJ nhảy từ Controller ➔ Service ➔ Repository ➔ DB.
+3. **Bật Debugger chạy từng dòng (Step-by-step Execution):** Đặt Breakpoint ở đầu Controller, dùng Postman hoặc Swagger gửi 1 request mẫu, sau đó bấm F8 (Step Over) và F7 (Step Into) để xem luồng dữ liệu biến đổi qua từng hàm.
+4. **Ghi chú sơ đồ tư duy (Mindmap / Sequence):** Tự phác thảo 1 trang sơ đồ tóm tắt luồng dữ liệu cho chính mình.`,
+        asciiDiagram: `[BẢN ĐỒ DÒ ĐƯỜNG TRONG CODEBASE KHỦNG]
+BƯỚC 1: Đọc DB Schema / Entities ──> Nắm vững bài toán nghiệp vụ
+                   │
+                   ▼
+BƯỚC 2: Chọn 1 Controller Endpoint ──> POST /api/v1/orders
+                   │
+                   ▼ (Cmd + B / Ctrl + B: Go to Declaration)
+BƯỚC 3: OrderServiceImpl.createOrder()
+                   │
+                   ▼ (Đặt Breakpoint & Chạy F7/F8 Debugger)
+BƯỚC 4: OrderRepository.save() + Kafka Event Publisher
+                   │
+                   ▼
+BƯỚC 5: Tự vẽ 1 Sequence Diagram ngắn gọn lưu vào sổ tay cá nhân!`,
+        badCodeTitle: '❌ Thói quen đọc code thụ động và không ghi chép',
+        badCode: `// ❌ CÁCH TIẾP CẬN SAI LẦM:
+// 1. Mở file pom.xml đọc hết 50 dependency không hiểu để làm gì.
+// 2. Mở từng file Java từ package com.company... đọc chay không có ngữ cảnh.
+// 3. Không chạy thử ứng dụng ở local mà chỉ nhìn code.
+// 4. Ngại hỏi, sau 1 tuần vẫn chưa dựng xong môi trường chạy thử.`,
+        goodCodeTitle: '✅ Phím tắt IntelliJ IDEA vàng ngọc cần nằm lòng',
+        goodCode: `// ✅ 5 BỘ PHÍM TẮT ĐƯA BẠN THÀNH CHUYÊN GIA DÒ CODEBASE:
+// 1. Double Shift (Nhấn Shift 2 lần):
+//    Search Everywhere - Tìm bất cứ thứ gì: Tên class, file, cài đặt, action.
+
+// 2. Cmd + B (Mac) / Ctrl + B (Win):
+//    Go to Declaration / Usages - Nhảy thẳng tới nơi khai báo hàm hoặc xem ai đang gọi nó.
+
+// 3. Cmd + Alt + B (Mac) / Ctrl + Alt + B (Win):
+//    Go to Implementation - Nhảy từ Interface tới Class thực thi (cực kỳ hữu ích trong Spring).
+
+// 4. Alt + F7 (Mac & Win):
+//    Find Usages - Liệt kê tất cả những nơi trong toàn bộ dự án đang sử dụng method/class này.
+
+// 5. Cmd + Shift + F (Mac) / Ctrl + Shift + F (Win):
+//    Find in Files - Tìm kiếm chuỗi văn bản (ví dụ tìm route: "/api/v1/checkout").`,
+        interviewTip: 'Khi phỏng vấn hoặc thử việc, hãy hỏi người hướng dẫn (Buddy/Mentor): "Anh/chị có thể cho em xin 3 luồng nghiệp vụ quan trọng nhất của hệ thống và 1 tài liệu Postman collection để em test luồng chạy thực tế được không ạ?". Câu hỏi này chứng minh bạn có tư duy tiếp cận hệ thống dựa trên giá trị kinh doanh thực tế chứ không chỉ học vẹt syntax.'
+      },
+      {
+        id: 'pull-request-code-review-etiquette',
+        title: '3. Chuẩn Mực Pull Request & Văn Hóa Code Review Chuyên Nghiệp',
+        badge: 'Tác Phong Kỹ Sư',
+        summary: 'Cách tạo Pull Request nguyên tử, mô tả rõ ràng chuẩn quốc tế và thái độ tiếp nhận nhận xét để ghi điểm tuyệt đối trong mắt Senior.',
+        explanation: `Pull Request (PR) là danh thiếp của một lập trình viên trong doanh nghiệp. Một PR cẩu thả, không viết mô tả, chứa 50 file bị thay đổi linh tinh sẽ làm Senior mất hàng giờ review trong ức chế. Ngược lại, một PR gọn gàng, có Unit Test đi kèm và giải thích rành mạch sẽ khiến các anh lớn vô cùng quý mến và tin tưởng giao cho bạn những task lớn hơn.
+
+**4 Nguyên Tắc Vàng Khi Tạo Pull Request:**
+1. **Nguyên tắc Nguyên tử (Atomic PR):** Mỗi PR chỉ làm DUY NHẤT một nhiệm vụ. Không bao giờ gộp "Làm tính năng login" chung với "Tiện tay sửa giao diện trang chủ" và "Reformat lại 20 file khác".
+2. **Kích thước lý tưởng (< 300 dòng code):** PR càng nhỏ thì đồng đội review càng nhanh và phát hiện bug càng chuẩn.
+3. **Mô tả đầy đủ 4 phần:**
+   - **What:** PR này làm gì? (Tóm tắt 2-3 câu).
+   - **Why:** Tại sao cần làm? (Dẫn link Jira ticket hoặc bug issue).
+   - **How to test:** Hướng dẫn từng bước để reviewer test lại (kèm cURL command hoặc JSON body).
+   - **Evidence:** Ảnh chụp màn hình Swagger hoặc kết quả chạy Unit Test pass 100%.
+4. **Văn hóa tiếp nhận góp ý:** Khi reviewer nhận xét code của bạn: "Đoạn này có thể bị dính NPE nếu user chưa kích hoạt":
+   - Tuyệt đối không tự ái hay tranh cãi gay gắt.
+   - Hãy trả lời: "Cảm ơn anh đã nhắc, em đã bổ sung kiểm tra null và viết thêm 1 case Unit Test ở commit mới ạ!".`,
+        asciiDiagram: `[CẤU TRÚC 1 PULL REQUEST MẪU MỰC]
+┌────────────────────────────────────────────────────────┐
+│ Title: feat(auth): add JWT token refresh endpoint       │
+│ JIRA Ticket: [BACKEND-402]                             │
+├────────────────────────────────────────────────────────┤
+│ 1. Tóm tắt thay đổi (What & Why):                       │
+│    Bổ sung API POST /api/v1/auth/refresh để cấp mới    │
+│    Access Token khi token cũ hết hạn.                  │
+│                                                        │
+│ 2. Kế hoạch kiểm thử (How to test):                    │
+│    curl -X POST http://localhost:8080/api/v1/refresh   │
+│         -H "Cookie: refreshToken=..."                  │
+│                                                        │
+│ 3. Bằng chứng (Evidence):                              │
+│    - 5 Unit Tests đã pass (Coverage: 91%)              │
+│    - Ảnh chụp Postman kết quả 200 OK                   │
+└────────────────────────────────────────────────────────┘`,
+        badCodeTitle: '❌ PR cẩu thả bị từ chối thẳng thừng',
+        badCode: `// ❌ TIÊU ĐỀ PR: "fix bug"
+// MÔ TẢ PR: (Để trống không ghi gì cả)
+// THAY ĐỔI: 45 files changed, 2,800 additions!
+// Lẫn lộn giữa việc sửa logic database với việc format code khoảng trắng!
+// Không có bất kỳ dòng Unit Test nào đi kèm!`,
+        goodCodeTitle: '✅ Mẫu PR Description Markdown chuẩn chỉnh đi làm',
+        goodCode: `### 📌 Description
+Triển khai cơ chế Refresh Token Rotation (RTR) theo yêu cầu bảo mật ticket #PROJ-120.
+
+### 🛠️ Key Changes
+- Thêm \`RefreshTokenService\` lưu token vào Redis với TTL 7 ngày.
+- Bổ sung \`AuthController.refreshToken()\` trả về cặp token mới.
+- Xử lý kịch bản Token Replay Attack: Vô hiệu hóa toàn bộ session nếu phát hiện token cũ dùng lại.
+
+### 🧪 Testing
+- [x] Đã viết 6 Unit Tests cho \`RefreshTokenServiceTest\` (Passed 100%).
+- [x] Đã kiểm thử tích hợp bằng MockMvc.
+- [x] Đã kiểm tra không có lỗi Checkstyle/Lint (\`mvn clean test\`).
+
+### 📸 Evidence
+- Đã test thành công với kịch bản token hợp lệ và kịch bản token hết hạn.`,
+        interviewTip: 'Khi phỏng vấn được hỏi: "Em xử lý thế nào khi người khác chê bai code của mình trong Code Review?", câu trả lời tốt nhất là: "Em luôn phân định rạch ròi giữa code và cái tôi cá nhân. Code Review là cơ hội miễn phí để em học hỏi kinh nghiệm thực chiến từ các anh Senior. Nếu nhận xét đúng, em vui vẻ tiếp thu và sửa đổi kèm lời cảm ơn. Nếu em thấy giải pháp của mình có lý do riêng, em sẽ giải thích nhẹ nhàng bằng dẫn chứng kỹ thuật hoặc chủ động hẹn trao đổi ngắn 5 phút để hai bên cùng tìm ra phương án tối ưu nhất cho dự án."'
+      },
+      {
+        id: 'troubleshooting-incident-response-entry',
+        title: '4. Bí Kíp Tự Debug Độc Lập & Xử Lý Sự Cố: Từ Log TraceId Đến Remote Debug',
+        badge: 'Kỹ Năng Giải Quyết Lỗi',
+        summary: 'Quy tắc 15-30 phút tự điều tra, cách khai thác Log TraceId, và phương pháp đặt câu hỏi 4 bước khiến Senior luôn sẵn lòng chỉ dẫn.',
+        explanation: `Một trong những thước đo lớn nhất để đánh giá xem một bạn Fresher có tiềm năng trở thành Kỹ sư cứng cáp hay không chính là **khả năng tự gỡ rối (Troubleshooting & Debugging)**.
+
+Có hai thái cực sai lầm phổ biến:
+1. **Hỏi quá sớm (Chưa thử đã hỏi):** Vừa thấy màn hình hiện Exception màu đỏ là quay sang gọi: "Anh ơi lỗi này là gì ạ?" mà chưa thèm đọc xem dòng chữ tiếng Anh đó nói gì. Điều này làm phiền đồng đội và khiến bạn bị đánh giá là thiếu độc lập.
+2. **Không dám hỏi (Giấu dốt):** Bị kẹt cứng một vấn đề suốt cả ngày, không dám nói với ai, đến chiều họp Standup thì bảo "Em chưa làm được gì". Điều này làm chậm tiến độ của cả nhóm.
+
+**Quy Tắc Vàng: Tự Điều Tra 15-30 Phút**
+Khi gặp lỗi, hãy dành đúng 15 đến 30 phút tự điều tra theo các bước:
+- Đọc dòng đầu tiên và dòng cuối cùng của Stacktrace (tìm từ khóa \`Caused by:\`).
+- Tra cứu TraceId trên Kibana / Grafana để xem toàn bộ nhật ký của request đó.
+- Kiểm tra lại các file vừa sửa gần nhất bằng \`git diff\`.
+- Nếu sau 30 phút vẫn chưa tìm ra nguyên nhân, áp dụng **Công thức 4 bước hỏi bài thông minh**:
+  1. Mục tiêu em muốn làm là gì?
+  2. Lỗi thực tế và thông điệp Exception là gì?
+  3. Em đã thử 2 cách A và B như thế nào, kết quả ra sao?
+  4. Em đang nghi ngờ vấn đề nằm ở đoạn nào?`,
+        asciiDiagram: `[QUY TRÌNH XỬ LÝ LỖI CHUẨN KỸ SƯ]
+Gặp Exception / Bug
+       │
+       ▼
+[TỰ ĐIỀU TRA 15 - 30 PHÚT]
+├─ 1. Đọc "Caused by:" trong Stacktrace
+├─ 2. Tra cứu TraceId trên hệ thống Log phân tán
+├─ 3. Đặt Breakpoint chạy Debugger local
+       │
+       ├─► Tìm ra nguyên nhân? ──> Fix bug & Viết Unit Test chặn tái phát! ✅
+       │
+       ▼ (Sau 30 phút vẫn bế tắc)
+[ÁP DỤNG CÔNG THỨC 4 BƯỚC HỎI SENIOR]
+1. Đang làm gì?
+2. Bị lỗi gì (kèm log)?
+3. Đã thử những cách nào?
+4. Đang nghi vấn chỗ nào?
+       │
+       ▼
+Senior giải thích trong 5 phút ➔ Học thêm được kiến thức mới sâu sắc! 🚀`,
+        badCodeTitle: '❌ Cách hỏi bài làm phiền và gây ức chế cho đồng đội',
+        badCode: `// ❌ CÁCH HỎI THIẾU TÁC PHÒNG:
+// Gửi 1 tấm ảnh chụp màn hình bằng điện thoại mờ căm qua Slack và nhắn:
+"Anh ơi code em bị lỗi rồi, anh xem giúp em với!"
+// Không nói rõ đang gọi API nào, không copy chuỗi log,
+// không nói đã thử gì, bắt người khác phải tự mò mẫm từ con số 0!`,
+        goodCodeTitle: '✅ Mẫu tin nhắn nhờ hỗ trợ đạt chuẩn kỹ sư chuyên nghiệp',
+        goodCode: `// ✅ CÁCH HỎI ĐIỂM 10 QUA SLACK / TEAMS:
+"Chào anh Hùng, em đang tích hợp tính năng trừ tồn kho khi tạo đơn hàng (Ticket #405).
+
+Hiện tại khi gọi API POST /api/v1/orders, em nhận mã lỗi 500.
+Trong log hiển thị:
+'Caused by: org.hibernate.LazyInitializationException: could not initialize proxy [Item#12] - no Session'
+TraceId: f83a-92b1-412c
+
+Em đã tìm hiểu và biết lỗi do truy cập quan hệ Lazy ngoài phạm vi Session của JPA.
+Em đã thử 2 phương án:
+1. Thêm @Transactional lên tầng Controller nhưng em thấy làm vậy vi phạm kiến trúc.
+2. Dùng JOIN FETCH trong Repository nhưng câu query đang bị dính cảnh báo MultipleBagFetchException.
+
+Anh cho em xin 5 phút hướng dẫn xem em nên tách DTO hay viết EntityGraph thì chuẩn hơn với dự án mình ạ?"`,
+        interviewTip: 'Kỹ năng hỏi bài thông minh chính là tấm vé thông hành đưa bạn vượt qua kỳ thử việc với lời khen ngợi từ mọi thành viên trong team. Người hỏi thông minh tiết kiệm 80% thời gian cho Senior và thể hiện tinh thần trách nhiệm cao độ với công việc của mình.'
+      }
+    ]
   }
 ];
+
 

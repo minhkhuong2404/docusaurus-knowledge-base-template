@@ -709,6 +709,190 @@ export const INTERVIEW_QUESTIONS: InterviewQuestion[] = [
     shortAnswer: 'Chống thảm họa Thundering Herd (Đàn bò giẫm đạp): Khi một dịch vụ gặp sự cố và hồi phục, nếu 10,000 client cùng retry sau đúng 1s, 2s, 4s (cố định), chúng sẽ tạo ra các đợt sóng xung kích đồng loạt đánh sập dịch vụ đó một lần nữa. Jitter thêm số mili-giây ngẫu nhiên ngẫu nhiên vào khoảng thời gian chờ (sleep = min(cap, base * 2^attempt) + random_jitter) để phân tán tải đều đặn.',
     seniorDeepDive: 'Nghiên cứu của Amazon AWS Architecture chỉ ra rằng: "Exponential Backoff mà không có Jitter chỉ làm dời thời điểm sập hệ thống sang các mốc lũy thừa chứ không giải quyết được xung đột". Áp dụng Full Jitter: sleep = ThreadLocalRandom.current().nextLong(0, min(cap, base * (1 << attempt))) giúp giãn cách các request retry mịn như dòng nước.',
     trapWarning: 'Luôn đặt giới hạn số lần thử lại tối đa (Max Retries = 3 - 5 lần) và thời gian chờ tối đa (Max Backoff = 30s), kết hợp Dead Letter Queue nếu sau 5 lần vẫn thất bại, tuyệt đối không retry vô tận!'
+  },
+  // ========================================================
+  // PHẦN 9: ENTRY-LEVEL ESSENTIALS & PHỎNG VẤN TRÚNG TỦ (CÂU 76 - 95)
+  // ========================================================
+  {
+    id: 'q-76',
+    category: 'Core Java',
+    level: 'Intern',
+    question: 'Toán tử "==" khác ".equals()" như thế nào? Tại sao Integer a = 127, b = 127; a == b là true nhưng với 128 lại là false?',
+    shortAnswer: 'Toán tử == so sánh địa chỉ ô nhớ (tham chiếu) của hai đối tượng trên Heap, còn .equals() so sánh giá trị nội dung logic bên trong. Với số nguyên, Java có bộ nhớ đệm Integer Cache từ -128 đến 127; trong dải này Java tái sử dụng cùng 1 instance Integer có sẵn nên a == b là true. Ngoài dải này (như 128), Java cấp phát hai object mới tách biệt trên Heap nên a == b trả về false.',
+    seniorDeepDive: 'Java Language Specification (JLS) quy định Integer.valueOf(int) tự động trỏ vào mảng tĩnh IntegerCache.cache[-128..127]. Bytecode của biểu thức Integer a = 128 thực chất gọi Integer.valueOf(128). Với các kiểu Wrapper khác: Byte, Short, Long cũng cache [-128..127], Character cache [0..127], Boolean cache TRUE/FALSE. Riêng Float và Double không cache.',
+    trapWarning: 'Khi so sánh hai khóa ID kiểu Long của hai entity trong Spring Data JPA (ví dụ order.getUserId() == user.getId()), nếu ID nhỏ hơn 128 code vẫn chạy đúng lúc test, nhưng khi lên production ID tăng lên 129 thì logic so sánh bị sai hoàn toàn! Luôn dùng Objects.equals(a, b).'
+  },
+  {
+    id: 'q-77',
+    category: 'Core Java',
+    level: 'Fresher',
+    question: 'Phân biệt sự khác nhau giữa Comparable và Comparator trong Java?',
+    shortAnswer: 'Comparable định nghĩa thứ tự sắp xếp tự nhiên (Natural Ordering) mặc định của chính đối tượng đó thông qua method compareTo(T o) nằm trong package java.lang. Comparator định nghĩa chiến lược sắp xếp tùy chỉnh bên ngoài (Custom Ordering) thông qua method compare(T o1, T o2) nằm trong java.util, cho phép tạo nhiều tiêu chí sắp xếp khác nhau (theo tên, theo tuổi, theo giá giảm dần).',
+    seniorDeepDive: 'Comparable can thiệp trực tiếp vào mã nguồn của class (phải implements Comparable<T>). Comparator áp dụng nguyên lý Open/Closed Principle (SOLID): ta có thể tạo thêm nhiều cách sắp xếp mới cho một class có sẵn mà không cần sửa đổi class đó. Từ Java 8, Comparator hỗ trợ cú pháp Lambda và method chaining cực mạnh: Comparator.comparing(User::getAge).thenComparing(User::getName).reversed().',
+    trapWarning: 'Khi viết hàm compare(a, b), tuyệt đối không dùng phép trừ return a.getScore() - b.getScore() vì có thể gây tràn số nguyên (Integer Overflow) nếu điểm số mang giá trị âm lớn hoặc vượt quá Integer.MAX_VALUE. Luôn dùng Integer.compare(a.getScore(), b.getScore()).'
+  },
+  {
+    id: 'q-78',
+    category: 'Core Java',
+    level: 'Fresher',
+    question: 'Tại sao từ Java 8 lại bổ sung default method vào Interface? Nếu 1 class implement 2 interface có cùng default method thì giải quyết ra sao?',
+    shortAnswer: 'Java 8 thêm default method để đảm bảo tính tương thích ngược (Backward Compatibility), cho phép bổ sung các method mới (như forEach, stream) vào các Interface sẵn có (như Collection, List) mà không làm vỡ mã nguồn của hàng triệu thư viện cũ đang implement interface đó. Nếu 1 class implement 2 interface có cùng method default, trình biên dịch sẽ báo lỗi xung đột (Diamond Problem) và bắt buộc class đó phải override lại method đó một cách tường minh.',
+    seniorDeepDive: 'Quy tắc giải quyết xung đột của Java tuân thủ 3 nguyên tắc: 1. Class luôn thắng Interface (nếu lớp cha định nghĩa method thì method đó luôn được ưu tiên); 2. Sub-interface chi tiết hơn luôn thắng Super-interface; 3. Nếu hai interface ngang hàng cùng có default method, class implement bắt buộc phải override và có thể chọn gọi cụ thể thông qua cú pháp: InterfaceName.super.methodName().',
+    trapWarning: 'Đừng nhầm lẫn Interface có default method với Abstract Class! Interface vẫn không có trạng thái biến thể hiện (Instance State - không thể khai báo biến non-static non-final) và một class có thể implement nhiều interface, trong khi chỉ được kế thừa 1 abstract class duy nhất.'
+  },
+  {
+    id: 'q-79',
+    category: 'Concurrency & JVM',
+    level: 'Fresher',
+    question: 'Phân biệt volatile, synchronized và AtomicInteger? Khi nào dùng volatile là chưa đủ?',
+    shortAnswer: 'volatile đảm bảo tính nhìn thấy (Visibility) giữa các luồng bằng cách đọc/ghi trực tiếp từ RAM, không lưu cache ở CPU Register; volatile KHÔNG đảm bảo tính nguyên tử (Atomicity). synchronized đảm bảo cả tính nhìn thấy lẫn tính nguyên tử bằng cách khóa màn hình độc quyền (Mutual Exclusion) nhưng có chi phí chặn luồng (blocking). AtomicInteger sử dụng chỉ lệnh phần cứng CAS (Compare-And-Swap) không chặn luồng (Lock-free), đảm bảo nguyên tử cho các thao tác số học cơ bản với hiệu năng cực cao.',
+    seniorDeepDive: 'Thao tác count++ thực chất gồm 3 bước bytecode: 1. Đọc count từ bộ nhớ vào thanh ghi; 2. Tăng giá trị lên 1; 3. Ghi giá trị mới ngược lại. Dù biến count có khai báo volatile, nếu 2 luồng cùng chạy count++ cùng lúc, cả 2 luồng đều đọc cùng giá trị ban đầu và ghi đè kết quả lên nhau ➔ Mất mát dữ liệu (Race Condition). volatile chỉ an toàn khi thao tác ghi độc lập với giá trị trước đó (ví dụ cờ báo dừng: volatile boolean isRunning = true).',
+    trapWarning: 'Nhiều bạn fresher trả lời: "Biến volatile giúp code thread-safe 100%". Hãy nêu ngay ví dụ count++ để chứng minh biến volatile hoàn toàn không thể bảo vệ tính nguyên tử của phép toán tăng giá trị.'
+  },
+  {
+    id: 'q-80',
+    category: 'Concurrency & JVM',
+    level: 'Junior',
+    question: 'ThreadPoolExecutor hoạt động theo thứ tự nào giữa corePoolSize, maxPoolSize và workQueue?',
+    shortAnswer: 'Thứ tự cấp phát của ThreadPoolExecutor: 1. Khi task mới tới, nếu số luồng đang chạy < corePoolSize: Luôn tạo ngay 1 Worker Thread mới để phục vụ; 2. Nếu đã đủ corePoolSize: Task mới sẽ được đưa vào hàng đợi (workQueue); 3. Chỉ khi workQueue bị ĐẦY (full capacity): ThreadPool mới bắt đầu tạo thêm các luồng vượt quá corePoolSize cho tới khi chạm maxPoolSize; 4. Nếu cả workQueue đầy và số luồng đã đạt maxPoolSize: Hệ thống kích hoạt chính sách từ chối (RejectedExecutionHandler).',
+    seniorDeepDive: 'Lỗi tai hại thường gặp: Dùng Executors.newFixedThreadPool(10) tạo ra LinkedBlockingQueue không giới hạn (Unbounded Queue: capacity = Integer.MAX_VALUE). Khi hệ thống quá tải, workQueue không bao giờ đầy nên số luồng không bao giờ tăng vượt core, và hàng triệu task tích tụ trong RAM dẫn đến java.lang.OutOfMemoryError: Java heap space. Trong sản xuất, luôn dùng ThreadPoolExecutor với ArrayBlockingQueue có chặn kích thước cụ thể.',
+    trapWarning: 'Nhiều ứng viên nhầm tưởng: "Khi task vào thì thread pool sẽ tạo luồng đến maxPoolSize trước, nếu thiếu thì mới đẩy vào Queue". Hãy nhấn mạnh: ThreadPoolExecutor đẩy vào Queue TRƯỚC, Queue đầy rồi mới tạo tiếp luồng đến maxPoolSize!'
+  },
+  {
+    id: 'q-81',
+    category: 'Spring Boot',
+    level: 'Intern',
+    question: 'Phân biệt @Component, @Service, @Repository, @Controller? Cơ chế Component Scanning phát hiện chúng ra sao?',
+    shortAnswer: '@Component là annotation gốc tổng quát đánh dấu một Java class là Spring-managed Bean. Ba annotation còn lại là các Stereo-type kế thừa (meta-annotated) từ @Component với mục đích biểu thị rõ ngữ nghĩa kiến trúc: @Service dùng cho tầng xử lý nghiệp vụ (Business Logic); @Repository dùng cho tầng truy cập dữ liệu (Data Access) và tự động chuyển đổi các ngoại lệ SQL thành DataAccessException của Spring; @Controller / @RestController dùng cho tầng giao tiếp HTTP API.',
+    seniorDeepDive: 'Annotation @SpringBootApplication thực chất bao gồm @ComponentScan. Khi ứng dụng khởi động, Spring quét đệ quy các package nằm dưới package chứa class chính (Root Package). Sử dụng ASM framework để phân tích bytecode của các file .class trên đĩa, tìm kiếm các class mang annotation chứa meta @Component để đăng ký vào BeanDefinitionRegistry của IoC Container.',
+    trapWarning: 'Nếu bạn đặt một class @Service ở ngoài thư mục gốc của file Application (ví dụ com.example.service trong khi App nằm ở com.example.app), Spring sẽ không thể quét thấy và ném lỗi NoSuchBeanDefinitionException lúc khởi động.'
+  },
+  {
+    id: 'q-82',
+    category: 'Spring Boot',
+    level: 'Fresher',
+    question: 'Vòng đời (Lifecycle) đầy đủ của một Spring Bean từ lúc khởi tạo đến khi bị tiêu hủy diễn ra như thế nào?',
+    shortAnswer: 'Vòng đời Spring Bean trải qua các giai đoạn chính: 1. Đọc BeanDefinition & Khởi tạo instance (Instantiate thông qua Constructor); 2. Tiêm phụ thuộc (Populate Properties / Dependency Injection); 3. Gọi các Aware Interfaces (BeanNameAware, ApplicationContextAware); 4. BeanPostProcessor.postProcessBeforeInitialization; 5. Gọi hàm khởi tạo (@PostConstruct -> InitializingBean.afterPropertiesSet -> custom initMethod); 6. BeanPostProcessor.postProcessAfterInitialization (Tạo Dynamic Proxy cho AOP); 7. Sẵn sàng phục vụ; 8. Tiêu hủy (@PreDestroy -> DisposableBean.destroy).',
+    seniorDeepDive: 'BeanPostProcessor là trái tim ma thuật của Spring: Chính tại giai đoạn postProcessAfterInitialization, Spring kiểm tra xem bean có chứa các annotation như @Transactional, @Async, @Cacheable hay không. Nếu có, Spring sẽ bọc bean thật bằng một CGLIB hoặc JDK Dynamic Proxy để chặn (intercept) các lời gọi hàm trước khi chuyển tiếp vào bean thật.',
+    trapWarning: 'Không bao giờ gọi logic phụ thuộc vào các bean được tiêm (@Autowired) bên trong Constructor của chính nó! Ở thời điểm Constructor chạy, các field phụ thuộc có thể chưa được Spring tiêm xong (vẫn là null). Hãy chuyển logic khởi tạo phụ thuộc đó vào phương thức đánh dấu @PostConstruct.'
+  },
+  {
+    id: 'q-83',
+    category: 'Spring Boot',
+    level: 'Fresher',
+    question: 'Tại sao gọi method nội bộ cùng class (this.methodB()) thì @Transactional hoặc @Async không hoạt động (Spring AOP Proxy Trap)?',
+    shortAnswer: 'Spring AOP triển khai bằng cơ chế bọc Proxy (Proxy Pattern). Khi một Bean bên ngoài gọi orderBean.methodA(), lời gọi đi qua lớp vỏ Proxy; lớp vỏ Proxy sẽ mở Transaction trước rồi mới ủy quyền vào instance thật. Tuy nhiên, nếu bên trong methodA() gọi trực tiếp this.methodB() (nơi có @Transactional), lời gọi diễn ra cục bộ trong chính instance thật mà không hề đi qua lớp vỏ Proxy, khiến annotation @Transactional trên methodB() bị bỏ qua 100%!',
+    seniorDeepDive: 'Để khắc phục có 3 cách chuẩn: 1. (Khuyên dùng) Tách methodB() sang một class Service độc lập khác và tiêm vào; 2. Tự tiêm chính mình (Self-injection thông qua @Lazy OrderService self); 3. Lấy proxy hiện tại từ AopContext.currentProxy() (cần cấu hình @EnableAspectJAutoProxy(exposeProxy = true)).',
+    trapWarning: 'Cạm bẫy tương tự xảy ra nếu bạn đánh dấu @Transactional trên một method private hoặc protected! Spring AOP (CGLIB proxy) chỉ có thể override các public method. Transaction đặt trên private method sẽ bị lờ đi trong im lặng mà không báo bất kỳ lỗi nào.'
+  },
+  {
+    id: 'q-84',
+    category: 'Spring Boot',
+    level: 'Intern',
+    question: 'Phân biệt sự khác nhau giữa @NotNull, @NotEmpty và @NotBlank trong Jakarta Bean Validation?',
+    shortAnswer: '1. @NotNull: Giá trị không được bằng null, nhưng chấp nhận chuỗi rỗng "" hoặc chuỗi chỉ chứa dấu cách "   "; 2. @NotEmpty: Giá trị không được null VÀ kích thước (size/length) phải > 0, nhưng chấp nhận chuỗi chứa toàn dấu cách "   "; 3. @NotBlank: Giá trị không được null, kích thước > 0 VÀ sau khi trim() bỏ khoảng trắng thì độ dài vẫn phải > 0. Dành riêng cho chuỗi văn bản (String).',
+    seniorDeepDive: '@NotNull có thể áp dụng cho mọi kiểu đối tượng (Integer, Date, Custom Object). @NotEmpty áp dụng cho String, Collection, Map hoặc Array (không cho phép tập hợp rỗng). @NotBlank chỉ áp dụng cho CharSequence / String. Đi làm, với các trường nhập liệu văn bản của người dùng (như username, password, address), 95% trường hợp bạn phải dùng @NotBlank để chặn người dùng nhập toàn phím Space.',
+    trapWarning: 'Nếu bạn đặt @NotBlank trên một trường kiểu Integer age, ứng dụng sẽ quăng lỗi UnexpectedTypeException lúc khởi động vì @NotBlank không hỗ trợ kiểu số! Với kiểu số, hãy dùng @NotNull kết hợp @Min(1) / @Positive.'
+  },
+  {
+    id: 'q-85',
+    category: 'Database / JPA',
+    level: 'Fresher',
+    question: 'So sánh Soft Delete (Xóa mềm với is_deleted) và Hard Delete (Xóa cứng)? Cạm bẫy với Unique Index khi xóa mềm là gì?',
+    shortAnswer: 'Hard Delete (DELETE FROM table) xóa vĩnh viễn dòng dữ liệu khỏi ổ cứng; nhanh, sạch DB nhưng không thể khôi phục và làm đứt gãy tính toàn vẹn dữ liệu lịch sử hóa đơn. Soft Delete cập nhật cờ (is_deleted = true hoặc deleted_at = NOW()); giúp bảo toàn dấu vết kiểm toán (Audit Trail) và dễ dàng khôi phục nhưng làm phình to dung lượng bảng và mọi câu query đều phải gắn thêm điều kiện WHERE is_deleted = false.',
+    seniorDeepDive: 'Cạm bẫy Unique Constraint: Giả sử bảng users có Unique Index trên cột email. Khách hàng xóa tài khoản user@example.com (is_deleted = true). Sau đó, một người dùng mới vào đăng ký lại đúng email user@example.com thì Database sẽ quăng lỗi Duplicate Key Violation! Giải pháp chuẩn: 1. Sử dụng cột deleted_at (TIMESTAMP) và tạo Composite Unique Index (email, deleted_at), khi chưa xóa thì deleted_at = NULL (trong Postgres, NULL không trùng nhau); 2. Hoặc nếu MySQL (nơi NULL được tính nhiều bản ghi nhưng có thể phức tạp), lưu cờ deleted_id: khi chưa xóa mang giá trị 0, khi xóa gán bằng chính ID của bản ghi đó và đánh Unique (email, deleted_id).',
+    trapWarning: 'Trong Spring Data JPA, nếu dùng Soft Delete kết hợp @SQLDelete và @SQLRestriction("is_deleted = false"), các quan hệ @ManyToOne đôi khi vẫn bị dính lỗi EntityNotFoundException nếu có một bản ghi con trỏ tới một bản ghi cha đã bị xóa mềm.'
+  },
+  {
+    id: 'q-86',
+    category: 'Database / JPA',
+    level: 'Junior',
+    question: '4 mức Transaction Isolation Level trong SQL ngăn chặn những hiện tượng bất thường nào (Dirty Read, Non-repeatable Read, Phantom Read)?',
+    shortAnswer: '1. READ UNCOMMITTED: Cho phép đọc dữ liệu chưa commit của transaction khác ➔ Dính cả 3 hiện tượng; 2. READ COMMITTED (Mặc định của Oracle, Postgres, SQL Server): Chỉ đọc dữ liệu đã commit ➔ Ngăn được Dirty Read, nhưng vẫn dính Non-repeatable Read và Phantom Read; 3. REPEATABLE READ (Mặc định của MySQL InnoDB): Cùng 1 query chạy nhiều lần trong 1 transaction luôn thấy cùng 1 kết quả ➔ Ngăn Dirty Read và Non-repeatable Read (MySQL dùng MVCC + Next-Key Lock để ngăn luôn Phantom Read); 4. SERIALIZABLE: Thực thi tuần tự tuyệt đối ➔ Ngăn toàn bộ hiện tượng nhưng thông lượng (throughput) cực thấp.',
+    seniorDeepDive: 'Định nghĩa 3 hiện tượng: - Dirty Read: Đọc trúng dữ liệu mà transaction khác đang sửa nhưng sau đó lại Rollback; - Non-repeatable Read: Đọc lại 1 dòng thấy dữ liệu của dòng đó bị transaction khác UPDATE đổi mất giá trị; - Phantom Read: Đọc lại 1 phạm vi (Range Query: WHERE age > 20) thấy xuất hiện thêm các dòng mới toanh do transaction khác INSERT thêm vào.',
+    trapWarning: 'Không phải cứ đặt Isolation cao là tốt! Nâng lên SERIALIZABLE sẽ biến Database thành cổ chai nghiêm trọng do Lock Contention và tăng vọt nguy cơ Deadlock. 90% hệ thống thực tế tối ưu ở mức READ COMMITTED kết hợp Optimistic Locking (@Version) ở tầng ứng dụng.'
+  },
+  {
+    id: 'q-87',
+    category: 'Database / JPA',
+    level: 'Intern',
+    question: 'Phân biệt WHERE và HAVING trong SQL? Thứ tự thực thi logic (Logical Query Processing Order) của một câu SELECT diễn ra ra sao?',
+    shortAnswer: 'WHERE lọc dữ liệu trên từng dòng đơn lẻ TRƯỚC khi dữ liệu được gom nhóm (GROUP BY) và không thể sử dụng các hàm tổng hợp (Aggregate Functions: COUNT, SUM, AVG). HAVING lọc dữ liệu trên các nhóm bản ghi SAU khi đã thực hiện GROUP BY và có thể dùng trực tiếp các hàm tổng hợp (ví dụ: HAVING COUNT(*) > 5).',
+    seniorDeepDive: 'Thứ tự thực thi logic của động cơ SQL (RDBMS) hoàn toàn khác thứ tự viết code: 1. FROM & JOIN (Xác định nguồn bảng và tích Descartes); 2. WHERE (Lọc các dòng thoả mãn); 3. GROUP BY (Gom nhóm các dòng); 4. HAVING (Lọc các nhóm thoả mãn); 5. SELECT (Chiếu các cột và tính toán biểu thức); 6. DISTINCT (Loại bỏ bản ghi trùng); 7. ORDER BY (Sắp xếp kết quả); 8. LIMIT / OFFSET (Cắt lấy số dòng hiển thị).',
+    trapWarning: 'Hiểu thứ tự thực thi giúp giải thích câu hỏi kinh điển: "Tại sao không thể dùng alias định nghĩa trong SELECT ở mệnh đề WHERE?" ➔ Vì WHERE được thực thi ở bước 2, trong khi SELECT và các alias mới chỉ được tính toán ở bước 5!'
+  },
+  {
+    id: 'q-88',
+    category: 'Testing & QA',
+    level: 'Fresher',
+    question: 'Phân biệt @Mock và @Spy trong Mockito? Khi nào dùng Mock và khi nào dùng Spy?',
+    shortAnswer: '@Mock tạo ra một đối tượng hoàn toàn giả lập (Dummy Object), toàn bộ các method bên trong đều không chạy code thật mà mặc định trả về null, 0, false hoặc rỗng trừ khi bạn dùng when(...).thenReturn(...). @Spy bọc một đối tượng thật (Partial Mock): Mặc định toàn bộ các method sẽ gọi code thực thi thật tế, bạn chỉ can thiệp (override) một vài method cụ thể cần thiết bằng cú pháp doReturn(...).when(spy).method().',
+    seniorDeepDive: 'Khi viết Unit Test: Khuyên dùng @Mock cho toàn bộ các dependency bên ngoài (như Repository, External API Client, Message Publisher) để cô lập hoàn toàn unit cần test. Chỉ dùng @Spy khi bạn đang kế thừa một Legacy Class khổng lồ có một method phụ khó test (như đọc file, lấy thời gian thực) mà bạn muốn mock riêng method đó trong khi vẫn giữ nguyên logic của các method còn lại.',
+    trapWarning: 'Khi stub dữ liệu trên một @Spy object, nếu dùng when(spy.realMethod()).thenReturn(...) thì realMethod() THẬT VẪN SẼ BỊ CHẠY MỘT LẦN trước khi stub có hiệu lực! Hãy luôn dùng cú pháp doReturn(val).when(spy).method() để tránh kích hoạt side-effect không mong muốn.'
+  },
+  {
+    id: 'q-89',
+    category: 'Testing & QA',
+    level: 'Junior',
+    question: 'Tại sao không nên viết Unit Test trực tiếp cho private method? Nếu private method quá phức tạp thì refactor như thế nào?',
+    shortAnswer: 'Unit Test nhằm mục đích kiểm chứng hợp đồng hành vi công khai (Public Interface / Observable Behavior) của class chứ không kiểm tra chi tiết cài đặt nội bộ (Implementation Details). Nếu test bám chặt vào private method, mỗi khi bạn tái cấu trúc (refactor) tên hàm hoặc tách nhỏ logic bên trong thì toàn bộ test sẽ vỡ vụn mặc dù hành vi bên ngoài của hệ thống không hề thay đổi.',
+    seniorDeepDive: 'Nếu một private method quá phức tạp, có hàng trăm dòng logic tính toán và rẽ nhánh mà bạn cảm thấy khó chịu nếu không test riêng nó: Đó là một "Code Smell" (Dấu hiệu code bẩn) cảnh báo vi phạm Single Responsibility Principle (SRP). Giải pháp chuẩn kiến trúc: Tách private method đó ra thành một class độc lập riêng (ví dụ CalculatorHelper hoặc TaxEvaluator), biến method đó thành public của class mới, và inject class mới này vào class cũ.',
+    trapWarning: 'Đừng bao giờ hạ quyền truy cập từ private xuống package-private (hoặc public) chỉ để phục vụ mục đích viết test, cũng như hạn chế dùng ReflectionTestUtils để gọi private method nếu không thực sự bắt buộc.'
+  },
+  {
+    id: 'q-90',
+    category: 'Hạ Tầng & Security',
+    level: 'Fresher',
+    question: 'Cấu trúc JWT gồm những phần nào? Cơ chế xác thực chữ ký (Signature) hoạt động ra sao và tại sao KHÔNG ĐƯỢC lưu thông tin nhạy cảm vào Payload?',
+    shortAnswer: 'JWT gồm 3 phần ngăn cách bởi dấu chấm: Header.Payload.Signature được mã hóa dưới dạng Base64URL. Server kiểm tra tính toàn vẹn bằng cách lấy (Header + Payload) kết hợp với Secret Key trên server để tính lại chữ ký mã băm (HMAC-SHA256). Nếu chữ ký mới trùng khớp với Signature trên token thì dữ liệu chưa bị can thiệp. KHÔNG ĐƯỢC lưu thông tin nhạy cảm (như mật khẩu, số thẻ tín dụng) vào Payload vì Base64URL CHỈ LÀ MÃ HÓA KÝ TỰ, KHÔNG PHẢI MÃ HÓA BẢO MẬT: Bất kỳ ai cũng có thể giải mã và đọc nội dung JSON trong 1 mili-giây!',
+    seniorDeepDive: 'Khi attacker sửa đổi userId trong Payload từ 10 thành 1, chuỗi Header.Payload thay đổi. Vì attacker không biết chuỗi Secret Key bí mật được bảo vệ trong biến môi trường của server, nên không thể tạo ra Signature hợp lệ tương ứng. Khi gửi token lên, server tính lại chữ ký và phát hiện không khớp ➔ Quăng ngay SignatureException và từ chối request.',
+    trapWarning: 'Hãy nhớ kiểm tra thuật toán trong Header! Lỗ hổng kinh điển CVE "Algorithm None": Attacker sửa Header thành {"alg": "none"}, bỏ phần Signature. Nếu backend dùng thư viện JWT cũ và không cấu hình chặt chẽ, server có thể tin tưởng token này là hợp lệ mà không cần kiểm tra chữ ký.'
+  },
+  {
+    id: 'q-91',
+    category: 'Hạ Tầng & Security',
+    level: 'Intern',
+    question: 'Phân biệt HTTP 401 Unauthorized vs 403 Forbidden? Khi nào dùng 400 Bad Request vs 422 Unprocessable Entity?',
+    shortAnswer: '401 Unauthorized nghĩa là "Chưa xác thực danh tính" (Unauthenticated): Bạn chưa đăng nhập, token bị thiếu hoặc token đã hết hạn (Server không biết bạn là ai). 403 Forbidden nghĩa là "Không có quyền truy cập" (Unauthorized / Access Denied): Server biết bạn là ai, nhưng tài khoản của bạn (ví dụ Role USER) không được phép truy cập tài nguyên của ADMIN. 400 Bad Request dùng khi sai định dạng cú pháp (Malformed JSON, sai kiểu dữ liệu query param). 422 Unprocessable Entity dùng khi cú pháp JSON hoàn toàn đúng nhưng vi phạm quy tắc nghiệp vụ (Validation Error: Email không đúng định dạng, tuổi âm).',
+    seniorDeepDive: 'Mặc dù mã 401 có tên là "Unauthorized", nhưng theo đặc tả RFC 9110 nó phục vụ cho Authentication. Khi trả về 401, server thường đính kèm header WWW-Authenticate chỉ dẫn cách đăng nhập. Khi trả về 403, việc client thử đăng nhập lại với cùng thông tin sẽ không mang lại kết quả gì.',
+    trapWarning: 'Nhiều lập trình viên trả về 400 cho mọi loại lỗi validation nghiệp vụ. Đi làm ở các dự án chuẩn RESTful hoặc RFC 7807, phân định rành mạch giữa 400 (Client gửi body lỗi cú pháp) và 422 (Body hợp lệ nhưng dữ liệu không thỏa mãn validation ràng buộc) sẽ giúp Frontend phân loại và hiển thị form error cực kỳ tinh tế.'
+  },
+  {
+    id: 'q-92',
+    category: 'Hạ Tầng & Security',
+    level: 'Fresher',
+    question: 'CORS (Cross-Origin Resource Sharing) là gì? Tại sao trình duyệt lại gửi Preflight Request (OPTIONS) trước request chính?',
+    shortAnswer: 'CORS là cơ chế bảo mật do TRÌNH DUYỆT THỰC THI (không phải do Backend) dựa trên Same-Origin Policy (SOP), nhằm ngăn chặn một website độc hại gửi request ngầm tới domain khác để lấy cắp dữ liệu người dùng. Nếu request không phải là Simple Request (ví dụ có header Authorization, dùng method PUT/DELETE hoặc Content-Type là application/json), trình duyệt sẽ tự động gửi trước một request thăm dò dạng HTTP OPTIONS (gọi là Preflight Request) để hỏi xem Backend có cho phép domain hiện tại gửi request hay không.',
+    seniorDeepDive: 'Trong Preflight Request, trình duyệt gửi các header: Origin, Access-Control-Request-Method, Access-Control-Request-Headers. Backend phải phản hồi HTTP 200/204 kèm header Access-Control-Allow-Origin: https://myfrontend.com. Chỉ khi kiểm tra thấy header này trùng khớp, trình duyệt mới chính thức gửi request thật sự tiếp theo (POST/PUT/DELETE).',
+    trapWarning: 'Nếu bạn dùng Postman hoặc curl gọi API mà thấy thành công 100%, nhưng trên giao diện web React/Vue thì bị lỗi CORS màu đỏ trong Console: Hãy nhớ ngay rằng CORS là cơ chế của Trình Duyệt. Postman không phải trình duyệt nên không bao giờ bị chặn CORS!'
+  },
+  {
+    id: 'q-93',
+    category: 'Kỹ Năng & Live Coding',
+    level: 'Intern',
+    question: 'Áp dụng phương pháp STAR (Situation, Task, Action, Result) trả lời câu hỏi: "Hãy kể về một lần em gặp bất đồng quan điểm kỹ thuật với đồng đội hoặc mentor"?',
+    shortAnswer: 'Cấu trúc STAR: S (Bối cảnh dự án đồ án/thực tập) -> T (Nhiệm vụ cụ thể cần hoàn thành) -> A (Hành động chuyên nghiệp của em: lắng nghe, thu thập số liệu benchmark, không tranh cãi bằng cảm tính) -> R (Kết quả đạt được và bài học rút ra). Luôn thể hiện tinh thần tôn trọng đồng đội, lấy dữ liệu và mục tiêu chung của sản phẩm làm trọng tâm.',
+    seniorDeepDive: 'Mẫu trả lời điểm 10: "Khi làm đồ án cổng thanh toán (S), nhóm em cần lưu trữ giỏ hàng tạm thời (T). Bạn cùng nhóm đề xuất lưu trực tiếp vào MySQL bằng cách thêm bảng cart_items, còn em muốn dùng Redis Hash để tối ưu tốc độ đọc ghi sub-millisecond. Thay vì tranh cãi lý thuyết (A), em chủ động viết một script benchmark nhỏ bằng Apache Bench mô phỏng 200 concurrent users. Kết quả cho thấy phương án Redis giảm 85% độ trễ và không gây lock bảng Database. Em trình bày số liệu này cho bạn và mentor trong buổi họp kỹ thuật, bạn đồng thuận và cả nhóm thống nhất dùng Redis (R). Qua đó em học được bài học: Khi bất đồng quan điểm kỹ thuật, số liệu thực nghiệm và giải pháp minh bạch luôn có sức thuyết phục cao hơn cảm tính cá nhân."',
+    trapWarning: 'Tuyệt đối không đổ lỗi cho đồng đội ("Do bạn ấy lười", "Do mentor khó tính"). Câu hỏi này kiểm tra kỹ năng giao tiếp (Communication), trí tuệ cảm xúc (EQ) và tác phong giải quyết xung đột dựa trên khoa học kỹ thuật.'
+  },
+  {
+    id: 'q-94',
+    category: 'Kỹ Năng & Live Coding',
+    level: 'Fresher',
+    question: 'Khi nhận một task mà yêu cầu (requirements) còn rất mơ hồ và tài liệu sơ sài, em sẽ xử lý như thế nào để hoàn thành đúng hạn và đúng kỳ vọng?',
+    shortAnswer: 'Quy trình 4 bước xử lý chuyên nghiệp: 1. Đọc kỹ và tự rà soát luồng dữ liệu (Input - Output - Edge cases); 2. Phác thảo tài liệu ngắn gọn (API Contract Draft dạng Swagger hoặc sơ đồ luồng Sequence); 3. Lên lịch hẹn 15 phút trao đổi trực tiếp với Business Analyst (BA) hoặc Senior để làm rõ các điểm mơ hồ bằng câu hỏi dạng Có/Không hoặc chọn phương án A/B; 4. Xác nhận lại bằng văn bản trên Ticket/Slack trước khi bắt tay vào code.',
+    seniorDeepDive: 'Sai lầm chết người của người mới: "Cứ tưởng là như vậy" rồi tự cắm đầu code suốt 1 tuần, đến ngày demo thì sản phẩm hoàn toàn sai lệch với mong đợi của Product Owner. Kỹ sư chuyên nghiệp luôn áp dụng nguyên tắc: "Confirm sớm - Sai sớm - Sửa rẻ". Chi phí sửa lỗi requirement trước khi code chỉ bằng 1/10 chi phí sửa sau khi đã viết xong cả logic và database migration.',
+    trapWarning: 'Không bao giờ hỏi những câu chung chung như: "Anh ơi tính năng này làm sao ạ?". Hãy chuẩn bị sẵn câu hỏi có giải pháp: "Em thấy tính năng xuất file Excel có thể xảy ra trường hợp dữ liệu 500,000 dòng gây tràn RAM. Em đề xuất phân luồng xử lý bất đồng bộ gửi qua email hoặc giới hạn tối đa 50,000 dòng, anh thấy phương án nào phù hợp hơn cho giai đoạn này?"'
+  },
+  {
+    id: 'q-95',
+    category: 'Kỹ Năng & Live Coding',
+    level: 'Fresher',
+    question: 'Nếu lỡ tay làm lỗi hệ thống trên môi trường dev/staging hoặc đẩy nhầm code có bug nghiêm trọng, các bước xử lý chuyên nghiệp của em là gì?',
+    shortAnswer: 'Quy trình 5 bước khắc phục sự cố có trách nhiệm: 1. Giữ bình tĩnh và Dừng ngay hành động gây hại (Stop the bleeding); 2. Thông báo ngay lập tức cho Team Lead / Senior trực tiếp, nêu rõ: Chuyện gì vừa xảy ra, phạm vi ảnh hưởng và trạng thái hiện tại (Tuyệt đối không giấu lỗi); 3. Phối hợp Revert code hoặc khôi phục dữ liệu từ bản sao lưu gần nhất; 4. Điều tra nguyên nhân gốc rễ (Root Cause Analysis - RCA); 5. Tham gia buổi họp Blameless Post-mortem và đề xuất giải pháp phòng ngừa (thêm Unit Test, chặn quyền script trên môi trường chung).',
+    seniorDeepDive: 'Trong văn hóa kỹ thuật hiện đại (như Google, Netflix): Con người luôn có thể phạm sai lầm. Nếu một người mới có thể vô tình xóa nhầm Database hay đẩy code chết lên Staging, lỗi 80% thuộc về quy trình và hệ thống phòng vệ (thiếu CI/CD lint, cấp thừa quyền tài khoản, thiếu môi trường sandbox an toàn). Điểm mấu chốt khi phỏng vấn là chứng minh bạn là người trung thực, dám nhận trách nhiệm (Accountability) và học hỏi sâu sắc từ sự cố.',
+    trapWarning: 'Cấm kỵ tuyệt đối: Im lặng xóa log hoặc âm thầm tìm cách lấp liếm để không ai biết. Trong hệ thống doanh nghiệp có đầy đủ Audit Log và Git history, hành động giấu lỗi sẽ khiến bạn mất hoàn toàn uy tín và có thể bị chấm dứt hợp đồng thử việc ngay lập tức.'
   }
 ];
+
 

@@ -42,6 +42,64 @@ const CV_SECTIONS: CvSectionBreakdown[] = [
       'Nhồi nhét từ khóa đao to búa lớn (Kafka, Kubernetes, Microservices, CI/CD) khi chỉ mới đọc lướt qua lý thuyết.'
     ],
     exampleText: '✅ Languages: Java (17/21), SQL (PostgreSQL, MySQL)\nFrameworks & Libraries: Spring Boot 3, Spring Data JPA, Spring Security (JWT), Hibernate, Lombok\nTesting: JUnit 5, Mockito, MockMvc\nDevOps & Tools: Docker, Docker Compose, Git, Maven, Postman, IntelliJ IDEA'
+  },
+  {
+    sectionTitle: '3. Học Vấn, Điểm Số & Môn Học Trọng Tâm (Education & GPA)',
+    doThis: [
+      'Ghi rõ trường Đại học, chuyên ngành (Công nghệ Thông tin / Khoa học Máy tính) và năm tốt nghiệp dự kiến.',
+      'Nếu GPA >= 3.0 / 4.0 (hoặc >= 7.5 / 10), hãy tự tin làm nổi bật trong CV.',
+      'Liệt kê các môn học nền tảng kỹ thuật then chốt: Cấu trúc dữ liệu & Giải thuật, Hệ quản trị cơ sở dữ liệu, Lập trình hướng đối tượng (OOP), Mạng máy tính, Hệ điều hành.'
+    ],
+    dontDoThis: [
+      'Nếu GPA dưới 2.5 thì không nên đưa vào mục tiêu điểm; thay vào đó hãy bù đắp bằng dự án thực chiến và link GitHub chất lượng.',
+      'Liệt kê các môn đại cương không liên quan (Triết học, Thể dục, Pháp luật đại cương).',
+      'Khai gian điểm số hoặc gian lận xếp loại học lực (sẽ bị phát hiện ngay khi nộp bảng điểm lúc nhận việc).'
+    ],
+    exampleText: '✅ "Đại học Bách Khoa Hà Nội — Chuyên ngành Khoa học Máy tính (2022 - 2026)\nGPA: 3.42 / 4.0 (Top 10% khóa)\nMôn học trọng tâm: Data Structures & Algorithms (A), Database Management Systems (A+), Object-Oriented Programming (A), Computer Networks (B+)\nGiải thưởng: Học bổng Khuyến khích học tập 3 kỳ liên tiếp."'
+  },
+  {
+    sectionTitle: '4. Kinh Nghiệm Thực Tập & Đồ Án Tốt Nghiệp (Work Experience)',
+    doThis: [
+      'Nếu chưa từng đi làm công ty: Hãy viết Đồ án tốt nghiệp, Research Lab tại trường hoặc Dự án Capstone theo chuẩn của một vị trí kỹ sư Backend.',
+      'Nêu rõ vai trò của bạn (Sole Developer hay Backend Lead nhóm 4 người), quy trình làm việc (Agile/Scrum, Git Flow, Jira sprint 2 tuần).',
+      'Làm nổi bật tác động thực tế: Số lượng API đã viết, tỷ lệ test coverage, hiệu năng cải thiện trước và sau khi tối ưu.'
+    ],
+    dontDoThis: [
+      'Bỏ trống phần kinh nghiệm và than thở: "Em là sinh viên mới ra trường nên chưa có kinh nghiệm gì".',
+      'Kể lể các công việc bán thời gian không liên quan đến IT (phục vụ bàn, bán hàng online) chiếm quá nhiều diện tích CV.',
+      'Viết trách nhiệm mơ hồ: "Tham gia phát triển dự án cùng nhóm và sửa một số lỗi".'
+    ],
+    exampleText: '✅ "Backend Engineering Intern — ABC Tech Solution (06/2025 - 12/2025)\n• Thiết kế và phát triển 12 RESTful endpoints cho phân hệ Quản lý Kho hàng bằng Spring Boot 3 và PostgreSQL.\n• Tái cấu trúc cơ sở dữ liệu và đánh B-Tree Composite Index giúp giảm thời gian truy vấn báo cáo tồn kho từ 2.4s xuống 320ms.\n• Viết bộ Integration Tests với Testcontainers (PostgreSQL & Redis) đạt 85% line coverage, tích hợp vào GitHub Actions CI pipeline.\n• Phối hợp cùng 2 Frontend Dev và 1 QA theo quy trình Scrum, hoàn thành 100% story points trong 6 sprints liên tiếp."'
+  },
+  {
+    sectionTitle: '5. Chiến Lược GitHub Repo & Portfolio 30 Giây (GitHub Strategy)',
+    doThis: [
+      'Đặt tên repo ngắn gọn, chuyên nghiệp (ví dụ: ecommerce-backend-api, booking-engine-service).',
+      'Đầu tư file README.md như một trang sản phẩm: Có sơ đồ kiến trúc (Architecture Diagram), hướng dẫn chạy 1-click bằng "docker compose up", và tài liệu Swagger UI.',
+      'Lịch sử commit đều đặn, commit message tuân thủ Conventional Commits (feat:, fix:, refactor:, test:).'
+    ],
+    dontDoThis: [
+      'Dẫn link GitHub rỗng hoặc chỉ có 1 commit duy nhất "Initial commit" chứa toàn bộ mã nguồn đẩy lên một lần.',
+      'Đẩy các file rác (.DS_Store, target/, .idea/, node_modules/) lên repo vì thiếu file .gitignore.',
+      'Để lộ các thông tin bí mật (DB Password, API Key, Token bí mật) trong commit history.'
+    ],
+    exampleText: '✅ GitHub README chuẩn mực bao gồm:\n1. Tech Stack Badges (Java 21, Spring Boot 3, PostgreSQL, Docker, Redis)\n2. Architecture Flowchart (Mermaid / SVG minh họa luồng dữ liệu qua Spring Security & Database)\n3. Quick Start (Chỉ cần gõ: docker compose up -d && ./mvnw spring-boot:run)\n4. API Documentation (Đường link Swagger UI: http://localhost:8080/swagger-ui.html)\n5. CI/CD Status Badge (GitHub Actions: Build Passing 100%)'
+  },
+  {
+    sectionTitle: '6. Những Lỗi "Chết Người" Khiến CV Bị Loại Từ Vòng Gửi Xe (Fatal Red Flags)',
+    doThis: [
+      'Xuất file dưới định dạng PDF chuẩn, đặt tên file chuyên nghiệp: "NguyenVanA_Java_Backend_Junior.pdf".',
+      'Độ dài hoàn hảo cho Intern/Fresher là đúng 1 TRANG A4 (tối đa 2 trang nếu dự án có chiều sâu đặc biệt).',
+      'Viết email ứng tuyển (Cover Letter) ngắn gọn 3 đoạn lịch sự: Giới thiệu bản thân - Lý do phù hợp với JD - Lời cảm ơn và đính kèm CV.'
+    ],
+    dontDoThis: [
+      'Gửi file .doc / .docx (rất dễ bị lệch format, vỡ font chữ trên máy của HR).',
+      'Đặt tên file cẩu thả: "CV.pdf", "CV_moi.pdf", "Ban_sao_CV(1).pdf".',
+      'Sai chính tả các từ khóa kỹ thuật cơ bản: "Jav", "springboot", "MySql", "postman", "git hub" (Đánh mất 100% ấn tượng chuyên nghiệp).',
+      'Sử dụng địa chỉ email thiếu nghiêm túc thời học sinh: "hoangtubuon9x@gmail.com", "boydeptrai_hp@yahoo.com".',
+      'Gửi email apply mà tiêu đề hoặc nội dung email để trống trơn, chỉ đính kèm mỗi file PDF.'
+    ],
+    exampleText: '✅ Tiêu đề email chuẩn mực:\n"[Họ và Tên] — Ứng Tuyển Vị Trí Java Backend Fresher / Junior"\n\nNội dung email:\n"Kính gửi Ban Tuyển dụng và Bộ phận Kỹ thuật [Tên Công ty],\nEm tên là Nguyễn Văn A, tốt nghiệp chuyên ngành CNTT trường Đại học ABC. Qua tìm hiểu, em được biết Quý công ty đang mở tuyển vị trí Java Backend Fresher...\nEm xin gửi kèm CV tổng hợp kinh nghiệm dự án Spring Boot, tối ưu SQL và link GitHub cá nhân. Em rất mong có cơ hội được trao đổi trực tiếp trong buổi phỏng vấn sắp tới.\nEm xin chân thành cảm ơn!"'
   }
 ];
 
@@ -542,6 +600,198 @@ public DataSource determineCurrentLookupKey() {
     return isRecentlyWrittenUser() ? DataSourceType.MASTER : DataSourceType.SLAVE;
 }`,
     goodExplanation: 'Sticky Master Routing chỉ định tuyến người dùng vừa thực hiện hành vi ghi đọc từ Master trong vài giây ngắn ngủi, vừa bảo đảm tính nhất quán tức thì vừa không làm quá tải Master.'
+  },
+  {
+    id: 'integer-cache-equals',
+    title: '17. So Sánh Bằng "==" vs ".equals()" & Bẫy Integer Cache (-128 Đến 127)',
+    category: 'Core Java',
+    impactBadge: 'Triệt tiêu 100% bug so sánh ID ngầm trên Prod',
+    badTitle: '❌ Thói quen ở trường (Dùng toán tử == so sánh hai đối tượng Wrapper)',
+    badCode: `// ❌ CẠM BẪY CHẾT NGƯỜI VỚI KHÓA ID:
+public boolean canAccessResource(Order order, User currentUser) {
+    // Khi test ở local với userId = 1 và 2: Code chạy ĐÚNG vì Java cache [-128..127]!
+    // Nhưng lên Production khi userId chạm ngưỡng 128:
+    // order.getUserId() == currentUser.getId() TRẢ VỀ FALSE DÙ HAI ID BẰNG NHAU!
+    return order.getUserId() == currentUser.getId(); 
+}`,
+    badExplanation: 'Toán tử == so sánh địa chỉ ô nhớ trên Heap. Với kiểu Wrapper (Integer, Long), Java chỉ tái sử dụng object trong dải cache -128 đến 127. Ngoài dải này, hai số 128 được cấp phát tại hai địa chỉ hoàn toàn khác nhau khiến biểu thức == trả về false, dẫn đến bug nghiêm trọng chặn quyền truy cập của khách hàng.',
+    goodTitle: '✅ Chuẩn đi làm (Dùng Objects.equals() hoặc .equals() an toàn tuyệt đối)',
+    goodCode: `// ✅ SO SÁNH NỘI DUNG LOGIC & AN TOÀN TRƯỚC NULL:
+public boolean canAccessResource(Order order, User currentUser) {
+    if (order == null || currentUser == null) {
+        return false;
+    }
+    // Objects.equals kiểm tra: (a == b || (a != null && a.equals(b)))
+    // Chạy chính xác 100% với mọi giá trị ID từ 1 đến hàng tỷ tỷ:
+    return Objects.equals(order.getUserId(), currentUser.getId());
+}`,
+    goodExplanation: 'Objects.equals(a, b) so sánh giá trị logic nội dung bên trong đối tượng, đồng thời xử lý an toàn kịch bản 1 trong 2 biến bị null mà không bao giờ ném NullPointerException.'
+  },
+  {
+    id: 'swallowed-exception-vs-rfc7807',
+    title: '18. Nuốt Lỗi Âm Thầm catch(Exception e) {} vs Custom Exception + RFC 7807',
+    category: 'Clean Code',
+    impactBadge: 'Chuẩn truy vết lỗi & Không tạo bug ma',
+    badTitle: '❌ Thói quen ở trường (Catch chung chung, in e.printStackTrace() hoặc nuốt lỗi)',
+    badCode: `// ❌ LỖI "NUỐT LỖI" KHIẾN HỆ THỐNG MÙ MỜ HOÀN TOÀN:
+public UserResponse getUser(Long id) {
+    try {
+        User user = userRepository.findById(id).get();
+        return convertToDto(user);
+    } catch (Exception e) {
+        // Nuốt lỗi hoặc in ra console - server không lưu vết gì trên log phân tán:
+        e.printStackTrace();
+        return null; // Frontend nhận HTTP 200 với body rỗng và lăn đùng ra sập!
+    }
+}`,
+    badExplanation: 'Nuốt ngoại lệ biến bug thành bóng ma. Phía Frontend nhận HTTP 200 nhưng body rỗng hoặc null, còn phía Backend không có cảnh báo nào, khiến việc bảo trì sau này mất hàng tuần truy vết.',
+    goodTitle: '✅ Chuẩn đi làm (Custom Business Exception + @RestControllerAdvice RFC 7807)',
+    goodCode: `// ✅ KHAI BÁO RÕ RÀNG VÀ ĐỂ GLOBAL HANDLER ĐỊNH DẠNG:
+public UserResponse getUser(Long id) {
+    User user = userRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng có id: " + id));
+    return userMapper.toDto(user);
+}
+
+// Global Exception Handler chuyển hóa thành chuẩn RFC 7807 (Problem Details):
+@ExceptionHandler(ResourceNotFoundException.class)
+public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
+    ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    problem.setProperty("timestamp", Instant.now());
+    problem.setProperty("errorCode", "USER_NOT_FOUND");
+    return problem;
+}`,
+    goodExplanation: 'Ném Custom Exception có ngữ cảnh rõ ràng và gom việc định dạng phản hồi lỗi về một nơi duy nhất bằng @RestControllerAdvice theo chuẩn RFC 7807 của Spring Boot 3.'
+  },
+  {
+    id: 'return-null-vs-empty-collection',
+    title: '19. Trả Về null vs Collections.emptyList() & Optional',
+    category: 'Clean Code',
+    impactBadge: 'Diệt tận gốc NullPointerException dây chuyền',
+    badTitle: '❌ Thói quen ở trường (Không có dữ liệu thì return null)',
+    badCode: `// ❌ GÂY RA DỊCH BỆNH NULLPOINTEREXCEPTION CHO TOÀN BỘ CALLER:
+public List<Order> getOrdersByUser(Long userId) {
+    List<Order> orders = orderRepository.findByUserId(userId);
+    if (orders.isEmpty()) {
+        return null; // ❌ Trả về null khi danh sách rỗng!
+    }
+    return orders;
+}
+
+// Bên gọi (Caller): Nếu quên kiểm tra == null sẽ bị sập ngay lập tức:
+// for (Order o : getOrdersByUser(id)) { ... } ➔ CRASH!`,
+    badExplanation: 'Trả về null cho kiểu Collection buộc mọi nơi gọi hàm đều phải nhớ viết if (list != null), chỉ cần 1 lập trình viên sơ suất là toàn bộ màn hình người dùng bị crash với NullPointerException.',
+    goodTitle: '✅ Chuẩn đi làm (Luôn trả về Collections.emptyList() hoặc Optional)',
+    goodCode: `// ✅ DANH SÁCH RỖNG LÀ MỘT DANH SÁCH CÓ 0 PHẦN TỬ, KHÔNG PHẢI NULL:
+public List<Order> getOrdersByUser(Long userId) {
+    List<Order> orders = orderRepository.findByUserId(userId);
+    if (orders == null || orders.isEmpty()) {
+        return Collections.emptyList(); // ✅ Tái sử dụng đối tượng rỗng bất biến, 0 byte RAM
+    }
+    return Collections.unmodifiableList(orders);
+}
+
+// Bên gọi lặp qua danh sách êm ru mà không cần bất kỳ câu if check null nào:
+for (Order o : getOrdersByUser(id)) { 
+    // Nếu rỗng: Vòng lặp đơn giản là không chạy, an toàn 100%!
+}`,
+    goodExplanation: 'Collections.emptyList() trả về một instance Singleton bất biến không cấp phát thêm bộ nhớ, cho phép phía gọi sử dụng an toàn trong foreach hoặc Stream mà không bao giờ gặp lỗi null.'
+  },
+  {
+    id: 'legacy-date-vs-java-time',
+    title: '20. java.util.Date & SimpleDateFormat vs java.time (Instant, OffsetDateTime UTC)',
+    category: 'Core Java',
+    impactBadge: 'Chuẩn múi giờ UTC & Thread-safe 100%',
+    badTitle: '❌ Thói quen ở trường (Dùng Date và SimpleDateFormat tĩnh dùng chung)',
+    badCode: `// ❌ LỖI RACE CONDITION KINH ĐIỂN VÌ SIMPLEDATEFORMAT KHÔNG THREAD-SAFE:
+public class DateUtils {
+    // SimpleDateFormat lưu trạng thái nội bộ trong Calendar:
+    // Khi 2 thread cùng gọi parse() hoặc format() sẽ gây sai lệch ngày tháng nghiêm trọng!
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static Date parseDate(String str) throws ParseException {
+        return SDF.parse(str); // ❌ Dính Race Condition trên môi trường đa luồng!
+    }
+}`,
+    badExplanation: 'SimpleDateFormat chứa biến trạng thái mutable bên trong. Khi nhiều request HTTP gọi chung một static SimpleDateFormat, các luồng ghi đè dữ liệu lên nhau làm xuất hiện ngày tháng sai lệch hoàn toàn (ví dụ năm 2026 biến thành năm 1970).',
+    goodTitle: '✅ Chuẩn đi làm (Dùng java.time từ Java 8+: Instant, OffsetDateTime, DateTimeFormatter)',
+    goodCode: `// ✅ BẤT BIẾN, THREAD-SAFE 100% VÀ CHUẨN HÓA MÚI GIỜ UTC:
+public class SafeDateTimeService {
+    // DateTimeFormatter trong java.time là IMMUTABLE và THREAD-SAFE:
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+    // Lưu trữ dưới Database luôn là mốc thời gian tuyệt đối UTC:
+    public Instant getCurrentUtcTimestamp() {
+        return Instant.now();
+    }
+
+    // Định dạng chuỗi theo múi giờ mong muốn một cách an toàn:
+    public String formatTimestamp(Instant instant, ZoneId zoneId) {
+        return instant.atZone(zoneId).format(FORMATTER);
+    }
+}`,
+    goodExplanation: 'Bộ thư viện java.time (JSR-310) thiết kế toàn bộ đối tượng là Immutable và Thread-safe. Lưu trữ dữ liệu thời gian bằng Instant (UTC) giúp hệ thống không bao giờ bị lỗi sai lệch múi giờ khi chuyển đổi server giữa các quốc gia.'
+  },
+  {
+    id: 'hardcoded-credentials-vs-env-profiles',
+    title: '21. Hardcode Password Trong application.properties vs Biến Môi Trường & Profiles',
+    category: 'Architecture',
+    impactBadge: 'Bảo mật chuẩn ISO 27001 & Chống lộ secret',
+    badTitle: '❌ Thói quen ở trường (Ghi thẳng tài khoản DB vào file cấu hình rồi commit)',
+    badCode: `# ❌ COMMIT THẲNG TÀI KHOẢN MẬT KHẨU LÊN GITHUB CÔNG KHAI:
+spring.datasource.url=jdbc:mysql://production-db.company.com:3306/prod_db
+spring.datasource.username=root
+spring.datasource.password=CongTyMinhDepTrai2026!
+jwt.secret-key=cai-khoa-nay-ai-cung-nhin-thay-duoc-tren-github`,
+    badExplanation: 'Commit mật khẩu lên Git là nguyên nhân số 1 khiến các công ty bị hacker tống tiền hoặc cài mã độc đào tiền ảo. Các bot scanner trên Internet quét các commit mới trên GitHub 24/7 và phát hiện mật khẩu trong vòng 30 giây.',
+    goodTitle: '✅ Chuẩn đi làm (Externalized Configuration với Biến Môi Trường & Spring Profiles)',
+    goodCode: `# ✅ ĐỌC AN TOÀN TỪ BIẾN MÔI TRƯỜNG CỦA HỆ THỐNG / KUBERNETES SECRETS:
+spring.datasource.url=\${DB_URL:jdbc:mysql://localhost:3306/dev_db}
+spring.datasource.username=\${DB_USERNAME:root}
+spring.datasource.password=\${DB_PASSWORD:}
+jwt.secret-key=\${JWT_SECRET}
+
+# Tách riêng cấu hình dev và prod bằng profiles:
+# application-dev.yml: Chạy H2 hoặc Docker MySQL local
+# application-prod.yml: Chạy RDS Database thực thụ`,
+    goodExplanation: 'Externalized Configuration tách biệt mã nguồn với cấu hình bảo mật. Mật khẩu được bơm động từ Kubernetes Secrets hoặc biến môi trường lúc container khởi động, không bao giờ xuất hiện trên Git history.'
+  },
+  {
+    id: 'uuid-v4-vs-tsid-page-split',
+    title: '22. UUIDv4 Ngẫu Nhiên vs BIGINT / TSID Làm Clustered Primary Key InnoDB',
+    category: 'Database / JPA',
+    impactBadge: 'Tăng tốc độ Insert gấp 5 lần & Chống Page Split',
+    badTitle: '❌ Thói quen ở trường (Dùng UUID.randomUUID() làm Khóa Chính PK)',
+    badCode: `// ❌ UUIDv4 HOÀN TOÀN NGẪU NHIÊN PHÁ NÁT CÂY B+TREE CỦA INNODB:
+@Entity
+@Table(name = "transactions")
+public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id; // UUID ngẫu nhiên (UUIDv4)
+
+    private BigDecimal amount;
+    // Mỗi lần chèn 1 dòng mới, khóa ngẫu nhiên chen vào giữa các trang B+Tree đã đầy!
+    // Bắt buộc InnoDB phải tách trang (Page Split) và ghi lại toàn bộ trang đĩa!
+}`,
+    badExplanation: 'Trong MySQL InnoDB, Clustered Index sắp xếp dữ liệu vật lý theo Primary Key. UUIDv4 hoàn toàn ngẫu nhiên nên khi chèn bản ghi mới, nó không được thêm vào cuối mà chen ngang vào các trang đĩa ở giữa, gây bão phân tách trang (Page Split) và làm giảm 80% tốc độ Insert.',
+    goodTitle: '✅ Chuẩn đi làm (BIGINT AUTO_INCREMENT hoặc Time-Sorted TSID / UUIDv7)',
+    goodCode: `// ✅ KHÓA CHÍNH TĂNG DẦN THEO THỜI GIAN (MONOTONICALLY INCREASING):
+@Entity
+@Table(name = "transactions")
+public class Transaction {
+    // 1. Sử dụng BIGINT AUTO_INCREMENT làm PK vật lý để tối ưu 100% B+Tree:
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // 2. Sử dụng TSID (Time-Sorted Unique Identifier) hoặc UUIDv7 làm mã công khai ra API:
+    @Column(name = "public_id", unique = true, updatable = false, length = 13)
+    private String publicId; // TSID: Vừa không lộ số lượng đơn hàng, vừa sắp xếp theo thời gian!
+
+    private BigDecimal amount;
+}`,
+    goodExplanation: 'Khóa chính tăng dần theo thời gian đảm bảo các bản ghi mới luôn được ghi tuần tự vào trang đĩa cuối cùng (Append-only style), loại bỏ 100% hiện tượng Page Split và tận dụng tối đa bộ nhớ đệm Buffer Pool.'
   }
 ];
 
@@ -836,21 +1086,33 @@ export default function CareerHubPage(): React.JSX.Element {
   };
 
   const PROBATION_TASKS = [
+    // Phase 1: Tuần 1: Onboarding
     { id: 'p-1', phase: 'Tuần 1: Onboarding', text: 'Chạy thành công dự án Local trong 48h đầu (JDK, Maven, Docker DB)', desc: 'Không cần hỏi Senior những lỗi cơ bản đã có trong README.' },
     { id: 'p-2', phase: 'Tuần 1: Onboarding', text: 'Đọc và hiểu luồng kiến trúc nghiệp vụ (Domain & Data Flow)', desc: 'Nắm được luồng request từ Gateway -> Controller -> Service -> DB.' },
     { id: 'p-3', phase: 'Tuần 1: Onboarding', text: 'Nắm vững quy tắc Git branching và commit message của team', desc: 'Quy chuẩn tên branch: feature/JIRA-123-ten-task, atomic commits.' },
     { id: 'p-4', phase: 'Tuần 1: Onboarding', text: 'Chủ động cập nhật lại file README nếu thấy tài liệu cũ bị thiếu', desc: 'Điểm cộng cực lớn giúp bạn ghi điểm chu đáo ngay từ tuần đầu.' },
     { id: 'p-5', phase: 'Tuần 1: Onboarding', text: 'Cấu hình SSH Key, GPG Signing và VPN công ty an toàn trong 24h', desc: 'Đảm bảo môi trường làm việc bảo mật, không commit bằng thông tin cá nhân sai lệch.' },
-    { id: 'p-6', phase: 'Tuần 2-4: First Tasks', text: 'Mở 3 PR gần nhất của Senior để học hỏi Coding Convention', desc: 'Bắt chước cách đặt tên biến, package, xử lý exception và ghi log.' },
-    { id: 'p-7', phase: 'Tuần 2-4: First Tasks', text: 'Luôn viết Unit Test đi kèm mọi dòng code mới', desc: 'Không nộp PR thiếu test; test bao phủ cả happy path và error path.' },
-    { id: 'p-8', phase: 'Tuần 2-4: First Tasks', text: 'Thái độ cầu thị và lịch sự khi nhận Code Review', desc: 'Không tự ái, cảm ơn khi được góp ý và sửa triệt để trước khi ping lại.' },
-    { id: 'p-9', phase: 'Tuần 2-4: First Tasks', text: 'Tự phác thảo tài liệu API Specs (OpenAPI/Swagger) trước khi code', desc: 'Trao đổi và thống nhất hợp đồng API với Frontend trước khi triển khai.' },
-    { id: 'p-10', phase: 'Tuần 2-4: First Tasks', text: 'Biết cách đọc và cấu hình Application Profiler & Actuator Metrics', desc: 'Theo dõi chỉ số JVM memory, heap allocation và database query count.' },
-    { id: 'p-11', phase: 'Tháng 2: Ownership', text: 'Báo cáo Daily Standup ngắn gọn: Làm gì - Sắp làm gì - Blocker', desc: 'Không nói chung chung "em đang nghiên cứu", nói rõ kết quả và rào cản.' },
-    { id: 'p-12', phase: 'Tháng 2: Ownership', text: 'Estimate thời gian có vùng đệm an toàn (Buffer 1.5x)', desc: 'Dự kiến 1 ngày thì estimate 1.5 ngày để dành thời gian viết test và fix bug.' },
-    { id: 'p-13', phase: 'Tháng 2: Ownership', text: 'Tự điều tra lỗi 15-30 phút trước khi nhờ Senior trợ giúp', desc: 'Áp dụng quy tắc 4 bước hỏi bài để Senior hỗ trợ nhiệt tình nhất.' },
-    { id: 'p-14', phase: 'Tháng 2: Ownership', text: 'Chủ động đề xuất xóa nợ kỹ thuật (Technical Debt) cho module cũ', desc: 'Tái cấu trúc code bẩn, bổ sung unit test cho các đoạn code thiếu test.' },
-    { id: 'p-15', phase: 'Tháng 2: Ownership', text: 'Tham gia quan sát và hỗ trợ Incident Response cùng các anh Senior', desc: 'Học cách đọc log phân tán, tra cứu traceId và xử lý khủng hoảng lúc deploy.' }
+    { id: 'p-6', phase: 'Tuần 1: Onboarding', text: 'Nắm cấu hình CI/CD Pipeline (GitHub Actions / GitLab CI) & Quality Gate', desc: 'Hiểu các rule Checkstyle, SonarQube và ngưỡng coverage bắt buộc khi merge.' },
+    { id: 'p-7', phase: 'Tuần 1: Onboarding', text: 'Tự thiết lập Postman / Swagger Collection để test luồng API chính', desc: 'Lưu trữ các request mẫu kèm token xác thực giúp tăng tốc độ kiểm thử hàng ngày.' },
+
+    // Phase 2: Tuần 2-4: First Tasks & Tiếp Nhận Codebase
+    { id: 'p-8', phase: 'Tuần 2-4: First Tasks', text: 'Mở 3 PR gần nhất của Senior để học hỏi Coding Convention', desc: 'Bắt chước cách đặt tên biến, package, xử lý exception và ghi log.' },
+    { id: 'p-9', phase: 'Tuần 2-4: First Tasks', text: 'Luôn viết Unit Test đi kèm mọi dòng code mới (Tối thiểu 80% coverage)', desc: 'Không nộp PR thiếu test; test bao phủ cả happy path và error path.' },
+    { id: 'p-10', phase: 'Tuần 2-4: First Tasks', text: 'Thái độ cầu thị và lịch sự khi nhận Code Review', desc: 'Không tự ái, cảm ơn khi được góp ý và sửa triệt để trước khi ping lại.' },
+    { id: 'p-11', phase: 'Tuần 2-4: First Tasks', text: 'Tự phác thảo tài liệu API Specs (OpenAPI/Swagger) trước khi code', desc: 'Trao đổi và thống nhất hợp đồng API với Frontend trước khi triển khai.' },
+    { id: 'p-12', phase: 'Tuần 2-4: First Tasks', text: 'Biết cách đọc và cấu hình Application Profiler & Actuator Metrics', desc: 'Theo dõi chỉ số JVM memory, heap allocation và database query count.' },
+    { id: 'p-13', phase: 'Tuần 2-4: First Tasks', text: 'Chạy EXPLAIN kiểm tra hiệu năng câu query SQL trước khi tạo PR', desc: 'Loại bỏ ngay nguy cơ Full Table Scan (type: ALL) và Using filesort.' },
+    { id: 'p-14', phase: 'Tuần 2-4: First Tasks', text: 'Nắm vững luồng phân quyền Spring Security & JWT Filters', desc: 'Hiểu cách context SecurityContextHolder trích xuất thông tin người dùng hiện tại.' },
+    { id: 'p-15', phase: 'Tuần 2-4: First Tasks', text: 'Phối hợp chặt chẽ với QA/Tester, viết reproduction steps rõ ràng', desc: 'Khi bàn giao tính năng hoặc trao đổi bug, luôn cung cấp đầy đủ payload và curl test.' },
+
+    // Phase 3: Tháng 2: Ownership & Tác Phong Kỹ Sư
+    { id: 'p-16', phase: 'Tháng 2: Ownership', text: 'Báo cáo Daily Standup ngắn gọn: Làm gì - Sắp làm gì - Blocker', desc: 'Không nói chung chung "em đang nghiên cứu", nói rõ kết quả và rào cản.' },
+    { id: 'p-17', phase: 'Tháng 2: Ownership', text: 'Estimate thời gian có vùng đệm an toàn (Buffer 1.5x)', desc: 'Dự kiến 1 ngày thì estimate 1.5 ngày để dành thời gian viết test và fix bug.' },
+    { id: 'p-18', phase: 'Tháng 2: Ownership', text: 'Tự điều tra lỗi 15-30 phút trước khi nhờ Senior trợ giúp', desc: 'Áp dụng quy tắc 4 bước hỏi bài để Senior hỗ trợ nhiệt tình nhất.' },
+    { id: 'p-19', phase: 'Tháng 2: Ownership', text: 'Chủ động đề xuất xóa nợ kỹ thuật (Technical Debt) cho module cũ', desc: 'Tái cấu trúc code bẩn, bổ sung unit test cho các đoạn code thiếu test.' },
+    { id: 'p-20', phase: 'Tháng 2: Ownership', text: 'Tham gia quan sát và hỗ trợ Incident Response cùng các anh Senior', desc: 'Học cách đọc log phân tán, tra cứu traceId và xử lý khủng hoảng lúc deploy.' },
+    { id: 'p-21', phase: 'Tháng 2: Ownership', text: 'Đóng góp ý kiến xây dựng trong buổi Sprint Retrospective', desc: 'Đề xuất cải tiến nhỏ về quy trình hoặc công cụ giúp cả nhóm làm việc mượt mà hơn.' },
+    { id: 'p-22', phase: 'Tháng 2: Ownership', text: 'Chuẩn bị bản báo cáo đánh giá thử việc (Probation Presentation) tự tin', desc: 'Tổng kết các đầu việc hoàn thành, chỉ số đo lường và định hướng phát triển quý tiếp theo.' }
   ];
 
   const completedCount = Object.values(checkedProbation).filter(Boolean).length;
@@ -932,10 +1194,10 @@ export default function CareerHubPage(): React.JSX.Element {
               gap: '12px'
             }}>
               {[
-                { label: `${KNOWLEDGE_MODULES.length} Khối Kiến Thức (${totalTopicsCount} Chuyên Đề)`, desc: 'Java • Spring • JPA • Test • Clean Code • Redis • Kafka • Security • Tải Cao', color: '#38bdf8' },
+                { label: `${KNOWLEDGE_MODULES.length} Khối Kiến Thức (${totalTopicsCount} Chuyên Đề)`, desc: 'Java • Spring • JPA • Test • Clean Code • Redis • Kafka • Security • Tải Cao • Entry-Level', color: '#38bdf8' },
                 { label: `${FIFTY_PRACTICAL_TIPS.length} Bí Quyết Thực Chiến`, desc: 'Quy tắc vàng sống còn khi đi làm', color: '#ec4899' },
-                { label: 'Chiến Thuật Phỏng Vấn', desc: 'Bẫy phỏng vấn & Cách trả lời 10 điểm', color: '#fbbf24' },
-                { label: 'Checklist 60 Ngày Thử Việc', desc: `Tiến độ: ${progressPercent}% hoàn thành`, color: '#f97316' }
+                { label: `${INTERVIEW_QUESTIONS.length} Câu Hỏi "Trúng Tủ"`, desc: 'Bẫy phỏng vấn & Cách trả lời 10 điểm', color: '#fbbf24' },
+                { label: 'Checklist 60 Ngày Thử Việc', desc: `Tiến độ: ${progressPercent}% (${completedCount}/${PROBATION_TASKS.length})`, color: '#f97316' }
               ].map((chip, i) => (
                 <div key={i} style={{
                   padding: '10px 16px',
@@ -970,9 +1232,9 @@ export default function CareerHubPage(): React.JSX.Element {
             {[
               { id: 'lessons', label: '📘 Kho Tri Thức Thực Chiến', color: '#38bdf8' },
               { id: 'tips50', label: `⚡ ${FIFTY_PRACTICAL_TIPS.length} Bí Quyết Đi Làm`, color: '#ec4899' },
-              { id: 'interview', label: '🎯 Phỏng Vấn "Trúng Tủ"', color: '#34d399' },
+              { id: 'interview', label: `🎯 Phỏng Vấn "Trúng Tủ" (${INTERVIEW_QUESTIONS.length} Câu)`, color: '#34d399' },
               { id: 'battles', label: `⚔️ Trường Học vs Đi Làm (${CODE_BATTLES.length} Trận)`, color: '#fbbf24' },
-              { id: 'cv', label: '📄 Bí Kíp Viết CV Backend', color: '#a78bfa' },
+              { id: 'cv', label: `📄 Bí Kíp Viết CV (${CV_SECTIONS.length} Phần)`, color: '#a78bfa' },
               { id: 'probation', label: `📋 Checklist Thử Việc (${progressPercent}%)`, color: '#f97316' }
             ].map((tab) => {
               const isActive = activeMainTab === tab.id;
