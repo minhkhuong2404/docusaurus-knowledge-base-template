@@ -41,8 +41,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1785518999000,
   "sidebarPosition": 2,
   "frontMatter": {
     "id": "osi-tcpip-models",
@@ -64,7 +64,7 @@
     "permalink": "/technical-knowledge/networking/"
   },
   "next": {
-    "title": "IP Addressing & Routing",
-    "permalink": "/technical-knowledge/networking/ip-addressing-routing"
+    "title": "MAC Addressing, ARP & Layer 2 Forwarding",
+    "permalink": "/technical-knowledge/networking/mac-address-and-layer-2"
   }
 }

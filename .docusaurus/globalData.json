@@ -6012,6 +6012,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/networking/mac-address-and-layer-2",
+              "path": "/technical-knowledge/networking/mac-address-and-layer-2",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/networking/network-performance-optimization",
               "path": "/technical-knowledge/networking/network-performance-optimization",
               "sidebar": "tutorialSidebar"
@@ -6059,6 +6064,11 @@
             {
               "id": "technical-knowledge/networking/tcp-udp-transport-layer",
               "path": "/technical-knowledge/networking/tcp-udp-transport-layer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/tor-and-privacy-networks",
+              "path": "/technical-knowledge/networking/tor-and-privacy-networks",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6742,6 +6752,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/problem-breakdowns/digital-wallet",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/digital-wallet",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/problem-breakdowns/distributed-cache",
               "path": "/technical-knowledge/system-design/problem-breakdowns/distributed-cache",
               "sidebar": "tutorialSidebar"
@@ -6852,6 +6867,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/problem-breakdowns/nearby-friends",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/nearby-friends",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/problem-breakdowns/netflix",
               "path": "/technical-knowledge/system-design/problem-breakdowns/netflix",
               "sidebar": "tutorialSidebar"
@@ -6894,6 +6914,11 @@
             {
               "id": "technical-knowledge/system-design/problem-breakdowns/spotify",
               "path": "/technical-knowledge/system-design/problem-breakdowns/spotify",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/stock-exchange",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/stock-exchange",
               "sidebar": "tutorialSidebar"
             },
             {

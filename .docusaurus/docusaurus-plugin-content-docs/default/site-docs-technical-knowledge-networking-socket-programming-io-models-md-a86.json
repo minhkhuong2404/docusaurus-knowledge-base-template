@@ -61,8 +61,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1788539707000,
   "sidebarPosition": 10,
   "frontMatter": {
     "id": "socket-programming-io-models",
@@ -84,7 +84,7 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Proxies, NAT & Firewalls",
+    "title": "Proxies, Firewalls, NAT & VPNs",
     "permalink": "/technical-knowledge/networking/proxies-nat-firewalls"
   },
   "next": {

@@ -334,6 +334,9 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart',
 								'technical-knowledge/system-design/problem-breakdowns/pastebin',
 								'technical-knowledge/system-design/problem-breakdowns/cookie-consent',
+								'technical-knowledge/system-design/problem-breakdowns/nearby-friends',
+								'technical-knowledge/system-design/problem-breakdowns/digital-wallet',
+								'technical-knowledge/system-design/problem-breakdowns/stock-exchange',
 							],
 						},
 						{
@@ -581,6 +584,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/networking/osi-tcpip-models',
+								'technical-knowledge/networking/mac-address-and-layer-2',
 								'technical-knowledge/networking/ip-addressing-routing',
 								'technical-knowledge/networking/tcp-udp-transport-layer',
 								'technical-knowledge/networking/quic-modern-transport',
@@ -627,6 +631,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/networking/network-security',
+								'technical-knowledge/networking/tor-and-privacy-networks',
 							],
 						},
 						{

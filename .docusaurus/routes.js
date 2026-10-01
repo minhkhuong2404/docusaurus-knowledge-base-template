@@ -79,11 +79,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'e72'),
+    component: ComponentCreator('/', '55f'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'b74'),
+        component: ComponentCreator('/', '4c2'),
         routes: [
           {
             path: '/tags',
@@ -418,6 +418,11 @@ export default [
           {
             path: '/tags/argocd',
             component: ComponentCreator('/tags/argocd', '7ff'),
+            exact: true
+          },
+          {
+            path: '/tags/arp',
+            component: ComponentCreator('/tags/arp', '9f6'),
             exact: true
           },
           {
@@ -1366,6 +1371,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/cloud-networking',
+            component: ComponentCreator('/tags/cloud-networking', '259'),
+            exact: true
+          },
+          {
             path: '/tags/cloud-security',
             component: ComponentCreator('/tags/cloud-security', 'e6c'),
             exact: true
@@ -1653,6 +1663,11 @@ export default [
           {
             path: '/tags/connection-pooling',
             component: ComponentCreator('/tags/connection-pooling', '8d4'),
+            exact: true
+          },
+          {
+            path: '/tags/conntrack',
+            component: ComponentCreator('/tags/conntrack', 'c01'),
             exact: true
           },
           {
@@ -3831,6 +3846,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/ipsec',
+            component: ComponentCreator('/tags/ipsec', '1f8'),
+            exact: true
+          },
+          {
             path: '/tags/iptables',
             component: ComponentCreator('/tags/iptables', '540'),
             exact: true
@@ -4191,6 +4211,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/layer-2',
+            component: ComponentCreator('/tags/layer-2', '4de'),
+            exact: true
+          },
+          {
             path: '/tags/layer-cache',
             component: ComponentCreator('/tags/layer-cache', '06e'),
             exact: true
@@ -4468,6 +4493,11 @@ export default [
           {
             path: '/tags/lucene',
             component: ComponentCreator('/tags/lucene', '3e5'),
+            exact: true
+          },
+          {
+            path: '/tags/mac-address',
+            component: ComponentCreator('/tags/mac-address', 'c5a'),
             exact: true
           },
           {
@@ -4916,6 +4946,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/nftables',
+            component: ComponentCreator('/tags/nftables', '763'),
+            exact: true
+          },
+          {
             path: '/tags/nginx',
             component: ComponentCreator('/tags/nginx', '65f'),
             exact: true
@@ -5083,6 +5118,11 @@ export default [
           {
             path: '/tags/onboarding',
             component: ComponentCreator('/tags/onboarding', 'b8e'),
+            exact: true
+          },
+          {
+            path: '/tags/onion-routing',
+            component: ComponentCreator('/tags/onion-routing', '848'),
             exact: true
           },
           {
@@ -7356,6 +7396,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/switch',
+            component: ComponentCreator('/tags/switch', '5b8'),
+            exact: true
+          },
+          {
             path: '/tags/switch-expression',
             component: ComponentCreator('/tags/switch-expression', '81c'),
             exact: true
@@ -7663,6 +7708,11 @@ export default [
           {
             path: '/tags/topological-sort',
             component: ComponentCreator('/tags/topological-sort', '0ad'),
+            exact: true
+          },
+          {
+            path: '/tags/tor',
+            component: ComponentCreator('/tags/tor', '976'),
             exact: true
           },
           {
@@ -7991,8 +8041,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/vrrp',
+            component: ComponentCreator('/tags/vrrp', 'bd8'),
+            exact: true
+          },
+          {
             path: '/tags/vulnerability-management',
             component: ComponentCreator('/tags/vulnerability-management', '41e'),
+            exact: true
+          },
+          {
+            path: '/tags/vxlan',
+            component: ComponentCreator('/tags/vxlan', 'f96'),
             exact: true
           },
           {
@@ -8181,6 +8241,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/wireguard',
+            component: ComponentCreator('/tags/wireguard', '852'),
+            exact: true
+          },
+          {
             path: '/tags/wiremock',
             component: ComponentCreator('/tags/wiremock', '60c'),
             exact: true
@@ -8302,7 +8367,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '9bc'),
+            component: ComponentCreator('/', 'e74'),
             routes: [
               {
                 path: '/aws',
@@ -15696,6 +15761,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/networking/mac-address-and-layer-2',
+                component: ComponentCreator('/technical-knowledge/networking/mac-address-and-layer-2', '64d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/networking/network-performance-optimization',
                 component: ComponentCreator('/technical-knowledge/networking/network-performance-optimization', 'a4e'),
                 exact: true,
@@ -15746,6 +15817,12 @@ export default [
               {
                 path: '/technical-knowledge/networking/tcp-udp-transport-layer',
                 component: ComponentCreator('/technical-knowledge/networking/tcp-udp-transport-layer', '876'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/networking/tor-and-privacy-networks',
+                component: ComponentCreator('/technical-knowledge/networking/tor-and-privacy-networks', '1cb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16554,6 +16631,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/system-design/problem-breakdowns/digital-wallet',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/digital-wallet', 'ad2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/system-design/problem-breakdowns/distributed-cache',
                 component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/distributed-cache', 'd38'),
                 exact: true,
@@ -16680,6 +16763,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/system-design/problem-breakdowns/nearby-friends',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/nearby-friends', '5db'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/system-design/problem-breakdowns/netflix',
                 component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/netflix', '537'),
                 exact: true,
@@ -16730,6 +16819,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/problem-breakdowns/spotify',
                 component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/spotify', 'bc2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/stock-exchange',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/stock-exchange', 'c9d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

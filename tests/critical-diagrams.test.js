@@ -17,6 +17,12 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'FunctionalInterfacesFactoryDiagram.tsx',
     'BlackboxSystemTestingDiagram.tsx',
     'DistributedTestingCoverageDiagram.tsx',
+    'ProxiesNatFirewallsDiagram.tsx',
+    'MacAddressArpDiagram.tsx',
+    'TorCircuitDiagram.tsx',
+    'NearbyFriendsDiagram.tsx',
+    'DigitalWalletLedgerDiagram.tsx',
+    'StockExchangeMatchingDiagram.tsx',
   ];
 
   for (const filename of criticalDiagrams) {
