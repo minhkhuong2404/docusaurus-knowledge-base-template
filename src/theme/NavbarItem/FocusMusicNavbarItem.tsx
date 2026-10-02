@@ -70,27 +70,21 @@ export default function FocusMusicNavbarItem({
             ? isFocus
               ? 'rgba(239, 68, 68, 0.12)'
               : 'rgba(245, 158, 11, 0.12)'
-            : isSpotifyActive
-            ? 'rgba(29, 185, 84, 0.12)'
-            : isPlaying
-            ? 'rgba(16, 185, 129, 0.12)'
+            : isAudioPlaying
+            ? 'var(--sidebar-active-bg, rgba(16, 185, 129, 0.12))'
             : 'transparent',
           border: isPomodoroActive
             ? isFocus
               ? '1px solid #ef4444'
               : '1px solid #f59e0b'
-            : isSpotifyActive
-            ? '1px solid #1DB954'
-            : isPlaying
+            : isAudioPlaying
             ? '1px solid var(--brand-green, #10b981)'
             : '1px solid transparent',
           color: isPomodoroActive
             ? isFocus
               ? '#ef4444'
               : '#f59e0b'
-            : isSpotifyActive
-            ? '#1DB954'
-            : isPlaying
+            : isAudioPlaying
             ? 'var(--brand-green, #10b981)'
             : 'var(--ifm-navbar-link-color, currentColor)',
           transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',

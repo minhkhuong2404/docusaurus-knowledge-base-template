@@ -676,12 +676,12 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
           box-shadow: 0 6px 24px rgba(16, 185, 129, 0.45), 0 0 18px var(--neon-glow-color, rgba(16, 185, 129, 0.5));
         }
         [data-theme="light"] .focus-round-btn.is-playing.is-spotify:not(.pomodoro-active):not(.pomodoro-break) {
-          border: 2.5px solid #1DB954;
-          box-shadow: 0 6px 22px rgba(29, 185, 84, 0.35), 0 0 16px rgba(29, 185, 84, 0.4);
+          border: 2.5px solid var(--brand-green, #10b981);
+          box-shadow: 0 6px 22px var(--neon-glow-color, rgba(16, 185, 129, 0.35)), 0 0 16px var(--neon-glow-color, rgba(16, 185, 129, 0.4));
         }
         [data-theme="dark"] .focus-round-btn.is-playing.is-spotify:not(.pomodoro-active):not(.pomodoro-break) {
-          border: 2.5px solid #1DB954;
-          box-shadow: 0 6px 24px rgba(29, 185, 84, 0.45), 0 0 18px rgba(29, 185, 84, 0.5);
+          border: 2.5px solid var(--brand-green, #10b981);
+          box-shadow: 0 6px 24px var(--neon-glow-color, rgba(16, 185, 129, 0.45)), 0 0 18px var(--neon-glow-color, rgba(16, 185, 129, 0.5));
         }
 
         /* Top Pomodoro Banner Toast */
@@ -930,8 +930,8 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                       animationDelay: `-${idx * 90}ms, -${idx * 1600}ms`,
                       ...(musicSource === 'spotify' && isSpotifyPlaying
                         ? {
-                            background: 'linear-gradient(180deg, #1DB954 0%, #1ed760 100%)',
-                            boxShadow: '0 0 6px rgba(29, 185, 84, 0.6)',
+                            background: 'var(--gradient-brand, linear-gradient(180deg, var(--brand-green, #10b981) 0%, var(--brand-green-mid, #86efac) 100%))',
+                            boxShadow: '0 0 6px var(--neon-glow-color, rgba(16, 185, 129, 0.6))',
                           }
                         : {}),
                     } as React.CSSProperties}
@@ -1506,7 +1506,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                 flex: 1,
                 padding: isPlayerOpen ? '8px 12px' : '5px 8px',
                 border: musicSource === 'spotify'
-                  ? '1px solid #1DB954'
+                  ? '1px solid var(--brand-green, #10b981)'
                   : '1px solid transparent',
                 borderRadius: '8px',
                 background: musicSource === 'spotify'
@@ -1519,7 +1519,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                 fontWeight: musicSource === 'spotify' ? 700 : 600,
                 fontSize: isPlayerOpen ? '0.82rem' : '0.74rem',
                 color: musicSource === 'spotify'
-                  ? '#1DB954'
+                  ? 'var(--brand-green, #10b981)'
                   : 'var(--ifm-color-content-secondary, #475569)',
                 display: 'flex',
                 alignItems: 'center',
@@ -1532,7 +1532,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                 width={isPlayerOpen ? "15" : "13"}
                 height={isPlayerOpen ? "15" : "13"}
                 viewBox="0 0 24 24"
-                fill="#1DB954"
+                fill="currentColor"
               >
                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.498 17.306c-.216.353-.674.468-1.026.252-2.812-1.718-6.352-2.106-10.523-1.152-.403.092-.806-.157-.899-.56-.092-.403.157-.806.56-.899 4.568-1.044 8.502-.601 11.636 1.333.352.216.467.674.252 1.026zm1.467-3.262c-.272.443-.854.582-1.297.31-3.218-1.978-8.125-2.55-11.932-1.393-.497.151-1.026-.134-1.177-.63-.151-.497.134-1.026.63-1.177 4.354-1.321 9.775-.681 13.466 1.593.443.272.582.854.31 1.297zm.126-3.41c-3.858-2.29-10.222-2.502-13.916-1.38-.592.18-1.222-.158-1.402-.75-.18-.592.158-1.222.75-1.402 4.252-1.291 11.282-1.042 15.717 1.59.533.316.708 1.008.392 1.541-.316.533-1.008.708-1.541.392z" />
               </svg>
@@ -1553,9 +1553,9 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                     width: '6px',
                     height: '6px',
                     borderRadius: '50%',
-                    backgroundColor: '#1DB954',
+                    backgroundColor: 'var(--brand-green, #10b981)',
                     display: 'inline-block',
-                    boxShadow: '0 0 6px #1DB954',
+                    boxShadow: '0 0 6px var(--neon-glow-color, rgba(16, 185, 129, 0.6))',
                     marginLeft: '2px',
                   }}
                 />
@@ -1605,12 +1605,12 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '5px',
-                          color: (isPlaying || isSpotifyPlaying) ? '#1DB954' : 'var(--ifm-color-content-secondary, #64748b)',
+                          color: (isPlaying || isSpotifyPlaying) ? 'var(--brand-green, #10b981)' : 'var(--ifm-color-content-secondary, #64748b)',
                         }}
                       >
                         {(isPlaying || isSpotifyPlaying) ? (
                           <>
-                            <span className="novatorem-status-dot" style={{ backgroundColor: '#1DB954', boxShadow: '0 0 8px #1DB954' }} />
+                            <span className="novatorem-status-dot" style={{ backgroundColor: 'var(--brand-green, #10b981)', boxShadow: '0 0 8px var(--neon-glow-color, rgba(16, 185, 129, 0.5))' }} />
                             <span>NOW PLAYING</span>
                           </>
                         ) : (
@@ -1628,11 +1628,12 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                           gap: '4px',
                           fontSize: '0.68rem',
                           fontWeight: 700,
-                          color: '#1DB954',
+                          color: 'var(--brand-green, #10b981)',
                           textDecoration: 'none',
                           padding: '2px 7px',
                           borderRadius: '6px',
-                          backgroundColor: 'rgba(29, 185, 84, 0.12)',
+                          backgroundColor: 'var(--sidebar-active-bg, rgba(16, 185, 129, 0.12))',
+                          border: '1px solid var(--sidebar-border, rgba(16, 185, 129, 0.25))',
                           transition: 'all 0.15s ease',
                         }}
                         title="Open in Spotify"
@@ -1658,7 +1659,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                         overflow: 'hidden',
                         flexShrink: 0,
                         backgroundColor: '#0f172a',
-                        boxShadow: (isPlaying || isSpotifyPlaying) ? '0 4px 14px rgba(29, 185, 84, 0.4)' : 'none',
+                        boxShadow: (isPlaying || isSpotifyPlaying) ? '0 4px 14px var(--neon-glow-color, rgba(16, 185, 129, 0.4))' : 'none',
                         border: '1px solid var(--sidebar-border, #D9D9D9)',
                       }}
                     >
@@ -1685,7 +1686,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                           width: '16px',
                           height: '16px',
                           borderRadius: '50%',
-                          backgroundColor: '#1DB954',
+                          backgroundColor: 'var(--brand-green, #10b981)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -1716,7 +1717,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                       <div style={{ fontSize: '0.72rem', opacity: 0.78, display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>Curated by {currentSpotifyPlaylist.curator}</span>
                         {currentSpotifyPlaylist.likes && (
-                          <span style={{ color: '#1DB954', fontWeight: 600 }}>• ❤️ {currentSpotifyPlaylist.likes}</span>
+                          <span style={{ color: 'var(--brand-green, #10b981)', fontWeight: 600 }}>• ❤️ {currentSpotifyPlaylist.likes}</span>
                         )}
                         {currentSpotifyPlaylist.isCustom && <span style={{ color: '#d97706' }}>• Favorite</span>}
                       </div>
@@ -1813,14 +1814,14 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                           width: isPlayerOpen ? '44px' : '38px',
                           height: isPlayerOpen ? '44px' : '38px',
                           borderRadius: '50%',
-                          border: '2px solid #86efac',
-                          background: 'linear-gradient(135deg, #1DB954 0%, #1ed760 100%)',
+                          border: '2px solid var(--brand-green-mid, var(--brand-green, #86efac))',
+                          background: 'var(--gradient-brand, linear-gradient(135deg, var(--brand-green, #10b981) 0%, var(--brand-green-mid, #86efac) 100%))',
                           color: '#ffffff',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           cursor: 'pointer',
-                          boxShadow: '0 4px 14px rgba(29, 185, 84, 0.45)',
+                          boxShadow: '0 4px 14px var(--neon-glow-color, rgba(16, 185, 129, 0.45))',
                           transition: 'transform 0.15s ease, box-shadow 0.15s ease',
                         }}
                       >
@@ -1897,7 +1898,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                         aria-label="Volume slider"
                         style={{
                           width: isPlayerOpen ? '75px' : '55px',
-                          accentColor: '#1DB954',
+                          accentColor: 'var(--brand-green, #10b981)',
                           cursor: 'pointer',
                         }}
                       />
@@ -1949,8 +1950,8 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                             padding: '8px 10px',
                             borderRadius: '8px',
                             cursor: 'pointer',
-                            border: isCurrent ? '1px solid #1DB954' : '1px solid transparent',
-                            backgroundColor: isCurrent ? 'rgba(29, 185, 84, 0.08)' : 'transparent',
+                            border: isCurrent ? '1px solid var(--brand-green, #10b981)' : '1px solid transparent',
+                            backgroundColor: isCurrent ? 'var(--sidebar-active-bg, rgba(16, 185, 129, 0.08))' : 'transparent',
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
@@ -1963,8 +1964,8 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                backgroundColor: isCurrent ? '#1DB954' : 'var(--ifm-color-emphasis-100, #F2F2F2)',
-                                color: isCurrent ? '#ffffff' : '#1DB954',
+                                backgroundColor: isCurrent ? 'var(--brand-green, #10b981)' : 'var(--ifm-color-emphasis-100, #F2F2F2)',
+                                color: isCurrent ? '#ffffff' : 'var(--brand-green, #10b981)',
                                 flexShrink: 0,
                               }}
                             >
@@ -1986,7 +1987,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                                   whiteSpace: 'nowrap',
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
-                                  color: isCurrent ? '#1DB954' : 'inherit',
+                                  color: isCurrent ? 'var(--brand-green, #10b981)' : 'inherit',
                                 }}
                               >
                                 {playlist.title}
@@ -1994,7 +1995,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                               <div style={{ fontSize: '0.68rem', opacity: 0.7, display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <span>{playlist.curator}</span>
                                 {playlist.likes && (
-                                  <span style={{ color: '#1DB954', fontWeight: 600 }}>
+                                  <span style={{ color: 'var(--brand-green, #10b981)', fontWeight: 600 }}>
                                     • ❤️ {playlist.likes}
                                   </span>
                                 )}
@@ -2060,13 +2061,13 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                           gap: '8px',
                         }}
                       >
-                        <span style={{ color: '#1DB954' }}>🟢</span>
+                        <span style={{ color: 'var(--brand-green, #10b981)' }}>🟢</span>
                         <span>Add to My Favorites (Spotify Playlist)</span>
                       </button>
                     ) : (
                       <form onSubmit={handleAddSpotifyPlaylist} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1DB954' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--brand-green, #10b981)' }}>
                             🟢 Add Favorite Spotify Playlist
                           </span>
                           <button
@@ -2078,7 +2079,7 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                           </button>
                         </div>
 
-                        <div style={{ fontSize: '0.72rem', opacity: 0.9, color: '#1DB954' }}>
+                        <div style={{ fontSize: '0.72rem', opacity: 0.9, color: 'var(--brand-green, #10b981)' }}>
                           {currentUser
                             ? `🔒 Private favorite for your account (${currentUser.displayName || currentUser.email})`
                             : '👤 Private favorite for this browser session'}
@@ -2110,11 +2111,12 @@ export default function FocusMusicPlayer(): React.JSX.Element | null {
                             padding: '6px',
                             borderRadius: '6px',
                             border: 'none',
-                            background: '#1DB954',
+                            background: 'var(--brand-green, #10b981)',
                             color: '#ffffff',
                             fontWeight: 600,
                             fontSize: '0.78rem',
                             cursor: 'pointer',
+                            boxShadow: '0 2px 8px var(--neon-glow-color, rgba(16, 185, 129, 0.3))',
                           }}
                         >
                           Save & Listen

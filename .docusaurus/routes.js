@@ -58,6 +58,11 @@ export default [
     exact: true
   },
   {
+    path: '/mock-interview/',
+    component: ComponentCreator('/mock-interview/', '4d0'),
+    exact: true
+  },
+  {
     path: '/profile/',
     component: ComponentCreator('/profile/', 'fe0'),
     exact: true

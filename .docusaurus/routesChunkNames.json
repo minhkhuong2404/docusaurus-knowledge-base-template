@@ -70,6 +70,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
+  "/mock-interview/-4d0": {
+    "__comp": "__comp---site-src-pages-mock-interview-index-tsx-826-ec0",
+    "__context": {
+      "plugin": "plugin---arcade-a-74-d23"
+    },
+    "config": "config---arcade-5-e-9-6a3"
+  },
   "/profile/-fe0": {
     "__comp": "__comp---site-src-pages-profile-index-tsxfe-1-25e",
     "__context": {

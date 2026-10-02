@@ -4,6 +4,7 @@ import Link from '@docusaurus/Link';
 import { FIFTY_PRACTICAL_TIPS, PracticalTip } from '../../data/hubFiftyTipsData';
 import { INTERVIEW_QUESTIONS, InterviewQuestion } from '../../data/hubInterviewQuestionsData';
 import { KNOWLEDGE_MODULES, KnowledgeModule, LessonTopic } from '../../data/hubKnowledgeModulesData';
+import MockInterviewStudio from '../../components/mock-interview/MockInterviewStudio';
 
 // ==========================================
 // 2. DATA: CV & JOB HUNTING STRATEGY
@@ -1007,7 +1008,7 @@ function FormattedDocContent({ text, accentColor }: { text: string; accentColor:
 // ==========================================
 
 export default function CareerHubPage(): React.JSX.Element {
-  const [activeMainTab, setActiveMainTab] = useState<'lessons' | 'tips50' | 'interview' | 'battles' | 'cv' | 'probation'>('lessons');
+  const [activeMainTab, setActiveMainTab] = useState<'lessons' | 'mock-interview' | 'interview' | 'tips50' | 'battles' | 'cv' | 'probation'>('lessons');
 
   // Lessons state
   const [selectedModuleId, setSelectedModuleId] = useState<string>('core-java');
@@ -1073,6 +1074,16 @@ export default function CareerHubPage(): React.JSX.Element {
       const saved = localStorage.getItem('hub_probation_checklist_v2');
       if (saved) setCheckedProbation(JSON.parse(saved));
     } catch (e) {}
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam === 'mock-interview' || tabParam === 'mock') {
+        setActiveMainTab('mock-interview');
+      } else if (tabParam === 'lessons' || tabParam === 'interview' || tabParam === 'tips50' || tabParam === 'battles' || tabParam === 'cv' || tabParam === 'probation') {
+        setActiveMainTab(tabParam as any);
+      }
+    }
   }, []);
 
   const toggleCheck = (id: string) => {
@@ -1142,15 +1153,12 @@ export default function CareerHubPage(): React.JSX.Element {
           {/* HERO BANNER */}
           {/* ======================================================== */}
           <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-            <div style={{
+            <div className="hub-hero-badge" style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
               padding: '6px 16px',
               borderRadius: '20px',
-              background: 'rgba(56, 189, 248, 0.1)',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
-              color: '#38bdf8',
               fontSize: '13px',
               fontWeight: 800,
               letterSpacing: '0.05em',
@@ -1160,18 +1168,14 @@ export default function CareerHubPage(): React.JSX.Element {
               <span>🎓 DÀNH CHO INTERN • FRESHER • JUNIOR BACKEND</span>
             </div>
 
-            <h1 style={{
+            <h1 className="hub-hero-title" style={{
               fontSize: '2.75rem',
               fontWeight: 900,
               letterSpacing: '-0.02em',
               margin: '0 0 14px 0',
               lineHeight: 1.25
             }}>
-              <span style={{
-                background: 'linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #fbbf24 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}>
+              <span>
                 Java Career Accelerator Hub
               </span>
             </h1>
@@ -1199,40 +1203,86 @@ export default function CareerHubPage(): React.JSX.Element {
                 { label: `${INTERVIEW_QUESTIONS.length} Câu Hỏi "Trúng Tủ"`, desc: 'Bẫy phỏng vấn & Cách trả lời 10 điểm', color: '#fbbf24' },
                 { label: 'Checklist 60 Ngày Thử Việc', desc: `Tiến độ: ${progressPercent}% (${completedCount}/${PROBATION_TASKS.length})`, color: '#f97316' }
               ].map((chip, i) => (
-                <div key={i} style={{
+                <div key={i} className={`hub-metric-card metric-${i}`} style={{
                   padding: '10px 16px',
                   borderRadius: '10px',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   fontSize: '14px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   minWidth: '180px'
                 }}>
-                  <span style={{ color: chip.color, fontWeight: 800 }}>{chip.label}</span>
-                  <span style={{ color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))', fontSize: '12.5px', marginTop: '3px' }}>{chip.desc}</span>
+                  <span className="hub-metric-label" style={{ fontWeight: 800 }}>{chip.label}</span>
+                  <span className="hub-metric-desc" style={{ fontSize: '12.5px', marginTop: '3px' }}>{chip.desc}</span>
                 </div>
               ))}
+            </div>
+
+            {/* Mock Interview Studio CTA Banner */}
+            <div className="hub-mock-banner" style={{
+              margin: '20px auto 0 auto',
+              maxWidth: '860px',
+              borderRadius: '14px',
+              padding: '16px 24px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '14px'
+            }}>
+              <div style={{ textAlign: 'left' }}>
+                <div className="hub-mock-banner-title" style={{ fontWeight: 800, fontSize: '15px' }}>
+                  🎙️ Phòng Luyện Phỏng Vấn Thử (Mock Interview Studio)
+                </div>
+                <div className="hub-mock-banner-desc" style={{ fontSize: '13px', marginTop: '2px' }}>
+                  Đề ngẫu nhiên 4 môn (Java, Spring Boot, Database, Network), tự động chấm điểm và đánh giá độ khớp đại ý 1-1.
+                </div>
+              </div>
+              <button
+                type="button"
+                className="hub-mock-banner-btn"
+                onClick={() => {
+                  setActiveMainTab('mock-interview');
+                  const navEl = document.getElementById('hub-main-nav');
+                  if (navEl) navEl.scrollIntoView({ behavior: 'smooth' });
+                }}
+                style={{
+                  padding: '9px 20px',
+                  borderRadius: '8px',
+                  fontWeight: 800,
+                  fontSize: '13.5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                Vào Phòng Phỏng Vấn ➔
+              </button>
             </div>
           </div>
 
           {/* ======================================================== */}
           {/* MAIN NAVIGATION BAR */}
           {/* ======================================================== */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '10px',
-            flexWrap: 'wrap',
-            marginBottom: '32px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-            paddingBottom: '16px'
-          }}>
+          <div
+            id="hub-main-nav"
+            className="hub-main-nav"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '10px',
+              flexWrap: 'wrap',
+              marginBottom: '32px',
+              paddingBottom: '16px'
+            }}
+          >
             {[
               { id: 'lessons', label: '📘 Kho Tri Thức Thực Chiến', color: '#38bdf8' },
-              { id: 'tips50', label: `⚡ ${FIFTY_PRACTICAL_TIPS.length} Bí Quyết Đi Làm`, color: '#ec4899' },
+              { id: 'mock-interview', label: '🎙️ Phỏng Vấn Thử (AI Evaluator)', color: '#0ea5e9' },
               { id: 'interview', label: `🎯 Phỏng Vấn "Trúng Tủ" (${INTERVIEW_QUESTIONS.length} Câu)`, color: '#34d399' },
+              { id: 'tips50', label: `⚡ ${FIFTY_PRACTICAL_TIPS.length} Bí Quyết Đi Làm`, color: '#ec4899' },
               { id: 'battles', label: `⚔️ Trường Học vs Đi Làm (${CODE_BATTLES.length} Trận)`, color: '#fbbf24' },
               { id: 'cv', label: `📄 Bí Kíp Viết CV (${CV_SECTIONS.length} Phần)`, color: '#a78bfa' },
               { id: 'probation', label: `📋 Checklist Thử Việc (${progressPercent}%)`, color: '#f97316' }
@@ -1241,18 +1291,15 @@ export default function CareerHubPage(): React.JSX.Element {
               return (
                 <button
                   key={tab.id}
+                  className={`hub-main-nav-tab tab-${tab.id} ${isActive ? 'active' : ''}`}
                   onClick={() => setActiveMainTab(tab.id as any)}
                   style={{
                     padding: '11px 20px',
                     borderRadius: '10px',
-                    background: isActive ? `${tab.color}22` : 'rgba(255, 255, 255, 0.03)',
-                    border: `1px solid ${isActive ? tab.color : 'rgba(255, 255, 255, 0.1)'}`,
-                    color: isActive ? tab.color : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.8))',
                     fontWeight: isActive ? 800 : 600,
                     fontSize: '15px',
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: isActive ? `0 0 15px ${tab.color}33` : 'none'
+                    transition: 'all 0.2s ease'
                   }}
                 >
                   {tab.label}
@@ -1286,7 +1333,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     return (
                       <div
                         key={mod.id}
-                        className={`hub-module-card ${isSelected ? 'active' : ''}`}
+                        className={`hub-module-card mod-${mod.id} ${isSelected ? 'active' : ''}`}
                         onClick={() => {
                           setSelectedModuleId(mod.id);
                           setSelectedTopicId(mod.topics[0].id);
@@ -1294,9 +1341,6 @@ export default function CareerHubPage(): React.JSX.Element {
                         style={{
                           padding: '14px 16px',
                           borderRadius: '12px',
-                          background: isSelected
-                            ? `linear-gradient(135deg, ${mod.accentColor}22 0%, rgba(255, 255, 255, 0.03) 100%)`
-                            : 'rgba(255, 255, 255, 0.025)',
                           border: `1.5px solid ${isSelected ? mod.accentColor : 'rgba(255, 255, 255, 0.08)'}`,
                           cursor: 'pointer',
                           transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -1332,22 +1376,28 @@ export default function CareerHubPage(): React.JSX.Element {
                             #{modNum} • {mod.topics.length} bài
                           </span>
                         </div>
-                        <div style={{
-                          fontSize: '15px',
-                          fontWeight: 800,
-                          color: isSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.85))',
-                          lineHeight: 1.35,
-                          marginBottom: '4px'
-                        }}>
+                        <div
+                          className="hub-module-title"
+                          style={{
+                            fontSize: '15px',
+                            fontWeight: 800,
+                            color: isSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.85))',
+                            lineHeight: 1.35,
+                            marginBottom: '4px'
+                          }}
+                        >
                           {mod.title}
                         </div>
-                        <div style={{
-                          fontSize: '12px',
-                          color: isSelected ? mod.accentColor : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}>
+                        <div
+                          className="hub-module-tagline"
+                          style={{
+                            fontSize: '12px',
+                            color: isSelected ? mod.accentColor : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}
+                        >
                           {mod.tagline}
                         </div>
                       </div>
@@ -1356,18 +1406,20 @@ export default function CareerHubPage(): React.JSX.Element {
                 </div>
 
                 {/* 2. Active Module Hero Strip */}
-                <div style={{
-                  padding: '16px 20px',
-                  borderRadius: '12px',
-                  background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
-                  border: `1px solid ${activeModule.accentColor}35`,
-                  marginBottom: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '12px'
-                }}>
+                <div
+                  className="hub-active-mod-strip"
+                  style={{
+                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    border: `1px solid ${activeModule.accentColor}35`,
+                    marginBottom: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '12px'
+                  }}
+                >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{
                       fontSize: '28px',
@@ -1437,14 +1489,17 @@ export default function CareerHubPage(): React.JSX.Element {
                   `}</style>
 
                   {/* Left Column: Topic Index Pills */}
-                  <div style={{
-                    background: 'rgba(15, 23, 42, 0.6)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '14px',
-                    padding: '14px',
-                    position: 'sticky',
-                    top: '20px'
-                  }}>
+                  <div
+                    className="hub-topic-index-pane"
+                    style={{
+                      background: 'rgba(15, 23, 42, 0.6)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '14px',
+                      padding: '14px',
+                      position: 'sticky',
+                      top: '20px'
+                    }}
+                  >
                     <div style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -1469,6 +1524,7 @@ export default function CareerHubPage(): React.JSX.Element {
                           <div
                             key={t.id}
                             onClick={() => setSelectedTopicId(t.id)}
+                            className={`hub-topic-item ${isTopicSelected ? 'selected' : ''}`}
                             style={{
                               padding: '11px 13px',
                               borderRadius: '10px',
@@ -1503,12 +1559,15 @@ export default function CareerHubPage(): React.JSX.Element {
                                 {t.badge}
                               </span>
                             </div>
-                            <div style={{
-                              fontSize: '13.5px',
-                              fontWeight: isTopicSelected ? 800 : 600,
-                              color: isTopicSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.8))',
-                              lineHeight: 1.35
-                            }}>
+                            <div
+                              className="hub-topic-item-title"
+                              style={{
+                                fontSize: '13.5px',
+                                fontWeight: isTopicSelected ? 800 : 600,
+                                color: isTopicSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.8))',
+                                lineHeight: 1.35
+                              }}
+                            >
                               {t.title}
                             </div>
                           </div>
@@ -1518,23 +1577,29 @@ export default function CareerHubPage(): React.JSX.Element {
                   </div>
 
                   {/* Right Column: Deep-Dive Document Reader */}
-                  <div style={{
-                    background: 'rgba(13, 17, 23, 0.85)',
-                    border: `1px solid ${activeModule.accentColor}35`,
-                    borderRadius: '16px',
-                    padding: '30px 32px',
-                    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
-                    backdropFilter: 'blur(10px)'
-                  }}>
+                  <div
+                    className="hub-reader-card"
+                    style={{
+                      background: 'rgba(13, 17, 23, 0.85)',
+                      border: `1px solid ${activeModule.accentColor}35`,
+                      borderRadius: '16px',
+                      padding: '30px 32px',
+                      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                  >
                     {/* Breadcrumbs Tag */}
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      fontSize: '12.5px',
-                      color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
-                      marginBottom: '14px'
-                    }}>
+                    <div
+                      className="hub-reader-breadcrumbs"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '12.5px',
+                        color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
+                        marginBottom: '14px'
+                      }}
+                    >
                       <span>Kho Tri Thức</span>
                       <span>/</span>
                       <span style={{ color: activeModule.accentColor }}>{activeModule.title}</span>
@@ -1566,13 +1631,16 @@ export default function CareerHubPage(): React.JSX.Element {
                         </span>
                       </div>
 
-                      <h1 style={{
-                        margin: '8px 0 14px 0',
-                        fontSize: '1.95rem',
-                        fontWeight: 900,
-                        color: 'var(--ifm-color-content, #ffffff)',
-                        lineHeight: 1.3
-                      }}>
+                      <h1
+                        className="hub-reader-title"
+                        style={{
+                          margin: '8px 0 14px 0',
+                          fontSize: '1.95rem',
+                          fontWeight: 900,
+                          color: 'var(--ifm-color-content, #ffffff)',
+                          lineHeight: 1.3
+                        }}
+                      >
                         {activeTopic.title}
                       </h1>
 
@@ -1841,6 +1909,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             setSelectedTopicId(prevTopic.id);
                             window.scrollTo({ top: 400, behavior: 'smooth' });
                           }}
+                          className="hub-reader-nav-btn hub-reader-prev-btn"
                           style={{
                             padding: '10px 18px',
                             borderRadius: '10px',
@@ -1869,6 +1938,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             setSelectedTopicId(nextTopic.id);
                             window.scrollTo({ top: 400, behavior: 'smooth' });
                           }}
+                          className="hub-reader-nav-btn hub-reader-next-btn"
                           style={{
                             padding: '10px 20px',
                             borderRadius: '10px',
@@ -1895,6 +1965,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             setSelectedTopicId(nextModule.topics[0].id);
                             window.scrollTo({ top: 400, behavior: 'smooth' });
                           }}
+                          className="hub-reader-nav-btn hub-reader-next-btn"
                           style={{
                             padding: '10px 20px',
                             borderRadius: '10px',
@@ -1923,6 +1994,15 @@ export default function CareerHubPage(): React.JSX.Element {
           })()}
 
           {/* ======================================================== */}
+          {/* TAB: PHÒNG PHỎNG VẤN THỬ (MOCK INTERVIEW STUDIO) */}
+          {/* ======================================================== */}
+          {activeMainTab === 'mock-interview' && (
+            <div style={{ marginTop: '8px' }}>
+              <MockInterviewStudio onSwitchTab={(tab) => setActiveMainTab(tab as any)} />
+            </div>
+          )}
+
+          {/* ======================================================== */}
           {/* TAB: 50 BÍ QUYẾT ĐI LÀM THỰC CHIẾN */}
           {/* ======================================================== */}
           {activeMainTab === 'tips50' && (
@@ -1930,30 +2010,35 @@ export default function CareerHubPage(): React.JSX.Element {
               {/* Category Filter & Search Bar */}
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '22px', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {['All', 'Core Java & JVM', 'Spring Boot & REST', 'Database & JPA', 'Testing & QA', 'Clean Code & Logging', 'Git & Tác Phong', 'Hạ Tầng & Security', 'Hệ Thống & Tải Cao'].map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setTipsCategoryFilter(cat)}
-                      style={{
-                        padding: '7px 16px',
-                        borderRadius: '8px',
-                        background: tipsCategoryFilter === cat ? 'rgba(236, 72, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${tipsCategoryFilter === cat ? '#ec4899' : 'rgba(255, 255, 255, 0.1)'}`,
-                        color: tipsCategoryFilter === cat ? '#ec4899' : 'rgba(255, 255, 255, 0.75)',
-                        fontSize: '13.5px',
-                        fontWeight: tipsCategoryFilter === cat ? 800 : 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      {cat === 'All' ? `Tất cả (${FIFTY_PRACTICAL_TIPS.length})` : cat}
-                    </button>
-                  ))}
+                  {['All', 'Core Java & JVM', 'Spring Boot & REST', 'Database & JPA', 'Testing & QA', 'Clean Code & Logging', 'Git & Tác Phong', 'Hạ Tầng & Security', 'Hệ Thống & Tải Cao'].map(cat => {
+                    const isActive = tipsCategoryFilter === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setTipsCategoryFilter(cat)}
+                        className={`hub-filter-btn ${isActive ? 'active' : ''}`}
+                        style={{
+                          padding: '7px 16px',
+                          borderRadius: '8px',
+                          background: isActive ? 'rgba(236, 72, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${isActive ? '#ec4899' : 'rgba(255, 255, 255, 0.1)'}`,
+                          color: isActive ? '#db2777' : 'var(--ifm-color-content-secondary, #334155)',
+                          fontSize: '13.5px',
+                          fontWeight: isActive ? 800 : 600,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        {cat === 'All' ? `Tất cả (${FIFTY_PRACTICAL_TIPS.length})` : cat}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div style={{ minWidth: '280px', flex: '1 1 auto', maxWidth: '420px' }}>
                   <input
                     type="text"
+                    className="hub-search-input"
                     placeholder={`Tìm nhanh trong ${FIFTY_PRACTICAL_TIPS.length} mẹo (vd: N+1, Lua, Deadlock, Idempotent, DLX)...`}
                     value={tipsSearchQuery}
                     onChange={(e) => setTipsSearchQuery(e.target.value)}
@@ -2041,26 +2126,32 @@ export default function CareerHubPage(): React.JSX.Element {
                             {tip.id}
                           </span>
 
-                          <span style={{
-                            fontSize: '12px',
-                            fontWeight: 800,
-                            padding: '3px 8px',
-                            borderRadius: '4px',
-                            background: 'rgba(255, 255, 255, 0.06)',
-                            color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.8))'
-                          }}>
+                          <span
+                            className="hub-tip-cat-badge"
+                            style={{
+                              fontSize: '12px',
+                              fontWeight: 800,
+                              padding: '3px 8px',
+                              borderRadius: '4px',
+                              background: 'rgba(255, 255, 255, 0.06)',
+                              color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.8))'
+                            }}
+                          >
                             {tip.category}
                           </span>
 
-                          <span style={{
-                            fontSize: '12px',
-                            fontWeight: 800,
-                            padding: '3px 8px',
-                            borderRadius: '4px',
-                            background: `${priorityColor}22`,
-                            color: priorityColor,
-                            border: `1px solid ${priorityColor}44`
-                          }}>
+                          <span
+                            className={`hub-tip-priority-badge priority-${tip.priority === 'Bắt Buộc' ? 'mandatory' : tip.priority === 'Hiệu Năng' ? 'performance' : 'architecture'}`}
+                            style={{
+                              fontSize: '12px',
+                              fontWeight: 800,
+                              padding: '3px 8px',
+                              borderRadius: '4px',
+                              background: `${priorityColor}22`,
+                              color: priorityColor,
+                              border: `1px solid ${priorityColor}44`
+                            }}
+                          >
                             {tip.priority}
                           </span>
 
@@ -2105,13 +2196,19 @@ export default function CareerHubPage(): React.JSX.Element {
                           {(tip.codeBad || tip.codeGood) && (
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
                               {tip.codeBad && (
-                                <div style={{
-                                  background: 'rgba(248, 113, 113, 0.05)',
-                                  border: '1px solid rgba(248, 113, 113, 0.25)',
-                                  borderRadius: '8px',
-                                  overflow: 'hidden'
-                                }}>
-                                  <div style={{ background: 'rgba(248, 113, 113, 0.15)', padding: '8px 12px', fontSize: '13px', fontWeight: 700, color: '#f87171' }}>
+                                <div
+                                  className="hub-tip-code-bad"
+                                  style={{
+                                    background: 'rgba(248, 113, 113, 0.05)',
+                                    border: '1px solid rgba(248, 113, 113, 0.25)',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden'
+                                  }}
+                                >
+                                  <div
+                                    className="hub-tip-code-bad-header"
+                                    style={{ background: 'rgba(248, 113, 113, 0.15)', padding: '8px 12px', fontSize: '13px', fontWeight: 700, color: '#f87171' }}
+                                  >
                                     ❌ Sai lầm thường gặp
                                   </div>
                                   <pre style={{ margin: 0, padding: '12px', fontSize: '13px', background: 'transparent', color: '#fca5a5', overflowX: 'auto', lineHeight: 1.5 }}>
@@ -2121,13 +2218,19 @@ export default function CareerHubPage(): React.JSX.Element {
                               )}
 
                               {tip.codeGood && (
-                                <div style={{
-                                  background: 'rgba(52, 211, 153, 0.05)',
-                                  border: '1px solid rgba(52, 211, 153, 0.25)',
-                                  borderRadius: '8px',
-                                  overflow: 'hidden'
-                                }}>
-                                  <div style={{ background: 'rgba(52, 211, 153, 0.15)', padding: '8px 12px', fontSize: '13px', fontWeight: 700, color: '#34d399' }}>
+                                <div
+                                  className="hub-tip-code-good"
+                                  style={{
+                                    background: 'rgba(52, 211, 153, 0.05)',
+                                    border: '1px solid rgba(52, 211, 153, 0.25)',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden'
+                                  }}
+                                >
+                                  <div
+                                    className="hub-tip-code-good-header"
+                                    style={{ background: 'rgba(52, 211, 153, 0.15)', padding: '8px 12px', fontSize: '13px', fontWeight: 700, color: '#34d399' }}
+                                  >
                                     ✅ Chuẩn đi làm (Best Practice)
                                   </div>
                                   <pre style={{ margin: 0, padding: '12px', fontSize: '13px', background: 'transparent', color: '#a7f3d0', overflowX: 'auto', lineHeight: 1.5 }}>
@@ -2152,25 +2255,31 @@ export default function CareerHubPage(): React.JSX.Element {
           {activeMainTab === 'interview' && (
             <div>
               {/* Filter and Search Bar */}
-              <div style={{
-                background: 'rgba(15, 23, 42, 0.7)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '12px',
-                padding: '20px',
-                marginBottom: '22px'
-              }}>
+              <div
+                className="hub-interview-filter-card"
+                style={{
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  marginBottom: '22px'
+                }}
+              >
                 {/* Search Bar & Stats */}
                 <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{
-                      padding: '6px 12px',
-                      borderRadius: '6px',
-                      background: 'rgba(52, 211, 153, 0.15)',
-                      border: '1px solid rgba(52, 211, 153, 0.3)',
-                      color: '#34d399',
-                      fontSize: '13.5px',
-                      fontWeight: 800
-                    }}>
+                    <span
+                      className="hub-count-badge"
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(52, 211, 153, 0.15)',
+                        border: '1px solid rgba(52, 211, 153, 0.3)',
+                        color: '#34d399',
+                        fontSize: '13.5px',
+                        fontWeight: 800
+                      }}
+                    >
                       🎯 Đang hiển thị {filteredInterviewQuestions.length} / {INTERVIEW_QUESTIONS.length} câu hỏi
                     </span>
                     <span style={{ fontSize: '13px', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))' }}>
@@ -2181,6 +2290,7 @@ export default function CareerHubPage(): React.JSX.Element {
                   <div style={{ minWidth: '280px', flex: '1 1 auto', maxWidth: '420px' }}>
                     <input
                       type="text"
+                      className="hub-search-input"
                       placeholder="Tìm câu hỏi, từ khóa, bẫy phỏng vấn..."
                       value={interviewSearch}
                       onChange={(e) => setInterviewSearch(e.target.value)}
@@ -2208,25 +2318,29 @@ export default function CareerHubPage(): React.JSX.Element {
                     { id: 'Intern', label: '🌱 Intern (Thực tập sinh)' },
                     { id: 'Fresher', label: '🚀 Fresher (Mới ra trường)' },
                     { id: 'Junior', label: '⚡ Junior (1-2 năm kn)' }
-                  ].map(lvl => (
-                    <button
-                      key={lvl.id}
-                      onClick={() => setSelectedLevelFilter(lvl.id)}
-                      style={{
-                        padding: '6px 14px',
-                        borderRadius: '6px',
-                        background: selectedLevelFilter === lvl.id ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${selectedLevelFilter === lvl.id ? '#38bdf8' : 'rgba(255, 255, 255, 0.08)'}`,
-                        color: selectedLevelFilter === lvl.id ? '#38bdf8' : 'rgba(255, 255, 255, 0.75)',
-                        fontSize: '13px',
-                        fontWeight: selectedLevelFilter === lvl.id ? 800 : 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease'
-                      }}
-                    >
-                      {lvl.label}
-                    </button>
-                  ))}
+                  ].map(lvl => {
+                    const isActive = selectedLevelFilter === lvl.id;
+                    return (
+                      <button
+                        key={lvl.id}
+                        onClick={() => setSelectedLevelFilter(lvl.id)}
+                        className={`hub-filter-btn ${isActive ? 'active' : ''}`}
+                        style={{
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          background: isActive ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${isActive ? '#38bdf8' : 'rgba(255, 255, 255, 0.08)'}`,
+                          color: isActive ? '#0284c7' : 'var(--ifm-color-content-secondary, #334155)',
+                          fontSize: '13px',
+                          fontWeight: isActive ? 800 : 500,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {lvl.label}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Category Filters */}
@@ -2244,25 +2358,29 @@ export default function CareerHubPage(): React.JSX.Element {
                     'Hạ Tầng & Security',
                     'Hệ Thống & Tải Cao',
                     'Kỹ Năng & Live Coding'
-                  ].map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      style={{
-                        padding: '6px 14px',
-                        borderRadius: '6px',
-                        background: selectedCategory === cat ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${selectedCategory === cat ? '#34d399' : 'rgba(255, 255, 255, 0.08)'}`,
-                        color: selectedCategory === cat ? '#34d399' : 'rgba(255, 255, 255, 0.75)',
-                        fontSize: '13px',
-                        fontWeight: selectedCategory === cat ? 800 : 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease'
-                      }}
-                    >
-                      {cat === 'All' ? 'Tất cả chủ đề' : cat}
-                    </button>
-                  ))}
+                  ].map(cat => {
+                    const isActive = selectedCategory === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`hub-filter-btn ${isActive ? 'active' : ''}`}
+                        style={{
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          background: isActive ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${isActive ? '#34d399' : 'rgba(255, 255, 255, 0.08)'}`,
+                          color: isActive ? '#059669' : 'var(--ifm-color-content-secondary, #334155)',
+                          fontSize: '13px',
+                          fontWeight: isActive ? 800 : 500,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {cat === 'All' ? 'Tất cả chủ đề' : cat}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -2316,28 +2434,34 @@ export default function CareerHubPage(): React.JSX.Element {
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', flex: 1, marginRight: '16px' }}>
-                            <span style={{
-                              fontSize: '12px',
-                              fontWeight: 800,
-                              padding: '3px 9px',
-                              borderRadius: '4px',
-                              background: `${levelBadgeColor}20`,
-                              border: `1px solid ${levelBadgeColor}50`,
-                              color: levelBadgeColor,
-                              textTransform: 'uppercase'
-                            }}>
+                            <span
+                              className={`hub-level-badge level-${q.level.toLowerCase()}`}
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: 800,
+                                padding: '3px 9px',
+                                borderRadius: '4px',
+                                background: `${levelBadgeColor}20`,
+                                border: `1px solid ${levelBadgeColor}50`,
+                                color: levelBadgeColor,
+                                textTransform: 'uppercase'
+                              }}
+                            >
                               {q.level}
                             </span>
 
-                            <span style={{
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              padding: '3px 9px',
-                              borderRadius: '4px',
-                              background: `${catBadgeColor}15`,
-                              border: `1px solid ${catBadgeColor}35`,
-                              color: catBadgeColor
-                            }}>
+                            <span
+                              className="hub-cat-badge"
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                padding: '3px 9px',
+                                borderRadius: '4px',
+                                background: `${catBadgeColor}15`,
+                                border: `1px solid ${catBadgeColor}35`,
+                                color: catBadgeColor
+                              }}
+                            >
                               {q.category}
                             </span>
 
@@ -2389,16 +2513,25 @@ export default function CareerHubPage(): React.JSX.Element {
                               </div>
                             </div>
 
-                            <div style={{
-                              padding: '12px 16px',
-                              borderRadius: '8px',
-                              background: 'rgba(248, 113, 113, 0.08)',
-                              border: '1px solid rgba(248, 113, 113, 0.25)'
-                            }}>
-                              <div style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: '#f87171', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <div
+                              className="hub-question-trap-box"
+                              style={{
+                                padding: '12px 16px',
+                                borderRadius: '8px',
+                                background: 'rgba(248, 113, 113, 0.08)',
+                                border: '1px solid rgba(248, 113, 113, 0.25)'
+                              }}
+                            >
+                              <div
+                                className="hub-question-trap-title"
+                                style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: '#f87171', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                              >
                                 <span>⚠️</span> Bẫy phỏng vấn viên sẽ hỏi tiếp
                               </div>
-                              <div style={{ fontSize: '14px', color: '#fca5a5', lineHeight: 1.6 }}>
+                              <div
+                                className="hub-question-trap-content"
+                                style={{ fontSize: '14px', color: '#fca5a5', lineHeight: 1.6 }}
+                              >
                                 {q.trapWarning}
                               </div>
                             </div>
@@ -2417,13 +2550,16 @@ export default function CareerHubPage(): React.JSX.Element {
           {/* ======================================================== */}
           {activeMainTab === 'battles' && (
             <div>
-              <div style={{
-                background: 'rgba(15, 23, 42, 0.7)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '12px',
-                padding: '22px',
-                marginBottom: '22px'
-              }}>
+              <div
+                className="hub-battle-container"
+                style={{
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '12px',
+                  padding: '22px',
+                  marginBottom: '22px'
+                }}
+              >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '18px' }}>
                   <div>
                     <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -2448,26 +2584,30 @@ export default function CareerHubPage(): React.JSX.Element {
 
                 {/* Battle Switcher */}
                 <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '8px' }}>
-                  {CODE_BATTLES.map((battle, idx) => (
-                    <button
-                      key={battle.id}
-                      onClick={() => setSelectedBattleIndex(idx)}
-                      style={{
-                        padding: '9px 16px',
-                        borderRadius: '8px',
-                        background: selectedBattleIndex === idx ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${selectedBattleIndex === idx ? '#fbbf24' : 'rgba(255, 255, 255, 0.1)'}`,
-                        color: selectedBattleIndex === idx ? '#fbbf24' : 'rgba(255, 255, 255, 0.75)',
-                        fontWeight: selectedBattleIndex === idx ? 800 : 500,
-                        fontSize: '13.5px',
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap',
-                        transition: 'all 0.15s ease'
-                      }}
-                    >
-                      {battle.title}
-                    </button>
-                  ))}
+                  {CODE_BATTLES.map((battle, idx) => {
+                    const isActive = selectedBattleIndex === idx;
+                    return (
+                      <button
+                        key={battle.id}
+                        onClick={() => setSelectedBattleIndex(idx)}
+                        className={`hub-filter-btn ${isActive ? 'active' : ''}`}
+                        style={{
+                          padding: '9px 16px',
+                          borderRadius: '8px',
+                          background: isActive ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${isActive ? '#fbbf24' : 'rgba(255, 255, 255, 0.1)'}`,
+                          color: isActive ? '#d97706' : 'var(--ifm-color-content-secondary, #334155)',
+                          fontWeight: isActive ? 800 : 500,
+                          fontSize: '13.5px',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {battle.title}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -2476,18 +2616,21 @@ export default function CareerHubPage(): React.JSX.Element {
                 const currentBattle = CODE_BATTLES[selectedBattleIndex] || CODE_BATTLES[0];
                 return (
                   <div>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      flexWrap: 'wrap',
-                      gap: '12px',
-                      marginBottom: '16px',
-                      padding: '12px 18px',
-                      borderRadius: '10px',
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.06)'
-                    }}>
+                    <div
+                      className="hub-battle-header"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '12px',
+                        marginBottom: '16px',
+                        padding: '12px 18px',
+                        borderRadius: '10px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid rgba(255, 255, 255, 0.06)'
+                      }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{
                           padding: '4px 10px',
@@ -2499,7 +2642,10 @@ export default function CareerHubPage(): React.JSX.Element {
                         }}>
                           {currentBattle.category}
                         </span>
-                        <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}>
+                        <span
+                          className="hub-battle-title"
+                          style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}
+                        >
                           {currentBattle.title}
                         </span>
                       </div>
@@ -2570,13 +2716,16 @@ export default function CareerHubPage(): React.JSX.Element {
           {/* ======================================================== */}
           {activeMainTab === 'cv' && (
             <div>
-              <div style={{
-                background: 'rgba(15, 23, 42, 0.7)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '12px',
-                padding: '26px',
-                marginBottom: '22px'
-              }}>
+              <div
+                className="hub-cv-container"
+                style={{
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '12px',
+                  padding: '26px',
+                  marginBottom: '22px'
+                }}
+              >
                 <h2 style={{ margin: '0 0 14px 0', fontSize: '1.6rem', color: '#a78bfa' }}>
                   📄 4 Tiêu Chuẩn Vàng Viết CV Cho Fresher / Junior
                 </h2>
@@ -2586,12 +2735,16 @@ export default function CareerHubPage(): React.JSX.Element {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                   {CV_SECTIONS.map((sec, idx) => (
-                    <div key={idx} style={{
-                      background: 'rgba(255, 255, 255, 0.02)',
-                      border: '1px solid rgba(255, 255, 255, 0.06)',
-                      borderRadius: '10px',
-                      padding: '18px'
-                    }}>
+                    <div
+                      key={idx}
+                      className="hub-cv-card"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid rgba(255, 255, 255, 0.06)',
+                        borderRadius: '10px',
+                        padding: '18px'
+                      }}
+                    >
                       <div style={{ fontSize: '16px', fontWeight: 800, color: '#38bdf8', marginBottom: '12px' }}>
                         {sec.sectionTitle}
                       </div>
@@ -2616,15 +2769,18 @@ export default function CareerHubPage(): React.JSX.Element {
                         </div>
                       </div>
 
-                      <div style={{
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        padding: '12px 16px',
-                        borderRadius: '8px',
-                        border: '1px solid rgba(255, 255, 255, 0.05)',
-                        fontSize: '13.5px',
-                        color: '#a7f3d0',
-                        lineHeight: 1.6
-                      }}>
+                      <div
+                        className="hub-cv-example-box"
+                        style={{
+                          background: 'rgba(0, 0, 0, 0.3)',
+                          padding: '12px 16px',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(255, 255, 255, 0.05)',
+                          fontSize: '13.5px',
+                          color: '#a7f3d0',
+                          lineHeight: 1.6
+                        }}
+                      >
                         {sec.exampleText}
                       </div>
                     </div>
@@ -2640,13 +2796,16 @@ export default function CareerHubPage(): React.JSX.Element {
           {activeMainTab === 'probation' && (
             <div>
               {/* Progress Bar */}
-              <div style={{
-                background: 'rgba(15, 23, 42, 0.7)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '12px',
-                padding: '22px',
-                marginBottom: '22px'
-              }}>
+              <div
+                className="hub-probation-container"
+                style={{
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '12px',
+                  padding: '22px',
+                  marginBottom: '22px'
+                }}
+              >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <div style={{ fontSize: '16.5px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}>
                     Tiến Độ Sẵn Sàng Vượt Qua 2 Tháng Thử Việc (Probation Survival Tracker)

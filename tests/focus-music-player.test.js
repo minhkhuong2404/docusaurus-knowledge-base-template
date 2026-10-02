@@ -613,8 +613,8 @@ describe('Focus Music Player & YouTube Study Beats Suite', () => {
       'Compact player bar must provide play/pause control for Spotify'
     );
     assert.ok(
-      playerContent.includes('#1DB954'),
-      'Spotify elements must be styled with official Spotify vibrant green #1DB954'
+      playerContent.includes("color: (isPlaying || isSpotifyPlaying) ? 'var(--brand-green, #10b981)'"),
+      'Spotify active playback elements must adapt to the active theme via var(--brand-green)'
     );
 
     const navbarContent = fs.readFileSync('src/theme/NavbarItem/FocusMusicNavbarItem.tsx', 'utf-8');
@@ -623,8 +623,8 @@ describe('Focus Music Player & YouTube Study Beats Suite', () => {
       'FocusMusicNavbarItem must track Spotify active playback'
     );
     assert.ok(
-      navbarContent.includes('#1DB954'),
-      'Navbar item must style with Spotify green when Spotify is playing'
+      navbarContent.includes("isAudioPlaying\n            ? 'var(--brand-green, #10b981)'"),
+      'Navbar item must style with theme color var(--brand-green) when Spotify or audio is playing'
     );
     assert.ok(
       navbarContent.includes('Now Playing (Spotify):'),
@@ -704,12 +704,24 @@ describe('Focus Music Player & YouTube Study Beats Suite', () => {
       'NavbarGamificationHUD must display formatted Pomodoro time'
     );
 
-    // 7. Verify Source Switcher Tabs are positioned directly under the Pomodoro section for improved UX
-    const pomodoroIndex = playerContent.indexOf('Pomodoro Focus Mode');
-    const platformTabsIndex = playerContent.indexOf('className="focus-platform-tabs"');
+    // 8. Verify Spotify player elements adapt dynamically to active theme palette variables
     assert.ok(
-      pomodoroIndex !== -1 && platformTabsIndex !== -1 && pomodoroIndex < platformTabsIndex,
-      'Source Switcher Tabs (YouTube / Spotify) must be placed under the Pomodoro section'
+      !playerContent.includes('#1DB954') && !playerContent.includes('#1ed760'),
+      'FocusMusicPlayer must not contain hardcoded Spotify green (#1DB954 or #1ed760)'
+    );
+    assert.ok(
+      playerContent.includes("musicSource === 'spotify'\n                  ? '1px solid var(--brand-green, #10b981)'"),
+      'Spotify Playlists Tab must use var(--brand-green) for border when active'
+    );
+    assert.ok(
+      playerContent.includes("accentColor: 'var(--brand-green, #10b981)'"),
+      'Volume slider in Spotify player must use theme accentColor var(--brand-green)'
+    );
+
+    const navItemContent = fs.readFileSync('src/theme/NavbarItem/FocusMusicNavbarItem.tsx', 'utf-8');
+    assert.ok(
+      !navItemContent.includes('#1DB954'),
+      'FocusMusicNavbarItem must not use hardcoded #1DB954'
     );
   });
 });

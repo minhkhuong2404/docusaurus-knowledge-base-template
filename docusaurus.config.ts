@@ -216,10 +216,6 @@ const config: Config = {
 					position: 'left',
 				},
 				{
-					type: 'custom-themePalettePicker',
-					position: 'right',
-				},
-				{
 					type: 'custom-userNavbarItem',
 					position: 'right',
 				},

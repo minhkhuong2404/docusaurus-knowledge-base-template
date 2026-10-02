@@ -136,5 +136,47 @@ describe('Java Career Hub Data Integrity & AST Safety Suite', () => {
         `Found undeclared runtime identifiers in hub/index.tsx: ${Array.from(undeclared).join(', ')}`
       );
     });
+
+    it('custom.css must include light mode rules for career hub filters, badges, and trap boxes', () => {
+      const fs = require('fs');
+      const cssPath = path.resolve(__dirname, '../src/css/custom.css');
+      const cssContent = fs.readFileSync(cssPath, 'utf8');
+
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-filter-btn'), 'Missing light theme .hub-filter-btn');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-count-badge'), 'Missing light theme .hub-count-badge');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-level-badge.level-intern'), 'Missing light theme .hub-level-badge');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-question-trap-box'), 'Missing light theme .hub-question-trap-box');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-tip-priority-badge'), 'Missing light theme .hub-tip-priority-badge');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-tip-code-bad'), 'Missing light theme .hub-tip-code-bad');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-tip-code-good'), 'Missing light theme .hub-tip-code-good');
+    });
+
+    it('custom.css must include theme synchronization rules for metrics, banners, navigation, and reader in both dark and light modes', () => {
+      const fs = require('fs');
+      const cssPath = path.resolve(__dirname, '../src/css/custom.css');
+      const cssContent = fs.readFileSync(cssPath, 'utf8');
+
+      // Dark mode synchronization
+      assert.ok(cssContent.includes('[data-theme="dark"] .hub-mock-banner-title'), 'Missing dark theme .hub-mock-banner-title');
+      assert.ok(cssContent.includes('[data-theme="dark"] .hub-hero-badge'), 'Missing dark theme .hub-hero-badge');
+      assert.ok(cssContent.includes('[data-theme="dark"] .hub-search-input'), 'Missing dark theme .hub-search-input');
+      assert.ok(cssContent.includes('[data-theme="dark"] .hub-metric-card.metric-0'), 'Missing dark theme metric-0');
+      assert.ok(cssContent.includes('[data-theme="dark"] .hub-main-nav-tab.tab-lessons'), 'Missing dark theme tab-lessons');
+      assert.ok(cssContent.includes('[data-theme="dark"] .hub-main-nav-tab.tab-battles'), 'Missing dark theme tab-battles');
+
+      // Light mode synchronization
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-metric-card'), 'Missing light theme .hub-metric-card');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-metric-card.metric-2 .hub-metric-label'), 'Missing light theme metric-2 high contrast');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-mock-banner'), 'Missing light theme .hub-mock-banner');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-main-nav-tab.tab-lessons'), 'Missing light theme tab-lessons');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-main-nav-tab.tab-battles'), 'Missing light theme tab-battles');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-module-card'), 'Missing light theme .hub-module-card');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-topic-index-pane'), 'Missing light theme .hub-topic-index-pane');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-reader-card'), 'Missing light theme .hub-reader-card');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-search-input'), 'Missing light theme .hub-search-input');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-battle-container'), 'Missing light theme .hub-battle-container');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-cv-container'), 'Missing light theme .hub-cv-container');
+      assert.ok(cssContent.includes('[data-theme="light"] .hub-probation-container'), 'Missing light theme .hub-probation-container');
+    });
   });
 });

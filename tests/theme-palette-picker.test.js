@@ -62,12 +62,8 @@ describe('Theme & Palette Switcher Invariants & AST Safety Suite', () => {
     );
   });
 
-  it('docusaurus.config.ts should configure colorMode and custom-themePalettePicker', () => {
+  it('docusaurus.config.ts should configure colorMode', () => {
     const configContent = fs.readFileSync('docusaurus.config.ts', 'utf-8');
-    assert.ok(
-      configContent.includes("type: 'custom-themePalettePicker'"),
-      'docusaurus.config.ts navbar must include custom-themePalettePicker'
-    );
     assert.ok(
       configContent.includes("disableSwitch: false"),
       'docusaurus.config.ts must allow color mode switching (disableSwitch: false)'
@@ -180,6 +176,14 @@ describe('Theme & Palette Switcher Invariants & AST Safety Suite', () => {
     assert.ok(cssContent.includes('[data-theme="light"] .domain-row'), 'Profile domain rows must have light mode styling');
     assert.ok(cssContent.includes('[data-theme="light"] .ach-card'), 'Profile achievement cards must have light mode styling');
     assert.ok(cssContent.includes('[data-theme="light"] .quest-box'), 'Profile quest boxes must have light mode styling');
+    assert.ok(cssContent.includes('[data-theme="light"] .profile-rank-pill'), 'Profile rank pill must have light mode styling');
+    assert.ok(cssContent.includes('[data-theme="light"] .stats-tag.stats-tag-docs'), 'Profile docs tag must have light mode styling');
+    assert.ok(cssContent.includes('[data-theme="light"] .dsa-pill.dsa-pill-easy'), 'Profile DSA easy pill must have light mode styling');
+    assert.ok(cssContent.includes('[data-theme="light"] .domain-synced-badge'), 'Profile domain synced badge must have light mode styling');
+
+    // Profile page dark mode unified tabs & hover safety
+    assert.ok(cssContent.includes('[data-theme="dark"] .profile-nav-tabs .nav-tab-btn.active'), 'Profile active nav tab must have dark theme styling with theme variable');
+    assert.ok(cssContent.includes('[data-theme="dark"] .profile-nav-tabs .nav-tab-btn:not(.active):hover'), 'Profile nav tab hover must only apply to inactive tabs');
   });
 
   it('custom.css must style markdown checklists and post/doc tags with theme variables', () => {
@@ -214,7 +218,7 @@ describe('Theme & Palette Switcher Invariants & AST Safety Suite', () => {
     );
   });
 
-  it('CustomUserNavbarItem must transpile cleanly and have 0 undeclared identifiers', () => {
+  it('CustomUserNavbarItem must transpile cleanly, have 0 undeclared identifiers, and embed theme palette in profile dropdown', () => {
     const filePath = 'src/theme/NavbarItem/CustomUserNavbarItem.tsx';
     assert.ok(fs.existsSync(filePath), `${filePath} must exist`);
     const jsCode = transpileCode(filePath);
@@ -225,6 +229,53 @@ describe('Theme & Palette Switcher Invariants & AST Safety Suite', () => {
     const content = fs.readFileSync(filePath, 'utf-8');
     assert.ok(content.includes('var(--brand-green'), 'CustomUserNavbarItem must use var(--brand-green)');
     assert.ok(content.includes('var(--sidebar-active-bg'), 'CustomUserNavbarItem must use var(--sidebar-active-bg)');
+    assert.ok(content.includes('THEME_PRESETS'), 'CustomUserNavbarItem must use THEME_PRESETS');
+    assert.ok(content.includes('useColorMode'), 'CustomUserNavbarItem must use useColorMode');
+    assert.ok(content.includes('user-dropdown-theme-section'), 'CustomUserNavbarItem must include user-dropdown-theme-section');
+  });
+
+  it('custom.css must enforce theme-adaptive Profile navigation tabs, high-contrast Unlocked status, and Streak Mastery light styles', () => {
+    const cssContent = fs.readFileSync('src/css/custom.css', 'utf-8');
+
+    // Profile navigation tabs Light Theme
+    assert.ok(
+      cssContent.includes('[data-theme="light"] .profile-nav-tabs .nav-tab-btn.active'),
+      'custom.css must style active profile nav tab in light theme'
+    );
+    assert.ok(
+      cssContent.includes('[data-theme="light"] .profile-nav-tabs .nav-tab-btn:not(.active):hover'),
+      'custom.css must style hover for inactive profile tabs without clobbering active tab'
+    );
+
+    // Profile navigation tabs Dark Theme
+    assert.ok(
+      cssContent.includes('[data-theme="dark"] .profile-nav-tabs .nav-tab-btn.active'),
+      'custom.css must style active profile nav tab in dark theme'
+    );
+
+    // Streak Mastery Light Theme
+    assert.ok(
+      cssContent.includes('[data-theme="light"] .streak-current-milestone-card'),
+      'custom.css must style streak-current-milestone-card in light theme'
+    );
+    assert.ok(
+      cssContent.includes('[data-theme="light"] .streak-current-milestone-card .streak-milestone-label'),
+      'custom.css must style streak-milestone-label in light theme with dark amber'
+    );
+    assert.ok(
+      cssContent.includes('#92400e'),
+      'Current milestone label must use high-contrast dark amber #92400e in light theme'
+    );
+
+    // Achievement Unlocked Status Light Theme
+    assert.ok(
+      cssContent.includes('[data-theme="light"] .ach-card .ach-unlocked-status.unlocked'),
+      'custom.css must style ach-unlocked-status in light theme'
+    );
+    assert.ok(
+      cssContent.includes('#15803d'),
+      'Unlocked status text must use bold dark green #15803d in light theme'
+    );
   });
 });
 
