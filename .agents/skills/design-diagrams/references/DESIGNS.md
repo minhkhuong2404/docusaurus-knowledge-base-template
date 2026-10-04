@@ -13,21 +13,55 @@
 
 ---
 
-## Quick-Start Decision Tree
+## Quick-Start Decision Tree & Semantic Patterns
 
 ```
-Is there a static ASCII block, code block, table, or text-only stub to replace?
-├─ YES → Is it a sequence/handshake/flow/payload transit?   → Archetype A (Animated Flow with Moving Arrows)
-│         Is it nodes + directed edges/architecture/data?  → Archetype B (SVG Node Graph with Flowing Arrows)
-│         Is it comparison/tabs/protocol evolution?         → Archetype C (Tabbed Explorer with SVG Flow)
-│         Is it a lookup reference (headers/tools)?         → Archetype D (Searchable List)
-│         Is it a checklist/audit criteria?                 → Archetype E (Interactive Checklist)
-└─ NO  → Do not create a component.
+Is there behavior, state, enforcement, or risk that carries the meaning?
+├─ YES → Identify Semantic Pattern (Behavior First):
+│         • Fan-in queue / finite capacity / backpressure   → Data Flow / Queue
+│         • Repeated Question / Input / Governance / Output → Process
+│         • Unstructured text/telemetry → structured state   → Data Flow
+│         • Paired policy traces (PASS/FAIL/SKIPPED)        → Flowchart / Sequence
+│         • Trust boundaries / secure paved road             → Architecture
+│         • Governance / control catalog & compensating     → Layer Stack
+│         • Hierarchical ID-addressable decomposition        → Tree
+│         • Lifecycle progress through phases & waits        → State Machine
+│
+└─ NO  → Select Visual Type Directly (Layout Grammar):
+          • Protocol sequence / request-response / payload  → Archetype A (Animated Flow with Moving Arrows)
+          • Architecture / cluster nodes / message topology  → Archetype B (SVG Node Graph with Flowing Arrows)
+          • Comparison / protocol evolution / topic tabs    → Archetype C (Tabbed Explorer with SVG Flow)
+          • Lookup reference (headers / CLI diagnostic tools)→ Archetype D (Searchable List)
+          • Pre-launch audit / production checklist gates   → Archetype E (Interactive Checklist)
 
 ⚠️ MANDATORY RULE: NEVER generate Monospace Schema Inspector diagrams.
 Wire formats, packet headers, schemas, runbooks, and payload transformations must ALWAYS be visualized
 as interactive diagrams featuring moving/flowing directional arrows and animated step playback.
 ```
+
+---
+
+## Editorial Design Principles (Adapted from Diagram Design)
+
+1. **Deletion Mindset**: The highest-quality move is usually deletion.
+   - Every node represents a distinct idea. Two nodes that always travel together are one node.
+   - Every connection carries information. If the relationship is obvious from layout, remove the line.
+   - **Target Density: 4/10.** Complete without cognitive overload. Above 9 primary nodes, split into an overview + detail view.
+2. **Accent Discipline**: The accent color (`#38bdf8` or `#34d399`) is strictly reserved for the **1–2 focal elements** the reader should look at first. Using accent on 5+ elements erases visual priority.
+3. **No Mermaid Slop**: No generic rounded boxes, no heavy drop shadows, no tangled crossing arrows.
+
+---
+
+## The 42 Visual Types Classification
+
+| Category | Supported Types |
+|---|---|
+| **Topologies & Systems** | **Architecture**, **Architecture delta** (Before · Changes · After topology), **IT current-state**, **High-Level** (cluster stack), **Deployment** (zones, hosts, replicas, ports), **DP integration** (sources → core → consumers). |
+| **Sequences & Workflows** | **Sequence** (actor lifelines), **Process** (multi-actor sequential handoffs), **Swimlane** (cross-functional lanes), **Timeline** (chronological events), **User journey** (stages, actions, sentiment), **Data flow** (role-scoped pipelines). |
+| **State, Logic & Trees** | **State machine** (states, transitions, guards), **Flowchart** (decision branching), **Tree** (parent → children), **Nested** (hierarchy by containment), **Org chart** (ownership & routing), **Fishbone** (Ishikawa root-cause analysis). |
+| **Data & Storage** | **ER / data model** (entities, attributes, cardinalities), **Database schema** (physical tables, SQL types, column FKs), **Medallion** (bronze/silver/gold tiers), **Dependency graph** (fan-in & cyclic dependencies), **UML class** (classes, operations, associations). |
+| **Strategy & Management** | **Wardley map** (value chain × evolution), **Kanban** (WIP limits by state), **Story map** (backbone × release slices), **Gantt** (tasks on timeline), **Quadrant** (2×2 prioritization), **DP security matrix** (role access permissions). |
+| **Cycles, Sets & Quantitative** | **Loop / Flywheel** (reinforcing cycle + state hub), **Venn** (set overlap), **Pyramid / Funnel** (ranked hierarchy / drop-off), **Bar / Dumbbell**, **Waterfall** (running total + bridges), **Treemap / Marimekko**, **Heatmap**, **Line / Slopegraph / Ridgeline**, **Scatter / Bubble / Beeswarm**, **Radar / Spider**, **Polar chart**, **Sankey** (split/merge volume). |
 
 ---
 
@@ -146,7 +180,30 @@ All classes are in [`src/css/diagrams.css`](file:///Users/lukhuong/Desktop/docus
 
 ---
 
-## Archetype A — Animated Flow
+## Mandatory Theme Invariant: Dark Telemetry Canvas in Both Themes
+
+All interactive diagrams (`.interactive-diagram-container`) are **cyber telemetry instruments**.
+- **Dark Surface by Design**: Every diagram is rendered on a dark container (`#090b14` / `#0b0f19`) with dark SVG canvas (`#0d0f1e`) and dark detail cards (`#0c0e17`).
+- **Consistent Light Theme Rendering**: In Light Mode, diagrams **KEEP THE EXACT SAME DARK THEME COLORS**. `src/css/diagrams.css` explicitly sets:
+  ```css
+  [data-theme="light"] .interactive-diagram-container {
+    --ifm-color-content: #f8fafc;
+    --ifm-color-content-secondary: #94a3b8;
+    background: #0b0f19 !important;
+    border: 1px solid var(--sidebar-border, rgba(74, 222, 128, 0.18)) !important;
+    color: #f8fafc !important;
+  }
+  ```
+- **Forbidden in Diagrams**: NEVER use light mode page/card tokens (`#F7FDF9`, `#D9D9D9`, `#F2F2F2`, `#ffffff` backgrounds, `#0f172a` dark text) inside interactive diagrams.
+- **Node & Text Tokens**:
+  - Base SVG node fill: `rgba(15, 23, 42, 0.85)` or `rgba(255, 255, 255, 0.04)`
+  - Active node fill: `${accentColor}25`
+  - Node strokes: neon accents (`#38bdf8`, `#34d399`, `#fbbf24`, `#a78bfa`, `#f87171`)
+  - Primary text: `#ffffff` or `var(--ifm-color-content)`
+  - Subtitle / metadata: `#94a3b8` or `var(--ifm-color-content-secondary)`
+  - Table headers in diagrams: `backgroundColor: rgba(255, 255, 255, 0.06)`, text `#ffffff`
+
+---
 
 **Use when:** Sequence flows, multi-step handshakes, or protocol execution steps.
 
@@ -470,6 +527,36 @@ export default function ProductionChecklistDiagram(): React.JSX.Element {
 
 ---
 
+## Existing Component Catalog & Quick Reference Index
+
+Before creating a new diagram component, consult this index to avoid redundant duplicates:
+
+| Domain | Key Components in `src/components/` | Core Concept & Coverage |
+|---|---|---|
+| **Testing & Quality** | `BlackboxSystemTestingDiagram`<br/>`DistributedTestingCoverageDiagram`<br/>`TestingPyramidDoublesDiagram`<br/>`WireMockResilienceDiagram`<br/>`ContractTestingPactFlowDiagram`<br/>`SpringTestAnnotationsDiagram` | Black-box vs system boundaries, distributed test coverage & chaos, test pyramid & test doubles (dummy/stub/mock/spy/fake), WireMock network chaos & transient fault simulation, consumer-driven Pact contracts, Spring test slices (`@SpringBootTest`, `@WebMvcTest`, `@DataJpaTest`). |
+| **Kafka & Streaming** | `KafkaArchitectureOverviewDiagram`<br/>`KafkaTopicPartitionDiagram`<br/>`KafkaBrokerStorageDiagram`<br/>`KraftVsZookeeperDiagram`<br/>`KafkaProducerTransactionsDiagram`<br/>`KafkaConsumerGroupRebalanceDiagram`<br/>`KafkaConsumerLagPoisonDiagram`<br/>`KafkaZeroCopyDiagram`<br/>`KafkaStreamsTopologyDiagram`<br/>`KafkaStreamsStateStoreDiagram`<br/>`KafkaStreamsExactlyOnceDiagram` | Broker cluster topology, log segments & zero-copy sendfile, KRaft quorum, 2PC transactional producer & zombie fencing, eager vs cooperative sticky rebalance, consumer lag & DLQ poison pill alerts, RocksDB LSM state stores & changelog restore, Exactly-Once V2 processing. |
+| **Redis & Caching** | `RedisDataTypesDiagram`<br/>`RedisClusterReplicationDiagram`<br/>`RedisLuaDistributedLockDiagram`<br/>`RedisPersistenceMechanicsDiagram`<br/>`RedisReactorPatternDiagram`<br/>`RedisEvictionPoliciesDiagram`<br/>`RedisPubSubVsStreamsDiagram`<br/>`WTinyLfuArchitectureDiagram`<br/>`ThunderingHerdDiagram` | Redis memory structures, cluster master-replica slot migration, Redlock & Lua atomic release, RDB snapshot + AOF fsync, epoll single-threaded event loop, allkeys-lru vs volatile-lfu, Pub/Sub vs consumer groups, Caffeine W-TinyLFU cache admission, thundering herd mitigation. |
+| **Distributed Consensus & Resilience** | `TwoPhaseCommitProtocolFlowDiagram`<br/>`ThreePhaseCommitPhasesDiagram`<br/>`SagaChoreographyVsOrchestrationDiagram`<br/>`SagaCompensationLifecycleDiagram`<br/>`TransactionalOutboxDiagram`<br/>`CircuitBreakerDiagram`<br/>`RateLimitingTokenBucketDiagram`<br/>`ReplicationConsistentHashingDiagram` | 2PC commit/abort flows & coordinator crash recovery, 3PC Pre-Commit non-blocking state transitions, Choreography vs Orchestration Saga comparison, compensation transaction rollbacks, Transactional Outbox CDC flow, Circuit Breaker state machine, Token Bucket / Leaky Bucket rate limiting, Consistent Hashing ring & virtual nodes. |
+| **Networking & Protocols** | `NetworkIndexOverviewDiagram`<br/>`TcpHandshakesDiagram`<br/>`TcpCongestionControlDiagram`<br/>`TcpStateTransitionDiagram`<br/>`TlsHandshakeDiagram`<br/>`HttpEvolutionDiagram`<br/>`QuicStackDiagram`<br/>`CorsDiagram`<br/>`NetworkTroubleshootingToolsDiagram` | 5-layer OSI/TCP stack, 3-way handshake & 4-way FIN termination, Slow Start / Congestion Avoidance / Fast Recovery, full TCP state machine (TIME_WAIT, CLOSE_WAIT), TLS 1.3 1-RTT animated handshake, HTTP/1.1 vs HTTP/2 vs HTTP/3, QUIC UDP multiplexing, CORS preflight flow, network diagnostic CLI reference. |
+| **Operating Systems & Linux** | `OsOverviewDiagram`<br/>`OsProcessesThreadsDiagram`<br/>`OsCpuSchedulingDiagram`<br/>`OsMemoryManagementDiagram`<br/>`OsVirtualMemoryDiagram`<br/>`OsSyncDeadlockDiagram`<br/>`OsFileSystemsIoDiagram`<br/>`OsLinuxSyscallsDiagram`<br/>`OsIpcNetworkingDiagram` | Ring 3 to Ring 0 Linux kernel architecture, 1:1 kernel threads vs virtual threads, Linux CFS red-black tree scheduling, multi-level page table translation & TLB, demand paging & copy-on-write fork, deadlock Coffman conditions, VFS & buffered vs direct vs mmap I/O, SYSCALL/SYSRET lifecycle, IPC mechanisms (Pipes, UDS, shm). |
+| **Spring Boot & Java** | `SpringBootStartupTimelineDiagram`<br/>`SpringBootStarterAnatomyDiagram`<br/>`SpringBeanLifecycleDiagram`<br/>`SpringMVCFlowDiagram`<br/>`SpringSecurityFilterDiagram`<br/>`AQSArchitectureDiagram`<br/>`LockDecisionTreeDiagram`<br/>`VirtualThreadLifecycleDiagram`<br/>`TomcatDirectMemoryDiagram` | Spring Boot initialization phases & auto-configuration import selector, starter BOM anatomy, BeanPostProcessor lifecycle, DispatcherServlet request pipeline, SecurityFilterChain order, AbstractQueuedSynchronizer state & CLH queue, Lock decision matrix, Virtual Thread carrier unmounting, Tomcat off-heap connector buffers. |
+| **Database & Storage** | `SqlExecutionOrderDiagram`<br/>`SlowQueryOptimizationDiagram`<br/>`WalWritePathDiagram`<br/>`WalReplicationDiagram`<br/>`StarVsSnowflakeSchemaDiagram`<br/>`TimeSeriesDatabaseEngineDiagram`<br/>`SnapshotPatternDiagram` | SQL logical execution order (FROM → WHERE → GROUP BY → SELECT), B-Tree vs Hash index scan analysis, Write-Ahead Log durability & append-only commit, primary-replica WAL streaming, Star vs Snowflake dimension modeling, TSDB time-partitioned chunking, LSM write path. |
+| **Security & Identity** | `TokenInvalidationFlowDiagram`<br/>`AccountHackedResponseDiagram`<br/>`PasswordInvalidationDiagram`<br/>`TokenTheftContainmentDiagram`<br/>`ZeroTrustDiagram`<br/>`SshHardeningDiagram`<br/>`WafDiagram` | Refresh token rotation & multi-device session revocation, account takeover containment timeline & blacklist bloom filter, password change cascade invalidation, JWT replay mitigation, Zero Trust identity-first perimeter, SSH certificate authentication, WAF rule inspection pipeline. |
+| **Career & Practices** | `SeniorArchitectureDeepDiveDiagram`<br/>`SeniorDevCodingLawsDiagram`<br/>`StarMethodDiagram`<br/>`StoryBankDiagram`<br/>`BehavioralQuestionsDiagram`<br/>`AmazonLPDiagram`<br/>`VibeCodingWorkflowDiagram` | Senior Principal architecture evaluation rubric, production coding laws (Conway, Hyrum, Postel, Gall), 4-stage STAR story delivery with timing allocations, behavioral story bank matrix, Amazon 16 Leadership Principles, modern AI-augmented vibe coding workflow with verification loops. |
+| **Banking & FinTech** | `BankingPaymentLifecycleDiagram`<br/>`Iso20022MigrationDiagram`<br/>`BankingClearingSettlementDiagram`<br/>`BankingSanctionsScreeningDiagram`<br/>`BankingCardPaymentFlowDiagram`<br/>`BankingAmlRegulatoryTestingDiagram` | End-to-end 10-step payment processing lifecycle, ISO 20022 XML (pacs.008) vs legacy SWIFT MT103, RTGS vs DNS settlement with multilateral netting, real-time sanctions screening with fuzzy matching algorithms, 4-party card payment model with interchange/MDR, AML regulatory testing pipelines. |
+
+---
+
+## Light Theme Invariants for Diagrams
+
+Always adhere to the Light Theme Design System (`.agents/skills/light-theme-design/SKILL.md`):
+- **Page & Surface Backgrounds**: Light surface `#F2F4F7`, card mint accent `#F7FDF9`, subcards `#F2F2F2`.
+- **Text Contrast**: Dark text `#0f172a` / `#1e293b` in light mode — NEVER white or faint pastels on light surfaces.
+- **Defined Borders**: `#D9D9D9` (subtle light grey) or `#98A2B3` (active/darker grey).
+- **Badge & Toast Pills**: Solid contrasting borders and dark text (`#166534` for green, `#92400e` for amber, `#991b1b` for red, `#3730a3` for indigo).
+
+---
+
 ## Pitfalls Checklist
 
 Before submitting a component, verify:
@@ -483,3 +570,4 @@ Before submitting a component, verify:
 - [ ] Multi-column layouts use fixed percentage columns (`55% 45%`, `58% 42%`, `50% 50%`) with `align-items: start` and inline media query style block to stack columns to `1fr` on small screens (`@media (max-width: 768px)`).
 - [ ] Node & lifeline nodes are padded. Add spacing offsets to arrow coordinates (e.g. `+6px` start, `-12px` end) so path lines and arrowhead tips float cleanly.
 - [ ] Component compiles cleanly with `npx tsc --noEmit`.
+- [ ] Tests and checkstyle pass cleanly: `yarn test` / `node scripts/checkstyle.js --quiet`.

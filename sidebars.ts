@@ -1925,6 +1925,7 @@ const sidebars: SidebarsConfig = {
 			collapsed: true,
 			items: [
 				'technical-knowledge/ai-agents/overview',
+				'technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev',
 				'technical-knowledge/ai-agents/mcp-and-agentic-ai',
 				'technical-knowledge/ai-agents/rag-fundamentals',
 				'technical-knowledge/ai-agents/agents',

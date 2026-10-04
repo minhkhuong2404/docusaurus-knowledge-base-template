@@ -23,6 +23,11 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'NearbyFriendsDiagram.tsx',
     'DigitalWalletLedgerDiagram.tsx',
     'StockExchangeMatchingDiagram.tsx',
+    'LlmTrainingAndJevDiagram.tsx',
+    'LlmTrainingPipelineDiagram.tsx',
+    'RlvrVerificationFlowDiagram.tsx',
+    'JevDecisionEngineDiagram.tsx',
+    'TwoTierAiArchitectureDiagram.tsx',
   ];
 
   for (const filename of criticalDiagrams) {

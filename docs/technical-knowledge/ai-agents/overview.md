@@ -129,5 +129,6 @@ If you are beginning your journey with AI Agents, focus on understanding these c
 - [ ] **Prompt Engineering ([prompt-engineering.md](./prompt-engineering)):** Zero/few-shot, Chain-of-Thought reasoning, XML/JSON structured output, and production prompt templates.
 - [ ] **AI Tools & Model Landscape ([ai-tools-landscape.md](./ai-tools-landscape)):** Cursor, Windsurf, Copilot, Devin, and LLM selection matrices (Claude vs GPT-4o vs Gemini).
 - [ ] **Context Engineering ([context-engineering.md](./context-engineering)):** Context compaction, context rot/drift, model routing, thinking budget, subagents, and AGENTS.md configuration.
+- [ ] **LLM Training, RL & Jev Decision Models ([llm-training-rlhf-rlvr-jev.md](./llm-training-rlhf-rlvr-jev)):** Master the AI model lifecycle—Pre-training scaling laws, SFT, RLHF (human preferences), RLVR (verifiable rewards / reasoning models), RLCD (calibrated decisions), and non-generative System 1 decision models (TypeSafe Jev).
 - [ ] **AI Agent Interview Questions ([ai-agent-interview-questions.md](./ai-agent-interview-questions)):** 30+ senior-level interview Q&As on agent architectures, security, MCP, sandboxing, and evaluations.
 

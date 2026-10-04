@@ -78,8 +78,9 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
    - Hardcoded white text (`#ffffff`, `rgba(255, 255, 255, ...)`, `#f8fafc`) in content cards, Career Hub, arcade arenas, or navigation MUST be overridden in `[data-theme="light"]` to `#0f172a` / `#1e293b`.
    - Title inline code blocks (e.g. `git commit`) must have dark monospace text and `#F2F2F2` background with `#D9D9D9` border, never disappearing into the white surface.
    - Hover states must keep text dark (`#0f172a` / `#1e293b`) on light backgrounds, never inverting to white.
-3. **Glassmorphism & Natural Borders**:
-   - Active menu item: soft frosted glass `border: 1px solid rgba(0, 0, 0, 0.08)`, `background: rgba(255, 255, 255, 0.8)`, `backdrop-filter: blur(8px)`.
+3. **Left Menu Bar (Sidebar) Consistency**:
+   - **All Topics Headings**: Must be pure solid black (`#000000`) and bold (`700`) with no other colors across idle, hover, or active-child states.
+   - **Active Topics & Pages**: Must have the exact same gradient effect and highlight as dark mode: theme-adaptive background (`var(--sidebar-active-bg)`), colored border (`var(--sidebar-active-border)`), neon glow shadow (`var(--neon-glow-color)`), vertical gradient left bar (`::before`), and animated shimmer sweep (`::after`).
    - Avatar hover border: subtle and thin (`rgba(0, 0, 0, 0.15)`), never bold.
    - Career Hub `#` sections: must have light borders (`1px solid #D9D9D9` or `#98A2B3`).
 4. **Badges, Chips, Pills & "Toasts"**:
@@ -146,6 +147,7 @@ Replace static content (ASCII art, ```` ```mermaid ``` ```` blocks, plain markdo
 13. **Descendant Heading Placement**: Always place interactive diagram component tags directly under the specific descendant section heading (`## ...` or `### ...`) that describes the topic, NOT loosely under the main top-level H1 page title (`# ...`). Remove old static ASCII blocks under that descendant section.
     - *Example*: In `kafka-exactly-once.md` (`docs/technical-knowledge/kafka/advanced/exactly-once.md`), place `<KafkaExactlyOnceDiagram initialTab="steps" />` under `## How the Transaction Coordinator Works` and `<KafkaExactlyOnceDiagram initialTab="zombie" />` under `## Zombie Producer Fencing`. In `consumer-lag.md`, place `<KafkaConsumerLagPoisonDiagram initialScenario="normal" />` under `## Part 1: Consumer Lag Mechanics` and `<KafkaConsumerLagPoisonDiagram initialScenario="poison" />` under `## Part 2: Poison Messages & Dead Letter Queues (DLQ)`.
 14. **No Monospace Schema Inspectors**: **NEVER** generate Monospace Schema Inspector diagrams. All schemas, wire protocols, byte layouts, message formats, and system flows must be rendered as genuine visual interactive diagrams with moving/flowing arrows (`.interactive-diagram-flowing-path` or animated step-by-step directional arrows).
+15. **Dark Telemetry Canvas Invariant (Keep Same Color in Both Themes)**: All interactive diagrams (`.interactive-diagram-container`) are **cyber telemetry instruments**. They **MUST apply for dark theme and keep the exact same dark theme colors in light theme** (enforced by `src/css/diagrams.css`). The container is dark `#090b14` / `#0b0f19`, inner SVG canvas is `#0d0f1e`, detail cards are `#0c0e17`, and text is `#ffffff` / `#e2e8f0` / `#94a3b8`. **NEVER** use light theme page tokens (`#F7FDF9`, `#D9D9D9`, `#0f172a` text, `#F2F2F2`) inside interactive diagrams.
 
 ### Choose the right archetype (full templates in DESIGNS.md Section 5)
 
@@ -266,6 +268,17 @@ Before creating a new component, check whether one already exists for the concep
 | `TestingPyramidDoublesDiagram` | Test Pyramid (Unit vs Integration vs E2E) & Test Doubles taxonomy (Stub vs Mock vs Spy) |
 | `SpringTestAnnotationsDiagram` | 3-Layer Testing Architecture (JUnit ➔ Mockito ➔ Spring) & Sliced Context decision guide |
 | `WireMockResilienceDiagram` | Real HTTP server stubbing, Mockito vs WireMock comparison & fault injection simulator |
+| `BlackboxSystemTestingDiagram` | Black-box vs system boundaries, test oracle design, test environment lifecycle |
+| `DistributedTestingCoverageDiagram` | End-to-end distributed test coverage, synthetic transactions, chaos injection & trace correlation |
+| `ContractTestingPactFlowDiagram` | Consumer-driven contract testing (Pact), broker verification, provider pipeline validation |
+| `TransactionalOutboxDiagram` | Dual-write problem prevention, Debezium CDC / Polling publisher, idempotency guarantees |
+| `SagaChoreographyVsOrchestrationDiagram` | Event-driven choreography vs central orchestrator, saga state machines & compensation |
+| `SagaCompensationLifecycleDiagram` | Forward vs backward recovery, pivot transactions, and idempotent retry strategies |
+| `RedisLuaDistributedLockDiagram` | Redlock algorithm, atomic release script, clock drift, watchdog token renewal |
+| `WTinyLfuArchitectureDiagram` | Caffeine Cache admission window, Bloom filter frequency sketch & TinyLFU eviction |
+| `VirtualThreadLifecycleDiagram` | Carrier worker threads, continuation yield/unmount, pinning gotchas (`synchronized` vs `ReentrantLock`) |
+| `SeniorArchitectureDeepDiveDiagram` | Principal engineer architectural evaluation rubric, non-functional trade-off matrices |
+| `SeniorDevCodingLawsDiagram` | Practical application of Conway, Hyrum, Postel, and Gall laws in system architecture |
 
 ## MANDATORY: Register Every New Page in sidebars.ts
 

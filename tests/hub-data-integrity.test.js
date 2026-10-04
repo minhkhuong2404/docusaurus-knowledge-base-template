@@ -179,4 +179,163 @@ describe('Java Career Hub Data Integrity & AST Safety Suite', () => {
       assert.ok(cssContent.includes('[data-theme="light"] .hub-probation-container'), 'Missing light theme .hub-probation-container');
     });
   });
+
+  describe('Career Hub UI Styling, Borders, Animations & Anti-Broken UI Suite', () => {
+    const fs = require('fs');
+    const cssPath = path.resolve(__dirname, '../src/css/custom.css');
+    const cssContent = fs.readFileSync(cssPath, 'utf8');
+
+    const expectedTabs = [
+      'lessons',
+      'mock-interview',
+      'interview',
+      'tips50',
+      'battles',
+      'cv',
+      'probation'
+    ];
+
+    it('All 7 category tabs must have distinct CSS styling, borders, and colors in dark mode', () => {
+      expectedTabs.forEach((tab) => {
+        const baseSelector = `[data-theme="dark"] .hub-main-nav-tab.tab-${tab}`;
+        const activeHoverSelector = `[data-theme="dark"] .hub-main-nav-tab.tab-${tab}.active`;
+
+        assert.ok(
+          cssContent.includes(baseSelector),
+          `Missing dark theme base selector for tab: ${tab}`
+        );
+        assert.ok(
+          cssContent.includes(activeHoverSelector),
+          `Missing dark theme active/hover selector for tab: ${tab}`
+        );
+      });
+    });
+
+    it('All 7 category tabs must have distinct CSS styling, borders, and colors in light mode', () => {
+      expectedTabs.forEach((tab) => {
+        const baseSelector = `[data-theme="light"] .hub-main-nav-tab.tab-${tab}`;
+        const activeHoverSelector = `[data-theme="light"] .hub-main-nav-tab.tab-${tab}.active`;
+
+        assert.ok(
+          cssContent.includes(baseSelector),
+          `Missing light theme base selector for tab: ${tab}`
+        );
+        assert.ok(
+          cssContent.includes(activeHoverSelector),
+          `Missing light theme active/hover selector for tab: ${tab}`
+        );
+      });
+    });
+
+    it('All 4 metric cards must have matching borders, gradients, and label styling in both dark and light modes', () => {
+      for (let i = 0; i <= 3; i++) {
+        // Dark theme checks
+        assert.ok(
+          cssContent.includes(`[data-theme="dark"] .hub-metric-card.metric-${i}`),
+          `Missing dark theme .hub-metric-card.metric-${i}`
+        );
+        assert.ok(
+          cssContent.includes(`[data-theme="dark"] .hub-metric-card.metric-${i} .hub-metric-label`),
+          `Missing dark theme .hub-metric-card.metric-${i} .hub-metric-label`
+        );
+        assert.ok(
+          cssContent.includes(`[data-theme="dark"] .hub-metric-card.metric-${i} .hub-metric-desc`),
+          `Missing dark theme .hub-metric-card.metric-${i} .hub-metric-desc`
+        );
+
+        // Light theme checks
+        assert.ok(
+          cssContent.includes(`[data-theme="light"] .hub-metric-card.metric-${i}`),
+          `Missing light theme .hub-metric-card.metric-${i}`
+        );
+        assert.ok(
+          cssContent.includes(`[data-theme="light"] .hub-metric-card.metric-${i} .hub-metric-label`),
+          `Missing light theme .hub-metric-card.metric-${i} .hub-metric-label`
+        );
+        assert.ok(
+          cssContent.includes(`[data-theme="light"] .hub-metric-card.metric-${i} .hub-metric-desc`),
+          `Missing light theme .hub-metric-card.metric-${i} .hub-metric-desc`
+        );
+      }
+    });
+
+    it('All navigation tabs and metric cards must declare animation transitions and hover transform matching', () => {
+      // Dark theme animation & transition
+      assert.ok(
+        cssContent.includes('[data-theme="dark"] .hub-main-nav-tab') &&
+        cssContent.includes('transition: all 0.25s'),
+        'Dark mode main nav tabs must declare smooth 0.25s transition'
+      );
+      assert.ok(
+        cssContent.includes('[data-theme="dark"] .hub-main-nav-tab:hover') &&
+        cssContent.includes('transform: translateY(-2px)'),
+        'Dark mode main nav tabs must declare hover translateY(-2px)'
+      );
+      assert.ok(
+        cssContent.includes('[data-theme="dark"] .hub-metric-card:hover') &&
+        cssContent.includes('transform: translateY(-2px)'),
+        'Dark mode metric cards must declare hover translateY(-2px)'
+      );
+
+      // Light theme animation & transition
+      assert.ok(
+        cssContent.includes('[data-theme="light"] .hub-main-nav-tab') &&
+        cssContent.includes('transition: all 0.25s'),
+        'Light mode main nav tabs must declare smooth 0.25s transition'
+      );
+      assert.ok(
+        cssContent.includes('[data-theme="light"] .hub-main-nav-tab:hover') &&
+        cssContent.includes('transform: translateY(-2px)'),
+        'Light mode main nav tabs must declare hover translateY(-2px)'
+      );
+      assert.ok(
+        cssContent.includes('[data-theme="light"] .hub-metric-card:hover') &&
+        cssContent.includes('transform: translateY(-2px)'),
+        'Light mode metric cards must declare hover translateY(-2px)'
+      );
+
+      // Mock banner button hover effect
+      assert.ok(
+        cssContent.includes('[data-theme="dark"] .hub-mock-banner-btn:hover') &&
+        cssContent.includes('filter: brightness(1.1)'),
+        'Dark mode mock banner button must declare hover brightness animation'
+      );
+    });
+
+    it('Anti-Broken UI: verify every tab ID in hub/index.tsx has a matching CSS class in custom.css', () => {
+      const hubPagePath = path.resolve(__dirname, '../src/pages/hub/index.tsx');
+      const hubContent = fs.readFileSync(hubPagePath, 'utf8');
+
+      // Extract all tab id strings from MAIN NAVIGATION BAR in hub/index.tsx
+      const tabIdMatches = [...hubContent.matchAll(/id:\s*['"]([a-z0-9-]+)['"],\s*label:/g)].map(m => m[1]);
+
+      assert.ok(tabIdMatches.length >= 7, `Expected at least 7 tabs, found ${tabIdMatches.length}`);
+
+      tabIdMatches.forEach((tabId) => {
+        const darkClass = `tab-${tabId}`;
+        assert.ok(
+          cssContent.includes(darkClass),
+          `Tab ID "${tabId}" in hub/index.tsx does not have a matching .${darkClass} CSS class in custom.css!`
+        );
+      });
+    });
+
+    it('Anti-Broken UI: ensure high contrast readability across both dark and light modes', () => {
+      // In dark theme, mock banner title must NOT use illegible dark blue (#0284c7)
+      const darkBannerTitleMatch = cssContent.match(/\[data-theme="dark"\]\s+\.hub-mock-banner-title\s*\{([^}]+)\}/);
+      assert.ok(darkBannerTitleMatch, 'Dark mock banner title rule must exist');
+      assert.ok(
+        !darkBannerTitleMatch[1].includes('#0284c7'),
+        'Dark mock banner title must not use unreadable dark blue (#0284c7) on dark background'
+      );
+
+      // In light theme, metric-2 label must NOT use pale washed-out yellow (#fbbf24)
+      const lightMetric2Match = cssContent.match(/\[data-theme="light"\]\s+\.hub-metric-card\.metric-2\s+\.hub-metric-label\s*\{([^}]+)\}/);
+      assert.ok(lightMetric2Match, 'Light metric-2 label rule must exist');
+      assert.ok(
+        !lightMetric2Match[1].includes('#fbbf24'),
+        'Light metric-2 label must use high-contrast dark amber/gold, not pale yellow #fbbf24'
+      );
+    });
+  });
 });

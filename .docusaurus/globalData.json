@@ -696,6 +696,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev",
+              "path": "/technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/ai-agents/loop-engineering",
               "path": "/technical-knowledge/ai-agents/loop-engineering",
               "sidebar": "tutorialSidebar"
@@ -7239,6 +7244,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }
