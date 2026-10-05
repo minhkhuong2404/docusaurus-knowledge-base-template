@@ -47,8 +47,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Garbage Collection: Lifecycle, Algorithms & STW",
-    "permalink": "/technical-knowledge/java/java-gc"
+    "title": "ZGC & Generational ZGC",
+    "permalink": "/technical-knowledge/java/java-gc-zgc-generational"
   },
   "next": {
     "title": "Off-Heap Memory & FFM API: High-Performance Native Memory in Modern Java (Java 22+)",

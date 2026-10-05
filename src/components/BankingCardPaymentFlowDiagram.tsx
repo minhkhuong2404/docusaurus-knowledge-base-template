@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 
-export default function BankingCardPaymentFlowDiagram(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<'auth' | 'fee' | 'chargeback'>('auth');
+export default function BankingCardPaymentFlowDiagram({
+  initialTab = 'auth'
+}: {
+  initialTab?: 'auth' | 'fee' | 'chargeback';
+} = {}): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState<'auth' | 'fee' | 'chargeback'>(initialTab);
   const [saleAmount, setSaleAmount] = useState<number>(100);
   const [lcrEnabled, setLcrEnabled] = useState<boolean>(false);
 

@@ -50,6 +50,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/java/java-oop',
 								'technical-knowledge/java/java-collections',
 								'technical-knowledge/java/java-object-class',
+								'technical-knowledge/java/java-object-layout-memory',
 								'technical-knowledge/java/java-functional-interfaces-factory'
 							]
 						},
@@ -76,7 +77,9 @@ const sidebars: SidebarsConfig = {
 									items: [
 										'technical-knowledge/java/java-threads',
 										'technical-knowledge/java/java-locks',
-										'technical-knowledge/java/java-aqs-internals'
+										'technical-knowledge/java/java-aqs-internals',
+										'technical-knowledge/java/java-lock-free-varhandle',
+										'technical-knowledge/java/java-lmax-disruptor'
 									]
 								}
 							]
@@ -87,6 +90,10 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/java/java-jvm',
+								'technical-knowledge/java/java-classloaders-metaspace',
+								'technical-knowledge/java/java-dynamic-bytecode-agents',
+								'technical-knowledge/java/java-jit-compiler',
+								'technical-knowledge/java/java-graalvm-aot',
 								'technical-knowledge/java/java-stack-vs-heap',
 								'technical-knowledge/java/java-virtual-threads',
 								'technical-knowledge/java/production-oom-debugging-guide',
@@ -98,7 +105,9 @@ const sidebars: SidebarsConfig = {
 							label: '♻️ Garbage Collection',
 							collapsed: true,
 							items: [
-								'technical-knowledge/java/java-gc'
+								'technical-knowledge/java/java-gc',
+								'technical-knowledge/java/java-gc-g1-deep-dive',
+								'technical-knowledge/java/java-gc-zgc-generational'
 							]
 						},
 						{
@@ -108,6 +117,8 @@ const sidebars: SidebarsConfig = {
 							items: [
 								'technical-knowledge/java/java-io',
 								'technical-knowledge/java/java-off-heap-ffm-api',
+								'technical-knowledge/java/java-serialization-security',
+								'technical-knowledge/java/java-zero-copy-serialization',
 								'technical-knowledge/java/java-new-features'
 							]
 						},
@@ -1841,7 +1852,10 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/npp', label: 'NPP - New Payments Platform' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payto', label: 'PayTo - Account Mandates' },
+						{ type: 'doc', id: 'technical-knowledge/banking/becs', label: 'BECS Direct Entry' },
 						{ type: 'doc', id: 'technical-knowledge/banking/swift', label: 'SWIFT - International' },
+						{ type: 'doc', id: 'technical-knowledge/banking/rtgs', label: 'RTGS & High-Value Clearing' },
 						{ type: 'doc', id: 'technical-knowledge/banking/direct_debit', label: 'Direct Debit (BECS & PayTo)' },
 						{ type: 'doc', id: 'technical-knowledge/banking/bpay', label: 'BPAY - Bill Payments' }
 					]
@@ -1853,6 +1867,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/debtor', label: 'Debtor & Creditor' },
 						{ type: 'doc', id: 'technical-knowledge/banking/fis', label: 'Financial Institutions' },
+						{ type: 'doc', id: 'technical-knowledge/banking/correspondent_banking', label: 'Correspondent Banking' },
 						{ type: 'doc', id: 'technical-knowledge/banking/account_types', label: 'Account Types' },
 						{ type: 'doc', id: 'technical-knowledge/banking/core_banking', label: 'Core Banking System (CBS)' }
 					]
@@ -1876,14 +1891,22 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/clearing', label: 'Clearing' },
-						{ type: 'doc', id: 'technical-knowledge/banking/settlement', label: 'Settlement' }
+						{ type: 'doc', id: 'technical-knowledge/banking/settlement', label: 'Settlement' },
+						{ type: 'doc', id: 'technical-knowledge/banking/liquidity', label: 'Liquidity Management' }
 					]
 				},
 				{
 					type: 'category',
 					label: '💳 Cards',
 					collapsed: true,
-					items: [{ type: 'doc', id: 'technical-knowledge/banking/cards', label: 'Cards & Card Schemes' }]
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/cards', label: 'Cards Overview & Schemes' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_anatomy_emv', label: 'Card Anatomy & EMV Cryptography' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_iso8583', label: 'ISO 8583 & AS 2805 Protocols' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_clearing_settlement', label: 'SMS vs DMS, Clearing & Interchange' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_tokenization_3ds', label: 'Network Tokenization & 3-D Secure' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_disputes_lcr', label: 'Disputes, Chargebacks & LCR' },
+					]
 				},
 				{
 					type: 'category',
@@ -1891,8 +1914,10 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/fraud', label: 'Fraud Detection & Prevention' },
+						{ type: 'doc', id: 'technical-knowledge/banking/cop', label: 'Confirmation of Payee (CoP)' },
 						{ type: 'doc', id: 'technical-knowledge/banking/sanction', label: 'Sanctions Screening' },
-						{ type: 'doc', id: 'technical-knowledge/banking/aml_kyc', label: 'AML, CTF & KYC' }
+						{ type: 'doc', id: 'technical-knowledge/banking/aml_kyc', label: 'AML, CTF & KYC' },
+						{ type: 'doc', id: 'technical-knowledge/banking/regulatory_reporting', label: 'Regulatory Reporting' }
 					]
 				},
 				{
@@ -1901,14 +1926,20 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/reconciliation', label: 'Reconciliation' },
-						{ type: 'doc', id: 'technical-knowledge/banking/payment_exceptions', label: 'Exceptions & Investigations' }
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_exceptions', label: 'Exceptions & Investigations' },
+						{ type: 'doc', id: 'technical-knowledge/banking/error_codes', label: 'Error Codes Reference' }
 					]
 				},
 				{
 					type: 'category',
 					label: '🧑‍💻 Engineering',
 					collapsed: true,
-					items: [{ type: 'doc', id: 'technical-knowledge/banking/testing_banking', label: 'Testing in Payments' }]
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/idempotency', label: 'Idempotency & Resilience' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_security', label: 'Payment Security & Cryptography' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_hub', label: 'Payment Hub Architecture' },
+						{ type: 'doc', id: 'technical-knowledge/banking/testing_banking', label: 'Testing in Payments' }
+					]
 				},
 				{
 					type: 'category',

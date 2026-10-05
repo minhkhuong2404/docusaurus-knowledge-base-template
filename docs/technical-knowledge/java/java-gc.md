@@ -105,7 +105,64 @@ G1 divides the heap into equal-sized regions. Each region is Eden, Survivor, Old
 
 ---
 
-## 7. Flags Cheatsheet
+---
+
+## 7. Tri-Color Marking & Concurrent Collector Barriers
+
+Modern low-latency collectors (G1, Shenandoah, ZGC) perform object marking concurrently while application worker threads (mutators) continue to run. They model object reachability using the **Tri-Color Marking Abstraction**:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TRI-COLOR MARKING ABSTRACTION                                               │
+│                                                                             │
+│ • WHITE: Unvisited objects. At the end of marking, white objects are dead.  │
+│ • GREY:  Visited by GC, but its outgoing field references are not yet scanned│
+│ • BLACK: Visited AND all outgoing references scanned. Guaranteed live.      │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### The Concurrent Invalidation Hazard
+Because mutator threads run simultaneously with the GC marking threads, a mutator can break reachability assumptions if:
+1. Mutator clears a pointer from a **Grey** object to a **White** object.
+2. Mutator attaches that **White** object to an already-scanned **Black** object.
+* If unhandled, the GC never visits the white object (since black objects are never rescanned), resulting in **catastrophic silent data corruption** (premature reclamation of live objects!).
+
+### Barriers: SATB vs. Incremental Update vs. Load Barrier
+* **Snapshot-At-The-Beginning (SATB - G1 GC)**: Uses a **Pre-Write Barrier**. Before overwriting an old field reference, it logs the old reference into a per-thread SATB buffer. Guarantees that any object that was live at the start of GC remains considered live.
+* **Incremental Update (CMS / Shenandoah)**: Uses a **Post-Write Barrier**. When a black object receives a reference to a white object, it downgrades the black object back to grey.
+* **Load Barrier (ZGC)**: Intercepts reference **reads** (`getfield`) rather than writes. If an object pointer has not been remapped, the load barrier intercepts the read in ~2 nanoseconds, updates the pointer to its new relocated address, and returns the valid object immediately ("Self-Healing").
+
+---
+
+## 8. ZGC Colored Pointers & Generational ZGC (Java 21)
+
+ZGC achieves **sub-millisecond pause times** on heaps ranging from 8MB to 16TB by executing all mark, evacuate, and relocate phases concurrently.
+
+### Colored Pointers & Virtual Memory Multi-Mapping
+On 64-bit platforms, ZGC stores metadata directly inside the unused high-order bits of the 64-bit object reference pointer:
+
+```
++-------------------+-------------+-----------------------------------------------+
+| 16 Unused Bits    | 4 Color Bits| 44-bit Object Offset (Addresses up to 16 TB)  |
++-------------------+-------------+-----------------------------------------------+
+                    | | | |
+                    | | | +-- Finalizable (Weak/Phantom reference tracking)
+                    | | +---- Remapped (Address points to new relocated location)
+                    | +------ Marked1 (Active live marking phase)
+                    +-------- Marked0 (Alternate live marking phase)
+```
+
+* **OS Virtual Memory Multi-Mapping (`mmap`)**: The Linux kernel maps the same physical memory page to three separate virtual memory addresses (`Marked0`, `Marked1`, and `Remapped`). When the CPU dereferences a colored pointer, it hits the exact same physical heap page regardless of which color bit is active, avoiding software bitmasking penalties.
+
+### Generational ZGC (JEP 439 - Java 21 LTS)
+In Java 21, **Generational ZGC** (`-XX:+UseZGC -XX:+ZGenerational`) separated the ZGC heap into Young and Old generations:
+* Young collections run frequently and collect 90%+ of short-lived objects with almost zero CPU overhead.
+* Resolves the legacy ZGC "Allocation Stall" issue where high allocation rates outpaced the single-generation concurrent marking cycle.
+* Delivers consistent **p99.99 latencies under 1 millisecond** while maintaining throughput comparable to G1 GC.
+
+---
+
+## 9. Flags Cheatsheet
 
 | Flag | Meaning |
 | --- | --- |
@@ -114,25 +171,27 @@ G1 divides the heap into equal-sized regions. Each region is Eden, Survivor, Old
 | `-XX:SurvivorRatio` | Eden vs each Survivor (default 8 → ~8:1:1) |
 | `-XX:MaxTenuringThreshold` | Max age before promotion (default 15) |
 | `-XX:+UseG1GC` | G1 (default JDK 9+) |
-| `-XX:MaxGCPauseMillis` | G1 pause goal (soft) |
-| `-XX:InitiatingHeapOccupancyPercent` | When G1 starts concurrent mark |
-| `-XX:+UseZGC` / `-XX:+ZGenerational` | ZGC (+ generational on JDK 21+) |
-| `-Xlog:gc*` | Unified GC logging |
+| `-XX:MaxGCPauseMillis` | G1 pause goal (soft, default 200ms) |
+| `-XX:InitiatingHeapOccupancyPercent` | When G1 starts concurrent mark (default 45%) |
+| `-XX:+UseZGC` / `-XX:+ZGenerational` | Generational ZGC (sub-millisecond pauses on JDK 21+) |
+| `-Xlog:gc*,gc+phases=debug:file=gc.log:time,uptime,pid:filecount=5,filesize=100M` | Production Unified GC logging |
 
 ---
 
-## 8. Interview Hooks
+## 10. Interview Hooks
 
 - Explain **S0/S1 From/To flip** and why one survivor is empty after a young GC.  
 - **Parallel vs concurrent:** Parallel = many GC threads but STW; concurrent = mutators run during mark/relocate.  
 - Why **Mark-Copy** for Young and why whole-heap copy is a bad Old strategy.  
-- **Premature promotion** symptoms and how Survivor sizing / tenuring threshold interact.  
-- When to stay on **G1** vs move to **ZGC** for p99 latency.
+- **Tri-color marking:** How write barriers (SATB) prevent premature reclamation of live objects.  
+- **ZGC Colored Pointers & Load Barriers:** How self-healing pointers achieve sub-millisecond pauses without Stop-The-World relocation phases.  
+- When to stay on **G1** (maximum batch throughput) vs move to **Generational ZGC** (strict &lt;1ms SLA requirements).
 
 ---
 
 ## Related
 
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm)  
+- [Java Object Layout (JOL) & Memory Architecture](./java-object-layout-memory)
 - [Stack vs Heap](./java-stack-vs-heap)  
 - [Diagnostics & Troubleshooting](./java-diagnostics-troubleshooting)

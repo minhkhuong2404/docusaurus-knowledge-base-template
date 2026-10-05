@@ -47,8 +47,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Off-Heap Memory & FFM API: High-Performance Native Memory in Modern Java (Java 22+)",
-    "permalink": "/technical-knowledge/java/java-off-heap-ffm-api"
+    "title": "Zero-Copy & Binary Protocols",
+    "permalink": "/technical-knowledge/java/java-zero-copy-serialization"
   },
   "next": {
     "title": "Java Interview Questions & Answers",

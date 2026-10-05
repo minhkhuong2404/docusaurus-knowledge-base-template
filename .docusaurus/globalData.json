@@ -957,7 +957,8 @@
             },
             {
               "id": "technical-knowledge/banking/becs",
-              "path": "/technical-knowledge/banking/becs"
+              "path": "/technical-knowledge/banking/becs",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/bpay",
@@ -980,6 +981,31 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/card_anatomy_emv",
+              "path": "/technical-knowledge/banking/card_anatomy_emv",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/card_clearing_settlement",
+              "path": "/technical-knowledge/banking/card_clearing_settlement",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/card_disputes_lcr",
+              "path": "/technical-knowledge/banking/card_disputes_lcr",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/card_iso8583",
+              "path": "/technical-knowledge/banking/card_iso8583",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/card_tokenization_3ds",
+              "path": "/technical-knowledge/banking/card_tokenization_3ds",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/cards",
               "path": "/technical-knowledge/banking/cards",
               "sidebar": "tutorialSidebar"
@@ -991,7 +1017,8 @@
             },
             {
               "id": "technical-knowledge/banking/cop",
-              "path": "/technical-knowledge/banking/cop"
+              "path": "/technical-knowledge/banking/cop",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/core_banking",
@@ -1000,7 +1027,8 @@
             },
             {
               "id": "technical-knowledge/banking/correspondent_banking",
-              "path": "/technical-knowledge/banking/correspondent_banking"
+              "path": "/technical-knowledge/banking/correspondent_banking",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/credit_post",
@@ -1029,7 +1057,8 @@
             },
             {
               "id": "technical-knowledge/banking/error_codes",
-              "path": "/technical-knowledge/banking/error_codes"
+              "path": "/technical-knowledge/banking/error_codes",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/fis",
@@ -1053,7 +1082,8 @@
             },
             {
               "id": "technical-knowledge/banking/idempotency",
-              "path": "/technical-knowledge/banking/idempotency"
+              "path": "/technical-knowledge/banking/idempotency",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/inbound",
@@ -1072,7 +1102,8 @@
             },
             {
               "id": "technical-knowledge/banking/liquidity",
-              "path": "/technical-knowledge/banking/liquidity"
+              "path": "/technical-knowledge/banking/liquidity",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/npp",
@@ -1141,7 +1172,8 @@
             },
             {
               "id": "technical-knowledge/banking/payment_hub",
-              "path": "/technical-knowledge/banking/payment_hub"
+              "path": "/technical-knowledge/banking/payment_hub",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/payment_lifecycle_101",
@@ -1154,8 +1186,14 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/payment_security",
+              "path": "/technical-knowledge/banking/payment_security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/payto",
-              "path": "/technical-knowledge/banking/payto"
+              "path": "/technical-knowledge/banking/payto",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/reconciliation",
@@ -1164,11 +1202,13 @@
             },
             {
               "id": "technical-knowledge/banking/regulatory_reporting",
-              "path": "/technical-knowledge/banking/regulatory_reporting"
+              "path": "/technical-knowledge/banking/regulatory_reporting",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/rtgs",
-              "path": "/technical-knowledge/banking/rtgs"
+              "path": "/technical-knowledge/banking/rtgs",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/sanction",
@@ -5596,6 +5636,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-classloaders-metaspace",
+              "path": "/technical-knowledge/java/java-classloaders-metaspace",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-collections",
               "path": "/technical-knowledge/java/java-collections",
               "sidebar": "tutorialSidebar"
@@ -5608,6 +5653,11 @@
             {
               "id": "technical-knowledge/java/java-diagnostics-troubleshooting",
               "path": "/technical-knowledge/java/java-diagnostics-troubleshooting",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-dynamic-bytecode-agents",
+              "path": "/technical-knowledge/java/java-dynamic-bytecode-agents",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5626,6 +5676,21 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-gc-g1-deep-dive",
+              "path": "/technical-knowledge/java/java-gc-g1-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-gc-zgc-generational",
+              "path": "/technical-knowledge/java/java-gc-zgc-generational",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-graalvm-aot",
+              "path": "/technical-knowledge/java/java-graalvm-aot",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-interview-questions",
               "path": "/technical-knowledge/java/java-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -5636,6 +5701,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-jit-compiler",
+              "path": "/technical-knowledge/java/java-jit-compiler",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-jmm-memory-model",
               "path": "/technical-knowledge/java/java-jmm-memory-model",
               "sidebar": "tutorialSidebar"
@@ -5643,6 +5713,16 @@
             {
               "id": "technical-knowledge/java/java-jvm",
               "path": "/technical-knowledge/java/java-jvm",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-lmax-disruptor",
+              "path": "/technical-knowledge/java/java-lmax-disruptor",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-lock-free-varhandle",
+              "path": "/technical-knowledge/java/java-lock-free-varhandle",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5661,6 +5741,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-object-layout-memory",
+              "path": "/technical-knowledge/java/java-object-layout-memory",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-off-heap-ffm-api",
               "path": "/technical-knowledge/java/java-off-heap-ffm-api",
               "sidebar": "tutorialSidebar"
@@ -5676,6 +5761,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-serialization-security",
+              "path": "/technical-knowledge/java/java-serialization-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-stack-vs-heap",
               "path": "/technical-knowledge/java/java-stack-vs-heap",
               "sidebar": "tutorialSidebar"
@@ -5688,6 +5778,11 @@
             {
               "id": "technical-knowledge/java/java-virtual-threads",
               "path": "/technical-knowledge/java/java-virtual-threads",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-zero-copy-serialization",
+              "path": "/technical-knowledge/java/java-zero-copy-serialization",
               "sidebar": "tutorialSidebar"
             },
             {
