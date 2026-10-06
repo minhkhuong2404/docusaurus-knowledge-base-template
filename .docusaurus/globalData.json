@@ -5922,6 +5922,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/core/kafka-zero-copy-page-cache",
+              "path": "/technical-knowledge/kafka/core/kafka-zero-copy-page-cache",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/core/kraft-vs-zookeeper",
               "path": "/technical-knowledge/kafka/core/kraft-vs-zookeeper",
               "sidebar": "tutorialSidebar"

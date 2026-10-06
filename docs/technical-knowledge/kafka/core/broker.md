@@ -154,6 +154,7 @@ When a consumer sends a `FetchRequest`, the broker executes Java's `FileChannel.
 
 ## See Also
 
+- [Kafka Zero-Copy & Linux OS Page Cache Architecture](./kafka-zero-copy-page-cache.md)
 - [KRaft vs ZooKeeper](./kraft-vs-zookeeper.md)
 - [Kafka Replication & ISR](./replication.md)
 - [Kafka Topic & Partition Scaling](./scaling-partitions.md)

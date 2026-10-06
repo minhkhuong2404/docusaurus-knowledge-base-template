@@ -61,13 +61,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-53e": {
+  "/-455": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-97f": {
+  "/-e62": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2079,6 +2079,10 @@
     "__comp": "df203c0f",
     "__props": "4b62ef9a"
   },
+  "/tags/dma-4a3": {
+    "__comp": "df203c0f",
+    "__props": "239ff1a9"
+  },
   "/tags/dms-384": {
     "__comp": "df203c0f",
     "__props": "80a6f553"
@@ -3615,6 +3619,10 @@
     "__comp": "df203c0f",
     "__props": "d3ae8e49"
   },
+  "/tags/ktls-e10": {
+    "__comp": "df203c0f",
+    "__props": "24fd32c4"
+  },
   "/tags/kubectl-985": {
     "__comp": "df203c0f",
     "__props": "eb430cca"
@@ -3766,6 +3774,10 @@
   "/tags/linux-371": {
     "__comp": "df203c0f",
     "__props": "d0a33d37"
+  },
+  "/tags/linux-kernel-a1d": {
+    "__comp": "df203c0f",
+    "__props": "f01d6f4c"
   },
   "/tags/liquibase-032": {
     "__comp": "df203c0f",
@@ -6251,6 +6263,10 @@
     "__comp": "df203c0f",
     "__props": "1f3837b3"
   },
+  "/tags/storage-engine-9bd": {
+    "__comp": "df203c0f",
+    "__props": "dedbf3b9"
+  },
   "/tags/storage-engines-dfe": {
     "__comp": "df203c0f",
     "__props": "cc171eed"
@@ -7199,14 +7215,14 @@
     "__comp": "df203c0f",
     "__props": "e05b6b95"
   },
-  "/-ab9": {
+  "/-63f": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
     "__comp": "17896441",
     "content": "78559adb"
   },
-  "/banking-c3f": {
+  "/banking-dfc": {
     "__comp": "17896441",
     "content": "59e92e34"
   },
@@ -8110,27 +8126,27 @@
     "__comp": "17896441",
     "content": "afebb541"
   },
-  "/technical-knowledge/banking/card_anatomy_emv-6f5": {
+  "/technical-knowledge/banking/card_anatomy_emv-6f1": {
     "__comp": "17896441",
     "content": "d4f8f852"
   },
-  "/technical-knowledge/banking/card_clearing_settlement-997": {
+  "/technical-knowledge/banking/card_clearing_settlement-d89": {
     "__comp": "17896441",
     "content": "4f3e890b"
   },
-  "/technical-knowledge/banking/card_disputes_lcr-a9a": {
+  "/technical-knowledge/banking/card_disputes_lcr-4e5": {
     "__comp": "17896441",
     "content": "fba17148"
   },
-  "/technical-knowledge/banking/card_iso8583-d13": {
+  "/technical-knowledge/banking/card_iso8583-01b": {
     "__comp": "17896441",
     "content": "9078bc74"
   },
-  "/technical-knowledge/banking/card_tokenization_3ds-307": {
+  "/technical-knowledge/banking/card_tokenization_3ds-15f": {
     "__comp": "17896441",
     "content": "0ee9b2aa"
   },
-  "/technical-knowledge/banking/cards-91c": {
+  "/technical-knowledge/banking/cards-5d1": {
     "__comp": "17896441",
     "content": "b973a717"
   },
@@ -8178,7 +8194,7 @@
     "__comp": "17896441",
     "content": "d16b33c3"
   },
-  "/technical-knowledge/banking/fraud-a17": {
+  "/technical-knowledge/banking/fraud-7eb": {
     "__comp": "17896441",
     "content": "c13c1767"
   },
@@ -8190,7 +8206,7 @@
     "__comp": "17896441",
     "content": "398d1142"
   },
-  "/technical-knowledge/banking/idempotency-b20": {
+  "/technical-knowledge/banking/idempotency-29f": {
     "__comp": "17896441",
     "content": "bf7c4049"
   },
@@ -8222,7 +8238,7 @@
     "__comp": "17896441",
     "content": "00e97688"
   },
-  "/technical-knowledge/banking/open_banking-ffd": {
+  "/technical-knowledge/banking/open_banking-6d0": {
     "__comp": "17896441",
     "content": "ecdb5fa9"
   },
@@ -8270,7 +8286,7 @@
     "__comp": "17896441",
     "content": "1263aa5e"
   },
-  "/technical-knowledge/banking/payment_security-62e": {
+  "/technical-knowledge/banking/payment_security-ca0": {
     "__comp": "17896441",
     "content": "ba2d4b86"
   },
@@ -11826,7 +11842,7 @@
     "__comp": "17896441",
     "content": "2695042f"
   },
-  "/technical-knowledge/java/java-classloaders-metaspace-b07": {
+  "/technical-knowledge/java/java-classloaders-metaspace-24a": {
     "__comp": "17896441",
     "content": "e12aeb20"
   },
@@ -11842,7 +11858,7 @@
     "__comp": "17896441",
     "content": "e89fd18d"
   },
-  "/technical-knowledge/java/java-dynamic-bytecode-agents-dad": {
+  "/technical-knowledge/java/java-dynamic-bytecode-agents-5c1": {
     "__comp": "17896441",
     "content": "ab3c48bc"
   },
@@ -11854,19 +11870,19 @@
     "__comp": "17896441",
     "content": "fb6d755b"
   },
-  "/technical-knowledge/java/java-gc-c7c": {
+  "/technical-knowledge/java/java-gc-58f": {
     "__comp": "17896441",
     "content": "ba67a95b"
   },
-  "/technical-knowledge/java/java-gc-g1-deep-dive-904": {
+  "/technical-knowledge/java/java-gc-g1-deep-dive-82c": {
     "__comp": "17896441",
     "content": "d79c7c00"
   },
-  "/technical-knowledge/java/java-gc-zgc-generational-d7a": {
+  "/technical-knowledge/java/java-gc-zgc-generational-aa5": {
     "__comp": "17896441",
     "content": "119ed1f3"
   },
-  "/technical-knowledge/java/java-graalvm-aot-32e": {
+  "/technical-knowledge/java/java-graalvm-aot-44b": {
     "__comp": "17896441",
     "content": "e5f93e6e"
   },
@@ -11878,7 +11894,7 @@
     "__comp": "17896441",
     "content": "3744858f"
   },
-  "/technical-knowledge/java/java-jit-compiler-a44": {
+  "/technical-knowledge/java/java-jit-compiler-77e": {
     "__comp": "17896441",
     "content": "1d41a7f3"
   },
@@ -11890,11 +11906,11 @@
     "__comp": "17896441",
     "content": "2fb67458"
   },
-  "/technical-knowledge/java/java-lmax-disruptor-584": {
+  "/technical-knowledge/java/java-lmax-disruptor-895": {
     "__comp": "17896441",
     "content": "005c5d51"
   },
-  "/technical-knowledge/java/java-lock-free-varhandle-c29": {
+  "/technical-knowledge/java/java-lock-free-varhandle-1ea": {
     "__comp": "17896441",
     "content": "14c4e657"
   },
@@ -11910,7 +11926,7 @@
     "__comp": "17896441",
     "content": "8e1d77b1"
   },
-  "/technical-knowledge/java/java-object-layout-memory-136": {
+  "/technical-knowledge/java/java-object-layout-memory-659": {
     "__comp": "17896441",
     "content": "e1fa173c"
   },
@@ -11926,7 +11942,7 @@
     "__comp": "17896441",
     "content": "adb02301"
   },
-  "/technical-knowledge/java/java-serialization-security-171": {
+  "/technical-knowledge/java/java-serialization-security-d44": {
     "__comp": "17896441",
     "content": "a4b2dc1c"
   },
@@ -11942,7 +11958,7 @@
     "__comp": "17896441",
     "content": "dd9695a1"
   },
-  "/technical-knowledge/java/java-zero-copy-serialization-38b": {
+  "/technical-knowledge/java/java-zero-copy-serialization-3f5": {
     "__comp": "17896441",
     "content": "b128d433"
   },
@@ -12061,6 +12077,10 @@
   "/technical-knowledge/kafka/core/kafka-vs-rabbitmq-7c2": {
     "__comp": "17896441",
     "content": "a9f771b0"
+  },
+  "/technical-knowledge/kafka/core/kafka-zero-copy-page-cache-c24": {
+    "__comp": "17896441",
+    "content": "55d5b905"
   },
   "/technical-knowledge/kafka/core/kraft-vs-zookeeper-108": {
     "__comp": "17896441",

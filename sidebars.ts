@@ -673,6 +673,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/kafka/core/kafka-partitioning-strategies',
 								'technical-knowledge/kafka/core/scaling-partitions',
 								'technical-knowledge/kafka/core/kafka-broker',
+								'technical-knowledge/kafka/core/kafka-zero-copy-page-cache',
 								'technical-knowledge/kafka/core/replication',
 								'technical-knowledge/kafka/core/kraft-vs-zookeeper',
 								'technical-knowledge/kafka/core/raft-consensus'

@@ -49,11 +49,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '53e'),
+    component: ComponentCreator('/', '455'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '97f'),
+        component: ComponentCreator('/', 'e62'),
         routes: [
           {
             path: '/tags',
@@ -2566,6 +2566,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/dma',
+            component: ComponentCreator('/tags/dma', '4a3'),
+            exact: true
+          },
+          {
             path: '/tags/dms',
             component: ComponentCreator('/tags/dms', '384'),
             exact: true
@@ -4486,6 +4491,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/ktls',
+            component: ComponentCreator('/tags/ktls', 'e10'),
+            exact: true
+          },
+          {
             path: '/tags/kubectl',
             component: ComponentCreator('/tags/kubectl', '985'),
             exact: true
@@ -4673,6 +4683,11 @@ export default [
           {
             path: '/tags/linux',
             component: ComponentCreator('/tags/linux', '371'),
+            exact: true
+          },
+          {
+            path: '/tags/linux-kernel',
+            component: ComponentCreator('/tags/linux-kernel', 'a1d'),
             exact: true
           },
           {
@@ -7781,6 +7796,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/storage-engine',
+            component: ComponentCreator('/tags/storage-engine', '9bd'),
+            exact: true
+          },
+          {
             path: '/tags/storage-engines',
             component: ComponentCreator('/tags/storage-engines', 'dfe'),
             exact: true
@@ -8967,7 +8987,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'ab9'),
+            component: ComponentCreator('/', '63f'),
             routes: [
               {
                 path: '/aws',
@@ -8977,7 +8997,7 @@ export default [
               },
               {
                 path: '/banking',
-                component: ComponentCreator('/banking', 'c3f'),
+                component: ComponentCreator('/banking', 'dfc'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10333,37 +10353,37 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/card_anatomy_emv',
-                component: ComponentCreator('/technical-knowledge/banking/card_anatomy_emv', '6f5'),
+                component: ComponentCreator('/technical-knowledge/banking/card_anatomy_emv', '6f1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/card_clearing_settlement',
-                component: ComponentCreator('/technical-knowledge/banking/card_clearing_settlement', '997'),
+                component: ComponentCreator('/technical-knowledge/banking/card_clearing_settlement', 'd89'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/card_disputes_lcr',
-                component: ComponentCreator('/technical-knowledge/banking/card_disputes_lcr', 'a9a'),
+                component: ComponentCreator('/technical-knowledge/banking/card_disputes_lcr', '4e5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/card_iso8583',
-                component: ComponentCreator('/technical-knowledge/banking/card_iso8583', 'd13'),
+                component: ComponentCreator('/technical-knowledge/banking/card_iso8583', '01b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/card_tokenization_3ds',
-                component: ComponentCreator('/technical-knowledge/banking/card_tokenization_3ds', '307'),
+                component: ComponentCreator('/technical-knowledge/banking/card_tokenization_3ds', '15f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/cards',
-                component: ComponentCreator('/technical-knowledge/banking/cards', '91c'),
+                component: ComponentCreator('/technical-knowledge/banking/cards', '5d1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10435,7 +10455,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/fraud',
-                component: ComponentCreator('/technical-knowledge/banking/fraud', 'a17'),
+                component: ComponentCreator('/technical-knowledge/banking/fraud', '7eb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10453,7 +10473,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/idempotency',
-                component: ComponentCreator('/technical-knowledge/banking/idempotency', 'b20'),
+                component: ComponentCreator('/technical-knowledge/banking/idempotency', '29f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10501,7 +10521,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/open_banking',
-                component: ComponentCreator('/technical-knowledge/banking/open_banking', 'ffd'),
+                component: ComponentCreator('/technical-knowledge/banking/open_banking', '6d0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10573,7 +10593,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/payment_security',
-                component: ComponentCreator('/technical-knowledge/banking/payment_security', '62e'),
+                component: ComponentCreator('/technical-knowledge/banking/payment_security', 'ca0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15907,7 +15927,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-classloaders-metaspace',
-                component: ComponentCreator('/technical-knowledge/java/java-classloaders-metaspace', 'b07'),
+                component: ComponentCreator('/technical-knowledge/java/java-classloaders-metaspace', '24a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15931,7 +15951,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-dynamic-bytecode-agents',
-                component: ComponentCreator('/technical-knowledge/java/java-dynamic-bytecode-agents', 'dad'),
+                component: ComponentCreator('/technical-knowledge/java/java-dynamic-bytecode-agents', '5c1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15949,25 +15969,25 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-gc',
-                component: ComponentCreator('/technical-knowledge/java/java-gc', 'c7c'),
+                component: ComponentCreator('/technical-knowledge/java/java-gc', '58f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/java/java-gc-g1-deep-dive',
-                component: ComponentCreator('/technical-knowledge/java/java-gc-g1-deep-dive', '904'),
+                component: ComponentCreator('/technical-knowledge/java/java-gc-g1-deep-dive', '82c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/java/java-gc-zgc-generational',
-                component: ComponentCreator('/technical-knowledge/java/java-gc-zgc-generational', 'd7a'),
+                component: ComponentCreator('/technical-knowledge/java/java-gc-zgc-generational', 'aa5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/java/java-graalvm-aot',
-                component: ComponentCreator('/technical-knowledge/java/java-graalvm-aot', '32e'),
+                component: ComponentCreator('/technical-knowledge/java/java-graalvm-aot', '44b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15985,7 +16005,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-jit-compiler',
-                component: ComponentCreator('/technical-knowledge/java/java-jit-compiler', 'a44'),
+                component: ComponentCreator('/technical-knowledge/java/java-jit-compiler', '77e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16003,13 +16023,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-lmax-disruptor',
-                component: ComponentCreator('/technical-knowledge/java/java-lmax-disruptor', '584'),
+                component: ComponentCreator('/technical-knowledge/java/java-lmax-disruptor', '895'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/java/java-lock-free-varhandle',
-                component: ComponentCreator('/technical-knowledge/java/java-lock-free-varhandle', 'c29'),
+                component: ComponentCreator('/technical-knowledge/java/java-lock-free-varhandle', '1ea'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16033,7 +16053,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-object-layout-memory',
-                component: ComponentCreator('/technical-knowledge/java/java-object-layout-memory', '136'),
+                component: ComponentCreator('/technical-knowledge/java/java-object-layout-memory', '659'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16057,7 +16077,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-serialization-security',
-                component: ComponentCreator('/technical-knowledge/java/java-serialization-security', '171'),
+                component: ComponentCreator('/technical-knowledge/java/java-serialization-security', 'd44'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16081,7 +16101,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-zero-copy-serialization',
-                component: ComponentCreator('/technical-knowledge/java/java-zero-copy-serialization', '38b'),
+                component: ComponentCreator('/technical-knowledge/java/java-zero-copy-serialization', '3f5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16247,6 +16267,12 @@ export default [
               {
                 path: '/technical-knowledge/kafka/core/kafka-vs-rabbitmq',
                 component: ComponentCreator('/technical-knowledge/kafka/core/kafka-vs-rabbitmq', '7c2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/core/kafka-zero-copy-page-cache',
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-zero-copy-page-cache', 'c24'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

@@ -748,6 +748,44 @@ RocksDB is a log-structured merge-tree (LSM-tree) embedded key-value database, o
 - Crash-safe via WAL — data survives process crash without full changelog replay
 - Tunable memory/disk trade-off via block cache size and compression
 
+#### How RocksDB Interacts with the Linux OS Page Cache
+
+A frequent architectural point of confusion is: **Does Kafka Streams have a Page Cache, or is that only on the Kafka Broker?**
+
+**Both use the Linux OS Page Cache, but in fundamentally different ways:**
+- On the **Kafka Broker**: The Page Cache directly buffers topic partition log segment files (`.log`), and `sendfile(2)` streams them to the network via Zero-Copy DMA without touching user space.
+- In **Kafka Streams**: The Page Cache runs on your **client application host or Kubernetes pod**, acting as a **secondary disk cache for RocksDB**:
+
+```
+Kafka Streams Memory Hierarchy on Client Host / K8s Pod:
+┌────────────────────────────────────────────────────────────────────────┐
+│ Tier 1: JVM Heap Memory (-Xmx)                                        │
+│ - Topology DAG, SerDes, StreamThread queues, POJO records              │
+├────────────────────────────────────────────────────────────────────────┤
+│ Tier 2: RocksDB Off-Heap Native Memory (C++ via JNI)                   │
+│ - MemTable: In-memory write buffer for fast mutations                  │
+│ - Block Cache: Decompressed hot key-value data blocks                  │
+├────────────────────────────────────────────────────────────────────────┤
+│ Tier 3: Linux OS Page Cache (Host / Container Kernel RAM)              │
+│ - Caches compressed SSTable (.sst) files and WAL logs                  │
+│ - Prevents physical disk I/O when Block Cache misses occur             │
+├────────────────────────────────────────────────────────────────────────┤
+│ Tier 4: Physical Storage (Local NVMe / Persistent Volume)              │
+│ - Flushed SSTables, .checkpoint file                                   │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Read Request Path**: When your stream topology queries a state store (`store.get(key)`):
+   - It checks the RocksDB in-memory **Block Cache** in off-heap C++ RAM.
+   - On a block cache miss, RocksDB performs a file read. The Linux kernel intercepts this read and checks the **OS Page Cache**. If the SST page is present in Page Cache, it is read into native memory at RAM bus speeds without hitting storage media.
+   - Only on a cold Page Cache miss does the kernel trigger physical NVMe/SSD read I/O.
+2. **Kubernetes Memory Planning Hazard**:
+   - In containerized environments (Kubernetes), developers frequently set container limits based only on the JVM `-Xmx` setting (e.g. `limit: 4Gi`, `-Xmx3g`).
+   - Because RocksDB allocates native C++ memory for its Block Cache and MemTables outside the JVM, and the Linux kernel allocates Page Cache for SST files within the container cgroup, the total memory usage will exceed 4 GiB, triggering an **`OOMKilled` (Exit Code 137)** termination.
+   - **Production Sizing Formula**:
+     $$\text{Container Memory Limit} \ge \text{JVM Heap } (-Xmx) + \text{RocksDB Block Cache} + \text{MemTables} + \text{Page Cache Buffer (25--30\%)}$$
+
+
 ### State Store Types
 
 ```java
