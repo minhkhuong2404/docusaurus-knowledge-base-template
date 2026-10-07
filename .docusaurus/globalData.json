@@ -1236,6 +1236,81 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/blockchain/consensus/consensus-mechanisms",
+              "path": "/technical-knowledge/blockchain/consensus/consensus-mechanisms",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/defi/defi-amm-mev",
+              "path": "/technical-knowledge/blockchain/defi/defi-amm-mev",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/enterprise/permissioned-ledgers",
+              "path": "/technical-knowledge/blockchain/enterprise/permissioned-ledgers",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/fundamentals/cryptography-primitives",
+              "path": "/technical-knowledge/blockchain/fundamentals/cryptography-primitives",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/fundamentals/ledger-models",
+              "path": "/technical-knowledge/blockchain/fundamentals/ledger-models",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/fundamentals/what-is-blockchain",
+              "path": "/technical-knowledge/blockchain/fundamentals/what-is-blockchain",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/interview/blockchain-interview-questions",
+              "path": "/technical-knowledge/blockchain/interview/blockchain-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/intro",
+              "path": "/technical-knowledge/blockchain/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/platforms/bitcoin-internals",
+              "path": "/technical-knowledge/blockchain/platforms/bitcoin-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/platforms/ethereum-evm",
+              "path": "/technical-knowledge/blockchain/platforms/ethereum-evm",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/production/blockchain-production-engineering",
+              "path": "/technical-knowledge/blockchain/production/blockchain-production-engineering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/scaling/sharding-rollups-scaling",
+              "path": "/technical-knowledge/blockchain/scaling/sharding-rollups-scaling",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/smart-contracts/smart-contract-security",
+              "path": "/technical-knowledge/blockchain/smart-contracts/smart-contract-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/storage/ipfs-decentralized-storage",
+              "path": "/technical-knowledge/blockchain/storage/ipfs-decentralized-storage",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/web3/web3-architecture",
+              "path": "/technical-knowledge/blockchain/web3/web3-architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/coding-interview-prep/array/array",
               "path": "/technical-knowledge/coding-interview-prep/array/",
               "sidebar": "tutorialSidebar"

@@ -660,6 +660,72 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
+					label: '⛓️ Blockchain & Web3',
+					items: [
+						'technical-knowledge/blockchain/intro',
+						{
+							type: 'category',
+							label: '🌱 Fundamentals',
+							collapsed: false,
+							items: [
+								'technical-knowledge/blockchain/fundamentals/what-is-blockchain',
+								'technical-knowledge/blockchain/fundamentals/cryptography-primitives',
+								'technical-knowledge/blockchain/fundamentals/ledger-models'
+							]
+						},
+						{
+							type: 'category',
+							label: '🤝 Consensus',
+							collapsed: true,
+							items: ['technical-knowledge/blockchain/consensus/consensus-mechanisms']
+						},
+						{
+							type: 'category',
+							label: '🏗️ Platforms',
+							collapsed: true,
+							items: [
+								'technical-knowledge/blockchain/platforms/bitcoin-internals',
+								'technical-knowledge/blockchain/platforms/ethereum-evm'
+							]
+						},
+						{
+							type: 'category',
+							label: '📜 Smart Contracts & DeFi',
+							collapsed: true,
+							items: [
+								'technical-knowledge/blockchain/smart-contracts/smart-contract-security',
+								'technical-knowledge/blockchain/defi/defi-amm-mev'
+							]
+						},
+						{
+							type: 'category',
+							label: '🌐 Web3, Scaling & Storage',
+							collapsed: true,
+							items: [
+								'technical-knowledge/blockchain/web3/web3-architecture',
+								'technical-knowledge/blockchain/scaling/sharding-rollups-scaling',
+								'technical-knowledge/blockchain/storage/ipfs-decentralized-storage'
+							]
+						},
+						{
+							type: 'category',
+							label: '🏢 Enterprise & Production',
+							collapsed: true,
+							items: [
+								'technical-knowledge/blockchain/enterprise/permissioned-ledgers',
+								'technical-knowledge/blockchain/production/blockchain-production-engineering'
+							]
+						},
+						{
+							type: 'category',
+							label: '🎯 Interview Prep',
+							collapsed: true,
+							items: ['technical-knowledge/blockchain/interview/blockchain-interview-questions']
+						}
+					]
+				},
+				{
+					type: 'category',
 					label: '📨 Kafka',
 					items: [
 						'technical-knowledge/kafka/intro',

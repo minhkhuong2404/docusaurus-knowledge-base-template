@@ -84,11 +84,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'baa'),
+    component: ComponentCreator('/', '54c'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '0a4'),
+        component: ComponentCreator('/', 'c48'),
         routes: [
           {
             path: '/tags',
@@ -876,6 +876,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/bitcoin',
+            component: ComponentCreator('/tags/bitcoin', '12c'),
+            exact: true
+          },
+          {
             path: '/tags/bitmap',
             component: ComponentCreator('/tags/bitmap', 'f60'),
             exact: true
@@ -898,6 +903,11 @@ export default [
           {
             path: '/tags/blob',
             component: ComponentCreator('/tags/blob', '44b'),
+            exact: true
+          },
+          {
+            path: '/tags/blockchain',
+            component: ComponentCreator('/tags/blockchain', 'a22'),
             exact: true
           },
           {
@@ -2386,6 +2396,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/defi',
+            component: ComponentCreator('/tags/defi', '77b'),
+            exact: true
+          },
+          {
             path: '/tags/delegation',
             component: ComponentCreator('/tags/delegation', 'fb6'),
             exact: true
@@ -2896,6 +2911,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/enterprise',
+            component: ComponentCreator('/tags/enterprise', '06a'),
+            exact: true
+          },
+          {
             path: '/tags/entities',
             component: ComponentCreator('/tags/entities', 'e29'),
             exact: true
@@ -2981,6 +3001,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/ethereum',
+            component: ComponentCreator('/tags/ethereum', '1be'),
+            exact: true
+          },
+          {
             path: '/tags/etl',
             component: ComponentCreator('/tags/etl', '27c'),
             exact: true
@@ -3048,6 +3073,11 @@ export default [
           {
             path: '/tags/eviction',
             component: ComponentCreator('/tags/eviction', 'd17'),
+            exact: true
+          },
+          {
+            path: '/tags/evm',
+            component: ComponentCreator('/tags/evm', 'f7d'),
             exact: true
           },
           {
@@ -3891,6 +3921,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/hyperledger',
+            component: ComponentCreator('/tags/hyperledger', '915'),
+            exact: true
+          },
+          {
             path: '/tags/hyperloglog',
             component: ComponentCreator('/tags/hyperloglog', '425'),
             exact: true
@@ -4233,6 +4268,11 @@ export default [
           {
             path: '/tags/ipc',
             component: ComponentCreator('/tags/ipc', '14d'),
+            exact: true
+          },
+          {
+            path: '/tags/ipfs',
+            component: ComponentCreator('/tags/ipfs', 'f52'),
             exact: true
           },
           {
@@ -5163,6 +5203,11 @@ export default [
           {
             path: '/tags/metrics',
             component: ComponentCreator('/tags/metrics', '71f'),
+            exact: true
+          },
+          {
+            path: '/tags/mev',
+            component: ComponentCreator('/tags/mev', '1c1'),
             exact: true
           },
           {
@@ -7036,6 +7081,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/rollups',
+            component: ComponentCreator('/tags/rollups', '388'),
+            exact: true
+          },
+          {
             path: '/tags/rotation',
             component: ComponentCreator('/tags/rotation', '2aa'),
             exact: true
@@ -7538,6 +7588,11 @@ export default [
           {
             path: '/tags/slow-query',
             component: ComponentCreator('/tags/slow-query', 'cdc'),
+            exact: true
+          },
+          {
+            path: '/tags/smart-contracts',
+            component: ComponentCreator('/tags/smart-contracts', '771'),
             exact: true
           },
           {
@@ -8836,6 +8891,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/web-3',
+            component: ComponentCreator('/tags/web-3', '5c4'),
+            exact: true
+          },
+          {
             path: '/tags/web-flux',
             component: ComponentCreator('/tags/web-flux', 'aa0'),
             exact: true
@@ -9122,7 +9182,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '6da'),
+            component: ComponentCreator('/', 'fd0'),
             routes: [
               {
                 path: '/aws',
@@ -10783,6 +10843,96 @@ export default [
               {
                 path: '/technical-knowledge/become-senior-developer/7-coding-laws',
                 component: ComponentCreator('/technical-knowledge/become-senior-developer/7-coding-laws', 'a51'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/consensus/consensus-mechanisms',
+                component: ComponentCreator('/technical-knowledge/blockchain/consensus/consensus-mechanisms', '52d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/defi/defi-amm-mev',
+                component: ComponentCreator('/technical-knowledge/blockchain/defi/defi-amm-mev', '056'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/enterprise/permissioned-ledgers',
+                component: ComponentCreator('/technical-knowledge/blockchain/enterprise/permissioned-ledgers', 'c60'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/fundamentals/cryptography-primitives',
+                component: ComponentCreator('/technical-knowledge/blockchain/fundamentals/cryptography-primitives', '702'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/fundamentals/ledger-models',
+                component: ComponentCreator('/technical-knowledge/blockchain/fundamentals/ledger-models', '40b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/fundamentals/what-is-blockchain',
+                component: ComponentCreator('/technical-knowledge/blockchain/fundamentals/what-is-blockchain', '3cc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/interview/blockchain-interview-questions',
+                component: ComponentCreator('/technical-knowledge/blockchain/interview/blockchain-interview-questions', '2c2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/intro',
+                component: ComponentCreator('/technical-knowledge/blockchain/intro', '346'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/platforms/bitcoin-internals',
+                component: ComponentCreator('/technical-knowledge/blockchain/platforms/bitcoin-internals', '363'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/platforms/ethereum-evm',
+                component: ComponentCreator('/technical-knowledge/blockchain/platforms/ethereum-evm', '98a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/production/blockchain-production-engineering',
+                component: ComponentCreator('/technical-knowledge/blockchain/production/blockchain-production-engineering', '47e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/scaling/sharding-rollups-scaling',
+                component: ComponentCreator('/technical-knowledge/blockchain/scaling/sharding-rollups-scaling', 'ac9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/smart-contracts/smart-contract-security',
+                component: ComponentCreator('/technical-knowledge/blockchain/smart-contracts/smart-contract-security', '6fb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/storage/ipfs-decentralized-storage',
+                component: ComponentCreator('/technical-knowledge/blockchain/storage/ipfs-decentralized-storage', 'e0b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/blockchain/web3/web3-architecture',
+                component: ComponentCreator('/technical-knowledge/blockchain/web3/web3-architecture', '2f3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

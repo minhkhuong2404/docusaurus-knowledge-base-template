@@ -23,6 +23,8 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'NearbyFriendsDiagram.tsx',
     'DigitalWalletLedgerDiagram.tsx',
     'StockExchangeMatchingDiagram.tsx',
+    'BlockchainCoreDiagram.tsx',
+    'BlockchainScalingDiagram.tsx',
     'LlmTrainingAndJevDiagram.tsx',
     'LlmTrainingPipelineDiagram.tsx',
     'RlvrVerificationFlowDiagram.tsx',

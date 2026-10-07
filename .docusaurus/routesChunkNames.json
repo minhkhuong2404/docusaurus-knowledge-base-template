@@ -104,13 +104,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-baa": {
+  "/-54c": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-0a4": {
+  "/-c48": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -742,6 +742,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-bit-manipulation-82-d-c36"
   },
+  "/tags/bitcoin-12c": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-bitcoin-828-741"
+  },
   "/tags/bitmap-f60": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-bitmap-89-c-251"
@@ -761,6 +765,10 @@
   "/tags/blob-44b": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-blobad-6-5e5"
+  },
+  "/tags/blockchain-a22": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-blockchain-2-c-2-da7"
   },
   "/tags/blocking-dd9": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1950,6 +1958,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-deferring-decisions-257-39a"
   },
+  "/tags/defi-77b": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-defi-151-d59"
+  },
   "/tags/delegation-fb6": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-delegation-533-1f0"
@@ -2358,6 +2370,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-enhanced-client-5-f-4-5fd"
   },
+  "/tags/enterprise-06a": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-enterprise-0-eb-ad6"
+  },
   "/tags/entities-e29": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-entities-352-e90"
@@ -2426,6 +2442,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-etcd-2-cd-74e"
   },
+  "/tags/ethereum-1be": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-ethereum-778-c91"
+  },
   "/tags/etl-27c": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-etl-5-e-9-898"
@@ -2481,6 +2501,10 @@
   "/tags/eviction-d17": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-eviction-426-314"
+  },
+  "/tags/evm-f7d": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-evm-1-be-82f"
   },
   "/tags/exactly-once-32b": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -3154,6 +3178,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-hygienee-18-9bb"
   },
+  "/tags/hyperledger-915": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-hyperledgera-17-64a"
+  },
   "/tags/hyperloglog-425": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-hyperloglog-457-f2e"
@@ -3429,6 +3457,10 @@
   "/tags/ipc-14d": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-ipc-981-387"
+  },
+  "/tags/ipfs-f52": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-ipfs-0-c-8-7d3"
   },
   "/tags/ipm-a5b": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -4173,6 +4205,10 @@
   "/tags/metrics-71f": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-metrics-86-c-f78"
+  },
+  "/tags/mev-1c1": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-meve-61-e4a"
   },
   "/tags/mfa-88e": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -5670,6 +5706,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-rolling-updated-47-118"
   },
+  "/tags/rollups-388": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-rollups-4-b-3-d15"
+  },
   "/tags/rotation-2aa": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-rotation-18-f-b3f"
@@ -6073,6 +6113,10 @@
   "/tags/slow-query-cdc": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-slow-querye-26-41b"
+  },
+  "/tags/smart-contracts-771": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-smart-contractsdf-3-489"
   },
   "/tags/smr-945": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -7110,6 +7154,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-webe-2-c-763"
   },
+  "/tags/web-3-5c4": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-web-3-f-78-823"
+  },
   "/tags/web-flux-aa0": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-web-fluxfaa-042"
@@ -7338,7 +7386,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-6da": {
+  "/-fd0": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -8448,6 +8496,66 @@
   "/technical-knowledge/become-senior-developer/7-coding-laws-a51": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-become-senior-developer-7-coding-laws-2-cf-a90"
+  },
+  "/technical-knowledge/blockchain/consensus/consensus-mechanisms-52d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-consensus-consensus-mechanisms-8-a-6-488"
+  },
+  "/technical-knowledge/blockchain/defi/defi-amm-mev-056": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-defi-defi-amm-mevfcb-485"
+  },
+  "/technical-knowledge/blockchain/enterprise/permissioned-ledgers-c60": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-enterprise-permissioned-ledgersd-12-26e"
+  },
+  "/technical-knowledge/blockchain/fundamentals/cryptography-primitives-702": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-fundamentals-cryptography-primitivesbfd-dcd"
+  },
+  "/technical-knowledge/blockchain/fundamentals/ledger-models-40b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-fundamentals-ledger-models-6-ee-b63"
+  },
+  "/technical-knowledge/blockchain/fundamentals/what-is-blockchain-3cc": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-fundamentals-what-is-blockchain-7-e-4-3e4"
+  },
+  "/technical-knowledge/blockchain/interview/blockchain-interview-questions-2c2": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-interview-blockchain-interview-questionsbbc-457"
+  },
+  "/technical-knowledge/blockchain/intro-346": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-intro-845-f2a"
+  },
+  "/technical-knowledge/blockchain/platforms/bitcoin-internals-363": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-platforms-bitcoin-internalsa-66-c2e"
+  },
+  "/technical-knowledge/blockchain/platforms/ethereum-evm-98a": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-platforms-ethereum-evm-0-af-a9b"
+  },
+  "/technical-knowledge/blockchain/production/blockchain-production-engineering-47e": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-production-blockchain-production-engineering-302-b17"
+  },
+  "/technical-knowledge/blockchain/scaling/sharding-rollups-scaling-ac9": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-scaling-sharding-rollups-scaling-843-04c"
+  },
+  "/technical-knowledge/blockchain/smart-contracts/smart-contract-security-6fb": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-smart-contracts-smart-contract-securityf-8-d-3b1"
+  },
+  "/technical-knowledge/blockchain/storage/ipfs-decentralized-storage-e0b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-storage-ipfs-decentralized-storagea-49-d1b"
+  },
+  "/technical-knowledge/blockchain/web3/web3-architecture-2f3": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-blockchain-web-3-web-3-architecturee-28-15a"
   },
   "/technical-knowledge/coding-interview-prep/array/-304": {
     "__comp": "__comp---theme-doc-item-178-a40",
