@@ -1,8 +1,8 @@
 {
-  "id": "1111",
-  "title": "Maximum Nesting Depth of Two Valid Parentheses Strings",
-  "url": "https://leetcode.com/problems/maximum-nesting-depth-of-two-valid-parentheses-strings/",
+  "id": "921",
+  "title": "Minimum Add to Make Parentheses Valid",
+  "url": "https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/",
   "difficulty": "medium",
-  "topic": "String, Stack, Bracket Sequences",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-30."
+  "topic": "String, Stack, Greedy, Bracket Sequences",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-10-06."
 }

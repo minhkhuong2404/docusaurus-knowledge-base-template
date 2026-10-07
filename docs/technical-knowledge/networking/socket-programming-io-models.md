@@ -264,6 +264,6 @@ socket.setReceiveBufferSize(65536);  // SO_RCVBUF: receive buffer size
 
 ---
 
-:::tip Master Architecture Guide
+:::tip[Master Architecture Guide]
 For a complete conceptual breakdown comparing **Sync vs Async**, **Blocking vs Non-blocking (the 2×2 Matrix)**, **Concurrency vs Parallelism**, and **Async vs Multi-threading Models** with interactive diagrams, see the master guide: [Concurrency, Asynchrony, Blocking & Threading Models](../system-design/concurrency-async-threading-models.md).
 :::

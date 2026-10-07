@@ -75,7 +75,7 @@ Recursive DNS Resolution Hierarchy:
 - **`TXT`**: Arbitrary text used for domain verification, **SPF** (Sender Policy Framework), and **DKIM** public keys.
 - **`PTR`**: Reverse DNS lookup mapping IP addresses back to domain names.
 
-:::warning Production DNS Gotcha: JVM Caching
+:::warning[Production DNS Gotcha: JVM Caching]
 By default, the Java Virtual Machine (`InetAddress`) caches successful DNS lookups **indefinitely** (forever) if a security manager is active, or for 30 seconds. During cloud IP migrations, Java apps will continue routing traffic to obsolete IPs. Always set `networkaddress.cache.ttl=60` in `$JAVA_HOME/conf/security/java.security`.
 :::
 

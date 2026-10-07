@@ -30,7 +30,7 @@ In distributed stream processing, network failures, timeouts, and broker restart
 | **At-least-once** | `acks=all`, `retries > 0`. | Duplicate delivery possible. | Standard business events with idempotent consumer handling. |
 | **Exactly-once (EOS)** | Idempotence + Kafka Transactions + `read_committed`. | No loss, no duplicates. | Financial ledger processing, payment gateways, inventory state. |
 
-:::tip For newcomers
+:::tip[For newcomers]
 Picture a producer sending a record and waiting for the broker's "got it" acknowledgment. If that acknowledgment gets lost on the way back — not the original record, just the reply — the producer has no way to know whether the broker actually received it. **At-most-once** says "I won't resend, so if that happened, the message is just gone." **At-least-once** says "I'll resend to be safe," which means the broker might now have two copies. **Exactly-once** is Kafka's answer to "can we get the safety of resending without the risk of duplicates?" — and the answer, as this page explains, is yes, but only through a specific combination of mechanisms, not through any single setting.
 :::
 

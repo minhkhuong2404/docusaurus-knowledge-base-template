@@ -49,11 +49,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '455'),
+    component: ComponentCreator('/', '058'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'e62'),
+        component: ComponentCreator('/', 'e27'),
         routes: [
           {
             path: '/tags',
@@ -8987,7 +8987,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '63f'),
+            component: ComponentCreator('/', '338'),
             routes: [
               {
                 path: '/aws',
@@ -16177,7 +16177,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-streams-deep-dive',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-streams-deep-dive', 'e52'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-streams-deep-dive', 'de1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16243,7 +16243,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-broker',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-broker', '117'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-broker', '666'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16272,7 +16272,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-zero-copy-page-cache',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-zero-copy-page-cache', 'c24'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-zero-copy-page-cache', 'd81'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

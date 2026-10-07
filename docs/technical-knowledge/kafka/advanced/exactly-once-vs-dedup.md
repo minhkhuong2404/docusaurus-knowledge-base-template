@@ -68,7 +68,7 @@ Every messaging system picks one of three delivery guarantees. It's important to
 | **At-least-once** | Message delivered one or more times | Duplicates on retry — never silent loss | Kafka default consumer, SQS standard queues, RabbitMQ with manual ACK |
 | **Exactly-once** | Message has the *effect* of being delivered precisely once | Requires coordination between producer, broker, and consumer state | Kafka `EXACTLY_ONCE_V2` (within Kafka's boundary only) |
 
-:::tip For newcomers
+:::tip[For newcomers]
 Think of these as three answers to "what happens if I don't hear back after mailing a letter?" **At-most-once** is "I won't resend it — if it got lost, it's lost." **At-least-once** is "I'll keep resending copies until someone confirms receipt" — which means the recipient might get several copies of the same letter. **Exactly-once** is "the recipient's mailbox is built so that even if they receive five copies, they only *act on* it once" — the guarantee isn't that only one copy is delivered, it's that duplicates don't change the outcome.
 :::
 

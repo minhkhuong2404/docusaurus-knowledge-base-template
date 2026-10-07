@@ -20,7 +20,8 @@ const STANDARD_GLOBALS = new Set([
   'FormData', 'Symbol', 'Proxy', 'Reflect', 'Intl', 'encodeURIComponent',
   'decodeURIComponent', 'encodeURI', 'decodeURI', 'requestAnimationFrame',
   'cancelAnimationFrame', 'HTMLCanvasElement', 'CanvasRenderingContext2D',
-  'TextEncoder', 'TextDecoder'
+  'TextEncoder', 'TextDecoder', 'AudioContext', 'webkitAudioContext',
+  'SpeechSynthesisUtterance', 'SpeechSynthesisVoice', 'speechSynthesis'
 ]);
 
 /**

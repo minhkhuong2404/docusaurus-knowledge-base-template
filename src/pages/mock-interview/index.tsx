@@ -57,6 +57,22 @@ export default function MockInterviewPage(): React.JSX.Element {
           </div>
 
           <MockInterviewStudio />
+
+          {/* Educational Disclaimer Footer Note */}
+          <div
+            style={{
+              marginTop: '32px',
+              padding: '16px 20px',
+              borderRadius: '12px',
+              background: 'var(--ifm-card-background-color, #ffffff)',
+              border: '1px solid var(--ifm-color-emphasis-300, #98A2B3)',
+              textAlign: 'center'
+            }}
+          >
+            <div style={{ fontSize: '12.5px', color: 'var(--ifm-color-content-secondary, #64748b)', lineHeight: 1.6 }}>
+              ⚖️ <strong>Tuyên bố miễn trừ trách nhiệm (Educational Disclaimer):</strong> Mọi nội dung, câu hỏi, định dạng và đánh giá trong phòng phỏng vấn thử đều mang tính chất học tập & tham khảo, không đại diện hoặc phản ánh chính xác 100% quy trình tuyển dụng thực tế của bất kỳ doanh nghiệp nào.
+            </div>
+          </div>
         </div>
       </div>
     </Layout>

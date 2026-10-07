@@ -33,6 +33,8 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'BankingCardPaymentFlowDiagram.tsx',
     'BankingFinCrimeFraudDiagram.tsx',
     'JavaObjectLayoutDiagram.tsx',
+    'HttpMethodSemanticsDiagram.tsx',
+    'IdempotencyDeduplicationConsistencyDiagram.tsx',
   ];
 
   for (const filename of criticalDiagrams) {

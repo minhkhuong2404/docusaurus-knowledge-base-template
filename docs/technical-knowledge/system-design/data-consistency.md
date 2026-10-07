@@ -7,6 +7,7 @@ tags: [consistency, linearizability, causal-consistency, session-guarantees, eve
 ---
 
 import ConsistencyModelsDiagram from '@site/src/components/ConsistencyModelsDiagram';
+import IdempotencyDeduplicationConsistencyDiagram from '@site/src/components/IdempotencyDeduplicationConsistencyDiagram';
 
 # Data Consistency & Transactions
 
@@ -546,35 +547,173 @@ Read repair strategy:
 
 ---
 
-## Idempotency Patterns
+## Idempotency & Deduplication Architecture
 
-### Database Constraint
+<IdempotencyDeduplicationConsistencyDiagram />
+
+### The Critical Architectural Difference: Idempotency vs. Deduplication
+
+Software engineers frequently conflate **idempotency** with **deduplication**. While they often collaborate, they operate at completely different layers of the distributed stack:
+
+```
+Ingress Layer (Network / Gateway)
+  ├── 1. Deduplication Filter (Redis SETNX / Token Ring / In-Memory Filter)
+  │     └─ Drops high-frequency duplicate packets within time window Δt (60s)
+  │
+Core Execution Layer (Domain Service / Ledger)
+  └── 2. Idempotency State Machine (PostgreSQL / Distributed Consensus)
+        ├─ Mathematical invariant: f(f(x)) = f(x)
+        ├─ Validates SHA-256 payload canonical fingerprint
+        ├─ Stores execution state: PENDING ➔ COMPLETED
+        └─ Returns identical cached response payload without re-executing
+```
+
+| Dimension | Deduplication Mechanism | Idempotency Engine |
+|---|---|---|
+| **Mathematical Definition** | Filter duplicate tokens: Discard/reject duplicate events observed within time window $\Delta t$. | Functional property: $f(f(x)) = f(x)$. Applying operation $N \ge 1$ times produces the identical state. |
+| **Architectural Layer** | Edge API Gateway, Reverse Proxy, Message Consumer filter. | Domain Application Service, Ledger Engine, Database unique index. |
+| **State Retention Lifetime** | Ephemeral ($60\text{ seconds}$ to $1\text{ hour}$) in fast in-memory cache (Redis). | Durable ($24\text{ hours}$ to $90\text{ days}$, or permanent database record). |
+| **Duplicate Response** | HTTP `409 Conflict`, `429 Too Many Requests`, or silent message acknowledgment. | Replays the stored original HTTP `200/201` response body and headers verbatim. |
+| **Payload Tampering Defense** | Checks only key/message ID; does not inspect modified payload bytes. | Computes SHA-256 payload digest; halts immediately on key-reuse with altered parameters. |
+| **Crash Invariant** | If cache restarts without persistence, duplicate message slips through. | Backed by transactional ACID database constraints; cannot be breached by cache failure. |
+
+---
+
+### End-to-End Idempotency State Machine Implementation
+
+In high-reliability enterprise systems, an idempotency engine must handle four distinct concurrency branches:
+1. **First-time Execution (Happy Path)**: Acquire in-flight lock, write `PENDING`, execute business mutation, write `COMPLETED` + cached response, release lock.
+2. **Concurrent In-Flight Retry (Race Condition)**: Second request arrives while request #1 is still committing. Lock fails, state is `PENDING`. Gateway returns `409 Conflict` or `425 Too Early` with `Retry-After` header.
+3. **Completed Duplicate Replay (Safe Replay)**: Key exists with status `COMPLETED` and payload digest matches. System returns original cached response with `X-Cache-Lookup: HIT-IDEMPOTENT`.
+4. **Key Hijacking / Payload Mismatch Attack**: Key matches existing record, but payload digest differs. System aborts with `409 Conflict` (`IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD`).
 
 ```sql
--- Natural idempotency via UNIQUE constraint
-CREATE TABLE processed_payments (
-    idempotency_key VARCHAR(100) PRIMARY KEY,
-    payment_id BIGINT NOT NULL,
-    result JSONB NOT NULL,
-    processed_at TIMESTAMPTZ NOT NULL
+-- Production Idempotency Ledger Table Schema
+CREATE TABLE idempotency_records (
+    idempotency_key      VARCHAR(128) PRIMARY KEY,
+    payload_hash         CHAR(64) NOT NULL,             -- SHA-256 of canonical JSON
+    status               VARCHAR(32) NOT NULL,          -- 'PROCESSING', 'COMPLETED', 'FAILED'
+    http_status_code     INTEGER,                       -- e.g. 201, 200
+    response_headers     JSONB,                         -- Serialized headers
+    response_body        JSONB,                         -- Serialized response payload
+    locked_until         TIMESTAMPTZ NOT NULL,          -- Recovery lease timestamp
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- On duplicate: INSERT ... ON CONFLICT DO NOTHING
+CREATE INDEX idx_idempotency_locked ON idempotency_records (locked_until) WHERE status = 'PROCESSING';
 ```
-
-### Application-Level
 
 ```java
-public PaymentResult processPayment(PaymentRequest req) {
-    return processedRepo.findByKey(req.getIdempotencyKey())
-        .map(p -> p.getResult()) // Return cached result
-        .orElseGet(() -> {
-            PaymentResult result = doProcess(req);
-            processedRepo.save(new ProcessedPayment(req.getIdempotencyKey(), result));
-            return result;
-        });
+@Service
+public class IdempotentPaymentService {
+
+    private final IdempotencyRepository idempRepo;
+    private final LedgerService ledgerService;
+
+    @Transactional
+    public PaymentResponse executePayment(String idempotencyKey, PaymentRequest request) {
+        String payloadHash = Hashing.sha256(canonicalize(request));
+        
+        // 1. Check existing record with pessimistic row lock
+        Optional<IdempotencyRecord> existing = idempRepo.findByKeyForUpdate(idempotencyKey);
+        
+        if (existing.isPresent()) {
+            IdempotencyRecord record = existing.get();
+            
+            // Branch 4: Payload mismatch security check
+            if (!record.getPayloadHash().equals(payloadHash)) {
+                throw new IdempotencyPayloadMismatchException(
+                    "Idempotency-Key reused with different request payload!"
+                );
+            }
+            
+            // Branch 3: Safe replay of cached result
+            if ("COMPLETED".equals(record.getStatus())) {
+                return PaymentResponse.fromCached(record.getHttpStatusCode(), record.getResponseBody());
+            }
+            
+            // Branch 2: In-flight execution check
+            if ("PROCESSING".equals(record.getStatus()) && record.getLockedUntil().isAfter(Instant.now())) {
+                throw new ConcurrentRequestInProgressException("Request is currently being processed. Retry shortly.");
+            }
+        }
+
+        // Branch 1: Claim processing rights
+        IdempotencyRecord record = existing.orElseGet(() -> new IdempotencyRecord(idempotencyKey, payloadHash));
+        record.setStatus("PROCESSING");
+        record.setLockedUntil(Instant.now().plusSeconds(60)); // 60-second lease
+        idempRepo.saveAndFlush(record);
+
+        // 2. Execute business mutation inside same ACID boundary
+        PaymentResult result = ledgerService.transferFunds(request.getFromAccount(), request.getToAccount(), request.getAmount());
+
+        // 3. Mark completed and store serialized response
+        record.setStatus("COMPLETED");
+        record.setHttpStatusCode(201);
+        record.setResponseBody(result.toJson());
+        record.setLockedUntil(Instant.now().plus(7, ChronoUnit.DAYS)); // 7-day retention
+        idempRepo.save(record);
+
+        return PaymentResponse.created(result);
+    }
 }
 ```
+
+---
+
+### Strong Consistency vs. Eventual Consistency: Deep-Dive
+
+When state is mutated across distributed storage nodes, systems must navigate the CAP/PACELC trade-off between **Strong Consistency** and **Eventual Consistency**.
+
+```
+                         ┌─────────────────────────────────────────────────────────┐
+                         │ Distributed Consistency Spectrum (Herlihy & Wing, 1990) │
+                         └─────────────────────────────────────────────────────────┘
+                                                      │
+         ┌────────────────────────────────────────────┴───────────────────────────────────────────┐
+         ▼                                                                                        ▼
+┌─────────────────────────────────┐                                              ┌─────────────────────────────────┐
+│ Strong Consistency              │                                              │ Eventual Consistency            │
+│ (Linearizability)               │                                              │ (BASE / Asynchronous)           │
+├─────────────────────────────────┤                                              ├─────────────────────────────────┤
+│ • Real-time global total order  │                                              │ • Zero coordination on writes   │
+│ • R + W > N quorum or Raft lease│                                              │ • Replicas converge over time   │
+│ • CP in CAP theorem             │                                              │ • AP in CAP theorem             │
+│ • High latency (majority round) │                                              │ • Sub-millisecond write latency │
+│ • Prevents double-spend/oversell│                                              │ • Susceptible to stale reads    │
+└─────────────────────────────────┘                                              └─────────────────────────────────┘
+```
+
+#### 1. Strong Consistency (Linearizability & Serializability)
+
+- **Linearizability**: A real-time data-centric contract. If write $W$ finishes at wall-clock time $t_0$, any read $R$ initiated by **any client anywhere in the world** at $t_1 > t_0$ is guaranteed to see $W$ or a newer write.
+- **Under-the-Hood Mechanics**:
+  - **Consensus Quorums**: Implemented via **Raft** or **Multi-Paxos**. A write requires an acknowledged majority ($\lfloor N/2 \rfloor + 1$).
+  - **Preventing Stale Reads via Leader Leases**: Even on a primary node, a naive read can return stale data if the leader is partitioned (split-brain zombie leader). Strong engines perform either a **Quorum Read** (polling a majority of followers before answering) or require an active **Leader Clock Lease** (guaranteed safe by TrueTime or bounded clock drift).
+- **Production Systems**: Google Cloud Spanner (TrueTime synchronized atomic clocks), `etcd` (Kubernetes state store), Apache ZooKeeper (`sync()` + read), CockroachDB.
+
+#### 2. Eventual Consistency (BASE)
+
+- **Eventual Consistency**: A liveness guarantee. The system promises that if no new updates are made to an object, all replicas will eventually synchronize and return identical data. It makes **zero promises** about the path taken to reach convergence.
+- **Under-the-Hood Mechanics**:
+  - **Asynchronous Replication**: Writes are committed locally on a single primary node and queued into an asynchronous write-ahead log stream (MySQL binlog, PostgreSQL streaming replication).
+  - **Gossip Protocols & Anti-Entropy**: Nodes periodically exchange digest trees (Merkle trees) to identify and repair divergent key ranges.
+  - **Conflict Resolution**: Multi-master writes require deterministic convergence rules:
+    1. *Last-Write-Wins (LWW)*: Replaces conflicting state based on highest wall-clock timestamp. **Risk**: Wall-clock skew permanently deletes legitimate writes.
+    2. *Vector Clocks / Version Vectors*: Tracks causal causality to detect concurrent edits.
+    3. *CRDTs (Conflict-free Replicated Data Types)*: Mathematically proven data structures (G-Counter, PN-Counter, ORSet) that commute automatically under join operations ($\sqcup$).
+- **Production Systems**: Amazon DynamoDB (default reads), Apache Cassandra, Amazon S3 (prior to Dec 2020), Couchbase, Riak KV.
+
+#### 3. Side-by-Side Trade-off Matrix
+
+| Metric / Dimension | Strong Consistency (Linearizable) | Eventual Consistency (BASE) |
+|---|---|---|
+| **Write Latency** | $15\text{--}80\text{ ms}$ (Requires consensus majority network roundtrips) | $0.5\text{--}3\text{ ms}$ (Returns immediately upon local memory/WAL write) |
+| **Network Partition (P)** | **CP Mode**: Blocks writes/reads if majority quorum cannot be reached. | **AP Mode**: Accepts local writes on both sides of partition; resolves later. |
+| **Read Stale Window** | **$0\text{ ms}$** (Strictly non-existent) | Unbounded ($\approx 10\text{ ms}$ up to seconds during network congestion). |
+| **Development Complexity** | Low (System acts like a single logical database). | High (Engineers must handle out-of-order events, time travel, and retries). |
+| **Ideal Business Domains** | Payment ledgers, inventory reservation, auth tokens, flight seat allocation. | Social feeds, analytics event streaming, product reviews, user presence status. |
 
 ---
 

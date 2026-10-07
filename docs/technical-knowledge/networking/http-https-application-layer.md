@@ -19,6 +19,7 @@ import CertChainDiagram from '@site/src/components/CertChainDiagram';
 import CorsDiagram from '@site/src/components/CorsDiagram';
 import HttpStatusCodesDiagram from '@site/src/components/HttpStatusCodesDiagram';
 import HttpHeadersDiagram from '@site/src/components/HttpHeadersDiagram';
+import HttpMethodSemanticsDiagram from '@site/src/components/HttpMethodSemanticsDiagram';
 import ProductionChecklistDiagram from '@site/src/components/ProductionChecklistDiagram';
 
 # HTTP, HTTPS & Application Layer
@@ -66,333 +67,479 @@ Think of it like a physical letter:
 
 ---
 
-## HTTP Methods In Depth
+## HTTP Methods In Depth (RFC 9110 & RFC 5789)
 
-HTTP methods (also called "verbs") tell the server **what action to perform** on a resource. Each method has a defined contract around safety and idempotency.
+HTTP request methods (verbs) define the **operational semantics applied to a target resource**. In enterprise distributed architectures, choosing and implementing these methods correctly is not merely a stylistic convention—it dictates **cacheability at CDN edge layers, proxy connection pooling, safe automated retry policies in service meshes, and distributed concurrency controls**.
 
-### Understanding Safety and Idempotency
-
-These two properties are critical for designing resilient APIs and clients.
-
-**Safe** means the request does not change server state. Safe methods can be cached, prefetched, and retried freely.
-
-**Idempotent** means calling the same request N times has the same effect as calling it once. Idempotent requests can be safely retried on network failure without risk of duplicate side effects.
-
-```
-Example: DELETE /orders/42
-
-First call:  order exists → deleted → 200 OK
-Second call: order gone → 404 Not Found
-
-The server state is the same after both calls (order is gone).
-→ DELETE is idempotent even though the response code differs.
-```
-
-| Method    | Safe | Idempotent | Has Body | Primary Use                               |
-| --------- | ---- | ---------- | -------- | ----------------------------------------- |
-| `GET`     | ✅    | ✅          | ❌        | Read / retrieve a resource                |
-| `HEAD`    | ✅    | ✅          | ❌        | Read headers only (no body)               |
-| `OPTIONS` | ✅    | ✅          | ❌        | Discover allowed methods / CORS preflight |
-| `DELETE`  | ❌    | ✅          | Rarely   | Remove a resource                         |
-| `PUT`     | ❌    | ✅          | ✅        | Replace a resource entirely               |
-| `PATCH`   | ❌    | ❌*         | ✅        | Partially update a resource               |
-| `POST`    | ❌    | ❌          | ✅        | Create a resource, trigger an action      |
-| `CONNECT` | ❌    | ❌          | —        | Establish a TCP tunnel (proxy)            |
-
-*PATCH *can* be designed to be idempotent (e.g., `SET field=value`) or non-idempotent (e.g., `INCREMENT field by 1`). The HTTP spec leaves this to the implementation.
+<HttpMethodSemanticsDiagram />
 
 ---
 
-### GET — Read a Resource
+### Mathematical Invariants: Safety & Idempotency
 
-Retrieves a representation of a resource. The most common method. **Never use GET to modify state.**
-
-```
-GET /api/products/42 HTTP/1.1
-Host: api.example.com
-Accept: application/json
-Authorization: Bearer <token>
-
-→ No body. All parameters go in the URL or query string.
-```
+RFC 9110 establishes two foundational properties that every distributed systems engineer must understand at a mathematical and operational level:
 
 ```
-GET /api/products?category=electronics&sort=price&page=2 HTTP/1.1
+┌────────────────────────────────────────────────────────────────────────┐
+│               SAFETY & IDEMPOTENCY OPERATIONAL CONTRACTS               │
+├─────────────────┬──────────────────────┬───────────────────────────────┤
+│ Property        │ Mathematical Formula │ Distributed System Guarantee  │
+├─────────────────┼──────────────────────┼───────────────────────────────┤
+│ Safe            │ f(S) = S             │ Origin state unchanged;       │
+│                 │                      │ Safe to prefetch & cache      │
+├─────────────────┼──────────────────────┼───────────────────────────────┤
+│ Idempotent      │ f(f(S)) = f(S)       │ N executions == 1 execution;  │
+│                 │                      │ Safe to retry on TCP/network  │
+│                 │                      │ timeout without side effects  │
+└─────────────────┴──────────────────────┴───────────────────────────────┘
 ```
 
-**Safe, idempotent** → browsers can prefetch GET requests, CDNs can cache them, load balancers can retry on failure.
-
-:::warning[Never use GET to modify state]
-`GET /api/orders/42/cancel` is a design error. If a browser or CDN prefetches that URL, the order gets cancelled silently. Use `POST /api/orders/42/cancel` or `DELETE /api/orders/42` instead.
-:::
-
-```java
-@GetMapping("/products/{id}")
-public ResponseEntity<Product> getProduct(@PathVariable Long id) {
-    return ResponseEntity.ok(productService.findById(id));
-}
-
-@GetMapping("/products")
-public ResponseEntity<Page<Product>> listProducts(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "20") int size,
-        @RequestParam(required = false) String category) {
-    return ResponseEntity.ok(productService.findAll(page, size, category));
-}
-```
-
-**Cacheability:** GET responses can be cached by browsers, CDNs, and proxies. Control this with `Cache-Control` headers.
-
-```
-HTTP/1.1 200 OK
-Cache-Control: public, max-age=3600   ← cache for 1 hour
-ETag: "d8e8fca2dc0f896f"             ← fingerprint for conditional requests
-```
+1. **Safety ($f(S) = S$)**:
+   - The origin server's target resource state does **not mutate**.
+   - *Operational Realism*: A safe request *may* produce ancillary server side effects—such as appending to audit access logs, incrementing promotional view counters, or evaluating rate-limit token buckets. RFC 9110 explicitly states that ancillary side-effects do not invalidate safety, provided they do not alter the target resource representation.
+2. **Idempotency ($f(f(S)) = f(S)$)**:
+   - Executing the request $N$ times ($N \ge 1$) produces the exact same server state as executing it once.
+   - *The Network Retry Contract*: If a client encounters a TCP reset, HTTP 503, or gateway timeout while calling an idempotent method (`GET`, `PUT`, `DELETE`, `HEAD`, `OPTIONS`), service meshes (like Envoy, Istio) and HTTP client libraries can **safely retry automatically** without application-level distributed locks.
 
 ---
 
-### POST — Create or Submit
+### Comprehensive Method Semantics Matrix
 
-Creates a new resource or triggers a server-side action. The response usually includes the newly created resource's URL in the `Location` header.
+| Method | Safe | Idempotent | RFC Spec | Request Body Wire Rule | Cacheable by Default? | Typical Status Codes | Distributed Concurrency Strategy |
+| :--- | :---: | :---: | :--- | :--- | :---: | :--- | :--- |
+| **`GET`** | ✅ | ✅ | RFC 9110 §9.3.1 | Forbidden / Ignored by proxies | ✅ (RFC 9111) | `200`, `206`, `304`, `404` | Conditional Headers (`If-None-Match`, `If-Modified-Since`) |
+| **`HEAD`** | ✅ | ✅ | RFC 9110 §9.3.2 | Forbidden / No body | ✅ (RFC 9111) | `200`, `304`, `404` | Metadata freshness validation |
+| **`POST`** | ❌ | ❌ | RFC 9110 §9.3.3 | Full Payload Required | Only with explicit `Cache-Control` | `201`, `202`, `200`, `204` | Distributed Idempotency Key (`Idempotency-Key` + Redis Lock) |
+| **`PUT`** | ❌ | ✅ | RFC 9110 §9.3.4 | Complete Resource Representation | ❌ (Invalidates cache) | `200`, `201`, `204`, `412` | Optimistic Concurrency Control (`If-Match: ETag`) |
+| **`PATCH`** | ❌ | ❌* | RFC 5789 | Delta / Patch Instructions | ❌ (Invalidates cache) | `200`, `204`, `409`, `422` | In-band CAS (`"op": "test"`) or `If-Match: ETag` |
+| **`DELETE`** | ❌ | ✅ | RFC 9110 §9.3.5 | Undefined semantics (Avoid) | ❌ (Invalidates cache) | `204`, `202`, `200`, `404` | Precondition check (`If-Match`) + Kafka Tombstones |
+| **`OPTIONS`**| ✅ | ✅ | RFC 9110 §9.3.7 | No Body | ❌ (Cached via `Access-Control-Max-Age`) | `204`, `200` | Stateless introspection |
 
-**Not idempotent** → retrying a POST may create duplicate resources. Always design APIs so clients don't need to retry blindly.
+*\*Note: PATCH is non-idempotent by default (e.g. array appends, numeric increments), but can be designed as idempotent when applying deterministic property sets or CAS test operations.*
 
+---
+
+### 1. GET — Retrieve a Resource Representation
+
+`GET` is the foundational read verb of the web. It retrieves the current representation of the target resource identified by the Request-URI.
+
+#### Physical Wire Framing & Payload Policy
+- **The Empty Body Rule**: RFC 9110 §9.3.1 specifies: *"A client SHOULD NOT generate content in a GET request unless it is made to a server that explicitly supports it."*
+- **Proxy/CDN Dropping Trap**: Intermediate proxies (NGINX, Envoy, HAProxy), AWS Application Load Balancers (ALB), and Cloudflare **routinely strip or reject GET requests containing a body** (returning `400 Bad Request` or routing the request without payload bytes).
+- **URI Length Limits**:
+  - RFC 9110 defines no protocol upper bound for URI length.
+  - Practical infrastructure bounds: Internet Explorer/Edge (~2,083 chars), Apache (`LimitRequestLine` 8,192 bytes), NGINX (`large_client_header_buffers` 8 KB), AWS ALB (16 KB total header buffer).
+  - Exceeding limits triggers `414 URI Too Long`. For complex filtering or massive geospatial polygon searches, enterprise APIs use `POST /search` or `REPORT` (RFC 3253).
+
+#### Conditional GET & Cache Validation
+To eliminate redundant payload transfer across high-latency WAN links, clients perform conditional GET requests using HTTP Entity Tags (ETags) or timestamps:
+
+```http
+GET /api/v2/products/42 HTTP/1.1
+Host: api.enterprise.com
+If-None-Match: "a8f3b-65c92e"
+If-Modified-Since: Tue, 06 Oct 2026 12:00:00 GMT
+
+→ Response (when unchanged):
+HTTP/1.1 304 Not Modified
+ETag: "a8f3b-65c92e"
+Cache-Control: public, max-age=3600, stale-while-revalidate=60
+(Zero body bytes transferred!)
 ```
+
+#### Byte-Range Streaming (`Range` & `206 Partial Content`)
+Modern video streaming players (HLS, DASH) and large file downloaders split multi-gigabyte files into discrete byte chunks using `GET` with the `Range` header:
+
+```http
+GET /media/lecture_4k.mp4 HTTP/1.1
+Range: bytes=0-1048575
+
+→ Response:
+HTTP/1.1 206 Partial Content
+Accept-Ranges: bytes
+Content-Range: bytes 0-1048575/524288000
+Content-Length: 1048576
+Content-Type: video/mp4
+
+[1 MB Binary Segment Data]
+```
+
+#### Senior Production Gotcha: The Prefetching Mutation Catastrophe
+```http
+// ⚠️ ANTI-PATTERN: NEVER mutate state via GET
+GET /api/accounts/42/deactivate HTTP/1.1
+```
+Web crawlers (Googlebot), aggressive browser link pre-fetchers, and chat message link unfurlers (Slack, Discord, Apple Messages) crawl URLs automatically. If state mutation is mapped to a `GET` endpoint, a single automated link unfurler can deactivate accounts, delete orders, or trigger catastrophic side effects!
+
+---
+
+### 2. POST — Resource Factory & Non-Idempotent Processing
+
+`POST` requests that the target resource process the payload representation according to the target's own specific semantics. It functions as a **resource creation factory**, a **data append pipeline**, or an **RPC command processor**.
+
+#### The Factory Pattern & Response Semantics
+When creating a resource, the target URI represents the **collection/factory** (`/orders`), while the newly minted entity receives its own distinct subordinate URI:
+
+```http
 POST /api/orders HTTP/1.1
+Host: api.enterprise.com
 Content-Type: application/json
 
-{"userId": 42, "items": [...], "total": 99.90}
+{"customerId": "cust_901", "currency": "USD", "items": [{"sku": "SKU_88", "qty": 2}]}
 
 → Response:
 HTTP/1.1 201 Created
-Location: /api/orders/1001     ← URL of the new resource
+Location: /api/orders/ord_550e8400
 Content-Type: application/json
 
-{"orderId": 1001, "status": "pending"}
+{"orderId": "ord_550e8400", "status": "PENDING", "created": "2026-10-07T12:00:00Z"}
 ```
 
-**POST for actions (RPC-style):**
+#### Asynchronous Processing (`202 Accepted`)
+For long-running background compute (e.g. video transcoding, financial reconciliation, or machine learning model generation), returning a synchronous 200/201 would exhaust HTTP gateway timeouts:
 
-POST is also the right method for actions that don't map cleanly to CRUD:
+```http
+POST /api/reports/annual-audit HTTP/1.1
+
+→ Response:
+HTTP/1.1 202 Accepted
+Location: /api/jobs/job_99812
+Retry-After: 30
+Content-Type: application/json
+
+{"jobId": "job_99812", "status": "QUEUED", "pollUrl": "/api/jobs/job_99812"}
+```
+
+#### Distributed Idempotency Key Architecture (The Two-Generals Solution)
+Because `POST` is **non-idempotent**, an unhandled network disconnect between the server and client after database commit causes the client to retry blindly, resulting in **double-billing or duplicate entity creation**.
+
+To guarantee safety, enterprise payment and mutation APIs adopt the **IETF Idempotency-Key Standard**:
 
 ```
-POST /api/orders/1001/cancel       ← cancel an order
-POST /api/payments/1001/refund     ← refund a payment
-POST /api/users/42/send-verification-email
-POST /api/reports/generate
+                       ┌────────────────────────────┐
+                       │  Client (Mobile/Web/API)   │
+                       └─────────────┬──────────────┘
+                                     │
+           POST /payments (Idempotency-Key: "uuid-v4-abc", Body: {...})
+                                     │
+                                     ▼
+                       ┌────────────────────────────┐
+                       │   API Gateway / Filter     │
+                       └─────────────┬──────────────┘
+                                     │
+                  Atomic Check: Redis SET NX PX 10000
+                                     │
+                 ┌───────────────────┴───────────────────┐
+                 ▼ (Key exists & Completed)              ▼ (Key new: Acquire Lock)
+    ┌─────────────────────────────┐         ┌─────────────────────────────────────┐
+    │ Return Cached HTTP Response │         │ Compute SHA-256(Body) & Process Txn │
+    │ 201 Created (Txn #8812)     │         │ Update Redis with Result + 24h TTL  │
+    └─────────────────────────────┘         └─────────────────────────────────────┘
 ```
 
 ```java
-@PostMapping("/orders")
-public ResponseEntity<Order> createOrder(@RequestBody @Valid CreateOrderRequest req) {
-    Order order = orderService.create(req);
-    URI location = URI.create("/api/orders/" + order.getId());
-    return ResponseEntity.created(location).body(order); // 201 Created + Location header
+@Component
+public class IdempotencyFilter extends OncePerRequestFilter {
+    private final StringRedisTemplate redis;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
+                                    FilterChain filterChain) throws ServletException, IOException {
+        String key = request.getHeader("Idempotency-Key");
+        if (key == null || !"POST".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String cacheKey = "idemp:" + key;
+        String requestHash = sha256(request.getInputStream());
+
+        // Atomic lock attempt
+        Boolean acquired = redis.opsForValue().setIfAbsent(cacheKey + ":lock", "LOCKED", Duration.ofSeconds(10));
+        if (Boolean.FALSE.equals(acquired)) {
+            response.setStatus(HttpStatus.CONFLICT.value()); // 409 Conflict: concurrent duplicate in flight
+            response.getWriter().write("{\"error\": \"Concurrent request in flight for this Idempotency-Key\"}");
+            return;
+        }
+
+        try {
+            String cachedResponse = redis.opsForValue().get(cacheKey);
+            if (cachedResponse != null) {
+                // Key was already executed successfully -> replay cached response directly
+                replayResponse(response, cachedResponse);
+                return;
+            }
+
+            // Wrap response to capture bytes and commit downstream
+            ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
+            filterChain.doFilter(request, responseWrapper);
+
+            // Cache status, headers, and body for 24 hours
+            cacheExecutionResult(cacheKey, responseWrapper);
+            responseWrapper.copyBodyToResponse();
+        } finally {
+            redis.delete(cacheKey + ":lock");
+        }
+    }
 }
-
-@PostMapping("/orders/{id}/cancel")
-public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
-    orderService.cancel(id);
-    return ResponseEntity.noContent().build(); // 204 No Content
-}
-```
-
-**Idempotency key pattern** — make POST idempotent when retries are needed:
-
-```
-POST /api/payments HTTP/1.1
-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000   ← client-generated UUID
-
-Server stores: if this key was seen before, return the original response.
-Retry safety: client can retry on network failure without double-charging.
 ```
 
 ---
 
-### PUT — Replace Entirely
+### 3. PUT — Complete Replacement & Upsert
 
-Replaces a resource completely with the request body. The client sends the **full representation** — any fields not included are removed or reset to defaults.
+`PUT` requests that the state of the target resource be **created or completely replaced** with the state defined by the enclosed payload representation.
 
-**Idempotent** → calling PUT multiple times with the same body has the same result.
+#### The Complete Replacement Contract
+Unlike partial updates, `PUT` replaces the **entire state**. If an existing entity has 10 attributes and the client sends a `PUT` body with only 2 attributes, the remaining 8 attributes must be **reset to defaults, set to null, or deleted**.
 
-```
+```http
 PUT /api/users/42 HTTP/1.1
+Host: api.enterprise.com
 Content-Type: application/json
 
 {
-  "name": "Alice",
-  "email": "alice@example.com",
-  "role": "admin",
-  "preferences": {"theme": "dark"}
+  "email": "alice@corp.com",
+  "name": "Alice Cooper"
 }
 
-→ The entire user object is replaced. Every field must be included.
-   Missing fields are nulled/defaulted — not preserved.
+// ⚠️ If "role", "address", and "preferences" existed previously on user 42,
+// a compliant PUT server wipes them out!
+```
+
+#### Upsert Semantics (Creation via PUT)
+- If the target resource **exists**: Server replaces it and returns `200 OK` (with updated entity) or `204 No Content` (without body).
+- If the target resource **does not exist**: Server creates the entity at that exact URI and returns `201 Created`.
+
+#### Concurrency & The Lost Update Problem
+In concurrent distributed systems, `PUT` is vulnerable to the classic **Lost Update Anomaly**:
+
+```
+Client A: Reads Product 42 (Price: $100, Stock: 5, Version: 1)
+Client B: Reads Product 42 (Price: $100, Stock: 5, Version: 1)
+
+Client A: Modifies Price -> $110. Sends PUT /products/42 (Price=$110, Stock=5)
+Origin: Commits Product 42.
+
+Client B: Modifies Stock -> 4. Sends PUT /products/42 (Price=$100, Stock=4)
+Origin: Commits Product 42.
+
+🚨 DISASTER: Client A's price change ($110) is silently overwritten and lost!
+```
+
+#### The Senior Solution: Optimistic Locking with `If-Match` & ETags
+Enterprise systems guard `PUT` operations using **HTTP Precondition Validation (RFC 9110 §13.1.1)**:
+
+```http
+// 1. Client reads entity and receives ETag header
+GET /api/products/42 HTTP/1.1
+→ HTTP/1.1 200 OK
+   ETag: "version_1_hash"
+
+// 2. Client issues conditional replacement
+PUT /api/products/42 HTTP/1.1
+If-Match: "version_1_hash"
+Content-Type: application/json
+
+{"price": 110.00, "stock": 5}
+
+// 3. If another client updated the record first:
+→ HTTP/1.1 412 Precondition Failed
+   Content-Type: application/json
+
+{"error": "Resource modified by another transaction. Fetch latest ETag before retry."}
 ```
 
 ```java
-@PutMapping("/users/{id}")
-public ResponseEntity<User> replaceUser(
+@PutMapping("/products/{id}")
+public ResponseEntity<ProductDTO> updateProduct(
         @PathVariable Long id,
-        @RequestBody @Valid UserRequest req) {
-    User user = userService.replace(id, req); // full replacement
-    return ResponseEntity.ok(user);
+        @RequestHeader(value = "If-Match", required = false) String ifMatch,
+        @RequestBody @Valid ProductDTO dto) {
+
+    if (ifMatch == null) {
+        throw new ResponseStatusException(HttpStatus.PRECONDITION_REQUIRED, "If-Match header mandatory for PUT");
+    }
+
+    Product current = repository.findById(id).orElseThrow();
+    String currentEtag = "\"" + current.getVersion() + "\"";
+
+    if (!currentEtag.equals(ifMatch)) {
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build(); // 412
+    }
+
+    Product updated = service.replace(id, dto);
+    return ResponseEntity.ok()
+            .eTag("\"" + updated.getVersion() + "\"")
+            .body(mapper.toDTO(updated));
 }
 ```
 
-**PUT can also create** (upsert) if the client specifies the resource ID:
-
-```
-PUT /api/settings/user:42     ← creates if not exists, replaces if it does
-```
-
-:::tip[PUT vs POST for creation]
-Use **POST** when the **server assigns the ID** (`POST /orders` → server creates `order:1001`).
-Use **PUT** when the **client assigns the ID** (`PUT /files/my-document.pdf` → client-named resource).
-:::
-
 ---
 
-### PATCH — Partial Update
+### 4. PATCH — Partial Modification (RFC 5789)
 
-Updates only the fields provided in the request body. Fields not mentioned are left unchanged. More efficient than PUT when only changing one or two fields of a large resource.
+`PATCH` applies a **delta set of modifications** described in the request payload to the target resource. Unlike `PUT`, fields not referenced in the patch remain untouched.
+
+#### The Two Standardized Patch Formats
 
 ```
+┌────────────────────────────────────────────────────────┐
+│                   PATCH SPECIFICATIONS                 │
+├───────────────────────────┬────────────────────────────┤
+│ RFC 7396: JSON Merge Patch│ RFC 6902: JSON Patch       │
+│ Content-Type:             │ Content-Type:              │
+│ application/merge-patch   │ application/json-patch+json│
+└───────────────────────────┴────────────────────────────┘
+```
+
+#### 1. JSON Merge Patch (RFC 7396)
+Clients transmit a partial JSON fragment containing only the target fields:
+
+```http
 PATCH /api/users/42 HTTP/1.1
-Content-Type: application/json
+Content-Type: application/merge-patch+json
 
-{"email": "newemail@example.com"}
-
-→ Only email is changed. name, role, preferences remain as-is.
-   (Compare: PUT would require sending all fields)
+{
+  "email": "alice_updated@corp.com",
+  "temporaryNotice": null
+}
 ```
 
-**PATCH is not always idempotent.** It depends on the operation:
+- **Semantics**: Existing keys are overwritten; new keys are added. Sending `key: null` explicitly instructs the server to **remove the key**.
+- **The "Null Ambiguity" Trap**: If a field legitimately permits a `null` value (e.g. `middleName: null`), Merge Patch cannot distinguish between *"delete this attribute"* and *"set this attribute's value to null"*.
 
-```
-Idempotent PATCH:     {"status": "cancelled"}    → set to cancelled (same result each time)
-Non-idempotent PATCH: {"balance": {"$inc": 100}} → add 100 each time (different each call)
-```
+#### 2. JSON Patch (RFC 6902) — Enterprise Grade
+JSON Patch represents modifications as an array of atomic operations: `add`, `remove`, `replace`, `move`, `copy`, and `test`:
 
-**JSON Patch** (RFC 6902) — a standardized patch format for complex operations:
-
-```
-PATCH /api/users/42 HTTP/1.1
+```http
+PATCH /api/orders/ord_101 HTTP/1.1
 Content-Type: application/json-patch+json
 
 [
-  {"op": "replace", "path": "/email", "value": "new@example.com"},
-  {"op": "add",     "path": "/tags/-", "value": "premium"},
-  {"op": "remove",  "path": "/legacyField"}
+  { "op": "test", "path": "/status", "value": "SUBMITTED" },
+  { "op": "replace", "path": "/shippingAddress/zipCode", "value": "94105" },
+  { "op": "add", "path": "/tags/-", "value": "EXPEDITE_PRIORITY" }
 ]
 ```
 
-```java
-@PatchMapping("/users/{id}")
-public ResponseEntity<User> updateUser(
-        @PathVariable Long id,
-        @RequestBody Map<String, Object> updates) {  // only fields to change
-    User user = userService.partialUpdate(id, updates);
-    return ResponseEntity.ok(user);
-}
-
-// Service: apply only non-null fields
-public User partialUpdate(Long id, Map<String, Object> updates) {
-    User user = repo.findById(id).orElseThrow();
-    if (updates.containsKey("email")) user.setEmail((String) updates.get("email"));
-    if (updates.containsKey("name"))  user.setName((String)  updates.get("name"));
-    return repo.save(user);
-}
-```
+- **Atomic Compare-And-Swap (CAS)**: The `"test"` operation verifies that `/status` is currently `"SUBMITTED"`. If another thread has transitioned the order to `"FULFILLED"`, the entire JSON Patch **aborts atomically with `409 Conflict` or `422 Unprocessable Entity`**, preventing stale mutation.
+- **Array Mutation**: `path: "/tags/-"` safely appends to an array without re-sending the whole array.
 
 ---
 
-### DELETE — Remove a Resource
+### 5. OPTIONS — Capabilities & The CORS Preflight Tax
 
-Removes the specified resource. Returns `200 OK` with a body, `204 No Content` with no body, or `202 Accepted` if deletion is async.
+`OPTIONS` requests information regarding communication options and allowed methods available for the target URI or server (`OPTIONS *`).
 
-**Idempotent** → deleting an already-deleted resource returns `404`, but the server state (resource absent) is the same.
+#### The Target Asterisk (`OPTIONS *`)
+Querying `*` inspects the top-level server capabilities without addressing a particular resource path:
 
-```
-DELETE /api/orders/1001 HTTP/1.1
-Authorization: Bearer <token>
-
-→ HTTP/1.1 204 No Content    (most common: success, no body)
-→ HTTP/1.1 404 Not Found     (already deleted — still idempotent)
-→ HTTP/1.1 202 Accepted      (async delete queued, not yet complete)
-```
-
-```java
-@DeleteMapping("/orders/{id}")
-public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-    orderService.delete(id);
-    return ResponseEntity.noContent().build(); // 204
-}
-
-// Soft delete — mark as deleted, don't actually remove from DB
-@DeleteMapping("/users/{id}")
-public ResponseEntity<Void> deactivateUser(@PathVariable Long id) {
-    userService.softDelete(id); // sets deletedAt, isActive=false
-    return ResponseEntity.noContent().build();
-}
-```
-
----
-
-### HEAD — Metadata Without Body
-
-Identical to GET but the server returns **only headers, no body**. Used to check resource existence, size, or freshness without downloading the full content.
-
-```
-HEAD /api/files/report.pdf HTTP/1.1
+```http
+OPTIONS * HTTP/1.1
+Host: api.enterprise.com
 
 → HTTP/1.1 200 OK
-   Content-Length: 2048576     ← file is 2MB — client can decide whether to download
-   Content-Type: application/pdf
-   Last-Modified: Mon, 14 Mar 2026 09:00:00 GMT
-   ETag: "d8e8fca"
-   (no body)
+Allow: GET, POST, OPTIONS, HEAD
+Server: Envoy/1.30.0
 ```
 
-**Practical uses:**
-- Check if a file exists before downloading it
-- Get the `Content-Length` to show a progress bar
-- Validate an ETag before a conditional GET
-- Health check: `HEAD /health` (faster than `GET /health` since no body is transferred)
+#### The CORS Preflight Mechanism
+Web browsers execute security preflights whenever a cross-origin web application initiates a request with **non-simple methods** (`PUT`, `PATCH`, `DELETE`) or **non-simple headers** (`Authorization`, `Content-Type: application/json`):
 
-```java
-@RequestMapping(value = "/files/{name}", method = RequestMethod.HEAD)
-public ResponseEntity<Void> checkFile(@PathVariable String name) {
-    FileMetadata meta = fileService.getMetadata(name);
-    return ResponseEntity.ok()
-        .contentLength(meta.size())
-        .contentType(MediaType.APPLICATION_PDF)
-        .eTag(meta.etag())
-        .build();
-}
+```http
+OPTIONS /api/customers/99 HTTP/1.1
+Host: api.enterprise.com
+Origin: https://app.enterprise.com
+Access-Control-Request-Method: DELETE
+Access-Control-Request-Headers: Authorization, X-Tenant-ID
+
+→ Response:
+HTTP/1.1 204 No Content
+Access-Control-Allow-Origin: https://app.enterprise.com
+Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS
+Access-Control-Allow-Headers: Authorization, X-Tenant-ID, Content-Type
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+```
+
+#### Senior Security Invariant: The Credentialed Wildcard Vulnerability
+If `Access-Control-Allow-Credentials: true` is set (permitting cookies or Authorization headers), RFC compliance and browser security engines **strictly forbid** using a wildcard origin (`Access-Control-Allow-Origin: *`). The server must echo the exact validated requesting origin domain (`https://app.enterprise.com`), or the browser immediately drops the response!
+
+#### The 1-RTT Preflight Latency Tax & Production Mitigations
+Every cross-origin API call adds an extra **full round-trip time (RTT)** before the browser transmits application data. In high-latency mobile or inter-continental scenarios (150ms RTT), this doubles perceived latency!
+
+```
+Mitigation Strategies:
+1. Max-Age Caching: Return `Access-Control-Max-Age: 86400` (24h) to cache preflight decisions in browser cache.
+2. Same-Origin BFF (Backend-for-Frontend): Deploy an edge reverse proxy (NGINX/Cloudflare) serving both frontend assets and proxying `/api/*` on the exact same origin domain, completely eliminating cross-origin preflight requests!
 ```
 
 ---
 
-### OPTIONS — Discover Capabilities
+### 6. DELETE — Resource Mapping Termination
 
-Returns the HTTP methods and headers allowed for a resource. Primarily used for **CORS preflight requests** — the browser asks "can I make this cross-origin request?" before actually sending it.
+`DELETE` requests that the origin server remove the association between the target Request-URI and the resource.
+
+#### Semantics of Termination (RFC 9110 §9.3.5)
+- DELETE does **not mandate physical disk block sanitization**. It mandates that the URI no longer maps to the target resource representation.
+- Subsequent `GET` requests to that URI should return `404 Not Found` or `410 Gone`.
+
+#### Request Body Policy
+While RFC 9110 does not strictly forbid a body in a DELETE request, it explicitly assigns it **no defined semantics**. Major reverse proxies, Cloudflare workers, and cloud load balancers may **drop DELETE bodies or return 400 Bad Request**. Never pass deletion parameters in a DELETE payload—use query parameters or request headers instead.
+
+#### Response Status Code Contract
+- **`204 No Content`**: Deletion executed synchronously; no response body returned (standard default).
+- **`200 OK`**: Deletion executed synchronously and returns a representation of the deleted entity or an audit confirmation payload.
+- **`202 Accepted`**: Deletion is asynchronous and queued for background processing (e.g., massive tenant purge or Amazon S3 bucket deletion). Returns a status URL in `Location`.
+- **`404 Not Found` vs `204 No Content` on Retries**: Because DELETE is **idempotent**, calling DELETE on an already deleted entity produces the exact same server state (resource absent). While some APIs return `404` on the second call and others return `204`, returning `204` simplifies client error handling during network retries.
+
+#### Senior Architectural Pattern: Soft Deletes vs Kafka Event Tombstones
 
 ```
-OPTIONS /api/orders HTTP/1.1
-Origin: https://frontend.example.com
-Access-Control-Request-Method: POST
-Access-Control-Request-Headers: Authorization, Content-Type
-
-→ HTTP/1.1 204 No Content
-   Allow: GET, POST, OPTIONS
-   Access-Control-Allow-Origin: https://frontend.example.com
-   Access-Control-Allow-Methods: GET, POST, PUT, DELETE
-   Access-Control-Allow-Headers: Authorization, Content-Type
-   Access-Control-Max-Age: 86400     ← cache preflight for 24h
+┌────────────────────────────────────────────────────────┐
+│               ENTERPRISE DELETION PATTERNS             │
+├────────────────────────────┬───────────────────────────┤
+│ Relational Database (OLTP) │ Distributed Event Streams │
+│ Soft Delete Pattern        │ Kafka Log Compaction      │
+└────────────────────────────┴───────────────────────────┘
 ```
 
-Spring handles OPTIONS/CORS automatically when configured — you rarely implement `@RequestMapping(method = OPTIONS)` manually.
+1. **Relational Database Soft Deletes**:
+   - `UPDATE users SET deleted_at = NOW(), is_active = false WHERE id = 42;`
+   - *Database Gotcha*: Soft deletes cause B-tree index bloat and break standard SQL unique constraints. A `UNIQUE(email)` constraint rejects new registrations for an email that was deleted!
+   - *Mitigation*: Partial Unique Indexes in PostgreSQL/MySQL:
+     ```sql
+     CREATE UNIQUE INDEX idx_users_active_email ON users(email) WHERE deleted_at IS NULL;
+     ```
+2. **Event-Driven Kafka Tombstones**:
+   - In distributed event sourcing, publishing a record with `Key = "user_42"` and `Value = null` is recognized by Apache Kafka as a **Tombstone**.
+   - During background **Log Compaction**, Kafka brokers physically purge all historical log segments for `user_42`, reclaiming disk while broadcasting the deletion event to all downstream read replicas and elasticsearch indexes.
+
+---
+
+### 7. HEAD — Metadata Verification Without Body
+
+`HEAD` is identical to `GET`, except the server **must not return a message body** in the response.
+
+#### Practical Engineering Use Cases
+1. **Zero-Byte Health Checking**: Probing microservice endpoints (`HEAD /health`) verifies TCP, TLS, and application readiness without allocating socket buffer space for JSON payload serialization.
+2. **Resource Sizing & Range Planning**: Reading `Content-Length` before triggering a multi-gigabyte download to confirm available client disk storage.
+3. **Cache Validation**: Inspecting `Last-Modified` and `ETag` to verify local cache freshness without transferring content bytes.
+
+```java
+@RequestMapping(value = "/artifacts/{name}", method = RequestMethod.HEAD)
+public ResponseEntity<Void> inspectArtifact(@PathVariable String name) {
+    ArtifactMetadata meta = storageService.getMetadata(name);
+    return ResponseEntity.ok()
+            .contentLength(meta.sizeInBytes())
+            .contentType(MediaType.parseMediaType(meta.mimeType()))
+            .eTag("\"" + meta.sha256() + "\"")
+            .lastModified(meta.updatedAt())
+            .build(); // Zero body bytes emitted
+}
+```
+
 
 ---
 

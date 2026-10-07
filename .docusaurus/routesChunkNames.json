@@ -61,13 +61,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-455": {
+  "/-058": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-e62": {
+  "/-e27": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -7215,7 +7215,7 @@
     "__comp": "df203c0f",
     "__props": "e05b6b95"
   },
-  "/-63f": {
+  "/-338": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -12014,7 +12014,7 @@
     "__comp": "17896441",
     "content": "fbc6c2a1"
   },
-  "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-e52": {
+  "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-de1": {
     "__comp": "17896441",
     "content": "ce37e8db"
   },
@@ -12058,7 +12058,7 @@
     "__comp": "17896441",
     "content": "ad28df9b"
   },
-  "/technical-knowledge/kafka/core/kafka-broker-117": {
+  "/technical-knowledge/kafka/core/kafka-broker-666": {
     "__comp": "17896441",
     "content": "820d99b7"
   },
@@ -12078,7 +12078,7 @@
     "__comp": "17896441",
     "content": "a9f771b0"
   },
-  "/technical-knowledge/kafka/core/kafka-zero-copy-page-cache-c24": {
+  "/technical-knowledge/kafka/core/kafka-zero-copy-page-cache-d81": {
     "__comp": "17896441",
     "content": "55d5b905"
   },

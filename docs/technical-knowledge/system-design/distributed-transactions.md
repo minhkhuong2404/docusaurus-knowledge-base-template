@@ -32,7 +32,7 @@ In a traditional monolithic architecture with a single relational database, main
 
 In a modern **Microservices Architecture with Database-per-Service**, transactions must span across multiple independent databases, message brokers, and third-party APIs (Stripe, SendGrid). If one step fails after earlier steps succeed, the system is left in a **partially committed, inconsistent state**.
 
-:::tip For newcomers
+:::tip[For newcomers]
 Think of a single database transaction like paying at one cash register: either the whole purchase goes through, or none of it does — the register handles that atomically for you. A **distributed transaction** is like buying a bundle where the flight, hotel, and rental car are each booked by a *different, unrelated company*. There's no single register that can undo all three at once if one booking fails. Everything on this page is about how real systems handle that problem when there's no single "undo button" that spans multiple independent services.
 :::
 
@@ -71,7 +71,7 @@ Two-Phase Commit (2PC) is a synchronous protocol designed to achieve **atomic tr
 
 <TwoPhaseCommitProtocolFlowDiagram />
 
-:::tip For newcomers
+:::tip[For newcomers]
 2PC works like a wedding with three separate officiants who all have to agree before the marriage is legally final. In Phase 1, the coordinator asks everyone "are you ready to say yes?" and each officiant privately commits to saying yes (but hasn't announced it yet). Only once *everyone* has privately agreed does the coordinator say "okay, everyone say it out loud now" — Phase 2. The dangerous part: if the coordinator has a heart attack right after everyone privately agreed but before telling them to say it out loud, all three officiants are stuck standing there indefinitely, unable to proceed *or* back out, because they don't know what the others decided.
 :::
 
@@ -99,7 +99,7 @@ The **Saga Pattern** breaks a distributed business transaction into a sequence o
 
 <SagaCompensationLifecycleDiagram />
 
-:::tip For newcomers
+:::tip[For newcomers]
 Back to the travel-booking analogy: instead of one coordinator forcing the flight, hotel, and car companies to all agree upfront, a Saga just books each one in order — flight first, then hotel, then car. If the car rental fails, the system doesn't try to travel back in time and un-book the flight. Instead, it calls the flight company and says "please cancel this booking" — a normal, everyday cancellation request, not a magic rollback. That's the whole idea: **compensations are just new actions that undo the business effect of a previous action**, using the same APIs a human would use.
 :::
 
