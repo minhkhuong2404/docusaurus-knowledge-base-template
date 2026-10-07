@@ -61,8 +61,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1783836149000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "sidebarPosition": 2,
   "frontMatter": {
     "id": "web-vulnerabilities",
@@ -88,7 +88,7 @@
     "permalink": "/technical-knowledge/security/refresh-token-security-invalidation"
   },
   "next": {
-    "title": "Cryptography",
-    "permalink": "/technical-knowledge/security/cryptography-secure-design"
+    "title": "API Security",
+    "permalink": "/technical-knowledge/security/api-security"
   }
 }

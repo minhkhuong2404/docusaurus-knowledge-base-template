@@ -436,9 +436,14 @@ This is called a **scatter-gather** or **fan-out** query. At 10 shards it's 10x 
 
 ---
 
-## Rebalancing Strategies
+## Rebalancing & Re-Sharding Strategies
 
-When your cluster grows (adding nodes) or shrinks (node failure, decommission), data must be redistributed. How you do this determines downtime and migration cost.
+When your cluster grows (adding nodes) or shrinks (node failure, decommission), data must be redistributed. How you do this determines downtime, network saturation, and migration safety.
+
+:::tip[Deep Dive: Live Re-Sharding Approaches & Zero-Downtime Migrations]
+For an exhaustive Principal Engineer breakdown of live production cluster re-sharding — including the **4-Phase Dual-Write pattern**, **CDC transaction log streaming (Debezium/Kafka)**, **Consistent Hashing virtual node migration**, and **CockroachDB/TiDB autonomous 64 MB range splits** with interactive telemetry — see the dedicated guide:
+👉 **[Database Re-Sharding: Zero-Downtime Migration Approaches & Trade-Offs](./database-resharding-strategies.md)**
+:::
 
 ### Manual rebalancing
 

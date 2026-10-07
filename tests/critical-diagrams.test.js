@@ -35,6 +35,9 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'JavaObjectLayoutDiagram.tsx',
     'HttpMethodSemanticsDiagram.tsx',
     'IdempotencyDeduplicationConsistencyDiagram.tsx',
+    'CockroachDbArchitectureDiagram.tsx',
+    'SplitBrainMultiLeaderDiagram.tsx',
+    'ReshardingStrategiesDiagram.tsx',
   ];
 
   for (const filename of criticalDiagrams) {

@@ -46,8 +46,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1785082978000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "sidebarPosition": 0,
   "frontMatter": {
     "id": "security-intro",
@@ -71,7 +71,7 @@
     "permalink": "/technical-knowledge/low-level-design/problem/inventory-management"
   },
   "next": {
-    "title": "AuthN & AuthZ",
-    "permalink": "/technical-knowledge/security/authentication-authorization"
+    "title": "Web Security Fundamentals",
+    "permalink": "/technical-knowledge/security/web-security-fundamentals"
   }
 }

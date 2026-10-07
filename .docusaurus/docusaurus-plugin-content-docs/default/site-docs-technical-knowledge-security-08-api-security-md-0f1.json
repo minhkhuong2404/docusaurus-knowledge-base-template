@@ -61,8 +61,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1783836149000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "sidebarPosition": 8,
   "frontMatter": {
     "id": "api-security",
@@ -84,11 +84,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Keys, Signing & TLS",
-    "permalink": "/technical-knowledge/security/keys-signing-tls"
+    "title": "Web Vulnerabilities",
+    "permalink": "/technical-knowledge/security/web-vulnerabilities"
   },
   "next": {
-    "title": "Privacy & Compliance",
-    "permalink": "/technical-knowledge/security/privacy-compliance"
+    "title": "Cryptography",
+    "permalink": "/technical-knowledge/security/cryptography-secure-design"
   }
 }

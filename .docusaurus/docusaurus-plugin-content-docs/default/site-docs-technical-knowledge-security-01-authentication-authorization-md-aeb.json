@@ -71,8 +71,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1787244903000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "sidebarPosition": 1,
   "frontMatter": {
     "id": "authentication-authorization",
@@ -96,11 +96,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Overview",
-    "permalink": "/security"
-  },
-  "next": {
     "title": "Web Security Fundamentals",
     "permalink": "/technical-knowledge/security/web-security-fundamentals"
+  },
+  "next": {
+    "title": "Cookies, Sessions & JWT",
+    "permalink": "/technical-knowledge/security/cookies-vs-sessions-vs-jwt"
   }
 }

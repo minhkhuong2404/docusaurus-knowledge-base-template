@@ -6002,6 +6002,46 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/streams/interview-questions",
+              "path": "/technical-knowledge/kafka/streams/interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/overview",
+              "path": "/technical-knowledge/kafka/streams/overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/processor-api-dlq",
+              "path": "/technical-knowledge/kafka/streams/processor-api-dlq",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/production-runbook",
+              "path": "/technical-knowledge/kafka/streams/production-runbook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/spring-boot",
+              "path": "/technical-knowledge/kafka/streams/spring-boot",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/state-stores-rocksdb",
+              "path": "/technical-knowledge/kafka/streams/state-stores-rocksdb",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/topology-architecture",
+              "path": "/technical-knowledge/kafka/streams/topology-architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/windowing-joins",
+              "path": "/technical-knowledge/kafka/streams/windowing-joins",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/low-level-design/concurrency/coordination",
               "path": "/technical-knowledge/low-level-design/concurrency/coordination",
               "sidebar": "tutorialSidebar"
@@ -6642,6 +6682,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/cockroachdb-architecture",
+              "path": "/technical-knowledge/system-design/cockroachdb-architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/common-interview-questions",
               "path": "/technical-knowledge/system-design/common-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -6679,6 +6724,11 @@
             {
               "id": "technical-knowledge/system-design/database-per-service",
               "path": "/technical-knowledge/system-design/database-per-service",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/database-resharding-strategies",
+              "path": "/technical-knowledge/system-design/database-resharding-strategies",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -7152,6 +7202,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/split-brain-multi-leader-divergence",
+              "path": "/technical-knowledge/system-design/split-brain-multi-leader-divergence",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/strangler-fig-pattern",
               "path": "/technical-knowledge/system-design/strangler-fig-pattern",
               "sidebar": "tutorialSidebar"
@@ -7344,15 +7399,6 @@
         }
       ],
       "breadcrumbs": true
-    }
-  },
-  "docusaurus-plugin-google-gtag": {
-    "default": {
-      "trackingID": [
-        "G-79SQQZQMCX"
-      ],
-      "anonymizeIP": true,
-      "id": "default"
     }
   }
 }

@@ -61,8 +61,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1783836149000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "sidebarPosition": 3,
   "frontMatter": {
     "id": "cryptography-secure-design",
@@ -84,8 +84,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Web Vulnerabilities",
-    "permalink": "/technical-knowledge/security/web-vulnerabilities"
+    "title": "API Security",
+    "permalink": "/technical-knowledge/security/api-security"
   },
   "next": {
     "title": "Keys, Signing & TLS",

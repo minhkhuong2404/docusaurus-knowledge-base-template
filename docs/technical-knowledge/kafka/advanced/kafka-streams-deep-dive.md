@@ -33,6 +33,20 @@ import KafkaStreamsExactlyOnceDiagram from '@site/src/components/KafkaStreamsExa
 
 ---
 
+:::tip[Modular Knowledge Base Guides]
+This master guide provides an end-to-end principal architectural reference. For targeted, modular deep dives, navigate directly to each focused guide:
+- **[🌊 1. Overview & Core Abstractions](../streams/overview)**: Mental model, Stream-Table duality, KStream vs KTable vs GlobalKTable.
+- **[⚡ 2. Topology Architecture & Execution](../streams/topology-architecture)**: DAG compilation, task sharding, Cooperative Sticky Assignor, sub-topology reorder storms.
+- **[💾 3. State Stores, RocksDB & Restore](../streams/state-stores-rocksdb)**: Off-heap memory bounding, cgroup OOMs, changelog compaction, `.checkpoint` recovery.
+- **[🪟 4. Windowing, Joins & Suppress](../streams/windowing-joins)**: Tumbling/hopping/sliding/session windows, `suppress()` stream-time trap, co-partitioning contract.
+- **[⚙️ 5. Processor API, DLQ & Deduplication](../streams/processor-api-dlq)**: PAPI 3.x+, Wall-Clock vs Stream-Time Punctuators, WindowStore deduplication, custom DLQ handler, async anti-pattern.
+- **[🍃 6. Spring Boot Integration](../streams/spring-boot)**: `spring-kafka` vs Spring Cloud Stream, multi-bean topology synthesis, branching with `split()` / `onTopOf()`, safe Interactive Queries.
+- **[📋 7. Production Runbook, Testing & Anti-Patterns](../streams/production-runbook)**: `TopologyTestDriver`, JMX monitoring metrics, 7 fatal anti-patterns, 5-way streaming comparison matrix.
+- **[🎯 8. Senior & Staff Interview Questions](../streams/interview-questions)**: 15 deep architectural interview questions, failure recovery scenarios, and The Four Golden Rules.
+:::
+
+---
+
 ## 1. What Is Kafka Streams (Really)?
 
 Most introductions say: *"Kafka Streams is a client library for stream processing."*
@@ -194,6 +208,136 @@ branches.get("order-tier-split-standard").to("standard-orders",
 Topology topology = builder.build();
 System.out.println(topology.describe());  // Always inspect in development
 ```
+
+### Stream Branching: Native `split()` vs Spring Kafka `KafkaStreamBrancher.onTopOf()`
+
+Historically in Kafka Streams (< 2.8), splitting a stream used `stream.branch(Predicate...)`, which returned an untyped array `KStream<K, V>[]`. Developers had to access branches using brittle array indices like `branches[0]`, where adding or reordering predicates silently broke downstream processing.
+
+#### 1. Native Kafka Streams 2.8+ (`split()` and `Branched`)
+Modern Kafka Streams provides a type-safe, fluent `split()` API that names branches and supports chained consumers:
+
+```java
+// Native split with direct consumer routing:
+enriched.split(Named.as("orders-branch-"))
+    .branch((k, v) -> v.isVip(),
+        Branched.withConsumer(ks -> ks.to("vip-orders", Produced.with(Serdes.String(), orderSerde))))
+    .branch((k, v) -> v.isFraudRisk(),
+        Branched.withConsumer(ks -> ks.to("fraud-review", Produced.with(Serdes.String(), orderSerde))))
+    .defaultBranch(
+        Branched.withConsumer(ks -> ks.to("standard-orders", Produced.with(Serdes.String(), orderSerde))));
+```
+
+#### 2. Spring Kafka `KafkaStreamBrancher.onTopOf(stream)`
+In Spring Boot ecosystems using `spring-kafka`, `org.springframework.kafka.support.KafkaStreamBrancher` provides an alternative builder pattern that defines branching rules upfront and attaches them onto an existing `KStream` via `.onTopOf(stream)`:
+
+```java
+// Spring Kafka fluent brancher definition
+KStream<String, Order> orderStream = builder.stream("orders-raw", Consumed.with(Serdes.String(), orderSerde));
+
+new KafkaStreamBrancher<String, Order>()
+    .branch((key, order) -> order.getTotal().compareTo(new BigDecimal("500")) >= 0,
+        ks -> ks.to("vip-orders", Produced.with(Serdes.String(), orderSerde)))
+    .branch((key, order) -> order.isFlaggedForReview(),
+        ks -> ks.to("fraud-review-orders", Produced.with(Serdes.String(), orderSerde)))
+    .defaultBranch(ks -> ks.to("standard-orders", Produced.with(Serdes.String(), orderSerde)))
+    .onTopOf(orderStream); // Binds all branches onto the base stream and returns it
+```
+
+**How `.onTopOf(...)` Works Under the Hood:**
+1. **Separation of Definition from Stream Instance**: You can define a reusable `KafkaStreamBrancher` bean or strategy object and apply it across multiple streams or in unit tests.
+2. **Terminal vs Continuation Chain**: `.onTopOf(stream)` returns the original `orderStream`, allowing you to continue chaining downstream operators on the root stream if needed, while each branch lambda consumes its filtered slice.
+3. **Execution Semantics**: Under the hood, `KafkaStreamBrancher` evaluates predicates sequentially in declaration order. The first predicate returning `true` routes the record; remaining predicates are skipped for that record.
+
+---
+
+### Merging Streams (`stream.merge()`) vs Merging Topologies
+
+A frequent source of design ambiguity in Kafka Streams is the difference between **merging stream records** and **merging topology graphs**.
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Stream-Level Merge: streamA.merge(streamB)                              │
+│                                                                         │
+│ Topic A ──► [ streamA ] ──┐                                             │
+│                           ├──► [ merge() ] ──► [ combined KStream ]     │
+│ Topic B ──► [ streamB ] ──┘                                             │
+│ (Same Key & Value SerDes required; interweaves records in Stream-Time)  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Topology-Level Merging: Multiple Pipelines in One StreamsBuilder        │
+│                                                                         │
+│ Pipeline 1: Topic A ──► [ Process ] ──► Topic Out 1   (Sub-topology 0)  │
+│ Pipeline 2: Topic B ──► [ Process ] ──► Topic Out 2   (Sub-topology 1)  │
+│                                                                         │
+│ Both registered in SAME StreamsBuilder ──► builder.build() = 1 Topology │
+│ Managed by 1 KafkaStreams client and 1 Consumer Group (application.id)  │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+#### 1. Merging Streams (`KStream.merge`)
+`streamA.merge(streamB)` is a **stream-level union operator**. It combines records from two independent streams having the **exact same Key and Value types** into a single downstream `KStream`:
+
+```java
+KStream<String, ClickEvent> webClicks = builder.stream("clicks-web");
+KStream<String, ClickEvent> mobileClicks = builder.stream("clicks-mobile");
+
+// Merge creates a single logical stream downstream
+KStream<String, ClickEvent> allClicks = webClicks.merge(mobileClicks, Named.as("merge-clicks"));
+
+allClicks
+    .groupByKey(Grouped.as("group-clicks-by-user"))
+    .count(Materialized.as("user-click-counts"))
+    .toStream()
+    .to("clicks-aggregated");
+```
+
+**Under-the-Hood Mechanics of `merge()`:**
+- **No Kafka Broker Hop**: Records are NOT written to an intermediate repartition topic. The downstream processor simply accepts inputs from both upstream nodes.
+- **Timestamp Ordering (Stream-Time)**: If the streams originate from different topics, Kafka Streams' partition synchronization logic processes records based on the lowest timestamp among available buffered records to maintain deterministic stream-time ordering.
+- **Co-Partitioning Invariant**: If you perform a key-based stateful operation (like `groupByKey()` or `join()`) immediately after `merge()`, both upstream topics **must** be co-partitioned (same partition count and partitioner). If partition counts differ, Kafka Streams automatically injects an internal repartition topic.
+
+#### 2. Merging Topologies in Spring Boot
+In Spring Boot (`@EnableKafkaStreams`), you often have separate business domains (e.g. Orders, Payments, Inventory). You can write distinct `@Bean` configuration methods that each inject `StreamsBuilder`:
+
+```java
+@Configuration
+@EnableKafkaStreams
+public class OrderStreamConfiguration {
+
+    @Bean
+    public KStream<String, Order> orderPipeline(StreamsBuilder builder) {
+        KStream<String, Order> orders = builder.stream("orders-raw", Consumed.with(Serdes.String(), orderSerde));
+        orders.filter((k, v) -> v.isValid(), Named.as("filter-orders"))
+              .to("orders-valid", Produced.with(Serdes.String(), orderSerde));
+        return orders;
+    }
+}
+
+@Configuration
+public class PaymentStreamConfiguration {
+
+    @Bean
+    public KStream<String, Payment> paymentPipeline(StreamsBuilder builder) {
+        KStream<String, Payment> payments = builder.stream("payments-raw", Consumed.with(Serdes.String(), paymentSerde));
+        payments.filter((k, v) -> v.isSuccess(), Named.as("filter-payments"))
+                .to("payments-processed", Produced.with(Serdes.String(), paymentSerde));
+        return payments;
+    }
+}
+```
+
+**How Spring Combines These Beans into One Topology:**
+1. **Single Shared `StreamsBuilder`**: Spring's `StreamsBuilderFactoryBean` creates a single instance of `StreamsBuilder`.
+2. **Sequential Bean Execution**: As Spring instantiates `@Bean` methods, each method adds nodes to the **same underlying `StreamsBuilder`**.
+3. **Single Topology Compilation**: When the Spring Application Context finishes loading, `StreamsBuilderFactoryBean.start()` calls `builder.build()`. This compiles both `orderPipeline` and `paymentPipeline` into a **single, composite `Topology` object**.
+4. **Sub-Topology Segmentation**: Because `orders-raw` and `payments-raw` share no source or sink connections, Kafka Streams automatically splits them into independent **Sub-topology 0** and **Sub-topology 1**.
+
+:::warning[Architectural Trade-Off: Shared vs Isolated Topologies]
+Merging all pipelines into one `StreamsBuilder` shares the same `KafkaStreams` client, the same thread pool (`num.stream.threads`), and the same `application.id`.
+- **Downside**: If `PaymentStream` crashes due to an uncaught exception, or triggers a rebalance due to a heavy lag, `OrderStream` is also paused!
+- **Best Practice for Critical Services**: If domains require fault isolation, configure separate `StreamsBuilderFactoryBean` beans with dedicated `application.id`s and thread pools (see Section 3.4 Multi-Engine JVM Isolation).
+:::
 
 ### Why Topology Naming Is Critical for Production
 
@@ -625,6 +769,78 @@ props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 50 * 1024 * 1024L); //
 props.put(StreamsConfig.NUM_STANDBY_REPLICAS_CONFIG, 1);
 ```
 
+### Scaling & Sizing: Partition-to-Task Math & Pod Allocation
+
+Scaling a Kafka Streams application requires understanding how tasks map to hardware cores and Kubernetes pods:
+
+#### 1. Maximum Parallelism Formula
+Kafka Streams parallelism is strictly bounded by the partition count of its input topics:
+
+$$\text{Max Active Tasks} = \sum_{s \in \text{Sub-topologies}} \left( \max_{t \in \text{SourceTopics}(s)} \text{Partitions}(t) \right)$$
+
+- **Single Pipeline Example**: If `orders-raw` has 12 partitions, the application creates exactly **12 Active Tasks** (`0_0` through `0_11`).
+- **Multiple Sub-Topologies Example**: If Sub-topology 0 reads `orders-raw` (12 partitions) and Sub-topology 1 reads `payments-raw` (8 partitions), total active tasks = $12 + 8 = 20\text{ tasks}$.
+
+#### 2. Sizing Stream Threads (`num.stream.threads`)
+- Each `StreamThread` executes a continuous `poll() → process() → commit()` event loop on a dedicated OS thread.
+- **Rule of Thumb**: Allocate **1 Stream Thread per dedicated vCPU core**, up to the number of tasks assigned to that instance.
+- **Thread Idling Trap**: If your cluster has 12 total tasks and you deploy 3 pods each configured with `num.stream.threads = 8` ($3 \times 8 = 24\text{ threads}$), exactly 12 threads will process tasks while the remaining 12 threads sit completely idle, consuming memory and thread stack overhead without increasing throughput.
+
+#### 3. Kubernetes Pod Sizing & Replicas
+- **Instance Saturation Limit**: You cannot scale beyond the total task count. If total active tasks = 12, deploying 16 Kubernetes pods leaves 4 pods with 0 active tasks (they will only host standby tasks if `num.standby.replicas > 0`; otherwise, they consume CPU/memory idling).
+- **Recommended Ratio**: Deploy pods such that $\frac{\text{Total Tasks}}{\text{Pods}} \in [2, 4]$. For example, 12 tasks on 3 pods (4 tasks/pod, 4 threads/pod) or 4 pods (3 tasks/pod, 3 threads/pod).
+
+---
+
+### Rebalancing Deep Dive: Eager vs Cooperative Sticky Assignor
+
+Understanding rebalancing mechanics is crucial to eliminating processing freezes during deployments and autoscaling.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ Eager Rebalance (Legacy - Stop The World):                             │
+│ Pod 1: [ Task 0, 1 ] ──► REVOKED ──► [ PAUSE ] ──► Re-assign [ Task 0 ]│
+│ Pod 2: [ Task 2, 3 ] ──► REVOKED ──► [ PAUSE ] ──► Re-assign [ Task 1 ]│
+│ Pod 3: (New instance joins) ───────► [ PAUSE ] ──► Re-assign [ Task 2 ]│
+│ ⚠️ 100% of tasks halt processing while assignments are computed!        │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ Cooperative Sticky Rebalance (Modern Incremental Handoff):             │
+│ Pod 1: [ Task 0 ] CONTINUES RUNNING ──► Only Task 1 revoked            │
+│ Pod 2: [ Task 2 ] CONTINUES RUNNING ──► Only Task 3 revoked            │
+│ Pod 3: (New instance joins) ──► Rebuilt state warm in background        │
+│ ✅ Unaffected tasks NEVER stop processing; sub-second handoff!          │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+#### 1. The Eager Rebalance Flaw (Stop-The-World)
+In early Kafka Streams versions, any group membership change (pod restart, deployment, node crash) triggered an **Eager Rebalance**:
+1. All instances revoked **all** assigned tasks simultaneously.
+2. All stream processing across the entire fleet froze completely.
+3. Local RocksDB state stores were closed.
+4. If an instance was reassigned its old task, it had to reopen RocksDB and verify offsets before resuming.
+5. In clusters with large state or frequent scale events, applications suffered endless "stop-the-world" latency spikes.
+
+#### 2. Cooperative Sticky Assignor (Incremental Rebalancing)
+Kafka Streams utilizes the **Cooperative Sticky Assignor** (`StreamsPartitionAssignor` with cooperative protocol):
+- **Sticky Assignment**: Tasks remain on their existing host whenever possible to maximize RocksDB page cache and disk reuse.
+- **Incremental Revocation**: When an instance joins or leaves, **only the specific tasks migrating to another node are paused and revoked**. All other tasks on all other instances continue processing real-time events without interruption!
+
+#### 3. Probing Rebalances & Warm Task Migration
+When a new instance joins, migrating a 50GB stateful task immediately would cause minutes of downtime while the new pod cold-replays the changelog. The Cooperative Sticky Assignor avoids this using **Probing Rebalances**:
+
+1. **Standby Task Assignment**: Instead of moving the active task immediately, the assignor assigns the task as a **Standby Task** to the new pod, while keeping the active task running on the original pod.
+2. **Background Catch-Up**: The new pod passively replays the changelog in the background while the active task processes live traffic without interruption.
+3. **Probing Intervals (`probing.rebalance.interval.ms`)**:
+   - Every `probing.rebalance.interval.ms` (default: 10 minutes / 600,000ms), the group coordinator initiates a lightweight **probing rebalance**.
+   - The assignor checks whether the standby task's changelog lag is within `acceptable.recovery.lag` (default: 10,000 records).
+4. **Hot Swap**: Once the standby task is caught up, the active task on the old pod is revoked and immediately promoted on the new pod. Downtime is reduced from minutes to sub-second.
+
+:::tip[Tuning Probing Rebalances for Fast Deploys]
+In Kubernetes environments with fast CI/CD pipelines, waiting 10 minutes for a probing rebalance can delay task convergence. Tune `probing.rebalance.interval.ms` down to `1.minute` (`60000`) for workloads with moderate state size to accelerate warm handoffs.
+:::
+
 ---
 
 ## 5. Stream Operations
@@ -785,6 +1001,127 @@ Kafka Streams Memory Hierarchy on Client Host / K8s Pod:
    - **Production Sizing Formula**:
      $$\text{Container Memory Limit} \ge \text{JVM Heap } (-Xmx) + \text{RocksDB Block Cache} + \text{MemTables} + \text{Page Cache Buffer (25--30\%)}$$
 
+#### 3. Bounding Native Off-Heap Memory with `RocksDBConfigSetter`
+By default, **every state store in every task creates its own independent RocksDB instance**, each allocating its own Block Cache (default 32MB) and MemTables (3 $\times$ 16MB).
+If an application has 8 active tasks and 3 state stores per task, that equals $8 \times 3 = 24$ independent RocksDB instances!
+$$24 \times (32\text{MB Block Cache} + 48\text{MB MemTables}) \approx 1.92\text{ GB native C++ RAM}$$
+Without global bounding, native memory balloons uncontrollably under load and triggers a container `OOMKilled (Exit Code 137)`.
+
+**The Solution: Shared Cache and Shared WriteBufferManager**
+Implement `org.apache.kafka.streams.state.RocksDBConfigSetter` to enforce a single global memory pool shared across all RocksDB instances on the JVM:
+
+```java
+import org.apache.kafka.streams.state.RocksDBConfigSetter;
+import org.rocksdb.BlockBasedTableConfig;
+import org.rocksdb.BloomFilter;
+import org.rocksdb.Cache;
+import org.rocksdb.CompactionStyle;
+import org.rocksdb.CompressionType;
+import org.rocksdb.LRUCache;
+import org.rocksdb.Options;
+import org.rocksdb.WriteBufferManager;
+import java.util.Map;
+
+public class CustomRocksDBConfigSetter implements RocksDBConfigSetter {
+
+    // Shared native memory budget across ALL RocksDB instances in this JVM process
+    // Total Native RocksDB Cap = 512 MB (Block Cache + Write Buffers)
+    private static final Cache SHARED_BLOCK_CACHE = new LRUCache(384 * 1024 * 1024L); // 384 MB
+    private static final WriteBufferManager SHARED_WRITE_BUFFER_MANAGER =
+        new WriteBufferManager(128 * 1024 * 1024L, SHARED_BLOCK_CACHE); // 128 MB write buffer charged to cache
+
+    @Override
+    public void setConfig(String storeName, Options options, Map<String, Object> configs) {
+        // 1. Enforce global shared write buffer manager
+        options.setWriteBufferManager(SHARED_WRITE_BUFFER_MANAGER);
+
+        // 2. Table options: attach shared block cache and configure bloom filter
+        BlockBasedTableConfig tableConfig = new BlockBasedTableConfig();
+        tableConfig.setBlockCache(SHARED_BLOCK_CACHE);
+        tableConfig.setBlockSize(16 * 1024L); // 16 KB block size (improves point lookup performance)
+        tableConfig.setCacheIndexAndFilterBlocks(true); // Cache index/filter in the shared block cache
+        tableConfig.setFilterPolicy(new BloomFilter(10, false)); // 10 bits per key (~1% false positive rate)
+        options.setTableFormatConfig(tableConfig);
+
+        // 3. Compaction and I/O tuning
+        options.setCompactionStyle(CompactionStyle.LEVEL);
+        options.setCompressionType(CompressionType.LZ4_COMPRESSION); // Fast compression, low CPU overhead
+        options.setMaxWriteBufferNumber(3);
+        options.setWriteBufferSize(32 * 1024 * 1024L); // 32 MB per memtable
+        options.setMaxBackgroundJobs(4); // Parallel flush and compaction threads
+    }
+
+    @Override
+    public void close(String storeName, Options options) {
+        // RocksDBConfigSetter close hook (resources cleaned on JVM shutdown)
+    }
+}
+```
+
+Enable it in your streams configuration:
+```java
+props.put(StreamsConfig.ROCKSDB_CONFIG_SETTER_CLASS_CONFIG, CustomRocksDBConfigSetter.class.getName());
+```
+
+---
+
+### State Store TTL & Expiration Patterns
+
+Unbounded state stores are the primary cause of disk space exhaustion and prolonged recovery times in production.
+
+| Store Type | Built-In Retention Mechanism | How TTL Works |
+|:---|:---|:---|
+| **WindowStore** | Native `TimeWindows.ofSizeAndGrace(...)` | Segments older than `windowSize + gracePeriod` are physically dropped |
+| **SessionStore** | Native `SessionWindows.ofInactivityGapAndGrace(...)` | Expired sessions dropped once inactivity gap + grace period passes |
+| **KeyValueStore** | **None** by default (Retained indefinitely!) | Requires KIP-653 / KIP-1033 state store TTL or custom Punctuator |
+
+#### 1. Native Window Retention
+Windowed stores divide RocksDB state into discrete time-sliced segment files. When a segment's latest timestamp falls outside the retention window:
+```java
+// Window retention: 24 hours retention, 1 hour grace period
+TimeWindows window = TimeWindows.ofSizeAndGrace(Duration.ofHours(1), Duration.ofMinutes(15));
+// RocksDB drops segment files older than (size + grace) without scanning individual keys!
+```
+
+#### 2. Key-Value Store Expiration via Processor API Punctuator
+Because regular `KeyValueStore` does not prune expired keys automatically, you must schedule a periodic cleanup punctuator:
+
+```java
+public class TtlCleanupProcessor extends ContextualProcessor<String, ValueWithTimestamp<String>, String, String> {
+
+    private KeyValueStore<String, ValueWithTimestamp<String>> stateStore;
+    private static final long TTL_MS = Duration.ofHours(6).toMillis();
+
+    @Override
+    public void init(ProcessorContext<String, String> context) {
+        super.init(context);
+        this.stateStore = context.getStateStore("ttl-store");
+
+        // Schedule wall-clock punctuator to purge expired keys every 15 minutes
+        context.schedule(Duration.ofMinutes(15), PunctuationType.WALL_CLOCK_TIME, timestamp -> {
+            try (KeyValueIterator<String, ValueWithTimestamp<String>> iterator = stateStore.all()) {
+                while (iterator.hasNext()) {
+                    KeyValue<String, ValueWithTimestamp<String>> entry = iterator.next();
+                    if (timestamp - entry.value.getTimestamp() > TTL_MS) {
+                        stateStore.delete(entry.key); // Writes tombstone to state store and changelog
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void process(Record<String, ValueWithTimestamp<String>> record) {
+        stateStore.put(record.key(), record.value());
+        context().forward(record.withValue(record.value().getValue()));
+    }
+}
+```
+
+:::warning[Punctuator Scanning Hazard on Large Stores]
+Scanning a full RocksDB store (`stateStore.all()`) with millions of keys inside a punctuator blocks the StreamThread event loop.
+- If store has $> 100{,}000$ keys, maintain a secondary **time-ordered index store** (keyed by `timestamp + key`), or use KIP-653 / KIP-1033 state store TTL APIs in Kafka 3.6+.
+:::
 
 ### State Store Types
 
@@ -943,6 +1280,55 @@ commit.interval.ms = 100ms (default):
              lower commit.interval = more frequent disk syncs = lower throughput
 ```
 
+### The `.checkpoint` File Anatomy & Corruption Hazard
+
+Located on disk at `<state.dir>/<application.id>/<task_id>/.checkpoint`, this plain text file represents the watermark up to which RocksDB data has been fsynced to storage:
+
+```
+0                       <-- Checkpoint file version (0)
+2                       <-- Number of state stores tracked
+order-count-store-changelog 0 148920
+summary-store-changelog     0 93402
+```
+
+#### Why Checkpoint Corruption Causes Catastrophic Cold Replay
+1. **Commit Coordination**: Kafka Streams only updates `.checkpoint` **after** RocksDB flushes all active MemTables to disk as immutable SST files.
+2. **Crash Before Checkpoint**: If a pod crashes mid-batch, uncommitted MemTable writes are lost, but `.checkpoint` reflects the last committed offset. On restart, Kafka Streams safely plays the changelog forward from `148920` to the partition head.
+3. **The Checkpoint Erasure Disaster**: If operations scripts, container restart policies, or pod storage volume remounts delete the `.checkpoint` file while retaining the RocksDB `.sst` data files:
+   - Kafka Streams treats the missing checkpoint as an **unclean, corrupted shutdown**.
+   - It **wipes the entire local RocksDB directory** and replays all changelog records from offset 0!
+   - For a 100GB state store, this converts what should have been a 2-second restart into a 30-minute outage.
+
+### Observing State Restoration with `StateRestoreListener`
+
+During failover, instances transition to the `RESTORING` state while replaying changelog records. Use `StateRestoreListener` to track progress, expose metrics, and avoid premature health check failures:
+
+```java
+kafkaStreams.setGlobalStateRestoreListener(new StateRestoreListener() {
+
+    @Override
+    public void onRestoreStart(TopicPartition topicPartition, String storeName,
+                               long startingOffset, long endingOffset) {
+        long totalRecordsToRestore = endingOffset - startingOffset;
+        log.info("Starting restoration for store [{}] on partition [{}] (records to replay: {})",
+            storeName, topicPartition, totalRecordsToRestore);
+    }
+
+    @Override
+    public void onBatchRestored(TopicPartition topicPartition, String storeName,
+                                long batchEndOffset, long numRestored) {
+        log.debug("Restored batch of {} records for store [{}] on partition [{}], current offset: {}",
+            numRestored, storeName, topicPartition, batchEndOffset);
+    }
+
+    @Override
+    public void onRestoreEnd(TopicPartition topicPartition, String storeName, long totalRestored) {
+        log.info("Completed restoration for store [{}] on partition [{}], total restored: {}",
+            storeName, topicPartition, totalRestored);
+    }
+});
+```
+
 ---
 
 ## 9. Standby Replicas
@@ -1030,6 +1416,46 @@ public void consumeProcessedOrder(EnrichedOrder order) {
 // Outbox relay (Debezium) publishes to Kafka after commit — at-least-once
 // Consumer idempotency key deduplicates retries — effectively exactly-once end-to-end
 ```
+
+### The EOS Duplicates Trap: Why `exactly_once_v2` Still Leaks Duplicates
+
+A ubiquitous production misconception is assuming that configuring `processing.guarantee=exactly_once_v2` eliminates duplicate processing across the entire enterprise system. In reality, Kafka EOS is strictly scoped to **internal Kafka-read-to-Kafka-write atomicity**.
+
+Here are the three primary vectors where duplicates still leak into downstream systems:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ Vector 1: Downstream Consumer reads aborted transaction records        │
+│ Kafka Broker Log: [ Msg 1 ] ──► [ Msg 2 (aborted) ] ──► [ Msg 2 (retry)│
+│                                           │                     │      │
+│ Downstream Consumer (read_uncommitted) ───┴─────────────────────┴──► 2x!
+│ (Reads BOTH aborted message and retry message!)                        │
+├────────────────────────────────────────────────────────────────────────┤
+│ Vector 2: External Side Effects (HTTP / REST / Third-Party DB)         │
+│ Stream Processor ──► HTTP POST /pay ──► [ Crash before commit ]        │
+│ Rebalance ──► Replay input record ──► HTTP POST /pay (2nd payment!)   │
+├────────────────────────────────────────────────────────────────────────┤
+│ Vector 3: Non-Idempotent Downstream Producer Republishing              │
+│ Consumer reads_committed ──► Non-idempotent Producer ──► Network Retry │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+#### 1. Downstream Consumers Missing `isolation.level=read_committed`
+- **Under-the-Hood Broker Truth**: When a Kafka Streams transactional producer writes records that eventually abort (due to an unhandled exception or rebalance fence), **the aborted messages are NEVER deleted from broker log segments**. They physically reside in the `.log` partition file alongside an abort control marker (`CONTROL_BATCH`).
+- **The Trap**: Standard Kafka consumers (in Spring Boot, Python, Go, or Spark) default to `isolation.level=read_uncommitted`. These consumers read straight through the partition log, receiving both the aborted records and the subsequently re-processed records!
+- **Mandatory Guard**: Every downstream consumer reading from Kafka Streams output topics must explicitly set:
+  ```properties
+  isolation.level=read_committed
+  ```
+
+#### 2. Non-Transactional External Side Effects (HTTP / RPC)
+- Placing HTTP REST calls, gRPC calls, email notifications, or non-transactional database mutations inside `.map()`, `.peek()`, or a Processor API step is an architectural disaster.
+- If the Kafka Streams transaction fails before commit (e.g. during a broker timeout or JVM crash), Kafka rolls back consumer offsets and output records. However, the external HTTP endpoint has already processed the request!
+- Upon task restart, the input record is replayed from the previous committed offset, triggering the HTTP call a second time.
+- **Mandatory Guard**: Always separate stream processing from external side effects. Write results to a dedicated Kafka topic, and let an idempotent worker or Transactional Outbox consumer trigger external RPC calls.
+
+#### 3. Producer Republishing Without Idempotence
+- If downstream pipelines read from a streams output topic and forward to an external Kafka cluster or message bus without `enable.idempotence=true` and transaction coordination, transient network disconnects on produce retries will inject duplicate messages into target topics.
 
 ---
 
@@ -1194,12 +1620,9 @@ KTable<Windowed<String>, Long> sessionCounts = stream
 
 ### Suppress — Emit Only Final Window Results
 
-By default, windowed aggregations emit a result **every time the window's aggregate changes** — potentially many times per window. `suppress()` holds back results until the window definitively closes:
+By default, windowed aggregations emit a result **every time the window's aggregate changes** — potentially dozens or hundreds of intermediate updates per window. `suppress()` holds back results in an internal buffer and emits **exactly once per window** when the window definitively closes:
 
 ```java
-// Without suppress: emits on every new record in the window
-// → many intermediate results per window
-
 // With suppress: emits exactly once per window, after it closes
 KTable<Windowed<String>, Long> finalCounts = stream
     .groupBy((k, v) -> v.getCategory(), Grouped.as("group-cat"))
@@ -1207,13 +1630,116 @@ KTable<Windowed<String>, Long> finalCounts = stream
     .count(Materialized.as("suppress-counts"))
     .suppress(
         Suppressed.untilWindowCloses(
-            Suppressed.BufferConfig.maxBytes(50 * 1024 * 1024L)  // 50MB buffer
-                .shutDownWhenFull()   // Fail fast if buffer exhausted (vs emitEarlyWhenFull)
+            Suppressed.BufferConfig.maxBytes(50 * 1024 * 1024L) // 50MB buffer
+                .shutDownWhenFull() // StrictBufferConfig: fail loudly if buffer fills
         )
     );
 ```
 
-**Trade-off**: `suppress()` buffers all in-flight window records in memory until each window closes. Buffer size is bounded by your configuration. If the buffer fills before windows close, you can either fail fast (`shutDownWhenFull`) or emit early (`emitEarlyWhenFull` — breaks the "exactly one emission" guarantee).
+### The `suppress()` Stalled Stream-Time Trap (`suppress-not-emitting`)
+
+The single most frequent production issue reported with `suppress(Suppressed.untilWindowCloses(...))` is that **the downstream output topic remains completely silent**. No errors, no warnings, no exceptions in the logs, but zero records are emitted.
+
+This is almost never a bug in Kafka Streams. It is a direct consequence of how `untilWindowCloses` defines when a window is finished:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ The Cardinal Invariant: Suppress Fires on STREAM-TIME, NOT WALL-CLOCK  │
+│                                                                        │
+│ Window [ 10:00 - 11:00 ] with 5 min grace                              │
+│ Closes ONLY when: Stream-Time >= 11:05:00                              │
+│                                                                        │
+│ Stream-Time = Max(record timestamps processed by this task)            │
+│ ⚠️ If last record arrived at 10:58 and stream goes quiet:              │
+│    Stream-Time remains frozen at 10:58:00 FOREVER!                     │
+│    Wall-clock reaches 11:05, 12:00, 18:00... WINDOW NEVER CLOSES!      │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+#### 1. Why Stream-Time Freezes on Low-Traffic or Idle Partitions
+- **Stream-Time is data-driven**: Stream-time advances **only when a new record arrives on that partition with a timestamp higher than the current stream-time**.
+- If a partition receives its last record at 10:58, and no more events arrive, stream-time is frozen at 10:58. Even though hours of wall-clock time pass, the window `[10:00 - 11:00]` cannot close. `suppress()` dutifully holds the result in its memory buffer indefinitely.
+- **Sparse Keys vs Quiet Partitions**: While windowed aggregation state is keyed, window closure is per **partition/task**. If other keys on the same partition have high volume, their events push stream-time forward and close the quiet key's window. But if an entire partition becomes idle (e.g. overnight, weekends, or hash key skew), all keys on that partition go silent.
+
+#### 2. Lagging Partition Holdback in Multi-Source Tasks
+- Stream-time is tracked **per task**. When a sub-topology reads from multiple source topics (such as a stream-stream join or `merge()`), Kafka Streams synchronizes inputs by picking the record with the **lowest timestamp** among buffered partition queues to maintain strict event-time ordering.
+- If one partition is lagging significantly (e.g. due to slow upstream producers or network partitions), it acts as an anchor holding back the entire task's stream-time. Windows on the faster partitions cannot close until the straggler partition catches up.
+
+#### 3. The `TopologyTestDriver` Illusion
+Why does `suppress()` pass in unit tests but fail in production?
+In a test using `TopologyTestDriver`, developers pipe test records with manually configured timestamps:
+```java
+// In test:
+inputTopic.pipeInput("k", "val1", Instant.parse("2026-06-08T10:30:00Z"));
+inputTopic.pipeInput("k", "val2", Instant.parse("2026-06-08T10:58:00Z"));
+// Still empty!
+assertTrue(outputTopic.isEmpty());
+
+// Test pipes a future event to verify output:
+inputTopic.pipeInput("k", "val3", Instant.parse("2026-06-08T11:06:00Z"));
+// BAM! Stream-time crossed 11:05, window closed, test passes!
+assertFalse(outputTopic.isEmpty());
+```
+In production, if that 11:06 event never arrives because customers stopped ordering, the application never emits!
+
+#### 4. The BufferConfig Strictness Compile Trap
+`suppress` stores pending window aggregates in heap memory (backed by an internal changelog topic `app-KTABLE-SUPPRESS-STATE-STORE-changelog`):
+
+| Buffer Configuration | Behavior When Buffer Fills | Safety & Semantics |
+|:---|:---|:---|
+| `BufferConfig.unbounded()` | Buffer grows indefinitely | ⚠️ High risk of Heap OOM on high-cardinality keys |
+| `BufferConfig.maxBytes(...).shutDownWhenFull()` | Application terminates immediately with error | ✅ Strict guarantee, fails fast without silent data corruption |
+| `BufferConfig.maxBytes(...).emitEarlyWhenFull()` | Emits oldest buffered window early | ❌ **Compile Error with `untilWindowCloses`!** Only works with `untilTimeLimit` |
+
+:::danger[Compile-Time Safety Guard]
+`untilWindowCloses` explicitly requires a `StrictBufferConfig`. You cannot combine `untilWindowCloses` with `emitEarlyWhenFull()`, because emitting early directly violates the contract of "emit only when the window is closed".
+:::
+
+#### 5. Solutions: Synthetic Heartbeats vs Wall-Clock Punctuator
+
+##### Approach A: Synthetic Heartbeat / Pulse Topic (Data-Driven Fix)
+Inject a synthetic "pulse" record with current wall-clock timestamp into every partition at a regular interval (e.g. every minute):
+- **Pros**: Advances stream-time without altering the topology DSL.
+- **Cons (Architectural Smell)**: Requires producing dummy messages to every partition; stream processors must filter out pulse records so they don't corrupt aggregates; synthetic future timestamps can prematurely expire genuine late-arriving records.
+
+##### Approach B: Processor API with `WALL_CLOCK_TIME` Punctuator (The Clean Architecture Fix)
+If you require predictable, wall-clock emission on sparse or low-traffic topics, discard `suppress()` and implement a custom Processor with a `WALL_CLOCK_TIME` Punctuator:
+
+```java
+// Punctuator runs on a fixed wall-clock schedule, immune to idle partition stalls:
+public class WallClockWindowFlushProcessor extends ContextualProcessor<String, Order, String, Long> {
+
+    private TimestampedKeyValueStore<String, Long> countStore;
+
+    @Override
+    public void init(ProcessorContext<String, Long> context) {
+        super.init(context);
+        this.countStore = context.getStateStore("window-counts");
+
+        // Schedule wall-clock execution every 60 seconds
+        context.schedule(Duration.ofSeconds(60), PunctuationType.WALL_CLOCK_TIME, currentWallTimeMs -> {
+            try (KeyValueIterator<String, ValueAndTimestamp<Long>> iter = countStore.all()) {
+                while (iter.hasNext()) {
+                    KeyValue<String, ValueAndTimestamp<Long>> entry = iter.next();
+                    long windowEnd = entry.value.timestamp() + Duration.ofMinutes(10).toMillis();
+                    if (currentWallTimeMs >= windowEnd) {
+                        // Window has elapsed according to wall clock — emit and delete
+                        context().forward(new Record<>(entry.key, entry.value.value(), currentWallTimeMs));
+                        countStore.delete(entry.key);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void process(Record<String, Order> record) {
+        ValueAndTimestamp<Long> current = countStore.get(record.key());
+        long newCount = (current == null) ? 1L : current.value() + 1;
+        countStore.put(record.key(), ValueAndTimestamp.make(newCount, record.timestamp()));
+    }
+}
+```
 
 ---
 
@@ -1297,6 +1823,47 @@ KStream<String, EnrichedOrder> enriched = orders.join(
 | KTable + KTable | ✅ Yes | Same key used for both |
 
 **Co-partitioning means**: same number of partitions AND same partitioning logic (same key, same partitioner). If topics have different partition counts, a repartition step is inserted automatically.
+
+### Join Debugging & Troubleshooting Checklist
+
+Stream joins are notoriously sensitive to partition alignment, window timing, and event timestamps. When a join produces missing or null results, walk through this 4-point diagnostic checklist:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ Join Troubleshooting Pipeline:                                         │
+│ 1. Co-partitioning Check ──► Same Partition Count? Same Hasher (Murmur)?│
+│ 2. Timestamp Alignment   ──► Event-Time vs Wall-Clock skew?            │
+│ 3. Asymmetric Windows    ──► before() and after() boundaries correct?  │
+│ 4. Grace Period Drops    ──► Check metric: dropped-records-total       │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+#### 1. The Co-Partitioning Tri-Contract
+For any `KStream-KStream` or `KStream-KTable` join, both inputs **must strictly adhere to all three rules**:
+1. **Identical Partition Count**: If `orders` has 12 partitions and `payments` has 8 partitions, record `key="user-42"` hashes to partition `abs(murmur2("user-42")) % 12 = 5` for orders, but `abs(murmur2("user-42")) % 8 = 1` for payments! Task 5 only holds state for Partition 5, so the records **never meet in memory**. Kafka Streams 3.x validates this and fails fast with `TopologyException`.
+2. **Identical Key SerDes**: If Topic A serializes keys as UTF-8 Strings (`"100"`) while Topic B serializes keys as 4-byte integers (`100`), the Murmur2 hash values are completely different, routing them to different partitions.
+3. **Identical Partitioner Strategy**: If upstream services use custom partitioners (e.g. partition by tenant ID while streams keys by user ID), co-partitioning is broken even with identical partition counts.
+- **Fix**: Force repartitioning via `.repartition(Repartitioned.as("orders-repartition").withNumberOfPartitions(8))` before joining.
+
+#### 2. Asymmetric Window Boundaries (`before()` vs `after()`)
+In `KStream-KStream` joins, timestamps define whether records join:
+- `JoinWindows.ofTimeDifferenceWithGrace(Duration.ofMinutes(5), Duration.ofSeconds(30))` creates a symmetric window:
+  $$t_{\text{order}} - 5\text{m} \le t_{\text{payment}} \le t_{\text{order}} + 5\text{m}$$
+- **Asymmetric Realities**: In real-world payment flows, payments *almost always happen after* orders, never before:
+  ```java
+  // Asymmetric window: payment can arrive up to 10 minutes AFTER order,
+  // but at most 30 seconds BEFORE order (clock skew tolerance)
+  JoinWindows asymmetricWindow = JoinWindows.ofTimeDifferenceAndGrace(Duration.ofMinutes(10), Duration.ofMinutes(1))
+      .before(Duration.ofSeconds(30))
+      .after(Duration.ofMinutes(10));
+  ```
+
+#### 3. Late-Arriving Records & Grace Period Drops
+- If an event arrives whose timestamp is older than:
+  $$t_{\text{current\_stream\_time}} - (\text{windowSize} + \text{gracePeriod})$$
+  Kafka Streams drops the record from the join entirely!
+- Dropped records are **not** routed to standard output or error topics by default.
+- **How to verify**: Monitor the JMX metric `kafka.streams:type=stream-processor-node-metrics,processor-node-id=*,client-id=*,dropped-records-total`. If this gauge is rising, increase your grace period or investigate upstream network latency.
 
 ---
 
@@ -1396,6 +1963,26 @@ metadata.forEach(m -> log.info("Host {} holds partitions {}", m.hostInfo(), m.to
 
 ## 15. Spring Boot Integration
 
+There are two distinct ways to run Kafka Streams in Spring Boot: **Spring for Apache Kafka (`spring-kafka`)** and **Spring Cloud Stream (KStream binder)**. Both run the exact same `kafka-streams` client library under the hood, but their architecture, configuration, and abstraction levels differ fundamentally.
+
+### Two Libraries, One Engine
+
+| Dimension | Spring for Apache Kafka (`spring-kafka`) | Spring Cloud Stream (KStream Binder) |
+|:---|:---|:---|
+| **Programming Model** | Explicit `StreamsBuilder` topology DAG | Functional `java.util.function.Function<KStream, KStream>` |
+| **Topic Binding** | Explicit in code (`builder.stream()`, `stream.to()`) | Declarative in `application.yml` (`spring.cloud.stream.bindings.*`) |
+| **Configuration Namespace** | `spring.kafka.streams.*` | `spring.cloud.stream.kafka.streams.binder.*` |
+| **Lifecycle Manager** | `StreamsBuilderFactoryBean` | Spring Cloud Stream Binder lifecycle |
+| **Topology Control** | Full, granular control over every processor node | Abstracted away; declarative input/output bindings |
+| **Interactive Queries** | Direct access via `factoryBean.getKafkaStreams()` | Complex; requires accessing underlying queryable state |
+| **Best Fit** | High-performance stateful topologies, complex joins, interactive queries | Microservice event meshes, multi-binder architectures |
+
+---
+
+### Approach 1: Spring for Apache Kafka (`spring-kafka`)
+
+Add `spring-kafka` and annotate your configuration with `@EnableKafkaStreams`. Spring auto-configures a `StreamsBuilderFactoryBean` that manages the lifecycle (`start()` / `stop()`) of the underlying `KafkaStreams` instance.
+
 ```xml
 <dependency>
     <groupId>org.springframework.kafka</groupId>
@@ -1403,104 +1990,571 @@ metadata.forEach(m -> log.info("Host {} holds partitions {}", m.hostInfo(), m.to
 </dependency>
 ```
 
+#### Application Configuration (`application.yml`)
+
+```yaml
+spring:
+  kafka:
+    bootstrap-servers: broker1:9092,broker2:9092
+    streams:
+      application-id: order-processing-service
+      properties:
+        # Mandatory since Kafka 3.0+ (KIP-741): no default serdes provided!
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        default.value.serde: org.springframework.kafka.support.serializer.JsonSerde
+        spring.json.trusted.packages: "com.example.orders.model"
+        
+        # Performance and Resilience
+        processing.guarantee: exactly_once_v2
+        num.stream.threads: 4
+        num.standby.replicas: 1
+        commit.interval.ms: 100
+        cache.max.bytes.buffering: 67108864 # 64 MB
+        state.dir: /var/data/kafka-streams/state
+        rocksdb.config.setter: com.example.config.CustomRocksDBConfigSetter
+```
+
+:::caution[The Kafka 3.0+ Missing Default Serdes Trap]
+Prior to Apache Kafka 3.0, Kafka provided default serdes for keys and values. Starting with Kafka 3.0 (KIP-741), **default serdes were completely removed**.
+If you do not configure `spring.kafka.streams.properties[default.key.serde]` and `[default.value.serde]`, or omit explicit `Consumed.with(...)` parameters, your Spring Boot context fails to start with:
+`org.apache.kafka.common.config.ConfigException: Missing required configuration "default.key.serde"`.
+:::
+
+#### Defining Topologies Across Multiple `@Bean` Methods
+
+In `spring-kafka`, you can declare one or more `@Bean` methods that inject `StreamsBuilder`. Spring combines all these beans into the **exact same underlying `StreamsBuilder`**:
+
 ```java
 @Configuration
 @EnableKafkaStreams
-public class KafkaStreamsConfig {
+public class OrderStreamTopologyConfig {
 
-    @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
-    public KafkaStreamsConfiguration streamsConfig() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "order-processing-app");
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092,broker2:9092");
-        props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE_V2);
-        props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4);
-        props.put(StreamsConfig.NUM_STANDBY_REPLICAS_CONFIG, 1);
-        props.put(StreamsConfig.STATE_DIR_CONFIG, "/var/kafka-streams/state");
-        props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 100);
-        props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 50 * 1024 * 1024L);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        return new KafkaStreamsConfiguration(props);
+    @Bean
+    public KStream<String, Order> orderPipeline(StreamsBuilder builder,
+                                                JsonSerde<Order> orderSerde,
+                                                JsonSerde<EnrichedOrder> enrichedSerde) {
+        KStream<String, Order> orders = builder.stream("orders-raw",
+            Consumed.with(Serdes.String(), orderSerde).withName("source-orders-raw"));
+
+        orders
+            .filter((k, v) -> v.isValid(), Named.as("filter-valid-orders"))
+            .mapValues(Order::enrich, Named.as("enrich-orders"))
+            .to("orders-enriched", Produced.with(Serdes.String(), enrichedSerde));
+
+        return orders;
     }
 
     @Bean
-    public Topology orderProcessingTopology(StreamsBuilder builder,
-                                             JsonSerde<Order> orderSerde,
-                                             JsonSerde<CustomerOrderSummary> summarySerde) {
-        KStream<String, Order> orders = builder.stream("orders-raw",
-            Consumed.with(Serdes.String(), orderSerde));
-
-        orders
-            .filter((key, order) -> order != null && order.isValid(),
-                Named.as("filter-valid-orders"))
-            .mapValues(order -> order.normalize(), Named.as("normalize-orders"))
-            .groupByKey(Grouped.as("group-by-customer"))
-            .aggregate(
-                CustomerOrderSummary::empty,
-                (key, order, summary) -> summary.addOrder(order),
-                Named.as("aggregate-customer-summary"),
-                Materialized.<String, CustomerOrderSummary, KeyValueStore<Bytes, byte[]>>
-                    as("customer-summary-store")
-                    .withKeySerde(Serdes.String())
-                    .withValueSerde(summarySerde)
-            )
-            .toStream(Named.as("summary-to-stream"))
-            .to("customer-summaries", Produced.with(Serdes.String(), summarySerde));
-
-        return builder.build();
+    public KTable<String, Long> userStatsPipeline(StreamsBuilder builder) {
+        return builder.table("user-logins",
+            Consumed.with(Serdes.String(), Serdes.Long()).withName("source-user-logins"),
+            Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("user-logins-store")
+                .withKeySerde(Serdes.String())
+                .withValueSerde(Serdes.Long()));
     }
 }
 ```
 
-### StateListener — React to Application State Changes
+When Spring refreshes its application context, `StreamsBuilderFactoryBean.start()` calls `builder.build()`, synthesizing both `orderPipeline` and `userStatsPipeline` into a **single unified `Topology` DAG** executed by the same thread pool.
+
+#### Lifecycle Customization & Error Handling
+
+Use `StreamsBuilderFactoryBeanCustomizer` (or `StreamsBuilderFactoryBeanConfigurer`) to intercept lifecycle states and stream thread crashes:
 
 ```java
-@Component
-@RequiredArgsConstructor
+@Configuration
 @Slf4j
-public class StreamsHealthMonitor {
+public class StreamsLifecycleConfig {
 
-    private final KafkaStreams kafkaStreams;
-    private final MeterRegistry meterRegistry;
+    @Bean
+    public StreamsBuilderFactoryBeanCustomizer customizer(MeterRegistry meterRegistry) {
+        return factoryBean -> {
+            // Track state transitions (REBALANCING -> RUNNING -> ERROR)
+            factoryBean.setStateListener((newState, oldState) -> {
+                log.info("Kafka Streams State Transition: {} -> {}", oldState, newState);
+                meterRegistry.gauge("kafka.streams.state", newState.ordinal());
+                if (newState == KafkaStreams.State.ERROR) {
+                    log.error("💥 Kafka Streams entered ERROR state! Triggering alert...");
+                }
+            });
 
-    @PostConstruct
-    public void registerStateListener() {
-        kafkaStreams.setStateListener((newState, oldState) -> {
-            log.info("Kafka Streams state: {} → {}", oldState, newState);
-            meterRegistry.gauge("kafka.streams.state",
-                Tags.of("state", newState.name()),
-                newState.ordinal());
-
-            if (newState == KafkaStreams.State.ERROR) {
-                log.error("Kafka Streams entered ERROR state — alerting ops");
-                alertingService.sendCritical("Kafka Streams ERROR",
-                    Map.of("application", "order-processing-app", "previousState", oldState.name()));
-            }
-        });
-
-        // Exception handler for uncaught stream thread exceptions
-        kafkaStreams.setUncaughtExceptionHandler(exception -> {
-            log.error("Uncaught exception in stream thread", exception);
-            return StreamThreadExceptionResponse.REPLACE_THREAD;
-            // REPLACE_THREAD: restart just the failed thread
-            // SHUTDOWN_CLIENT: shut down this instance (trigger rebalance)
-            // SHUTDOWN_APPLICATION: shut down all instances
-        });
+            // Handle uncaught exceptions in StreamThreads (KIP-663)
+            factoryBean.setStreamsUncaughtExceptionHandler(exception -> {
+                log.error("Uncaught exception in StreamThread", exception);
+                // REPLACE_THREAD: restart only the crashed thread (keeps instance alive)
+                // SHUTDOWN_CLIENT: terminate this KafkaStreams instance (forces rebalance)
+                // SHUTDOWN_APPLICATION: terminate all instances in the consumer group
+                return StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.REPLACE_THREAD;
+            });
+        };
     }
+}
+```
 
-    @GetMapping("/health/streams")
-    public ResponseEntity<Map<String, String>> streamsHealth() {
-        KafkaStreams.State state = kafkaStreams.state();
-        boolean healthy = state == KafkaStreams.State.RUNNING || state == KafkaStreams.State.REBALANCING;
-        return ResponseEntity.status(healthy ? 200 : 503)
-            .body(Map.of("state", state.name()));
+#### Accessing `KafkaStreams` for Interactive Queries Safely
+
+```java
+@RestController
+@RequiredArgsConstructor
+public class InteractiveQueryController {
+
+    private final StreamsBuilderFactoryBean factoryBean;
+
+    @GetMapping("/api/users/{userId}/logins")
+    public ResponseEntity<?> getUserLogins(@PathVariable String userId) {
+        KafkaStreams streams = factoryBean.getKafkaStreams();
+
+        // 1. Null check: streams is null before context refresh and after stop()
+        if (streams == null) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Streams initializing");
+        }
+
+        // 2. State check: store() throws InvalidStateStoreException unless state == RUNNING
+        if (streams.state() != KafkaStreams.State.RUNNING) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body("Streams not ready (current state: " + streams.state() + ")");
+        }
+
+        ReadOnlyKeyValueStore<String, Long> store = streams.store(
+            StoreQueryParameters.fromNameAndType("user-logins-store", QueryableStoreTypes.keyValueStore())
+        );
+
+        Long count = store.get(userId);
+        return ResponseEntity.ok(Map.of("userId", userId, "logins", count != null ? count : 0L));
     }
 }
 ```
 
 ---
 
-## 16. When to Use (and Not Use) Kafka Streams
+### Approach 2: Spring Cloud Stream Functional Binder
+
+Spring Cloud Stream inverts the paradigm: you do not touch `StreamsBuilder` directly. You write a standard `java.util.function.Function` bean, and the binder wires inputs and outputs declaratively based on `application.yml`:
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-stream-binder-kafka-streams</artifactId>
+</dependency>
+```
+
+#### Functional Pipeline Bean
+
+```java
+@Configuration
+public class FunctionalStreamConfig {
+
+    @Bean
+    public Function<KStream<String, Order>, KStream<String, EnrichedOrder>> processOrders() {
+        return input -> input
+            .filter((k, v) -> v.isValid())
+            .mapValues(Order::enrich);
+    }
+}
+```
+
+#### Declarative Topic Bindings (`application.yml`)
+
+```yaml
+spring:
+  cloud:
+    function:
+      definition: processOrders
+    stream:
+      bindings:
+        processOrders-in-0:
+          destination: orders-raw
+        processOrders-out-0:
+          destination: orders-enriched
+      kafka:
+        streams:
+          binder:
+            application-id: functional-order-service
+            brokers: localhost:9092
+            configuration:
+              processing.guarantee: exactly_once_v2
+              default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              default.value.serde: org.springframework.kafka.support.serializer.JsonSerde
+```
+
+:::danger[Obsolete API Warning]
+The legacy `@EnableBinding` and `@StreamListener` annotations were **completely removed in Spring Cloud Stream 4.0**. Any tutorial or code using `@StreamListener` is obsolete. Always use the modern `java.util.function.Function`, `Consumer`, or `Supplier` functional model.
+:::
+
+---
+
+## 16. Production Engineering Patterns & Runbook
+
+### 16.1 Modern Processor API (PAPI 3.x+) & Wall-Clock Punctuator
+
+While the High-Level DSL (`map`, `filter`, `join`) covers 90% of use cases, complex stateful workflows (custom sessionizing, deduplication, state TTL, dynamic routing) require the **Processor API (PAPI)**.
+
+Modern Kafka Streams (3.0+) uses `org.apache.kafka.streams.processor.api.Processor<KIn, VIn, KOut, VOut>` and `Record<K, V>`:
+
+```java
+import org.apache.kafka.streams.processor.api.ContextualProcessor;
+import org.apache.kafka.streams.processor.api.ProcessorContext;
+import org.apache.kafka.streams.processor.api.Record;
+import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.processor.PunctuationType;
+import java.time.Duration;
+
+public class OrderAggregationProcessor extends ContextualProcessor<String, Order, String, CustomerSummary> {
+
+    private KeyValueStore<String, CustomerSummary> stateStore;
+
+    @Override
+    public void init(ProcessorContext<String, CustomerSummary> context) {
+        super.init(context);
+        this.stateStore = context.getStateStore("customer-summary-store");
+
+        // Schedule Punctuator: fires every 60 seconds of WALL-CLOCK time
+        // (Runs independently of whether new records arrive on this partition!)
+        context.schedule(Duration.ofSeconds(60), PunctuationType.WALL_CLOCK_TIME, currentTimestamp -> {
+            log.info("Wall-clock punctuation tick at timestamp: {}", currentTimestamp);
+            // Scan state, flush pending summaries, or purge expired records
+        });
+
+        // Contrast: PunctuationType.STREAM_TIME advances ONLY when records with newer timestamps arrive.
+        // On idle partitions, STREAM_TIME freezes and never triggers!
+    }
+
+    @Override
+    public void process(Record<String, Order> record) {
+        CustomerSummary summary = stateStore.get(record.key());
+        if (summary == null) {
+            summary = new CustomerSummary(record.key());
+        }
+        summary.addOrder(record.value());
+        stateStore.put(record.key(), summary);
+
+        // Forward transformed record downstream with preserved headers and timestamp
+        context().forward(record.withValue(summary));
+    }
+}
+```
+
+#### Attaching PAPI to the DSL
+Integrate custom processors directly into a DSL pipeline via `.process()`:
+
+```java
+KStream<String, Order> orders = builder.stream("orders-raw");
+
+orders.process(
+    OrderAggregationProcessor::new,
+    Named.as("process-customer-summary"),
+    "customer-summary-store" // Declare state stores accessed by the processor
+).to("customer-summaries");
+```
+
+---
+
+### 16.2 Production Event Deduplication Pattern
+
+In high-throughput distributed systems, upstream retries or non-idempotent producers can produce duplicate events. You can implement an **idempotent deduplication filter** using the Processor API and a `WindowStore`:
+
+```java
+public class EventDeduplicationProcessor<K, V> extends ContextualProcessor<K, V, K, V> {
+
+    private WindowStore<String, Long> dedupStore;
+    private final Duration dedupWindow;
+
+    public EventDeduplicationProcessor(Duration dedupWindow) {
+        this.dedupWindow = dedupWindow;
+    }
+
+    @Override
+    public void init(ProcessorContext<K, V> context) {
+        super.init(context);
+        this.dedupStore = context.getStateStore("dedup-store");
+    }
+
+    @Override
+    public void process(Record<K, V> record) {
+        String eventId = extractEventId(record); // Unique event ID from payload or header
+        long recordTime = record.timestamp();
+
+        // Query window store: did we see this eventId within [recordTime - window, recordTime + window]?
+        Long previousTime = dedupStore.fetch(eventId, recordTime);
+
+        if (previousTime != null) {
+            // Duplicate detected! Drop record and increment drop metric
+            log.warn("Dropping duplicate event [{}] seen previously at {}", eventId, previousTime);
+            return;
+        }
+
+        // New event: record into store and forward downstream
+        dedupStore.put(eventId, recordTime, recordTime);
+        context().forward(record);
+    }
+
+    private String extractEventId(Record<K, V> record) {
+        // Extract from Kafka Header or payload ID
+        org.apache.kafka.common.header.Header header = record.headers().lastHeader("X-Event-ID");
+        return (header != null) ? new String(header.value()) : record.key().toString();
+    }
+}
+```
+
+```java
+// Registering in StreamsBuilder:
+StoreBuilder<WindowStore<String, Long>> dedupStoreBuilder = Stores.windowStoreBuilder(
+    Stores.persistentWindowStore("dedup-store", Duration.ofHours(2), Duration.ofHours(2), false),
+    Serdes.String(), Serdes.Long()
+);
+builder.addStateStore(dedupStoreBuilder);
+
+stream.process(() -> new EventDeduplicationProcessor<>(Duration.ofHours(2)),
+    Named.as("dedup-filter"), "dedup-store")
+    .to("deduped-output");
+```
+
+---
+
+### 16.3 Dead Letter Queue (DLQ) & Deserialization Exception Handling
+
+When a corrupt, malformed, or schema-incompatible record lands on an input topic, deserialization happens **before the record enters the topology**.
+- **Default Behavior (`LogAndFailExceptionHandler`)**: The stream thread crashes immediately with `SerializationException`.
+- **Naive Fallback (`LogAndContinueExceptionHandler`)**: The corrupted record is dropped with a log warning. **Fatal production hazard**: silent data loss without auditability!
+
+#### Production Solution: Custom DLQ Deserialization Exception Handler
+Route poison pills to a Dead Letter Queue (DLQ) topic via a dedicated `KafkaProducer`, stamping diagnostic error headers:
+
+```java
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.internals.RecordHeader;
+import org.apache.kafka.streams.errors.DeserializationExceptionHandler;
+import org.apache.kafka.streams.processor.ProcessorContext;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
+public class ProductionDlqDeserializationHandler implements DeserializationExceptionHandler {
+
+    private KafkaProducer<byte[], byte[]> dlqProducer;
+    private String dlqTopicName;
+
+    @Override
+    public void configure(Map<String, ?> configs) {
+        this.dlqTopicName = (String) configs.getOrDefault("dlq.topic.name", "streams-dlq");
+        this.dlqProducer = new KafkaProducer<>(configs);
+    }
+
+    @Override
+    public DeserializationHandlerResponse handle(ProcessorContext context,
+                                                ConsumerRecord<byte[], byte[]> record,
+                                                Exception exception) {
+        ProducerRecord<byte[], byte[]> dlqRecord = new ProducerRecord<>(
+            dlqTopicName,
+            record.partition(),
+            record.timestamp(),
+            record.key(),
+            record.value()
+        );
+
+        // Attach diagnostic error headers for debugging and replay
+        dlqRecord.headers().add(new RecordHeader("x-orig-topic", record.topic().getBytes(StandardCharsets.UTF_8)));
+        dlqRecord.headers().add(new RecordHeader("x-orig-partition", String.valueOf(record.partition()).getBytes(StandardCharsets.UTF_8)));
+        dlqRecord.headers().add(new RecordHeader("x-orig-offset", String.valueOf(record.offset()).getBytes(StandardCharsets.UTF_8)));
+        dlqRecord.headers().add(new RecordHeader("x-error-class", exception.getClass().getName().getBytes(StandardCharsets.UTF_8)));
+        dlqRecord.headers().add(new RecordHeader("x-error-msg", (exception.getMessage() != null ? exception.getMessage() : "null").getBytes(StandardCharsets.UTF_8)));
+
+        // Synchronously or asynchronously dispatch to DLQ
+        dlqProducer.send(dlqRecord);
+
+        // Instruct Streams to acknowledge and continue processing the partition
+        return DeserializationHandlerResponse.CONTINUE;
+    }
+
+    @Override
+    public void close() {
+        if (dlqProducer != null) {
+            dlqProducer.close();
+        }
+    }
+}
+```
+
+Enable in `application.yml`:
+```yaml
+spring.kafka.streams.properties:
+  default.deserialization.exception.handler: com.example.kafka.ProductionDlqDeserializationHandler
+  dlq.topic.name: dead-letter-orders
+```
+
+---
+
+### 16.4 The Async Processing Anti-Pattern (Network I/O in Streams)
+
+A common temptation among engineers migrating from Spring Web or microservices is placing non-blocking asynchronous calls (`CompletableFuture`, WebClient, reactive `Mono`) inside `.map()`, `.peek()`, or a Processor:
+
+```java
+// ❌ DANGEROUS ANTI-PATTERN: Asynchronous HTTP / DB call in stream loop
+stream.mapValues(order -> {
+    return httpClient.post()
+        .uri("https://payment-gateway/v1/charge")
+        .bodyValue(order)
+        .retrieve()
+        .bodyToMono(PaymentResult.class); // Returns Mono<PaymentResult>!
+});
+```
+
+#### Why Async Calls Destroy Kafka Streams
+1. **Uncompleted Futures & Data Loss**: The stream thread cannot await external reactive publishers. Offsets are committed immediately upon returning from the processor. If the external async operation fails 2 seconds later or the pod restarts, **the event is lost forever**.
+2. **Blocking Futures (`future.get()`) Destroys Throughput**: If you block the stream thread synchronously (`Mono.block()` or `future.get(50, TimeUnit.MILLISECONDS)`), a single 50ms latency hop limits the thread's maximum throughput to $1000\text{ms} / 50\text{ms} = 20\text{ records/second}$!
+3. **Heartbeat Failure & Rebalance Storm**: If an external database slows down or times out, the stream thread blocks beyond `max.poll.interval.ms` (default: 5 minutes). The broker coordinator assumes the consumer died, evicts it from the group, and triggers an infinite cluster rebalance loop!
+
+#### Proper Architectural Solutions:
+1. **Parallel Consumer Pattern**: Offload I/O to a dedicated Kafka Consumer fleet using Confluent Parallel Consumer with key-based concurrent worker pools.
+2. **Transactional Outbox / Database CDC**: Have upstream services commit to local databases, use Debezium to stream the WAL into Kafka, and keep Kafka Streams 100% compute-only.
+3. **Decoupled Kafka Topics**: Write requests to a `payment-requests` topic, process them with a horizontally scalable stateless worker fleet, and produce responses to a `payment-responses` topic for Kafka Streams to join.
+
+---
+
+### 16.5 Serdes & Schema Registry Integration
+
+For production pipelines using Avro, Protobuf, or JSON Schema, integrate with Confluent or Apicurio Schema Registry:
+
+```java
+Map<String, Object> serdeConfig = Map.of(
+    AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://schema-registry:8081",
+    AbstractKafkaSchemaSerDeConfig.AUTO_REGISTER_SCHEMAS, "false", // CI/CD controls schema versions
+    KafkaAvroSerializerConfig.SPECIFIC_AVRO_READER_CONFIG, "true"
+);
+
+SpecificAvroSerde<OrderEvent> orderSerde = new SpecificAvroSerde<>();
+orderSerde.configure(serdeConfig, false); // false = value serde
+
+KStream<String, OrderEvent> stream = builder.stream("orders-avro",
+    Consumed.with(Serdes.String(), orderSerde));
+```
+
+---
+
+### 16.6 Testing Topologies with `TopologyTestDriver`
+
+Unit testing Kafka Streams does not require a Kafka cluster, Zookeeper, KRaft, or Docker containers. Use `TopologyTestDriver` for **100% deterministic, in-memory, synchronous test execution**:
+
+```java
+public class OrderTopologyTest {
+
+    private TopologyTestDriver driver;
+    private TestInputTopic<String, String> inputTopic;
+    private TestOutputTopic<String, Long> outputTopic;
+
+    @BeforeEach
+    void setup() {
+        StreamsBuilder builder = new StreamsBuilder();
+        new WordCountTopology().buildPipeline(builder);
+
+        Properties props = new Properties();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "test-app");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "dummy:1234");
+        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+
+        driver = new TopologyTestDriver(builder.build(), props);
+        inputTopic = driver.createInputTopic("words-input", new StringSerializer(), new StringSerializer());
+        outputTopic = driver.createOutputTopic("words-output", new StringDeserializer(), new LongDeserializer());
+    }
+
+    @AfterEach
+    void tearDown() {
+        driver.close();
+    }
+
+    @Test
+    void shouldCountWordsCorrectly() {
+        inputTopic.pipeInput("k1", "apple banana apple");
+
+        Map<String, Long> results = outputTopic.readKeyValuesToMap();
+        assertEquals(2L, results.get("apple"));
+        assertEquals(1L, results.get("banana"));
+    }
+
+    @Test
+    void shouldTestWindowClosingWithExplicitTimestamps() {
+        Instant t0 = Instant.parse("2026-06-08T10:00:00Z");
+        inputTopic.pipeInput("user1", "login", t0);
+        inputTopic.pipeInput("user1", "action", t0.plus(Duration.ofMinutes(45)));
+
+        // Output remains empty because window is still open!
+        assertTrue(outputTopic.isEmpty());
+
+        // Advance stream-time past window end (11:00) + grace (5m)
+        inputTopic.pipeInput("user1", "heartbeat", t0.plus(Duration.ofMinutes(66)));
+
+        // Window closes, verified!
+        assertFalse(outputTopic.isEmpty());
+    }
+}
+```
+
+---
+
+### 16.7 Production Monitoring & Key Observability Metrics
+
+Monitor Kafka Streams applications through JMX and Micrometer metrics. The most critical operational signals are:
+
+| Metric Name | Subsystem | Alert Threshold | Operational Meaning |
+|:---|:---|:---|:---|
+| `record-e2e-latency-avg` | Processor Node | Spike $> 2000\text{ms}$ | Time from initial producer timestamp to processing completion. Indicates pipeline lag. |
+| `process-rate` | Stream Thread | Drop to 0 records/s | Processing throughput per thread. Zero indicates rebalance storm or stall. |
+| `commit-latency-avg` | Stream Thread | $> 200\text{ms}$ | Time spent flushing state stores and committing transactions to brokers. |
+| `active-process-ratio` | Stream Thread | $< 0.10$ or $> 0.95$ | Fraction of time spent actively processing vs polling. High = CPU bottleneck; Low = idle. |
+| `dropped-records-total` | Stream Node | $> 0$ | Records dropped due to grace period expiration or deserialization errors. |
+| `block-cache-hit-ratio` | RocksDB | $< 0.85$ | Cache hits in off-heap memory. Low ratio triggers heavy NVMe disk read I/O. |
+| `memtable-flush-pending` | RocksDB | $> 2$ | Pending memtables waiting to write to disk. Risk of write stall. |
+
+---
+
+## 17. Kafka Streams Anti-Patterns Checklist
+
+Before deploying any Kafka Streams application to production, audit your codebase against these seven fatal anti-patterns:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ The 7 Fatal Kafka Streams Anti-Patterns:                               │
+│ 1. ❌ Synchronous or Reactive Network I/O inside .map() / .peek()      │
+│ 2. ❌ Unbounded KeyValueStore without TTL or purge punctuator          │
+│ 3. ❌ Using .map() when only values change (triggers unnecessary topic)│
+│ 4. ❌ Relying on Wall-Clock Time instead of Event-Time for aggregations│
+│ 5. ❌ Static Singletons / Thread-Unsafe state shared across threads    │
+│ 6. ❌ Anonymous operator IDs in production topologies (naming shift)   │
+│ 7. ❌ Mixing Spring Cloud Stream and @EnableKafkaStreams in one app     │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Network I/O in the Stream Thread**: Performing HTTP, gRPC, or external SQL lookups inside stream processors blocks event loops, breaks EOS guarantees, and risks `max.poll.interval.ms` rebalance evictions.
+2. **Unbounded State Stores**: Registering persistent `KeyValueStore` instances without retention periods or purging logic causes infinite disk growth and hours-long cold restore times.
+3. **Unnecessary Key Mutations**: Using `.map()` or `.selectKey()` when only values are transformed forces Kafka Streams to provision an internal repartition topic, adding network hops and disk write overhead. Always prefer `.mapValues()`.
+4. **Wall-Clock Time Reliance**: Using `System.currentTimeMillis()` for windowing rather than event timestamps produces non-deterministic results during replays and rebalances.
+5. **Shared Mutable State**: Sharing HashMap instances or mutable caches between stream threads without thread safety causes race conditions, corrupted state, and intermittent JVM segfaults.
+6. **Anonymous Operator Naming**: Omitting `Named.as()` and `Materialized.as()` exposes your application to catastrophic state store invalidation on code deployment.
+7. **Mixing Spring Stacks**: Combining `@EnableKafkaStreams` and Spring Cloud Stream functional binders creates conflicting lifecycle managers fighting over client startup.
+
+---
+
+## 18. Kafka Streams vs Alternatives
+
+Choosing between Kafka Streams, Apache Flink, Apache Spark, ksqlDB, and the raw Consumer API depends on operational boundaries, latency requirements, and data architecture:
+
+| Dimension | Kafka Streams | Apache Flink | Apache Spark Structured Streaming | ksqlDB | Raw Consumer API (Parallel Consumer) |
+|:---|:---|:---|:---|:---|:---|
+| **Architecture** | **Embedded Java Library** (runs in microservice) | **Distributed Cluster** (JobManager + TaskManager) | **Distributed Cluster** (Driver + Executors) | **Distributed Server Engine** (built on Kafka Streams) | **Embedded Client Library** |
+| **Operational Overhead** | **Lowest** (standard container CI/CD, no cluster) | **High** (dedicated Flink cluster, Kubernetes operator) | **High** (Spark cluster, YARN/K8s resource management) | **Medium** (separate server cluster to monitor) | **Lowest** (microservice) |
+| **Latency** | **Sub-millisecond** (Continuous record-by-record) | **Sub-millisecond** (Continuous streaming engine) | **100ms - 1s** (Micro-batch by default) | **Sub-millisecond** (Continuous) | **Sub-millisecond** (Continuous) |
+| **State Storage** | Embedded RocksDB / Heap | RocksDB / Heap (checkpointed to S3/HDFS) | Memory / RocksDB (checkpointed to HDFS) | Embedded RocksDB via Kafka Streams | External DB only (Stateless client) |
+| **Fault Recovery** | Local disk `.checkpoint` + Kafka compacted changelog | Distributed Chandy-Lamport state snapshots to object storage | Lineage graph + WAL replay from object storage | Kafka compacted changelog | Offset replay from Kafka broker |
+| **Event-Time & Watermarks** | Event-time windows + grace period + Stream-Time | Advanced event-time watermarking & timers | Watermarks with micro-batch trigger | Event-time windowing via Streams DSL | Custom application implementation |
+| **Dynamic SQL Engine** | ❌ None (Pure Java/Scala DSL + PAPI) | ✅ First-class Flink SQL | ✅ First-class Spark SQL | ✅ SQL-first (REST API driven) | ❌ None |
+| **Elastic Autoscaling** | Partition-bounded ($N \le \text{partitions}$) | Dynamic task slot scaling via JobManager | Dynamic executor allocation | Partition-bounded | Key-hash concurrent threads ($N > \text{partitions}$) |
+| **Best Fit** | Stateful event-driven microservices, CQRS materialized views, low-ops Java teams | Large-scale complex event processing (CEP), cross-cluster analytics | Unified batch + stream processing, ML feature engineering | Rapid SQL analytics, Kafka-native stream ETL | Stateless asynchronous I/O, external REST/DB calls |
+
+---
+
+## 19. When to Use (and Not Use) Kafka Streams
 
 ### Use Kafka Streams When
 
@@ -1548,23 +2602,7 @@ public class StreamsHealthMonitor {
 
 ---
 
-## 17. Kafka Streams vs Alternatives
-
-| Dimension | Kafka Streams | Apache Flink | Apache Spark Structured Streaming | ksqlDB |
-|:---|:---|:---|:---|:---|
-| **Deployment model** | Embedded library | Separate cluster (JobManager + TaskManager) | Separate cluster (Driver + Executors) | Separate server (built on Kafka Streams) |
-| **Operational overhead** | Minimal — standard microservice | High — Flink cluster ops | High — Spark cluster ops | Medium — ksqlDB server |
-| **State management** | RocksDB (local, backed by changelog) | RocksDB or heap (backed by Flink state backend) | In-memory / RocksDB (backed by HDFS) | RocksDB via Kafka Streams |
-| **Exactly-once** | ✅ (EXACTLY_ONCE_V2) | ✅ (Flink checkpointing) | ✅ (with idempotent sink) | ✅ (via Kafka Streams) |
-| **SQL support** | ❌ Java/Scala only | ✅ Flink SQL | ✅ Spark SQL | ✅ SQL-first |
-| **Event time / watermarks** | ✅ (window + grace) | ✅ (advanced watermarking) | ✅ (event time) | ✅ (via Kafka Streams) |
-| **Dynamic pipelines** | ❌ Topology fixed | ✅ Dynamic graph | ✅ Dynamic | ❌ Schema-first |
-| **Throughput at scale** | Very high (bounded by Kafka) | Very high | Very high | High |
-| **Best for** | Microservice-embedded stateful processing | Complex large-scale stateful streaming | Batch + streaming unified | SQL-based stream analytics |
-
----
-
-## 18. Production System Design Examples
+## 20. Production System Design Examples
 
 ### Example 1 — Real-Time Fraud Detection
 
@@ -1637,29 +2675,53 @@ KTable<String, OrderReadModel> readModel = events
     );
 
 // Expose via Interactive Queries for REST API queries
-// → customers can query their order history in real-time with sub-ms latency
+// -> customers can query their order history in real-time with sub-ms latency
 ```
 
 ---
 
-## 19. Failure Scenarios & Mitigation Matrix
+## 21. Failure Scenarios & Mitigation Matrix
 
 | Scenario | What Happens | Latency Impact | Mitigation |
 |:---|:---|:---|:---|
-| **Instance crash** | Consumer group rebalance; tasks reassigned; state rebuilt from changelog | Downtime proportional to unrebuildable state | Standby replicas (`NUM_STANDBY_REPLICAS`) |
-| **Rebalance (new instance joins)** | All instances pause; task redistribution; partial state rebuild | Temporary pause (seconds with standbys, minutes without) | Static group membership (`group.instance.id`), standby replicas |
-| **Large state cold restore** | Full changelog replay from beginning | Minutes to hours | Windowing + TTL to limit state size; use checkpoints; NVMe SSDs |
-| **Topology naming shift on deploy** | State store name mismatch; full state rebuild; orphaned topics | Extended startup latency | Explicit Named/Materialized names on all operators |
-| **Rolling deploy with topology mismatch** | V1 and V2 tasks incompatible; infinite rebalance loop | Total processing stoppage | Blue-green deploy; validate topology stability before rolling |
+| **Instance crash** | Consumer group rebalance; tasks reassigned; state rebuilt from changelog | Downtime proportional to unrebuildable state | Standby replicas (`NUM_STANDBY_REPLICAS`), Cooperative Sticky Assignor |
+| **Rebalance (new instance joins)** | Task redistribution; incremental migration | Sub-second pause for migrating tasks only | Cooperative Sticky Assignor, standby replicas, tuned `probing.rebalance.interval.ms` |
+| **Large state cold restore** | Full changelog replay from beginning | Minutes to hours | Windowing + TTL to limit state size; persistent volume checkpoints; NVMe SSDs |
+| **Topology naming shift on deploy** | State store name mismatch; full state rebuild; orphaned topics | Extended startup latency | Explicit `Named.as()` and `Materialized.as()` on all operators |
+| **Rolling deploy with topology mismatch** | V1 and V2 tasks incompatible; infinite rebalance loop | Total processing stoppage | Blue-green deploy; decouple K8s liveness probes; append-only evolution |
 | **Zombie task (pre-fence)** | Stale instance writes after eviction | Duplicate output | `EXACTLY_ONCE_V2` fences zombie producers via epoch |
-| **Changelog topic lag during restore** | State behind changelog; data inconsistency window | Degraded accuracy during restore | Monitor `kafka.streams.thread.commit-latency-avg`; alert on restore time |
+| **Changelog topic lag during restore** | State behind changelog; data inconsistency window | Degraded accuracy during restore | Monitor `commit-latency-avg`; alert on restore lag via `StateRestoreListener` |
 | **Repartition topic growth** | Internal topics fill disk; partition exhaustion | Processing failure if Kafka cluster full | Topic retention policies; monitor internal topic sizes |
-| **Clock skew across producers** | Out-of-order events relative to event time | Incorrect window assignment | Grace periods; prefer processing time for non-time-critical aggregations |
-| **RocksDB compaction stall** | Write stalls under heavy load | Latency spikes | Tune RocksDB via `rocksdb.config.setter`; allocate dedicated NVMe |
+| **Idle partition suppresses output** | Stream-time halts; window close never triggered | Silent pipeline halt | Pulse/heartbeat topic or Processor API `WALL_CLOCK_TIME` Punctuator |
+| **RocksDB Cgroup OOMKilled** | Native C++ memory balloons beyond container limit | CrashLoopBackOff | Enforce shared block cache and write buffer manager via `RocksDBConfigSetter` |
 
 ---
 
-## 20. Interview Questions — Senior Level
+## 22. Interview Questions — Senior Level
+
+**Q: Why does `suppress(untilWindowCloses)` emit nothing on an idle or low-traffic partition?**
+
+> `suppress(untilWindowCloses)` evaluates window closure strictly using **Stream-Time**, which is the maximum record timestamp processed so far by that task. It does **not** look at the system wall-clock. A window `[10:00 - 11:00]` with a 5-minute grace period closes only when a record stamped $\ge 11:05$ arrives on that partition. If the stream goes idle at 10:58, Stream-Time freezes at 10:58 forever. Even if hours of wall-clock time pass, the window never closes and the suppressed result is never emitted. To fix this on quiet partitions, you must either inject synthetic heartbeat records to advance stream-time, or abandon `suppress` in favor of a Processor API `WALL_CLOCK_TIME` Punctuator that flushes expired windows on a fixed real-time schedule.
+
+**Q: How do you prevent RocksDB off-heap memory from crashing a Kubernetes pod with Exit Code 137 (`OOMKilled`)?**
+
+> Each state store in each active task creates its own independent native RocksDB C++ instance with separate Block Cache and MemTables outside the JVM heap. With multiple tasks and state stores, total native allocations frequently exceed the container cgroup memory limit, causing Kubernetes to issue `SIGKILL (Exit Code 137)`. The solution is implementing a custom `RocksDBConfigSetter` that instantiates a static, shared `org.rocksdb.Cache` (e.g. 384MB) and a shared `org.rocksdb.WriteBufferManager` (e.g. 128MB). Every state store instance is configured to share these singletons, strictly bounding total native off-heap memory across the entire process to a fixed budget.
+
+**Q: How does the Cooperative Sticky Assignor prevent "stop-the-world" freezes during cluster scaling?**
+
+> Legacy Eager Rebalancing forced all group members to revoke all partitions simultaneously, halting processing across the entire fleet until assignment completed. The **Cooperative Sticky Assignor** uses incremental rebalancing: only the specific tasks migrating to another node are paused, while all unaffected tasks continue processing live events without interruption. Furthermore, when migrating a stateful task to a new node, it assigns the task as a warm **Standby Task** first. The new node passively replays the changelog in the background while the old node keeps running the active task. Every `probing.rebalance.interval.ms` (default 10 minutes), a lightweight probing rebalance checks whether the standby is caught up. Once caught up, an instant sub-second hot swap occurs.
+
+**Q: Why can an application with `processing.guarantee=exactly_once_v2` still produce duplicate records for downstream consumers?**
+
+> `EXACTLY_ONCE_V2` only guarantees atomicity within the internal Kafka read-process-write cycle. Duplicates still leak downstream in three scenarios:
+> 1. **Downstream consumers lack `isolation.level=read_committed`**: Aborted transactional batches are physically retained in broker partition logs. Consumers using default `read_uncommitted` read both aborted batches and retry batches.
+> 2. **External non-transactional side-effects**: If a processor makes HTTP/REST calls, emails, or direct database mutations inside the stream thread, rolling back a Kafka transaction does not roll back the external call. Replaying the input record triggers the HTTP call again.
+> 3. **Non-idempotent downstream republishing**: If downstream consumers forward records to external topics without producer idempotence, broker network retries inject duplicates.
+
+**Q: What is the purpose of Spring Kafka's `KafkaStreamBrancher.onTopOf()` and how does merging multiple topology `@Bean` methods work?**
+
+> In `spring-kafka`, `KafkaStreamBrancher` provides a fluent builder pattern to define branching predicates with inline consumer actions, terminating with `.onTopOf(stream)` which attaches the branch definitions onto a base `KStream` and returns it. This avoided legacy Kafka Streams brittle array-indexed `KStream[]` branching before `split()` was introduced.
+> When multiple `@Bean` methods in Spring configuration accept `StreamsBuilder builder`, Spring passes the **same shared `StreamsBuilder` instance** to all of them during context initialization. Each bean registers its nodes into this common builder. When `StreamsBuilderFactoryBean.start()` is executed, it invokes `builder.build()`, synthesizing all individual bean pipelines into a **single composite `Topology` object** sharing the same thread pool and `application.id`.
 
 **Q: What is the difference between KStream and KTable?**
 
@@ -1677,33 +2739,13 @@ KTable<String, OrderReadModel> readModel = events
 
 > Kafka's exactly-once implementation writes transaction control records (commit/abort markers) to the partition log. These markers increment `LogEndOffset` but are transparent to `read_committed` consumers — they don't count as deliverable records. The consumer's committed offset doesn't advance past these markers until a real data record arrives. So `LogEndOffset - CommittedOffset = 1` is normal and expected in fully-caught-up `exactly_once_v2` applications. Exclude this from lag alerting.
 
-**Q: How does repartitioning work and when does it occur?**
-
-> Any operation that changes the record key (`.map()`, `.selectKey()`, `.groupBy()`) triggers repartitioning. Kafka Streams writes affected records to an internal repartition topic partitioned by the new key. Records are then re-consumed from this topic, ensuring all records with the same key land on the same task (which owns the state store for that key). The cost is an extra Kafka write + read round-trip per record, plus a permanent internal topic. Prefer `.mapValues()` over `.map()` when only the value needs changing — it never triggers repartition.
-
-**Q: What happens during a rebalance and how do standby replicas help?**
-
-> During a rebalance, all instances in the consumer group pause processing — tasks are redistributed and each instance must restore state for newly assigned tasks by replaying changelog topics. Without standby replicas, restoring 100GB of state could take 15+ minutes. Standby replicas are shadow tasks that continuously consume the changelog without processing input. On failover, they already have near-current state — promotion to active requires replaying only the most recent seconds of changelog. Recovery drops from minutes to seconds.
-
-**Q: Why is state store size a first-class design concern?**
-
-> Recovery time is directly proportional to state size: `recovery_time ≈ state_size / replay_throughput`. A 100GB state store with no standby replicas and a cold changelog could take 15–30 minutes to restore. This means every crash causes 15–30 minutes of downtime per affected task. The primary levers for controlling state size: windowing (discard data older than N minutes), TTL on state entries, selective aggregation (aggregate only needed fields), and designing your event schema to minimize state fan-out.
-
-**Q: When would you choose GlobalKTable over KTable for a join?**
-
-> Choose `GlobalKTable` when: the reference data is small enough to replicate to every instance (rule of thumb: < 1GB per instance), the data changes infrequently (each change triggers a full replication across all instances), and the stream you're joining is not co-partitioned with the table. `GlobalKTable` eliminates the co-partitioning constraint entirely. For large tables or high-write reference data, prefer `KTable` to avoid the per-instance replication cost, but then ensure co-partitioning between the stream and table.
-
-**Q: How would you design exactly-once end-to-end when writes go to an external database?**
-
-> `EXACTLY_ONCE_V2` covers atomicity within Kafka only. For external DB writes, use the Transactional Outbox Pattern: the consuming service writes both its business state and an outbox record in a single local DB transaction (atomic). A CDC tool like Debezium reads the WAL and publishes the outbox record to Kafka. Downstream consumers process the outbox event with idempotency guards (unique constraint on event ID). This chains: Kafka EOS (Kafka → consumer) + local ACID (consumer DB write) + CDC + idempotency (consumer → downstream) = effectively exactly-once end-to-end, without any distributed transaction manager.
-
 **Q: Why does changing the order of sub-topologies in code cause an infinite rebalance storm during a rolling deployment?**
 
 > Kafka Streams assigns sequential integer IDs to sub-topologies (`0, 1, ...`) based on their declaration order in `StreamsBuilder`. Physical tasks are identified by `TaskId(subTopologyId, partitionId)` (e.g. `0_0`). If you swap the declaration order of two sub-topologies, Task `0_0` changes from consuming Topic A to Topic B. During a rolling update, a `v2` leader assigns Task `0_0` (Topic B) to a `v1` instance, whose local topology expects Task `0_0` to process Topic A. The instance rejects the assignment with a topology mismatch, crashes or leaves the group, triggering another cluster-wide rebalance. Because instances endlessly clash over task definitions, threads never reach the `RUNNING` state and zero records are processed. Furthermore, local RocksDB directories on disk (`/0_0/`) and auto-generated changelog topic names become misaligned with the new task duties.
 
 ---
 
-## Summary — The Four Golden Rules
+## 23. Summary — The Four Golden Rules
 
 ```
 Kafka Streams =
@@ -1716,7 +2758,7 @@ Kafka Streams =
 | Rule | Why It Matters |
 |:---|:---|
 | **State size = recovery time** | Design state to be bounded via windowing, TTL, and selective aggregation |
-| **Partition count = max parallelism** | More partitions → more tasks → more scale; you cannot exceed partition count |
+| **Partition count = max parallelism** | More partitions -> more tasks -> more scale; you cannot exceed partition count |
 | **Changelog = source of truth** | Everything needed to reconstruct state is in Kafka; local disk is a cache |
 | **Design for failure, not success** | Rebalances and restores are normal events — design your state and topology for fast recovery |
 
