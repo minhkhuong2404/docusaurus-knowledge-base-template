@@ -905,6 +905,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/database/full-text-search',
+								'technical-knowledge/database/vector-databases-deep-dive',
 								'technical-knowledge/database/data-warehousing-olap',
 								'technical-knowledge/database/time-series-databases',
 							],

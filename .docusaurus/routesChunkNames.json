@@ -61,13 +61,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-4e7": {
+  "/-f4b": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-29a": {
+  "/-35d": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -3087,6 +3087,10 @@
     "__comp": "df203c0f",
     "__props": "f5b0e201"
   },
+  "/tags/hnsw-e8f": {
+    "__comp": "df203c0f",
+    "__props": "822ad3ce"
+  },
   "/tags/hooks-809": {
     "__comp": "df203c0f",
     "__props": "fba4b180"
@@ -3494,6 +3498,10 @@
   "/tags/iterator-d3d": {
     "__comp": "df203c0f",
     "__props": "59a19e23"
+  },
+  "/tags/ivf-pq-633": {
+    "__comp": "df203c0f",
+    "__props": "12bc0cca"
   },
   "/tags/jaeger-1ab": {
     "__comp": "df203c0f",
@@ -7371,7 +7379,7 @@
     "__comp": "df203c0f",
     "__props": "e05b6b95"
   },
-  "/-5b0": {
+  "/-2d5": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -8094,47 +8102,47 @@
     "__comp": "17896441",
     "content": "de2714d4"
   },
-  "/technical-knowledge/api-design/api-design-interview-questions-698": {
+  "/technical-knowledge/api-design/api-design-interview-questions-9e8": {
     "__comp": "17896441",
     "content": "489e6a77"
   },
-  "/technical-knowledge/api-design/api-security-owasp-checklist-f6c": {
+  "/technical-knowledge/api-design/api-security-owasp-checklist-387": {
     "__comp": "17896441",
     "content": "107983ca"
   },
-  "/technical-knowledge/api-design/contract-governance-testing-591": {
+  "/technical-knowledge/api-design/contract-governance-testing-13e": {
     "__comp": "17896441",
     "content": "ffc724f7"
   },
-  "/technical-knowledge/api-design/errors-pagination-filtering-777": {
+  "/technical-knowledge/api-design/errors-pagination-filtering-93a": {
     "__comp": "17896441",
     "content": "a4ef67dc"
   },
-  "/technical-knowledge/api-design/intro-6be": {
+  "/technical-knowledge/api-design/intro-a1c": {
     "__comp": "17896441",
     "content": "9bd24fb0"
   },
-  "/technical-knowledge/api-design/naming-conventions-af1": {
+  "/technical-knowledge/api-design/naming-conventions-08e": {
     "__comp": "17896441",
     "content": "dc5a7557"
   },
-  "/technical-knowledge/api-design/openapi-swagger-fundamentals-08f": {
+  "/technical-knowledge/api-design/openapi-swagger-fundamentals-67e": {
     "__comp": "17896441",
     "content": "3e076cb5"
   },
-  "/technical-knowledge/api-design/reliability-idempotency-webhooks-1dc": {
+  "/technical-knowledge/api-design/reliability-idempotency-webhooks-12c": {
     "__comp": "17896441",
     "content": "a084c15d"
   },
-  "/technical-knowledge/api-design/resource-modeling-http-semantics-da0": {
+  "/technical-knowledge/api-design/resource-modeling-http-semantics-67f": {
     "__comp": "17896441",
     "content": "e5856faa"
   },
-  "/technical-knowledge/api-design/spring-boot-springdoc-openapi-269": {
+  "/technical-knowledge/api-design/spring-boot-springdoc-openapi-1a6": {
     "__comp": "17896441",
     "content": "b4e7f33f"
   },
-  "/technical-knowledge/api-design/versioning-evolution-c21": {
+  "/technical-knowledge/api-design/versioning-evolution-17a": {
     "__comp": "17896441",
     "content": "bf3583b0"
   },
@@ -8821,6 +8829,10 @@
   "/technical-knowledge/database/transactions-concurrency-1ce": {
     "__comp": "17896441",
     "content": "d2fa8756"
+  },
+  "/technical-knowledge/database/vector-databases-deep-dive-583": {
+    "__comp": "17896441",
+    "content": "4491f1fc"
   },
   "/technical-knowledge/design-patterns/abstract-factory-7e2": {
     "__comp": "17896441",
@@ -12186,7 +12198,7 @@
     "__comp": "17896441",
     "content": "8e1d77b1"
   },
-  "/technical-knowledge/java/java-object-layout-memory-659": {
+  "/technical-knowledge/java/java-object-layout-memory-dae": {
     "__comp": "17896441",
     "content": "e1fa173c"
   },
@@ -12970,7 +12982,7 @@
     "__comp": "17896441",
     "content": "73d1f34f"
   },
-  "/technical-knowledge/system-design/database-resharding-strategies-32f": {
+  "/technical-knowledge/system-design/database-resharding-strategies-d0b": {
     "__comp": "17896441",
     "content": "7852c460"
   },

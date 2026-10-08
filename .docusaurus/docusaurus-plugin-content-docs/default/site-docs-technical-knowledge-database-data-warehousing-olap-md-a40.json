@@ -78,8 +78,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Full-Text Search",
-    "permalink": "/technical-knowledge/database/full-text-search"
+    "title": "Vector Databases: Architecture, ANN Math & Comparative Deep Dive",
+    "permalink": "/technical-knowledge/database/vector-databases-deep-dive"
   },
   "next": {
     "title": "Time-Series Databases",

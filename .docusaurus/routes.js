@@ -49,11 +49,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '4e7'),
+    component: ComponentCreator('/', 'f4b'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '29a'),
+        component: ComponentCreator('/', '35d'),
         routes: [
           {
             path: '/tags',
@@ -3826,6 +3826,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/hnsw',
+            component: ComponentCreator('/tags/hnsw', 'e8f'),
+            exact: true
+          },
+          {
             path: '/tags/hooks',
             component: ComponentCreator('/tags/hooks', '809'),
             exact: true
@@ -4333,6 +4338,11 @@ export default [
           {
             path: '/tags/iterator',
             component: ComponentCreator('/tags/iterator', 'd3d'),
+            exact: true
+          },
+          {
+            path: '/tags/ivf-pq',
+            component: ComponentCreator('/tags/ivf-pq', '633'),
             exact: true
           },
           {
@@ -9182,7 +9192,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '5b0'),
+            component: ComponentCreator('/', '2d5'),
             routes: [
               {
                 path: '/aws',
@@ -10266,67 +10276,67 @@ export default [
               },
               {
                 path: '/technical-knowledge/api-design/api-design-interview-questions',
-                component: ComponentCreator('/technical-knowledge/api-design/api-design-interview-questions', '698'),
+                component: ComponentCreator('/technical-knowledge/api-design/api-design-interview-questions', '9e8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/api-security-owasp-checklist',
-                component: ComponentCreator('/technical-knowledge/api-design/api-security-owasp-checklist', 'f6c'),
+                component: ComponentCreator('/technical-knowledge/api-design/api-security-owasp-checklist', '387'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/contract-governance-testing',
-                component: ComponentCreator('/technical-knowledge/api-design/contract-governance-testing', '591'),
+                component: ComponentCreator('/technical-knowledge/api-design/contract-governance-testing', '13e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/errors-pagination-filtering',
-                component: ComponentCreator('/technical-knowledge/api-design/errors-pagination-filtering', '777'),
+                component: ComponentCreator('/technical-knowledge/api-design/errors-pagination-filtering', '93a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/intro',
-                component: ComponentCreator('/technical-knowledge/api-design/intro', '6be'),
+                component: ComponentCreator('/technical-knowledge/api-design/intro', 'a1c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/naming-conventions',
-                component: ComponentCreator('/technical-knowledge/api-design/naming-conventions', 'af1'),
+                component: ComponentCreator('/technical-knowledge/api-design/naming-conventions', '08e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/openapi-swagger-fundamentals',
-                component: ComponentCreator('/technical-knowledge/api-design/openapi-swagger-fundamentals', '08f'),
+                component: ComponentCreator('/technical-knowledge/api-design/openapi-swagger-fundamentals', '67e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/reliability-idempotency-webhooks',
-                component: ComponentCreator('/technical-knowledge/api-design/reliability-idempotency-webhooks', '1dc'),
+                component: ComponentCreator('/technical-knowledge/api-design/reliability-idempotency-webhooks', '12c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/resource-modeling-http-semantics',
-                component: ComponentCreator('/technical-knowledge/api-design/resource-modeling-http-semantics', 'da0'),
+                component: ComponentCreator('/technical-knowledge/api-design/resource-modeling-http-semantics', '67f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/spring-boot-springdoc-openapi',
-                component: ComponentCreator('/technical-knowledge/api-design/spring-boot-springdoc-openapi', '269'),
+                component: ComponentCreator('/technical-knowledge/api-design/spring-boot-springdoc-openapi', '1a6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/api-design/versioning-evolution',
-                component: ComponentCreator('/technical-knowledge/api-design/versioning-evolution', 'c21'),
+                component: ComponentCreator('/technical-knowledge/api-design/versioning-evolution', '17a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -11353,6 +11363,12 @@ export default [
               {
                 path: '/technical-knowledge/database/transactions-concurrency',
                 component: ComponentCreator('/technical-knowledge/database/transactions-concurrency', '1ce'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/database/vector-databases-deep-dive',
+                component: ComponentCreator('/technical-knowledge/database/vector-databases-deep-dive', '583'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16404,7 +16420,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-object-layout-memory',
-                component: ComponentCreator('/technical-knowledge/java/java-object-layout-memory', '659'),
+                component: ComponentCreator('/technical-knowledge/java/java-object-layout-memory', 'dae'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -17571,7 +17587,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/database-resharding-strategies',
-                component: ComponentCreator('/technical-knowledge/system-design/database-resharding-strategies', '32f'),
+                component: ComponentCreator('/technical-knowledge/system-design/database-resharding-strategies', 'd0b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

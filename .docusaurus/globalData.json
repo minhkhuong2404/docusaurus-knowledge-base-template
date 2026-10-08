@@ -1661,6 +1661,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/vector-databases-deep-dive",
+              "path": "/technical-knowledge/database/vector-databases-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/design-patterns/abstract-factory",
               "path": "/technical-knowledge/design-patterns/abstract-factory",
               "sidebar": "tutorialSidebar"
