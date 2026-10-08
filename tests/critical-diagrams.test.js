@@ -25,6 +25,8 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'StockExchangeMatchingDiagram.tsx',
     'BlockchainCoreDiagram.tsx',
     'BlockchainScalingDiagram.tsx',
+    'OpenApiLifecycleDiagram.tsx',
+    'ApiNamingConventionsDiagram.tsx',
     'LlmTrainingAndJevDiagram.tsx',
     'LlmTrainingPipelineDiagram.tsx',
     'RlvrVerificationFlowDiagram.tsx',

@@ -741,6 +741,61 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/api-design/api-design-interview-questions",
+              "path": "/technical-knowledge/api-design/api-design-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/api-security-owasp-checklist",
+              "path": "/technical-knowledge/api-design/api-security-owasp-checklist",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/contract-governance-testing",
+              "path": "/technical-knowledge/api-design/contract-governance-testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/errors-pagination-filtering",
+              "path": "/technical-knowledge/api-design/errors-pagination-filtering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/intro",
+              "path": "/technical-knowledge/api-design/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/naming-conventions",
+              "path": "/technical-knowledge/api-design/naming-conventions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/openapi-swagger-fundamentals",
+              "path": "/technical-knowledge/api-design/openapi-swagger-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/reliability-idempotency-webhooks",
+              "path": "/technical-knowledge/api-design/reliability-idempotency-webhooks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/resource-modeling-http-semantics",
+              "path": "/technical-knowledge/api-design/resource-modeling-http-semantics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/spring-boot-springdoc-openapi",
+              "path": "/technical-knowledge/api-design/spring-boot-springdoc-openapi",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/versioning-evolution",
+              "path": "/technical-knowledge/api-design/versioning-evolution",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/aws/api-gateway/index",
               "path": "/technical-knowledge/aws/api-gateway/",
               "sidebar": "tutorialSidebar"
@@ -7474,6 +7529,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }

@@ -660,6 +660,23 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
+					label: '🧭 API Design & OpenAPI',
+					items: [
+						'technical-knowledge/api-design/intro',
+						'technical-knowledge/api-design/openapi-swagger-fundamentals',
+						'technical-knowledge/api-design/spring-boot-springdoc-openapi',
+						'technical-knowledge/api-design/naming-conventions',
+						'technical-knowledge/api-design/resource-modeling-http-semantics',
+						'technical-knowledge/api-design/errors-pagination-filtering',
+						'technical-knowledge/api-design/versioning-evolution',
+						'technical-knowledge/api-design/reliability-idempotency-webhooks',
+						'technical-knowledge/api-design/contract-governance-testing',
+						'technical-knowledge/api-design/api-security-owasp-checklist',
+						'technical-knowledge/api-design/api-design-interview-questions',
+					]
+				},
+				{
+					type: 'category',
 					label: '⛓️ Blockchain & Web3',
 					items: [
 						'technical-knowledge/blockchain/intro',

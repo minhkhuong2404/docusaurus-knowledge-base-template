@@ -203,5 +203,6 @@ Notice HotSpot reordered the fields (moving `int` before `long`) to pack fields 
 
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
 - [Stack vs. Heap Memory Architecture](./java-stack-vs-heap.md)
-- [Lock-Free Concurrency, VarHandle & LMAX Disruptor](./java-lock-free-disruptor.md)
+- [Lock-Free Concurrency & VarHandle](./java-lock-free-varhandle.md)
+- [LMAX Disruptor High-Performance Ring Buffer](./java-lmax-disruptor.md)
 - [Java Off-Heap Memory & Foreign Function (FFM) API](./java-off-heap-ffm-api.md)

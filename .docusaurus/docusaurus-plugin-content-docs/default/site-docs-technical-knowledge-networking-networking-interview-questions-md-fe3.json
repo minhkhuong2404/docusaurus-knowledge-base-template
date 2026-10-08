@@ -36,8 +36,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1785518999000,
   "sidebarPosition": 19,
   "frontMatter": {
     "id": "networking-interview-questions",
@@ -59,6 +59,6 @@
   },
   "next": {
     "title": "Introduction",
-    "permalink": "/technical-knowledge/blockchain/intro"
+    "permalink": "/technical-knowledge/api-design/intro"
   }
 }

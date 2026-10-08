@@ -202,7 +202,7 @@ Before approving a production re-sharding migration:
 ## Related Knowledge & Further Reading
 
 - [Database Sharding & Partitioning Core Guide](./sharding-partitioning.md) — Fundamental shard keys, consistent hashing, and scatter-gather query design.
-- [Consistent Hashing Deep Dive](./consistent-hashing-deep-dive.md) — Mathematical proofs, virtual node distributions, and Karger's algorithm.
+- [Consistent Hashing Deep Dive](./consistent-hashing.md) — Mathematical proofs, virtual node distributions, and Karger's algorithm.
 - [CockroachDB Distributed Architecture](./cockroachdb-architecture.md) — 64 MB Range splits, Multi-Raft consensus, and Leaseholder mechanics.
 - [Split-Brain: Dual Primary & Multi-Leader Divergence](./split-brain-multi-leader-divergence.md) — Fencing tokens, STONITH, and network partition hazards.
 - [Data Consistency & Transactions Deep Dive](./data-consistency.md) — Linearizability and distributed ACID consistency models.
