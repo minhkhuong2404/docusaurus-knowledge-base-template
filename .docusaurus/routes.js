@@ -49,11 +49,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'f4b'),
+    component: ComponentCreator('/', 'c9c'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '35d'),
+        component: ComponentCreator('/', '7da'),
         routes: [
           {
             path: '/tags',
@@ -9192,7 +9192,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '2d5'),
+            component: ComponentCreator('/', 'de0'),
             routes: [
               {
                 path: '/aws',
@@ -11164,7 +11164,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/',
-                component: ComponentCreator('/technical-knowledge/database/', '7b1'),
+                component: ComponentCreator('/technical-knowledge/database/', 'f18'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -11368,7 +11368,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/vector-databases-deep-dive',
-                component: ComponentCreator('/technical-knowledge/database/vector-databases-deep-dive', '583'),
+                component: ComponentCreator('/technical-knowledge/database/vector-databases-deep-dive', 'f93'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

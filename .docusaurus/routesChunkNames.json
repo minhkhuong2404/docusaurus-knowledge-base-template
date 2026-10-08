@@ -61,13 +61,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-f4b": {
+  "/-c9c": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-35d": {
+  "/-7da": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -7379,7 +7379,7 @@
     "__comp": "df203c0f",
     "__props": "e05b6b95"
   },
-  "/-2d5": {
+  "/-de0": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -8694,7 +8694,7 @@
     "__comp": "17896441",
     "content": "58095ff6"
   },
-  "/technical-knowledge/database/-7b1": {
+  "/technical-knowledge/database/-f18": {
     "__comp": "17896441",
     "content": "d4d0b9b0"
   },
@@ -8830,7 +8830,7 @@
     "__comp": "17896441",
     "content": "d2fa8756"
   },
-  "/technical-knowledge/database/vector-databases-deep-dive-583": {
+  "/technical-knowledge/database/vector-databases-deep-dive-f93": {
     "__comp": "17896441",
     "content": "4491f1fc"
   },
