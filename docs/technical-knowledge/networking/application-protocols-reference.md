@@ -223,7 +223,7 @@ ssh -D 1080 -N -C user@bastion.example.com
 └───────────────────────────────────────┴───────────────────────────────────────┘
 ```
 
-:::caution Why Pure FTP Must Never Be Used
+:::caution[Why Pure FTP Must Never Be Used]
 Standard FTP sends usernames and passwords across the wire in clear ASCII text. Any network sniffer (Wireshark, tcpdump) on the transit path can instantly capture credentials. Always mandate **SFTP** (over SSH) or **FTPS** (FTP over explicit TLS).
 :::
 

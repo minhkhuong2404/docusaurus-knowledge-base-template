@@ -12,7 +12,7 @@ import SweToAiEngineerEvolutionDiagram from '@site/src/components/SweToAiEnginee
 
 # 🧭 Vector Databases: Architecture, ANN Math & Comparative Deep Dive
 
-:::info Architectural Persona
+:::info[Architectural Persona]
 Written from the perspective of a **Senior Principal Systems Architect & Distributed Engine Specialist**. This deep dive deconstructs physical memory layouts, approximate nearest neighbor (ANN) graph algorithms, hardware SIMD instruction sets, the curse of dimensionality, and cross-paradigm operational trade-offs across modern enterprise data architectures.
 :::
 

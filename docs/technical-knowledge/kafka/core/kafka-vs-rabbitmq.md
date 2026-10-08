@@ -178,7 +178,7 @@ Broker Sizing Estimator:
 
 In system design interviews, candidates often panic when asked: *"What happens if Kafka goes down?"*
 
-:::info Principal Architect Interview Technique
+:::info[Principal Architect Interview Technique]
 Push back gently on the premise. Kafka is **always available, sometimes consistent** under standard distributed systems operation.
 A production Kafka cluster runs across multiple availability zones (AZs) with:
 1. **Partition Replication**: A replication factor of 3 (1 Leader + 2 Followers) distributed across separate physical racks/AZs.
