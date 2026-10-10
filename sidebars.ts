@@ -355,6 +355,7 @@ const sidebars: SidebarsConfig = {
 							label: '🏗️ Fundamentals',
 							collapsed: true,
 							items: [
+								'technical-knowledge/system-design/full-system-design-course',
 								'technical-knowledge/system-design/architecture-fundamentals',
 								'technical-knowledge/system-design/what-breaks-at-scale',
 								'technical-knowledge/system-design/capacity-planning',
@@ -401,6 +402,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/saga-pattern',
 								'technical-knowledge/system-design/outbox-pattern',
 								'technical-knowledge/system-design/event-driven-microservices',
+								'technical-knowledge/system-design/data-driven-vs-event-driven',
 								'technical-knowledge/system-design/dead-letter-queue',
 								'technical-knowledge/system-design/long-running-tasks',
 								'technical-knowledge/system-design/handling-contention',

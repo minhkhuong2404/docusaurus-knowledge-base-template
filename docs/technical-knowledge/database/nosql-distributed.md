@@ -570,6 +570,36 @@ A graph database stores data as nodes (things) and edges (relationships between 
 
 In SQL, "find all friends of friends" requires a self-join — and "friends 3 hops away" means 3 self-joins, which explodes exponentially. In a graph DB, each hop is `O(1)` — just follow an edge pointer.
 
+### Under the Hood: Index-Free Adjacency vs Relational B+Tree Join Scans
+
+Understanding why Graph databases vastly outperform Relational databases for connected data is a key senior system design insight:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      RELATIONAL VS GRAPH TRAVERSAL ENGINES                  │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│      RELATIONAL DATABASE (B+TREE)    │   GRAPH DATABASE (INDEX-FREE ADJACENCY│
+├──────────────────────────────────────┼──────────────────────────────────────┤
+│ 1. Scan user table for User A.       │ 1. Locate Node A in memory/disk.     │
+│ 2. Query join table index:           │ 2. Node A contains direct pointer    │
+│    O(log N) B+Tree index lookup.     │    to its first Relationship record. │
+│ 3. For each connected friend, query  │ 3. Relationship records form a       │
+│    join index AGAIN for their friends│    doubly-linked list with direct    │
+│    -> O(log N) per hop.              │    memory pointers to target nodes.  │
+│ 4. Total Cost: O(N^K) join explosion │ 4. Total Cost: O(K) pointer hops.    │
+└──────────────────────────────────────┴──────────────────────────────────────┘
+```
+
+#### The Disk Record Layout (Neo4j Engine Architecture):
+- **Node Record (Fixed 15 Bytes):** Contains `inUse` flag, pointer to first relationship, pointer to first property, and labels.
+- **Relationship Record (Fixed 34 Bytes):** Contains pointer to source node, pointer to target node, relationship type, pointer to previous/next relationship for the source node, and pointer to previous/next relationship for the target node.
+- **Result:** Because records are fixed-size, calculating a record's physical disk byte offset is pure $O(1)$ arithmetic: `offset = recordId * RECORD_SIZE`. The database dereferences pointers directly in OS page cache without searching B+Tree indexes.
+
+### The Graph Scaling Dilemma: The Distributed Partitioning Trap
+While Document and Key-Value stores shard trivially across partitions, **graph databases are notoriously difficult to shard horizontally across multiple servers**:
+- **The Graph Cut Problem:** Splitting a connected graph across 10 machines requires severing millions of edges. Every cross-machine relationship traversal incurs an inter-server network RPC hop (5–20ms), completely erasing the sub-microsecond speed of pointer dereferencing!
+- **Production Standard:** Production graph databases (Neo4j, Memgraph) typically scale by keeping the **entire graph topology on a single machine's RAM/NVMe storage**, scaling read throughput via read replicas and clustering, rather than trying to partition a dense graph across servers.
+
 ### Use Cases
 
 - **Social networks** — friends, followers, mutual connections

@@ -104,13 +104,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-90a": {
+  "/-e03": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-20a": {
+  "/-cfe": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -1849,6 +1849,10 @@
   "/tags/data-consistency-3fb": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-data-consistencyaf-4-9a4"
+  },
+  "/tags/data-driven-b0d": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-data-driven-297-2b8"
   },
   "/tags/data-migration-d75": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -7482,7 +7486,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-e81": {
+  "/-6c6": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -13080,6 +13084,10 @@
   "/technical-knowledge/system-design/data-consistency-709": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-system-design-data-consistency-009-429"
+  },
+  "/technical-knowledge/system-design/data-driven-vs-event-driven-e4b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-data-driven-vs-event-driven-5-db-3bc"
   },
   "/technical-knowledge/system-design/database-per-service-207": {
     "__comp": "__comp---theme-doc-item-178-a40",

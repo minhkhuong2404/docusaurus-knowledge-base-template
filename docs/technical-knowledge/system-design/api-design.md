@@ -1011,6 +1011,57 @@ def idempotent_create_payment(idempotency_key: str, request: dict) -> dict:
 
 ---
 
+## Transport Layer Foundations: TCP, UDP, and the Evolution to HTTP/3 (QUIC)
+
+All application-layer API protocols (REST, GraphQL, gRPC, WebSocket) ultimately transmit data over Layer 4 Transport protocols:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       TRANSPORT LAYER PROTOCOL SPECTRUM                     │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│  TCP (TRANSMISSION CONTROL PROTOCOL) │     UDP (USER DATAGRAM PROTOCOL)     │
+├──────────────────────────────────────┼──────────────────────────────────────┤
+│ • Connection-oriented (3-Way Handshake)│ • Connectionless (Fire and Forget)  │
+│ • Guaranteed delivery via ACK packets │ • No acknowledgments or retries     │
+│ • Strict in-order byte stream        │ • Packets may arrive out of order    │
+│ • Flow control (Sliding Window)      │ • Zero connection handshake latency  │
+│ • Congestion control (Cubic / BBR)   │ • 8-byte fixed header (vs 20–60B)    │
+│ • Head-of-Line (HoL) blocking        │ • Independent packet streams         │
+│ • Best For: Web, APIs, Banking, SSH  │ • Best For: DNS, VoIP, Gaming, QUIC  │
+└──────────────────────────────────────┴──────────────────────────────────────┘
+```
+
+### The TCP 3-Way Handshake & Connection Lifecycles
+Before any HTTP request is transmitted over TCP, client and server execute the 3-Way Handshake:
+1. **SYN:** Client sends Synchronize packet with initial sequence number ($ISN_c$).
+2. **SYN-ACK:** Server acknowledges with $ACK = ISN_c + 1$ and responds with server sequence number ($ISN_s$).
+3. **ACK:** Client sends $ACK = ISN_s + 1$.
+4. **Latency Cost:** Incurs 1 full Round-Trip Time (RTT) before application payload bytes flow.
+5. **Connection Teardown:** Closes via a 4-way FIN/ACK handshake, requiring sockets to linger in the `TIME_WAIT` state (typically 60–120 seconds) to ensure delayed duplicate packets dissipate in the network.
+
+### The Protocol Evolution: HTTP/1.1 ➔ HTTP/2 ➔ HTTP/3 (QUIC)
+Understanding the trade-offs between modern HTTP versions is a core senior interview competency:
+
+```
+HTTP/1.1:   [ Request 1 ➔ Response 1 ] ──▶ [ Request 2 ➔ Response 2 ] (Application HoL Blocking)
+HTTP/2:     Stream 1 ──┐
+            Stream 2 ──┼─▶ [ Single Multiplexed TCP Connection ] (TCP-level HoL Blocking on packet drop)
+            Stream 3 ──┘
+HTTP/3:     Stream 1 (UDP) ──▶ Independent byte stream
+(QUIC)      Stream 2 (UDP) ──▶ Independent byte stream (Packet drop on Stream 1 does NOT stall Stream 2!)
+            Stream 3 (UDP) ──▶ 0-RTT Handshake + Connection Migration (Seamless Wi-Fi ➔ Cellular Roaming)
+```
+
+1. **HTTP/1.1:** Textual protocol with pipelining flaws. Browsers open 6 concurrent TCP connections per origin to mitigate application-level head-of-line blocking.
+2. **HTTP/2:** Multiplexes dozens of binary streams over a **single TCP connection** with HPACK header compression.  
+   *The Achilles Heel:* If a single IP packet is dropped on the network, the underlying TCP connection stalls **all multiplexed streams** until that single packet is retransmitted (TCP-level Head-of-Line blocking).
+3. **HTTP/3 & QUIC:** Replaces TCP with **QUIC over UDP**:
+   - **Independent Streams:** A dropped packet on stream 1 causes zero latency on streams 2, 3, or 4.
+   - **0-RTT Handshake:** Returning clients transmit encrypted API payloads on the very first packet.
+   - **Connection Migration:** Connections use a 64-bit Connection ID instead of an IP:Port 4-tuple. When a mobile user walks out of the office and switches from Wi-Fi to 5G, active API calls and WebSocket connections continue uninterrupted without reconnecting.
+
+---
+
 ## Real-Time Protocols
 
 Standard request-response REST doesn't fit use cases where the server must push data to the client continuously.

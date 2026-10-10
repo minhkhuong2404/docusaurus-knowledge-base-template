@@ -6857,6 +6857,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/data-driven-vs-event-driven",
+              "path": "/technical-knowledge/system-design/data-driven-vs-event-driven",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/database-per-service",
               "path": "/technical-knowledge/system-design/database-per-service",
               "sidebar": "tutorialSidebar"
@@ -7534,15 +7539,6 @@
         }
       ],
       "breadcrumbs": true
-    }
-  },
-  "docusaurus-plugin-google-gtag": {
-    "default": {
-      "trackingID": [
-        "G-79SQQZQMCX"
-      ],
-      "anonymizeIP": true,
-      "id": "default"
     }
   }
 }

@@ -819,6 +819,30 @@ spring:
 
 ## API Security: Defense in Depth
 
+### Edge Security: Layer 3/4 DDoS Mitigation vs Layer 7 WAF
+
+Production defense-in-depth begins at the perimeter edge before requests ever touch an API gateway or backend compute instance:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          EDGE PERIMETER DEFENSE                             │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│    LAYER 3/4 DDOS SCRUBBING (BGP)    │    LAYER 7 WAF (APPLICATION FIREWALL)│
+├──────────────────────────────────────┼──────────────────────────────────────┤
+│ • Targets: SYN floods, UDP floods,   │ • Targets: SQLi, XSS, HTTP floods,   │
+│   NTP amplification, IP fragmentation│   path traversal, bot scraping       │
+│ • Mitigation: Anycast BGP routing    │ • Mitigation: OWASP Core Rule Sets,  │
+│   into distributed scrubbing centers │   rate limits, TLS fingerprinting    │
+│ • Inspection: IP and TCP/UDP headers │ • Inspection: Full HTTP body, URI,   │
+│ • Tools: AWS Shield, Cloudflare Magic│   cookies, headers, and JSON schemas │
+└──────────────────────────────────────┴──────────────────────────────────────┘
+```
+
+#### Layer 7 WAF Best Practices:
+1. **OWASP Core Rule Set (CRS):** Enforce strict rules against SQL Injection (`UNION SELECT`, `' OR 1=1`), Cross-Site Scripting (XSS), and Remote Code Execution (RCE).
+2. **Behavioral Bot Mitigation:** Block automated scrapers and credential-stuffing tools by inspecting JA3/JA4 TLS client fingerprints and HTTP header anomaly patterns.
+3. **Geo-Blocking & Tor Exit Node Denial:** Drop traffic originating from unauthorized jurisdictions or anonymized exit nodes on high-security endpoints (e.g. `/auth/login`, `/checkout`).
+
 ### Input Validation: Multiple Layers
 
 ```java

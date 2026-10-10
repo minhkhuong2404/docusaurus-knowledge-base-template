@@ -84,11 +84,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '90a'),
+    component: ComponentCreator('/', 'e03'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '20a'),
+        component: ComponentCreator('/', 'cfe'),
         routes: [
           {
             path: '/tags',
@@ -2258,6 +2258,11 @@ export default [
           {
             path: '/tags/data-consistency',
             component: ComponentCreator('/tags/data-consistency', '3fb'),
+            exact: true
+          },
+          {
+            path: '/tags/data-driven',
+            component: ComponentCreator('/tags/data-driven', 'b0d'),
             exact: true
           },
           {
@@ -9302,7 +9307,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'e81'),
+            component: ComponentCreator('/', '6c6'),
             routes: [
               {
                 path: '/aws',
@@ -17686,6 +17691,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/data-consistency',
                 component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '709'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/data-driven-vs-event-driven',
+                component: ComponentCreator('/technical-knowledge/system-design/data-driven-vs-event-driven', 'e4b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
