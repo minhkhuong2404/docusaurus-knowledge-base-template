@@ -1,8 +1,8 @@
 {
-  "id": "1021",
-  "title": "Remove Outermost Parentheses",
-  "url": "https://leetcode.com/problems/remove-outermost-parentheses/",
-  "difficulty": "easy",
-  "topic": "String, Stack, Bracket Sequences",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-10-08."
+  "id": "2333",
+  "title": "Minimum Sum of Squared Difference",
+  "url": "https://leetcode.com/problems/minimum-sum-of-squared-difference/",
+  "difficulty": "medium",
+  "topic": "Array, Binary Search, Greedy, Sorting, Heap (Priority Queue)",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-10-10."
 }

@@ -84,11 +84,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'e03'),
+    component: ComponentCreator('/', '4dc'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'cfe'),
+        component: ComponentCreator('/', '1ee'),
         routes: [
           {
             path: '/tags',
@@ -423,6 +423,11 @@ export default [
           {
             path: '/tags/api-server',
             component: ComponentCreator('/tags/api-server', '7ba'),
+            exact: true
+          },
+          {
+            path: '/tags/apis',
+            component: ComponentCreator('/tags/apis', '834'),
             exact: true
           },
           {
@@ -2108,6 +2113,11 @@ export default [
           {
             path: '/tags/coupling',
             component: ComponentCreator('/tags/coupling', '8ac'),
+            exact: true
+          },
+          {
+            path: '/tags/course',
+            component: ComponentCreator('/tags/course', '8d7'),
             exact: true
           },
           {
@@ -9307,7 +9317,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '6c6'),
+            component: ComponentCreator('/', '870'),
             routes: [
               {
                 path: '/aws',
@@ -17769,6 +17779,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/feature-toggle',
                 component: ComponentCreator('/technical-knowledge/system-design/feature-toggle', 'e55'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/full-system-design-course',
+                component: ComponentCreator('/technical-knowledge/system-design/full-system-design-course', '56d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

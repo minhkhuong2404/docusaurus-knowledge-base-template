@@ -104,13 +104,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-e03": {
+  "/-4dc": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-cfe": {
+  "/-1ee": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -381,6 +381,10 @@
   "/tags/api-server-7ba": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-api-server-7-de-55c"
+  },
+  "/tags/apis-834": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-apis-739-ca3"
   },
   "/tags/app-fraud-4e5": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1729,6 +1733,10 @@
   "/tags/coupling-8ac": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-coupling-016-645"
+  },
+  "/tags/course-8d7": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-coursee-59-58c"
   },
   "/tags/cpu-scheduling-50d": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -7486,7 +7494,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-6c6": {
+  "/-870": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -13136,6 +13144,10 @@
   "/technical-knowledge/system-design/feature-toggle-e55": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-system-design-feature-toggled-05-81a"
+  },
+  "/technical-knowledge/system-design/full-system-design-course-56d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-full-system-design-courseb-99-2e7"
   },
   "/technical-knowledge/system-design/handling-contention-7c9": {
     "__comp": "__comp---theme-doc-item-178-a40",

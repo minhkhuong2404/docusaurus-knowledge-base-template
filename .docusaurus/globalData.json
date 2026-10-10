@@ -6922,6 +6922,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/full-system-design-course",
+              "path": "/technical-knowledge/system-design/full-system-design-course",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/handling-contention",
               "path": "/technical-knowledge/system-design/handling-contention",
               "sidebar": "tutorialSidebar"
