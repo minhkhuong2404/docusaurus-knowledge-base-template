@@ -34,11 +34,12 @@ A structured guide covering everything you need to know about databases — from
 | 11 | [Caching Strategies](../system-design/caching-strategies) | Redis, eviction, cache patterns, pitfalls |
 | 12 | [Performance & Monitoring](./performance-monitoring) | Slow queries, profiling, connection pooling |
 | 13 | [Full-Text Search](./full-text-search) | Inverted index, tsvector, Elasticsearch |
-| 14 | [Data Warehousing & OLAP](./data-warehousing-olap) | Star schema, ETL/ELT, materialized views |
-| 15 | [Database Patterns for Microservices](./database-patterns-microservices) | Outbox, Saga, CQRS, Event Sourcing |
-| 16 | [Time-Series Databases](./time-series-databases) | TimescaleDB, InfluxDB, Prometheus |
-| 17 | [Backup & Recovery](./backup-recovery) | RPO/RTO, PITR, DR checklist |
-| 18 | [Database Security](./database-security) | SQL injection, encryption, auditing |
+| 14 | [Vector Databases & ANN Architectures](./vector-databases-deep-dive) | High-dimensional embeddings, HNSW, IVF-PQ, RAG, pgvector vs dedicated |
+| 15 | [Data Warehousing & OLAP](./data-warehousing-olap) | Star schema, ETL/ELT, materialized views |
+| 16 | [Database Patterns for Microservices](./database-patterns-microservices) | Outbox, Saga, CQRS, Event Sourcing |
+| 17 | [Time-Series Databases](./time-series-databases) | TimescaleDB, InfluxDB, Prometheus |
+| 18 | [Backup & Recovery](./backup-recovery) | RPO/RTO, PITR, DR checklist |
+| 19 | [Database Security](./database-security) | SQL injection, encryption, auditing |
 
 :::tip[Java / Spring Tip]
 Throughout this guide, Java and Spring Data / JPA notes are included where relevant to bridge theory and real-world usage.
@@ -70,3 +71,4 @@ Throughout this guide, Java and Spring Data / JPA notes are included where relev
 - [PostgreSQL BRIN Index Guide](./postgresql-brin-index-guide.md)
 - [Database ACID Properties](./acid.md)
 - [Transactions & Concurrency](./transactions-concurrency.md)
+- [Vector Databases & ANN Architectures](./vector-databases-deep-dive.md)

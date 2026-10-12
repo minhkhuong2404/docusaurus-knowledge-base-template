@@ -76,7 +76,7 @@
     "permalink": "/technical-knowledge/database/isolation-levels"
   },
   "next": {
-    "title": "Deadlocks Touching 1 Row (Gap Locks)",
-    "permalink": "/technical-knowledge/database/mysql-deadlocks-gap-locks-internals"
+    "title": "Optimistic vs Pessimistic Locks",
+    "permalink": "/technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive"
   }
 }

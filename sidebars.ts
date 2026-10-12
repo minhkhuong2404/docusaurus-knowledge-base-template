@@ -24,15 +24,18 @@ const sidebars: SidebarsConfig = {
 			label: '💼 General Interview Framework'
 		},
 		{
-			type: 'doc',
-			id: 'technical-knowledge/engineering-practices/how-to-become-senior-developer',
-			label: '🏆 7 Senior Coding Laws'
-		},
-		{
 			type: 'category',
 			label: '🛠️Technical Knowledge',
 			collapsed: false,
 			items: [
+				{
+					type: 'category',
+					label: '🏆 Become Senior Developer',
+					collapsed: true,
+					items: [
+						'technical-knowledge/become-senior-developer/7-coding-laws'
+					]
+				},
 				{
 					type: 'category',
 					label: '☕ Java',
@@ -47,6 +50,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/java/java-oop',
 								'technical-knowledge/java/java-collections',
 								'technical-knowledge/java/java-object-class',
+								'technical-knowledge/java/java-object-layout-memory',
 								'technical-knowledge/java/java-functional-interfaces-factory'
 							]
 						},
@@ -73,7 +77,9 @@ const sidebars: SidebarsConfig = {
 									items: [
 										'technical-knowledge/java/java-threads',
 										'technical-knowledge/java/java-locks',
-										'technical-knowledge/java/java-aqs-internals'
+										'technical-knowledge/java/java-aqs-internals',
+										'technical-knowledge/java/java-lock-free-varhandle',
+										'technical-knowledge/java/java-lmax-disruptor'
 									]
 								}
 							]
@@ -85,6 +91,10 @@ const sidebars: SidebarsConfig = {
 							items: [
 								'technical-knowledge/java/java-jvm',
 								'technical-knowledge/java/java-stack-vs-heap',
+								'technical-knowledge/java/java-classloaders-metaspace',
+								'technical-knowledge/java/java-dynamic-bytecode-agents',
+								'technical-knowledge/java/java-jit-compiler',
+								'technical-knowledge/java/java-graalvm-aot',
 								'technical-knowledge/java/java-virtual-threads',
 								'technical-knowledge/java/production-oom-debugging-guide',
 								'technical-knowledge/java/java-diagnostics-troubleshooting'
@@ -95,7 +105,9 @@ const sidebars: SidebarsConfig = {
 							label: '♻️ Garbage Collection',
 							collapsed: true,
 							items: [
-								'technical-knowledge/java/java-gc'
+								'technical-knowledge/java/java-gc',
+								'technical-knowledge/java/java-gc-g1-deep-dive',
+								'technical-knowledge/java/java-gc-zgc-generational'
 							]
 						},
 						{
@@ -105,6 +117,8 @@ const sidebars: SidebarsConfig = {
 							items: [
 								'technical-knowledge/java/java-io',
 								'technical-knowledge/java/java-off-heap-ffm-api',
+								'technical-knowledge/java/java-serialization-security',
+								'technical-knowledge/java/java-zero-copy-serialization',
 								'technical-knowledge/java/java-new-features'
 							]
 						},
@@ -156,9 +170,9 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/spring/spring-data-jpa',
 								'technical-knowledge/spring/spring-data-jpa-query-annotation',
 								'technical-knowledge/spring/hibernate-association-best-practices',
+								'technical-knowledge/spring/jpa-hibernate-lifecycle-methods',
 								'technical-knowledge/spring/spring-data-jpa-transactions',
 								'technical-knowledge/spring/spring-transactional-deep-dive',
-								'technical-knowledge/spring/jpa-hibernate-lifecycle-methods',
 								'technical-knowledge/spring/hibernate-transactions-performance',
 								'technical-knowledge/spring/spring-data-jpa-interview-questions'
 							]
@@ -331,6 +345,9 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart',
 								'technical-knowledge/system-design/problem-breakdowns/pastebin',
 								'technical-knowledge/system-design/problem-breakdowns/cookie-consent',
+								'technical-knowledge/system-design/problem-breakdowns/nearby-friends',
+								'technical-knowledge/system-design/problem-breakdowns/digital-wallet',
+								'technical-knowledge/system-design/problem-breakdowns/stock-exchange',
 							],
 						},
 						{
@@ -338,6 +355,7 @@ const sidebars: SidebarsConfig = {
 							label: '🏗️ Fundamentals',
 							collapsed: true,
 							items: [
+								'technical-knowledge/system-design/full-system-design-course',
 								'technical-knowledge/system-design/architecture-fundamentals',
 								'technical-knowledge/system-design/what-breaks-at-scale',
 								'technical-knowledge/system-design/capacity-planning',
@@ -351,23 +369,23 @@ const sidebars: SidebarsConfig = {
 							label: '⚡ Scalability Patterns',
 							collapsed: true,
 							items: [
-								'technical-knowledge/system-design/scaling-reads',
-								'technical-knowledge/system-design/scaling-writes',
-								'technical-knowledge/system-design/sharding-partitioning',
-								'technical-knowledge/system-design/sharded-counters-and-leaderboards',
-								'technical-knowledge/system-design/caching-strategies',
-								'technical-knowledge/system-design/bloom-filters',
-								'technical-knowledge/system-design/load-balancing-reliability',
-								'technical-knowledge/system-design/retry-pattern',
-								'technical-knowledge/system-design/circuit-breaker-pattern',
-								'technical-knowledge/system-design/bulkhead-pattern',
+								'technical-knowledge/system-design/concurrency-async-threading-models',
 								'technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
 								'technical-knowledge/system-design/nginx-internals',
-								'technical-knowledge/system-design/concurrency-async-threading-models',
-								'technical-knowledge/system-design/consistent-hashing-deep-dive',
+								'technical-knowledge/system-design/load-balancing-reliability',
 								'technical-knowledge/system-design/rate-limiting-algorithms',
+								'technical-knowledge/system-design/circuit-breaker-pattern',
+								'technical-knowledge/system-design/bulkhead-pattern',
+								'technical-knowledge/system-design/retry-pattern',
+								'technical-knowledge/system-design/caching-strategies',
+								'technical-knowledge/system-design/bloom-filters',
+								'technical-knowledge/system-design/scaling-reads',
+								'technical-knowledge/system-design/scaling-writes',
+								'technical-knowledge/system-design/consistent-hashing-deep-dive',
+								'technical-knowledge/system-design/sharding-partitioning',
+								'technical-knowledge/system-design/database-resharding-strategies',
+								'technical-knowledge/system-design/sharded-counters-and-leaderboards',
 							],
-
 						},
 						{
 							type: 'category',
@@ -375,19 +393,22 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/system-design/distributed-systems',
-								'technical-knowledge/system-design/crdt-collaborative-systems',
-								'technical-knowledge/system-design/real-time-updates',
-								'technical-knowledge/system-design/handling-contention',
-								'technical-knowledge/system-design/inventory-reservation-system',
 								'technical-knowledge/system-design/data-consistency',
+								'technical-knowledge/system-design/advanced-consensus-bft',
+								'technical-knowledge/system-design/split-brain-multi-leader-divergence',
+								'technical-knowledge/system-design/cockroachdb-architecture',
 								'technical-knowledge/system-design/distributed-transactions',
 								'technical-knowledge/system-design/two-phase-commit',
 								'technical-knowledge/system-design/saga-pattern',
 								'technical-knowledge/system-design/outbox-pattern',
 								'technical-knowledge/system-design/event-driven-microservices',
-								'technical-knowledge/system-design/long-running-tasks',
+								'technical-knowledge/system-design/data-driven-vs-event-driven',
 								'technical-knowledge/system-design/dead-letter-queue',
-								'technical-knowledge/system-design/advanced-consensus-bft',
+								'technical-knowledge/system-design/long-running-tasks',
+								'technical-knowledge/system-design/handling-contention',
+								'technical-knowledge/system-design/inventory-reservation-system',
+								'technical-knowledge/system-design/crdt-collaborative-systems',
+								'technical-knowledge/system-design/real-time-updates',
 							],
 						},
 						{
@@ -395,27 +416,27 @@ const sidebars: SidebarsConfig = {
 							label: '🧩 Architecture & APIs',
 							collapsed: true,
 							items: [
-								'technical-knowledge/system-design/microservices-patterns',
-								'technical-knowledge/system-design/microservice-chassis',
-								'technical-knowledge/system-design/service-decomposition',
-								'technical-knowledge/system-design/database-per-service',
-								'technical-knowledge/system-design/backend-for-frontend',
-								'technical-knowledge/system-design/api-composition',
-								'technical-knowledge/system-design/externalized-configuration',
-								'technical-knowledge/system-design/webhook',
 								'technical-knowledge/system-design/domain-driven-design',
+								'technical-knowledge/system-design/microservices-patterns',
+								'technical-knowledge/system-design/service-decomposition',
+								'technical-knowledge/system-design/microservice-chassis',
+								'technical-knowledge/system-design/database-per-service',
 								'technical-knowledge/system-design/cqrs',
 								'technical-knowledge/system-design/api-design',
 								'technical-knowledge/system-design/contract-testing',
+								'technical-knowledge/system-design/backend-for-frontend',
+								'technical-knowledge/system-design/api-composition',
+								'technical-knowledge/system-design/webhook',
+								'technical-knowledge/system-design/externalized-configuration',
 								'technical-knowledge/system-design/sidecar-pattern',
 								'technical-knowledge/system-design/service-mesh',
 								'technical-knowledge/system-design/envoy-proxy',
 								'technical-knowledge/system-design/service-discovery',
 								'technical-knowledge/system-design/kubernetes-networking',
+								'technical-knowledge/system-design/strangler-fig-pattern',
+								'technical-knowledge/system-design/feature-toggle',
 								'technical-knowledge/system-design/deployment-strategies',
 								'technical-knowledge/system-design/blue-green-deployment',
-								'technical-knowledge/system-design/feature-toggle',
-								'technical-knowledge/system-design/strangler-fig-pattern',
 							],
 						},
 						{
@@ -528,14 +549,14 @@ const sidebars: SidebarsConfig = {
 							label: '🔐 Core Security',
 							collapsed: true,
 							items: [
-								'technical-knowledge/security/authentication-authorization',
 								'technical-knowledge/security/web-security-fundamentals',
+								'technical-knowledge/security/authentication-authorization',
 								'technical-knowledge/security/cookies-vs-sessions-vs-jwt',
 								'technical-knowledge/security/refresh-token-security-invalidation',
 								'technical-knowledge/security/web-vulnerabilities',
+								'technical-knowledge/security/api-security',
 								'technical-knowledge/security/cryptography-secure-design',
 								'technical-knowledge/security/keys-signing-tls',
-								'technical-knowledge/security/api-security',
 							],
 						},
 						{
@@ -578,6 +599,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/networking/osi-tcpip-models',
+								'technical-knowledge/networking/mac-address-and-layer-2',
 								'technical-knowledge/networking/ip-addressing-routing',
 								'technical-knowledge/networking/tcp-udp-transport-layer',
 								'technical-knowledge/networking/quic-modern-transport',
@@ -624,6 +646,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/networking/network-security',
+								'technical-knowledge/networking/tor-and-privacy-networks',
 							],
 						},
 						{
@@ -639,9 +662,108 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
+					label: '🧭 API Design & OpenAPI',
+					items: [
+						'technical-knowledge/api-design/intro',
+						'technical-knowledge/api-design/openapi-swagger-fundamentals',
+						'technical-knowledge/api-design/spring-boot-springdoc-openapi',
+						'technical-knowledge/api-design/naming-conventions',
+						'technical-knowledge/api-design/resource-modeling-http-semantics',
+						'technical-knowledge/api-design/errors-pagination-filtering',
+						'technical-knowledge/api-design/versioning-evolution',
+						'technical-knowledge/api-design/reliability-idempotency-webhooks',
+						'technical-knowledge/api-design/contract-governance-testing',
+						'technical-knowledge/api-design/api-security-owasp-checklist',
+						'technical-knowledge/api-design/api-design-interview-questions',
+					]
+				},
+				{
+					type: 'category',
+					label: '⛓️ Blockchain & Web3',
+					items: [
+						'technical-knowledge/blockchain/intro',
+						{
+							type: 'category',
+							label: '🌱 Fundamentals',
+							collapsed: false,
+							items: [
+								'technical-knowledge/blockchain/fundamentals/what-is-blockchain',
+								'technical-knowledge/blockchain/fundamentals/cryptography-primitives',
+								'technical-knowledge/blockchain/fundamentals/ledger-models'
+							]
+						},
+						{
+							type: 'category',
+							label: '🤝 Consensus',
+							collapsed: true,
+							items: ['technical-knowledge/blockchain/consensus/consensus-mechanisms']
+						},
+						{
+							type: 'category',
+							label: '🏗️ Platforms',
+							collapsed: true,
+							items: [
+								'technical-knowledge/blockchain/platforms/bitcoin-internals',
+								'technical-knowledge/blockchain/platforms/ethereum-evm'
+							]
+						},
+						{
+							type: 'category',
+							label: '📜 Smart Contracts & DeFi',
+							collapsed: true,
+							items: [
+								'technical-knowledge/blockchain/smart-contracts/smart-contract-security',
+								'technical-knowledge/blockchain/defi/defi-amm-mev'
+							]
+						},
+						{
+							type: 'category',
+							label: '🌐 Web3, Scaling & Storage',
+							collapsed: true,
+							items: [
+								'technical-knowledge/blockchain/web3/web3-architecture',
+								'technical-knowledge/blockchain/scaling/sharding-rollups-scaling',
+								'technical-knowledge/blockchain/storage/ipfs-decentralized-storage'
+							]
+						},
+						{
+							type: 'category',
+							label: '🏢 Enterprise & Production',
+							collapsed: true,
+							items: [
+								'technical-knowledge/blockchain/enterprise/permissioned-ledgers',
+								'technical-knowledge/blockchain/production/blockchain-production-engineering'
+							]
+						},
+						{
+							type: 'category',
+							label: '🎯 Interview Prep',
+							collapsed: true,
+							items: ['technical-knowledge/blockchain/interview/blockchain-interview-questions']
+						}
+					]
+				},
+				{
+					type: 'category',
 					label: '📨 Kafka',
 					items: [
 						'technical-knowledge/kafka/intro',
+						{
+							type: 'category',
+							label: '🌊 Kafka Streams',
+							collapsed: false,
+							items: [
+								'technical-knowledge/kafka/streams/overview',
+								'technical-knowledge/kafka/streams/topology-architecture',
+								'technical-knowledge/kafka/streams/state-stores-rocksdb',
+								'technical-knowledge/kafka/streams/windowing-joins',
+								'technical-knowledge/kafka/streams/processor-api-dlq',
+								'technical-knowledge/kafka/streams/spring-boot',
+								'technical-knowledge/kafka/streams/production-runbook',
+								'technical-knowledge/kafka/streams/interview-questions',
+								'technical-knowledge/kafka/advanced/kafka-streams-deep-dive'
+							]
+						},
 						{
 							type: 'category',
 							label: '🏗️ Core Concepts',
@@ -654,6 +776,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/kafka/core/kafka-partitioning-strategies',
 								'technical-knowledge/kafka/core/scaling-partitions',
 								'technical-knowledge/kafka/core/kafka-broker',
+								'technical-knowledge/kafka/core/kafka-zero-copy-page-cache',
 								'technical-knowledge/kafka/core/replication',
 								'technical-knowledge/kafka/core/kraft-vs-zookeeper',
 								'technical-knowledge/kafka/core/raft-consensus'
@@ -688,7 +811,6 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/kafka/advanced/kafka-connect',
-								'technical-knowledge/kafka/advanced/kafka-streams-deep-dive',
 								'technical-knowledge/kafka/advanced/schema-registry',
 								'technical-knowledge/kafka/advanced/exactly-once-vs-dedup'
 							]
@@ -698,12 +820,12 @@ const sidebars: SidebarsConfig = {
 							label: '📈 Reliability & Operations',
 							collapsed: true,
 							items: [
-								'technical-knowledge/kafka/advanced/kafka-exactly-once',
 								'technical-knowledge/kafka/advanced/order-messages',
 								'technical-knowledge/kafka/advanced/processing-and-ordering',
-								'technical-knowledge/kafka/advanced/monitoring-operations',
-								'technical-knowledge/kafka/advanced/kafka-throughput-optimization',
+								'technical-knowledge/kafka/advanced/kafka-exactly-once',
 								'technical-knowledge/kafka/advanced/rebalance-storms',
+								'technical-knowledge/kafka/advanced/kafka-throughput-optimization',
+								'technical-knowledge/kafka/advanced/monitoring-operations',
 							]
 						},
 						{
@@ -759,8 +881,8 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/database/acid',
 								'technical-knowledge/database/isolation-levels',
 								'technical-knowledge/database/transactions-concurrency',
-								'technical-knowledge/database/mysql-deadlocks-gap-locks-internals',
 								'technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive',
+								'technical-knowledge/database/mysql-deadlocks-gap-locks-internals',
 								'technical-knowledge/database/long-transactions-undo-mdl-meltdown',
 								'technical-knowledge/database/storage-engines-data-structures',
 								'technical-knowledge/database/postgresql-heap-storage-architecture',
@@ -785,6 +907,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/database/full-text-search',
+								'technical-knowledge/database/vector-databases-deep-dive',
 								'technical-knowledge/database/data-warehousing-olap',
 								'technical-knowledge/database/time-series-databases',
 							],
@@ -832,13 +955,13 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/redis/redis-distributed-cache',
+								'technical-knowledge/redis/redis-session-management',
 								'technical-knowledge/redis/redis-as-database',
-								'technical-knowledge/redis/redis-clustering-replication',
-								'technical-knowledge/redis/redis-performance-patterns',
 								'technical-knowledge/redis/redis-distributed-lock',
 								'technical-knowledge/redis/redis-lua-scripting-distributed-locks',
 								'technical-knowledge/redis/redis-rate-limiting',
-								'technical-knowledge/redis/redis-session-management',
+								'technical-knowledge/redis/redis-clustering-replication',
+								'technical-knowledge/redis/redis-performance-patterns',
 							]
 						},
 						{
@@ -917,11 +1040,11 @@ const sidebars: SidebarsConfig = {
 							label: '📦 Basics',
 							collapsed: false,
 							items: [
+								'technical-knowledge/git/basics/status-diff',
 								'technical-knowledge/git/basics/add',
 								'technical-knowledge/git/basics/commit',
 								'technical-knowledge/git/basics/push',
 								'technical-knowledge/git/basics/fetch-pull',
-								'technical-knowledge/git/basics/status-diff',
 							],
 						},
 						{
@@ -940,12 +1063,12 @@ const sidebars: SidebarsConfig = {
 							label: '🕰️ History & Rewriting',
 							collapsed: false,
 							items: [
+								'technical-knowledge/git/history/log-blame',
 								'technical-knowledge/git/history/cherry-pick',
 								'technical-knowledge/git/history/squash',
 								'technical-knowledge/git/history/fixup',
 								'technical-knowledge/git/history/reset-revert',
 								'technical-knowledge/git/history/reflog',
-								'technical-knowledge/git/history/log-blame',
 							],
 						},
 						{
@@ -996,10 +1119,10 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/devops/docker-fundamentals',
-								'technical-knowledge/devops/dockerfile',
 								'technical-knowledge/devops/docker-commands',
-								'technical-knowledge/devops/docker-networking',
+								'technical-knowledge/devops/dockerfile',
 								'technical-knowledge/devops/docker-volumes',
+								'technical-knowledge/devops/docker-networking',
 								'technical-knowledge/devops/docker-compose',
 							],
 						},
@@ -1011,9 +1134,9 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/devops/kubernetes-fundamentals',
 								'technical-knowledge/devops/kubernetes-pods',
 								'technical-knowledge/devops/kubernetes-workloads',
-								'technical-knowledge/devops/kubernetes-networking',
-								'technical-knowledge/devops/kubernetes-storage',
 								'technical-knowledge/devops/kubernetes-configuration',
+								'technical-knowledge/devops/kubernetes-storage',
+								'technical-knowledge/devops/kubernetes-networking',
 							],
 						},
 						{
@@ -1097,12 +1220,12 @@ const sidebars: SidebarsConfig = {
 							label: '🗄️ Storage & Databases',
 							collapsed: true,
 							items: [
-								'technical-knowledge/aws/s3/index',
-								'technical-knowledge/aws/s3/advanced',
+								'technical-knowledge/aws/rds-aurora',
 								'technical-knowledge/aws/dynamodb/index',
 								'technical-knowledge/aws/dynamodb/advanced',
 								'technical-knowledge/aws/elasticache/index',
-								'technical-knowledge/aws/rds-aurora',
+								'technical-knowledge/aws/s3/index',
+								'technical-knowledge/aws/s3/advanced',
 							],
 						},
 						{
@@ -1110,8 +1233,8 @@ const sidebars: SidebarsConfig = {
 							label: '📨 Messaging & Workflows',
 							collapsed: true,
 							items: [
-								'technical-knowledge/aws/messaging/sns',
 								'technical-knowledge/aws/messaging/sqs',
+								'technical-knowledge/aws/messaging/sns',
 								'technical-knowledge/aws/messaging/kinesis',
 								'technical-knowledge/aws/step-functions/index',
 							],
@@ -1833,7 +1956,10 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/npp', label: 'NPP - New Payments Platform' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payto', label: 'PayTo - Account Mandates' },
+						{ type: 'doc', id: 'technical-knowledge/banking/becs', label: 'BECS Direct Entry' },
 						{ type: 'doc', id: 'technical-knowledge/banking/swift', label: 'SWIFT - International' },
+						{ type: 'doc', id: 'technical-knowledge/banking/rtgs', label: 'RTGS & High-Value Clearing' },
 						{ type: 'doc', id: 'technical-knowledge/banking/direct_debit', label: 'Direct Debit (BECS & PayTo)' },
 						{ type: 'doc', id: 'technical-knowledge/banking/bpay', label: 'BPAY - Bill Payments' }
 					]
@@ -1845,6 +1971,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/debtor', label: 'Debtor & Creditor' },
 						{ type: 'doc', id: 'technical-knowledge/banking/fis', label: 'Financial Institutions' },
+						{ type: 'doc', id: 'technical-knowledge/banking/correspondent_banking', label: 'Correspondent Banking' },
 						{ type: 'doc', id: 'technical-knowledge/banking/account_types', label: 'Account Types' },
 						{ type: 'doc', id: 'technical-knowledge/banking/core_banking', label: 'Core Banking System (CBS)' }
 					]
@@ -1868,14 +1995,22 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/clearing', label: 'Clearing' },
-						{ type: 'doc', id: 'technical-knowledge/banking/settlement', label: 'Settlement' }
+						{ type: 'doc', id: 'technical-knowledge/banking/settlement', label: 'Settlement' },
+						{ type: 'doc', id: 'technical-knowledge/banking/liquidity', label: 'Liquidity Management' }
 					]
 				},
 				{
 					type: 'category',
 					label: '💳 Cards',
 					collapsed: true,
-					items: [{ type: 'doc', id: 'technical-knowledge/banking/cards', label: 'Cards & Card Schemes' }]
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/cards', label: 'Cards Overview & Schemes' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_anatomy_emv', label: 'Card Anatomy & EMV Cryptography' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_iso8583', label: 'ISO 8583 & AS 2805 Protocols' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_clearing_settlement', label: 'SMS vs DMS, Clearing & Interchange' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_tokenization_3ds', label: 'Network Tokenization & 3-D Secure' },
+						{ type: 'doc', id: 'technical-knowledge/banking/card_disputes_lcr', label: 'Disputes, Chargebacks & LCR' },
+					]
 				},
 				{
 					type: 'category',
@@ -1883,8 +2018,10 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/fraud', label: 'Fraud Detection & Prevention' },
+						{ type: 'doc', id: 'technical-knowledge/banking/cop', label: 'Confirmation of Payee (CoP)' },
 						{ type: 'doc', id: 'technical-knowledge/banking/sanction', label: 'Sanctions Screening' },
-						{ type: 'doc', id: 'technical-knowledge/banking/aml_kyc', label: 'AML, CTF & KYC' }
+						{ type: 'doc', id: 'technical-knowledge/banking/aml_kyc', label: 'AML, CTF & KYC' },
+						{ type: 'doc', id: 'technical-knowledge/banking/regulatory_reporting', label: 'Regulatory Reporting' }
 					]
 				},
 				{
@@ -1893,14 +2030,20 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/reconciliation', label: 'Reconciliation' },
-						{ type: 'doc', id: 'technical-knowledge/banking/payment_exceptions', label: 'Exceptions & Investigations' }
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_exceptions', label: 'Exceptions & Investigations' },
+						{ type: 'doc', id: 'technical-knowledge/banking/error_codes', label: 'Error Codes Reference' }
 					]
 				},
 				{
 					type: 'category',
 					label: '🧑‍💻 Engineering',
 					collapsed: true,
-					items: [{ type: 'doc', id: 'technical-knowledge/banking/testing_banking', label: 'Testing in Payments' }]
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/idempotency', label: 'Idempotency & Resilience' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_security', label: 'Payment Security & Cryptography' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_hub', label: 'Payment Hub Architecture' },
+						{ type: 'doc', id: 'technical-knowledge/banking/testing_banking', label: 'Testing in Payments' }
+					]
 				},
 				{
 					type: 'category',
@@ -1917,6 +2060,7 @@ const sidebars: SidebarsConfig = {
 			collapsed: true,
 			items: [
 				'technical-knowledge/ai-agents/overview',
+				'technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev',
 				'technical-knowledge/ai-agents/mcp-and-agentic-ai',
 				'technical-knowledge/ai-agents/rag-fundamentals',
 				'technical-knowledge/ai-agents/agents',

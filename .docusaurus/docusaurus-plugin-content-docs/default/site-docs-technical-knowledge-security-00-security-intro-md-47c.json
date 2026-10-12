@@ -71,7 +71,7 @@
     "permalink": "/technical-knowledge/low-level-design/problem/inventory-management"
   },
   "next": {
-    "title": "AuthN & AuthZ",
-    "permalink": "/technical-knowledge/security/authentication-authorization"
+    "title": "Web Security Fundamentals",
+    "permalink": "/technical-knowledge/security/web-security-fundamentals"
   }
 }

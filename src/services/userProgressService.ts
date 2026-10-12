@@ -606,3 +606,34 @@ export async function saveThemePreferenceToFirestore(
   }
 }
 
+/**
+ * Save user's personal favorite custom music tracks to Cloud Firestore
+ */
+export async function saveFavoriteTracksToFirestore(
+  uid: string,
+  tracks: any[]
+): Promise<void> {
+  if (!uid) return;
+  const userDocRef = doc(db, 'users', uid);
+  try {
+    await updateDoc(userDocRef, {
+      favoriteCustomTracks: tracks,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (_err) {
+    try {
+      await setDoc(
+        userDocRef,
+        {
+          favoriteCustomTracks: tracks,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+    } catch (fallbackErr) {
+      console.error('Failed to save favorite tracks to Firestore:', fallbackErr);
+    }
+  }
+}
+
+

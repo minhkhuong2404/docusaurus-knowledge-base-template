@@ -1,266 +1,249 @@
 ---
 id: idempotency
-title: Idempotency in Payment Systems
-sidebar_label: Idempotency in Payments
+title: "Payment Processing Resilience: Idempotency, Deduplication & Loss Prevention"
+sidebar_label: "Idempotency & Resilience"
 sidebar_position: 11
-description: Critical engineering guide to idempotency in payment systems — duplicate detection strategies, EndToEndId, at-least-once delivery, saga compensation, and Java implementation patterns.
-tags: [banking, idempotency, payments, engineering, deduplication, at-least-once, saga]
+description: Principal engineering guide to payment processing resilience — multi-tier deduplication, request fingerprinting, retriable error classification, the transactional outbox pattern, reverse inquiry polling, and 3-way reconciliation engines.
+tags: [banking, idempotency, deduplication, resilience, outbox, kafka, reconciliation, spring-boot, distributed-systems]
 ---
 
-# 🔐 Idempotency in Payment Systems
+import BankingPaymentResilienceSecurityDiagram from '@site/src/components/BankingPaymentResilienceSecurityDiagram';
 
-Idempotency in payments means that **processing the same payment instruction multiple times produces the same outcome as processing it once**. It is one of the most critical safety properties in financial systems, preventing double charges, double credits, and phantom payments.
+# ⚡ Payment Processing Resilience: Idempotency, Deduplication & Loss Prevention
 
-> Without idempotency, network timeouts, retries, and failures become catastrophic rather than recoverable.
+In distributed banking architectures, payment execution is not a simple database transaction. It crosses network boundaries, message brokers, payment clearing rails (NPP, FedNow, SEPA, SWIFT), and legacy core ledgers. Because networks are inherently asynchronous and unreliable, payment systems must be architected so that **network timeouts, retries, and hardware crashes never cause double debits, phantom transfers, or lost funds**.
+
+<BankingPaymentResilienceSecurityDiagram />
 
 ---
 
-## Why Idempotency Is Critical in Payments
+## 1. The Distributed Payment Fallacy & The Dual-Write Hazard
 
-### The Retry Problem
+### The Tri-State Execution Dilemma
+
+Every financial transfer over a network has three possible terminal states:
 
 ```
-Client sends payment request
-    → Network timeout after 5s
-    → Client doesn't know if the bank received it
-    → Client retries
-
-If the bank already processed the first request:
-  ❌ Without idempotency → customer charged TWICE
-  ✅ With idempotency    → second request returns same result as first
+                  ┌──────────────────────┐
+                  │ 1. SUCCESS           │ ➔ Positive acknowledgement received
+                  ├──────────────────────┤
+Request State ───┼ 2. FAILURE           │ ➔ Explicit rejection (e.g. Insufficient Funds)
+                  ├──────────────────────┤
+                  │ 3. UNKNOWN / TIMEOUT │ ➔ In-flight network partition / socket reset
+                  └──────────────────────┘
 ```
 
-### Failure Scenarios Requiring Idempotency
+When an HTTP socket or TCP connection times out during a `POST /payments` call, the client **cannot distinguish** between:
+1. The request was dropped by a firewall before reaching the bank.
+2. The core ledger successfully debited the account, but the response packet was dropped on the return path.
+3. The bank's database server crashed during the commit phase.
 
-| Scenario | Risk Without Idempotency |
-|----------|------------------------|
-| Network timeout on payment POST | Duplicate payment on retry |
-| Message broker redelivery (Kafka at-least-once) | Duplicate event processing |
-| Database commit success, response lost | Client retries → duplicate |
-| Scheduled batch rerun after failure | Entire batch executed twice |
-| Webhook received twice | Duplicate status update triggers |
-| Outage recovery — partial processing | Same file partially processed again |
+> **The Golden Rule of Banking:** In the `UNKNOWN` state, an operation must **NEVER** be assumed failed, and it must **NEVER** be retried without an end-to-end idempotency guarantee.
 
----
+### The Dual-Write Hazard
 
-## ISO 20022 Idempotency Fields
-
-### The ID Hierarchy
-
-| Field | Set By | Scope | Purpose |
-|-------|--------|-------|---------|
-| `MsgId` | Message sender | Per message | Message-level dedup; unique per sender per day |
-| `PmtInfId` | Initiating party | Per payment group in pain.001 | Group-level dedup |
-| `EndToEndId` | Originating customer | Preserved end-to-end | Customer's own reference; never changed |
-| `InstrId` | Debtor bank | Per instruction | Bank's instruction-level dedup |
-| `TxId` | Debtor bank | Per transaction | Unique transaction reference |
-| `UETR` | Debtor bank | Global (gpi) | UUID4; globally unique across all banks |
-
-### Using EndToEndId for Deduplication
+A classic architectural trap is attempting to write to a local database and publish to a message broker (e.g., Apache Kafka) sequentially:
 
 ```java
-// EndToEndId is set once at origin and preserved through the entire chain
-// Use it as your idempotency key for customer-facing operations
+// ❌ DANGEROUS ANTI-PATTERN: Dual-Write Hazard
+@Transactional
+public void processPayment(PaymentInstruction pmt) {
+    // 1. Write to Postgres Core Ledger
+    ledgerRepository.debit(pmt.getDebtorAccount(), pmt.getAmount());
 
-String endToEndId = "E2E-" + customerId + "-" + UUID.randomUUID();
-
-// Before processing, check if we've seen this EndToEndId before
-if (paymentRepository.existsByEndToEndId(endToEndId)) {
-    return paymentRepository.findByEndToEndId(endToEndId);
-    // Return existing result — do NOT process again
+    // 2. Publish to Kafka payment-clearing-rail
+    // If JVM crashes, pod is killed (OOM), or network drops HERE:
+    // Postgres commits, but Kafka NEVER receives the message!
+    // Result: Customer is debited, but payee NEVER receives funds (LOST PAYMENT).
+    kafkaTemplate.send("rail-dispatch", pmt.getEndToEndId(), pmt);
 }
 ```
 
+If we invert the order (Kafka first, then database), a database deadlock causes Kafka to process a payment that was never recorded in the ledger (phantom payment). Distributed two-phase commit (XA/2PC) is notoriously fragile and unscalable across modern microservices.
+
 ---
 
-## Idempotency Key Strategies
+## 2. Idempotency vs. Deduplication: Architectural Taxonomy
 
-### 1. Client-Provided Idempotency Key (API pattern)
+While frequently conflated, **deduplication** and **idempotency** operate at different architectural layers:
 
-The API consumer generates a unique key and passes it in a header:
+| Dimension | Deduplication | Idempotency |
+|---|---|---|
+| **Definition** | Detecting and dropping/rejecting repeated messages within a time window. | Mathematical property: $f(f(x)) = f(x)$. Executing $N \ge 1$ times yields the identical state and deterministic response. |
+| **Layer** | Ingress API Gateway, Message Consumer filter, Firewalls. | Core Domain Service, Ledger State Machine, Database Unique Engine. |
+| **State Retention** | Short-lived (Minutes to Hours) in in-memory stores (e.g., Redis). | Long-lived / Permanent (7 to 30 days, or permanent in DB ledger). |
+| **Response** | HTTP `429 Too Many Requests` or `409 Conflict`. | Original HTTP `201 Created` or `200 OK` with identical payload. |
 
-```http
-POST /payments
-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
-Content-Type: application/json
+### ISO 20022 Key Taxonomy
 
+Financial networks enforce idempotency across institutional boundaries using standardized identifiers:
+
+```
+pain.001 (Customer Ingress)
+  └── MsgId (Sender message envelope deduplication; unique per bank per day)
+        └── PmtInfId (Payment group reference)
+              └── EndToEndId (Immutable customer reference; never changed across any rail)
+                    └── pacs.008 (Interbank Clearing)
+                          ├── InstrId (Debtor bank instruction tracker)
+                          ├── TxId (Debtor bank core transaction reference)
+                          └── UETR (Universal Unique UUIDv4 tracked globally across SWIFT gpi)
+```
+
+- **`EndToEndId`**: Generated by the originator. Passed verbatim across all intermediary clearing and settlement rails.
+- **`UETR` (Unique End-to-End Transaction Reference)**: A 36-character hexadecimal UUIDv4 specified in ISO 20022 and SWIFT gpi to track cross-border and instant domestic rails.
+
+---
+
+## 3. The Multi-Tier Idempotency & Deduplication Engine
+
+To achieve sub-millisecond deduplication while guaranteeing zero double-spending, production payment hubs implement a **3-tier defense-in-depth pipeline**:
+
+```
+Client Request
+      │
+      ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Tier 1: Ingress Edge Gateway (Fingerprint & Conflict Filter) │
+│  - Validate UUIDv4 Idempotency-Key                          │
+│  - Compute SHA-256 payload digest                           │
+│  - Detect payload mutation under same key (409 Conflict)    │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Tier 2: Distributed Lock & State Machine (Redis / Memcached)│
+│  - Atomic SETNX pmt:lock:{key} NX PX 10000                 │
+│  - Fast short-circuit for COMPLETED payments (Cached 201)   │
+│  - Backpressure for PENDING_EXECUTION (425 Too Early)       │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Tier 3: Core Database Unique Ledger (ACID Row-Level Anchor) │
+│  - Hard Postgres constraint: UNIQUE(tenant_id, idemp_key)   │
+│  - Serializable / SELECT FOR UPDATE row reservation         │
+│  - Atomic status transition: PENDING ➔ EXECUTING ➔ COMMITTED│
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Request Fingerprinting: Preventing Payload Tampering
+
+An attacker or misconfigured client may reuse an `Idempotency-Key` but mutate the underlying payload (e.g., increasing the transfer amount or changing the creditor IBAN/BSB). The payment gateway must hash the canonicalized payload:
+
+$$\text{Fingerprint} = \text{HMAC-SHA256}\Big(\text{Secret}, \text{Method} + \text{URI} + \text{Debtor} + \text{Creditor} + \text{Amount} + \text{Currency}\Big)$$
+
+If the `Idempotency-Key` matches an existing record but the calculated fingerprint differs, the gateway **MUST immediately abort** with HTTP `409 Conflict`:
+
+```json
 {
-  "amount": 100.00,
-  "currency": "AUD",
-  "debtorAccount": "062-000/12345678",
-  "creditorAccount": "063-000/98765432"
+  "type": "https://api.bank.com/errors/idempotency-payload-mismatch",
+  "title": "Idempotency Key Payload Conflict",
+  "status": 409,
+  "detail": "The provided Idempotency-Key was previously used with a different request payload.",
+  "instance": "/payments/e2e-984214-77"
 }
 ```
 
-Server logic:
+### Production Spring Boot & Redis Idempotency Implementation
+
+Here is an enterprise-grade, concurrency-safe Java implementation using Redis distributed locking and PostgreSQL:
 
 ```java
-@PostMapping("/payments")
-public ResponseEntity<PaymentResponse> createPayment(
-    @RequestHeader("Idempotency-Key") String idempotencyKey,
-    @RequestBody PaymentRequest request) {
+package com.bank.payment.resilience;
 
-    // Check if we've seen this key before
-    Optional<IdempotencyRecord> existing =
-        idempotencyStore.findByKey(idempotencyKey);
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
-    if (existing.isPresent()) {
-        // Return cached response — do NOT process again
-        return ResponseEntity
-            .status(existing.get().getHttpStatus())
-            .body(existing.get().getResponse());
-    }
+import java.time.Duration;
+import java.util.Optional;
 
-    // Process the payment
-    PaymentResponse response = paymentService.process(request);
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class IdempotentPaymentOrchestrator {
 
-    // Store the idempotency record with TTL
-    idempotencyStore.save(IdempotencyRecord.builder()
-        .key(idempotencyKey)
-        .httpStatus(200)
-        .response(response)
-        .expiresAt(Instant.now().plus(Duration.ofDays(7)))
-        .build());
+    private final StringRedisTemplate redisTemplate;
+    private final PaymentLedgerRepository ledgerRepository;
+    private final IdempotencyStoreRepository idempotencyRepository;
+    private final ObjectMapper objectMapper;
 
-    return ResponseEntity.ok(response);
-}
-```
+    private static final Duration LOCK_TIMEOUT = Duration.ofSeconds(10);
+    private static final Duration COMPLETED_TTL = Duration.ofDays(7);
 
-### 2. Content-Based Idempotency Key (hash)
+    public PaymentResponse executeIdempotentPayment(String idempotencyKey, PaymentRequest request) {
+        String payloadHash = calculatePayloadHash(request);
+        String lockKey = "pmt:lock:" + idempotencyKey;
 
-When the client cannot provide a key, derive one from the content:
-
-```java
-String idempotencyKey = DigestUtils.sha256Hex(
-    debtorAccount +
-    creditorAccount +
-    amount.toPlainString() +
-    currency +
-    valueDate.toString() +
-    endToEndId
-);
-```
-
-> ⚠️ Content-based keys are fragile — any field difference (even spacing) creates a different key. Use client-provided keys for APIs wherever possible.
-
-### 3. Database Unique Constraint (at the transaction level)
-
-```java
-@Entity
-@Table(uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"end_to_end_id", "debtor_bsb", "debtor_account"})
-})
-public class PaymentInstruction {
-    private String endToEndId;
-    private String debtorBsb;
-    private String debtorAccount;
-    // ...
-}
-
-// In service:
-try {
-    paymentRepository.save(payment);
-} catch (DataIntegrityViolationException e) {
-    // Duplicate EndToEndId — return existing record
-    return paymentRepository.findByEndToEndId(payment.getEndToEndId());
-}
-```
-
----
-
-## At-Least-Once Delivery — Kafka & Messaging
-
-Payment systems commonly use Kafka with **at-least-once delivery semantics** (the default). This means a message may be delivered more than once.
-
-### Problem
-
-```
-PaymentCreatedEvent published to Kafka
-Consumer reads message, processes payment ✅
-Consumer fails before committing offset
-Kafka re-delivers message
-Consumer processes payment AGAIN ❌ DUPLICATE
-```
-
-### Solution — Idempotent Consumer
-
-```java
-@KafkaListener(topics = "payment-instructions")
-public void handlePaymentInstruction(PaymentInstructionEvent event) {
-    String idempotencyKey = event.getMessageId(); // Kafka message key
-
-    // Atomic check-and-insert using Redis or DB
-    boolean isNew = idempotencyStore.setIfAbsent(
-        "payment:" + idempotencyKey,
-        "processed",
-        Duration.ofDays(1)
-    );
-
-    if (!isNew) {
-        log.info("Duplicate message {} — skipping", idempotencyKey);
-        return; // Already processed — skip
-    }
-
-    // Safe to process
-    paymentProcessor.process(event);
-}
-```
-
-### Kafka Exactly-Once Semantics (EOS)
-
-For highest-reliability payment processing:
-
-```java
-// Producer with idempotence enabled
-Properties props = new Properties();
-props.put("enable.idempotence", true);
-props.put("acks", "all");
-props.put("retries", Integer.MAX_VALUE);
-props.put("max.in.flight.requests.per.connection", 5);
-
-// Transactional producer (exactly-once)
-props.put("transactional.id", "payment-producer-1");
-```
-
----
-
-## BECS Batch Idempotency
-
-```java
-public class BecsSubmissionService {
-
-    // Generate deterministic submission ID from content
-    public SubmissionResult submitBatch(BecsBatch batch) {
-        String submissionId = calculateSubmissionId(batch);
-
-        // Prevent duplicate file submission
-        if (submissionRepository.existsBySubmissionId(submissionId)) {
-            log.warn("Duplicate BECS submission: {}", submissionId);
-            return submissionRepository.findBySubmissionId(submissionId);
+        // 1. Check if payment was already processed (Fast-Path Read)
+        Optional<IdempotencyEntity> existingRecord = idempotencyRepository.findById(idempotencyKey);
+        if (existingRecord.isPresent()) {
+            IdempotencyEntity record = existingRecord.get();
+            if (!record.getPayloadHash().equals(payloadHash)) {
+                log.error("Payload hash mismatch for key: {}", idempotencyKey);
+                throw new IdempotencyPayloadMismatchException("Key reused with mutated request payload!");
+            }
+            if (record.getStatus() == ExecutionStatus.COMPLETED) {
+                log.info("Returning cached response for idempotencyKey: {}", idempotencyKey);
+                return deserialize(record.getResponsePayload(), PaymentResponse.class);
+            }
+            if (record.getStatus() == ExecutionStatus.PENDING_EXECUTION) {
+                log.warn("Concurrent duplicate request detected for in-flight key: {}", idempotencyKey);
+                throw new ConcurrentPaymentExecutionException("Payment currently processing. Retry after 2s.");
+            }
         }
 
-        // Submit to bank
-        SubmissionResult result = bankGateway.submit(batch.toDeFile());
+        // 2. Acquire Distributed Lock with fencing token (Fails fast if concurrent thread attempts)
+        Boolean lockAcquired = redisTemplate.opsForValue().setIfAbsent(lockKey, "LOCKED", LOCK_TIMEOUT);
+        if (Boolean.FALSE.equals(lockAcquired)) {
+            throw new ConcurrentPaymentExecutionException("Unable to acquire lock. In-flight execution active.");
+        }
 
-        // Persist with idempotency ID
-        submissionRepository.save(SubmissionRecord.builder()
-            .submissionId(submissionId)
-            .submittedAt(Instant.now())
-            .transactionCount(batch.getTransactions().size())
-            .totalAmount(batch.getTotalAmount())
-            .status(result.getStatus())
-            .build());
-
-        return result;
+        try {
+            // 3. Execute Core Ledger inside ACID transaction with DB Unique Constraint
+            return executeInsideTransaction(idempotencyKey, payloadHash, request);
+        } finally {
+            // Release distributed lock
+            redisTemplate.delete(lockKey);
+        }
     }
 
-    private String calculateSubmissionId(BecsBatch batch) {
-        // Hash of date + batch reference + total amounts
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    protected PaymentResponse executeInsideTransaction(String key, String hash, PaymentRequest req) {
+        // Reserve initial idempotency state
+        IdempotencyEntity entity = IdempotencyEntity.builder()
+                .idempotencyKey(key)
+                .payloadHash(hash)
+                .status(ExecutionStatus.PENDING_EXECUTION)
+                .build();
+        idempotencyRepository.saveAndFlush(entity);
+
+        // Core Accounting: Double-entry debit reservation
+        PaymentRecord paymentRecord = ledgerRepository.executeDebitReservation(
+                req.getDebtorAccount(), req.getCreditorAccount(), req.getAmount(), req.getCurrency()
+        );
+
+        PaymentResponse response = PaymentResponse.from(paymentRecord);
+
+        // Transition status to COMPLETED and store response body
+        entity.setStatus(ExecutionStatus.COMPLETED);
+        entity.setResponsePayload(serialize(response));
+        idempotencyRepository.save(entity);
+
+        return response;
+    }
+
+    private String calculatePayloadHash(PaymentRequest req) {
         return DigestUtils.sha256Hex(
-            batch.getProcessingDate().toString() +
-            batch.getBatchReference() +
-            batch.getTotalAmount().toPlainString() +
-            batch.getTransactionCount()
+                req.getDebtorAccount() + "|" +
+                req.getCreditorAccount() + "|" +
+                req.getAmount().toPlainString() + "|" +
+                req.getCurrency()
         );
     }
 }
@@ -268,105 +251,208 @@ public class BecsSubmissionService {
 
 ---
 
-## Saga Pattern & Idempotency
+## 4. Retriable vs. Non-Retriable Error Classification
 
-In a distributed payment system, a saga coordinates multiple services. Each step must be idempotent.
+Blind retries are hazardous in banking. If an error is non-transient (e.g., account frozen), retrying wastes cluster CPU and risks tripping denial-of-service alarms.
 
-```
-Payment Saga:
-  Step 1: Reserve funds (debit hold)      [idempotent: check existing hold]
-  Step 2: Send to external network        [idempotent: use EndToEndId]
-  Step 3: Confirm receipt                 [idempotent: check status]
-  Step 4: Release hold / finalise debit   [idempotent: check if already posted]
+### Error Classification Matrix
 
-Compensating transactions (on failure):
-  Cancel Step 4 → debit_reversal          [idempotent: check if reversal exists]
-  Cancel Step 3 → payment cancellation    [idempotent: send camt.056 once]
-  Cancel Step 2 → recall/return           [idempotent: check pacs.004 exists]
-  Cancel Step 1 → release hold            [idempotent: check hold status]
-```
+| Error Condition | Category | HTTP Status | Action |
+|---|---|---|---|
+| **Downstream 504 Gateway Timeout** | Retriable | 504 | Truncated Exponential Backoff with Full Jitter |
+| **OptimisticLockingFailureException** | Retriable | 409 / 500 | Retry immediately with fresh version snapshot (max 3 times) |
+| **HikariCP Connection Pool Exhaustion** | Retriable | 503 | Circuit breaker trip; fast fallback to backpressure queue |
+| **Payment Rail Scheduled Maintenance** | Retriable | 503 | Buffer in message queue; hold until window re-opens |
+| **Insufficient Available Funds** | **Non-Retriable** | 422 | Abort immediately; emit notification to customer |
+| **Account Closed / Invalid BSB/IBAN** | **Non-Retriable** | 404 / 422 | Reject immediately; do not queue or retry |
+| **Sanctions Screening Watchlist Match** | **Non-Retriable** | 403 / 451 | Freeze payment; route to compliance investigation queue |
+| **Payload Schema / Syntax Failure** | **Non-Retriable** | 400 | Return RFC 7807 Bad Request |
+
+---
+
+## 5. Resilient Retry Strategies & Poison Pill Defense
+
+### Truncated Exponential Backoff with Full Jitter
+
+When downstream systems experience transient degradation, synchronized retries generate devastating **thundering herds**. Production banking systems enforce AWS-style Full Jitter:
+
+$$t_{\text{sleep}} = \text{random}\Big(0, \; \min\big(T_{\text{max}}, \; T_{\text{base}} \cdot 2^{\text{attempt}}\big)\Big)$$
 
 ```java
-// Each saga step checks for idempotency
-@Transactional
-public void executeStep(String sagaId, SagaStep step) {
-    SagaStepRecord record = sagaStepRepository
-        .findBySagaIdAndStep(sagaId, step)
-        .orElse(null);
+public class BackoffCalculator {
+    private static final long BASE_MS = 200;
+    private static final long MAX_MS = 15000;
+    private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
 
-    if (record != null && record.isCompleted()) {
-        log.info("Saga step {} already completed for {}", step, sagaId);
-        return; // Idempotent — skip
+    public static Duration calculateFullJitter(int attempt) {
+        long exponentialLimit = Math.min(MAX_MS, BASE_MS * (1L << attempt));
+        long sleepTimeMs = RANDOM.nextLong(0, exponentialLimit + 1);
+        return Duration.ofMillis(sleepTimeMs);
     }
-
-    // Execute the step
-    StepResult result = step.execute();
-
-    // Mark complete
-    sagaStepRepository.save(SagaStepRecord.builder()
-        .sagaId(sagaId)
-        .step(step.getName())
-        .completedAt(Instant.now())
-        .result(result)
-        .build());
 }
 ```
 
----
+### Dead Letter Queues (DLQ) & Poison Pill Isolation
 
-## Idempotency Store Options
+A **poison pill** is a corrupted message that repeatedly crashes the consumer thread (e.g. Out of Memory or NullPointerException), preventing subsequent valid payments from being processed.
 
-| Option | Pros | Cons |
-|--------|------|------|
-| **PostgreSQL (unique constraint)** | Atomic, transactional | DB write per request |
-| **Redis (SETNX/SET NX EX)** | Fast, TTL-based | Separate infra, eventual durability |
-| **DynamoDB (conditional write)** | Scalable, serverless | AWS-specific |
-| **In-memory (ConcurrentHashMap)** | Zero latency | Lost on restart — development only |
-
-For payment systems, **PostgreSQL unique constraint** is recommended — it participates in the same transaction as the payment record, ensuring atomicity.
-
----
-
-## Interview Questions
-
-**Q: What is the difference between idempotency and deduplication?**
-> Deduplication is one way to achieve idempotency. Idempotency is the property: "calling N times = calling once." Deduplication detects exact duplicate requests and short-circuits them. You can also achieve idempotency through other means (e.g. state machine that ignores already-applied transitions).
-
-**Q: How do you design an idempotent payment API?**
-> Require clients to provide an Idempotency-Key header (UUID). On receipt, check a durable store (DB/Redis) for the key. If found, return the cached response. If not found, process and persist the result with the key. Use the same HTTP response status as the original. Set a reasonable TTL (7-30 days). Make the key check atomic with the payment processing using DB transactions.
-
-**Q: Is Kafka's at-least-once delivery safe for payments?**
-> At-least-once delivery means messages can be delivered more than once — you must implement idempotent consumers. For payment processing, check a deduplication store (Redis SETNX or DB unique constraint) before processing each message. Alternatively, Kafka's exactly-once semantics (EOS) with transactional producers/consumers eliminates the duplicate delivery concern.
-
-:::danger[Never Do This]
-```java
-// ❌ WRONG: No idempotency check
-@PostMapping("/payments")
-public void createPayment(@RequestBody PaymentRequest req) {
-    paymentService.debitAccount(req); // Could run twice on retry!
-}
 ```
-:::
-
-:::tip[Always Do This]
-```java
-// ✅ RIGHT: Idempotency key check first
-@PostMapping("/payments")
-public ResponseEntity<PaymentResponse> createPayment(
-    @RequestHeader("Idempotency-Key") String key,
-    @RequestBody PaymentRequest req) {
-    return idempotencyService.executeOnce(key, () -> paymentService.process(req));
-}
+Incoming Stream ➔ [Consumer Worker] ➔ Exception thrown!
+                         │
+         Attempt Count < 3? ─── YES ──➔ [Retry Topic with Backoff Delay]
+                         │
+                        NO
+                         │
+                         ▼
+        [Dead Letter Queue (DLQ)]
+                         │
+       ┌─────────────────┴─────────────────┐
+       ▼                                   ▼
+ [Ops Alert / PagerDuty]         [Admin Inspection UI]
+                                 (Manual Re-drive / Discard)
 ```
-:::
+
+1. **Retry Topics with Tiered Delays**: Messages retry across 3 topics (`pmt-retry-1s`, `pmt-retry-10s`, `pmt-retry-60s`).
+2. **DLQ Parking Lot**: Exceeded retries move to `pmt-dlq`. The payload and root cause stack trace are persisted.
+3. **Poison Pill Bypassing**: Consumer commits the Kafka offset on the main topic, ensuring cluster head-of-line blocking is prevented.
 
 ---
 
-## Related Concepts
+## 6. Preventing Lost Payments (Zero-Data-Loss Architecture)
 
-- [Payment Lifecycle 101](./payment_lifecycle_101)
-- [BECS](./becs)
-- [NPP](./npp)
-- [Debit Posting](./debit_post)
-- [Payment Exceptions](./payment_exceptions)
-- [Reconciliation](./reconciliation)
+### Pattern 1: The Transactional Outbox Pattern
+
+To eliminate the dual-write hazard between the database and the event broker, the Transactional Outbox pattern guarantees **at-least-once message dispatch**:
+
+```sql
+-- Executed inside the SAME local transaction as customer account debit
+BEGIN TRANSACTION;
+
+-- 1. Balance update
+UPDATE accounts
+SET balance = balance - 250.00
+WHERE account_id = 'ACC-9812' AND balance >= 250.00;
+
+-- 2. Outbox event recording
+INSERT INTO outbox_events (event_id, aggregate_type, aggregate_id, event_type, payload, status, created_at)
+VALUES (
+    gen_random_uuid(),
+    'PAYMENT',
+    'E2E-776214',
+    'PAYMENT_DEBIT_RESERVED',
+    '{"debtor":"ACC-9812","creditor":"ACC-3310","amount":250.00,"currency":"AUD"}',
+    'PENDING',
+    NOW()
+);
+
+COMMIT;
+```
+
+A Change Data Capture (CDC) engine such as **Debezium** tails the PostgreSQL Write-Ahead Log (WAL) and publishes the event to Apache Kafka with `acks=all`. The application code never directly publishes to Kafka during the HTTP request thread.
+
+### Pattern 2: Saga Orchestration & Compensating Transactions
+
+A payment transfer spanning multiple autonomous microservices (Fraud Service ➔ Core Ledger ➔ Scheme Gateway) cannot use distributed locks without catastrophic latency. Instead, an **Orchestrated Saga** executes forward steps and triggers automated compensating steps on failure:
+
+```
+[Payment Saga Orchestrator]
+       │
+       ├── Step 1: Reserve Payer Balance ───────➔ [Core Banking] (Debit Hold)
+       ├── Step 2: Screen Sanctions & Fraud ────➔ [Risk Engine] (Pass)
+       ├── Step 3: Dispatch to Clearing Rail ───➔ [NPP Gateway] ❌ FATAL REJECT
+       │
+       └── Trigger Compensation Flow:
+             ├── Compensate Step 2: Clear screening ticket
+             └── Compensate Step 1: Release Debit Hold ➔ [Core Banking] (pacs.004 Return)
+```
+
+Every compensating action (`debit_reversal`, `pacs.004`, `camt.056`) must itself be strictly idempotent.
+
+### Pattern 3: Active Reverse Inquiry & In-Flight Status Polling
+
+When a payment dispatch to an external rail (e.g. SWIFT, NPP, FedNow) times out, the bank must **never** assume it failed.
+
+1. The payment state is transitioned to `PENDING_INVESTIGATION`.
+2. The transaction orchestrator spawns an **Active Reverse Inquiry** job.
+3. The job queries the scheme network via API using the `UETR`:
+   - If scheme returns `ACCP` (Accepted): Mark payment as `COMPLETED`.
+   - If scheme returns `RJCT` (Rejected): Release the funds hold.
+   - If scheme reports no record after maximum TTL: Send a `camt.056` (Payment Recall / Cancellation Request).
+
+### Pattern 4: Intraday & T+1 Three-Way Reconciliation
+
+Reconciliation is the ultimate financial safety net that catches dropped callbacks and outbox transmission failures:
+
+$$\text{Discrepancy} = \text{Internal Ledger} \setminus \big(\text{Gateway Dispatch Logs} \cap \text{Central Bank Statement}\big)$$
+
+```
+┌─────────────────────────────────┐      ┌─────────────────────────────────┐
+│ Dataset A: Bank Internal Ledger │      │ Dataset B: Rail Gateway Journal │
+│   (Debit/Credit postings)       │      │   (Outbox events & Kafka logs)  │
+└────────────────┬────────────────┘      └────────────────┬────────────────┘
+                 │                                        │
+                 └───────────────────┬────────────────────┘
+                                     │
+                                     ▼
+                      ┌─────────────────────────────┐
+                      │ 3-Way Reconciliation Engine │ ◀─── Dataset C: Central Bank
+                      │  (Matches on EndToEndId,    │      Statement (camt.053 / RITS)
+                      │   UETR, Amount, Value Date) │
+                      └──────────────┬──────────────┘
+                                     │
+                 ┌───────────────────┴───────────────────┐
+                 ▼                                       ▼
+       [Matched & Cleared]                      [Unreconciled Break]
+        (100% Zero-Loss)                         (Auto-Remediation)
+```
+
+- **T+0 Intraday Streaming Matcher**: Correlates outbound debits against real-time rail confirmations. Flags orphaned holds older than 15 minutes.
+- **T+1 End-of-Day Batch Matcher**: Ingests official central bank clearing statements (`camt.053`) and verifies every cent transferred matches internal general ledger balances.
+
+---
+
+## 7. Double-Entry Bookkeeping Ledger Guarantees
+
+In modern core banking systems, an account balance is **never stored as a single mutable column** (`UPDATE accounts SET balance = balance + 100`). Single-column mutations are vulnerable to race conditions and lack auditability.
+
+Instead, all movements follow **Double-Entry Bookkeeping**:
+
+$$\sum \text{Debits} \equiv \sum \text{Credits}$$
+
+```
+Transaction TX-98412: Outbound NPP Transfer of $1,000 AUD
+
+Date: 2026-10-05T14:30:00Z
+Account Debited:  100-2410 (Customer Operational Account)   Dr $1,000.00
+Account Credited: 999-0010 (Bank Scheme Settlement Escrow)  Cr $1,000.00
+-------------------------------------------------------------------------
+Net Balance Change: $0.00 (Perfect Zero-Sum Equilibrium)
+```
+
+An account balance is simply a materialized view of the append-only ledger journal. If an idempotency failure occurs, the journal provides an immutable forensic record to immediately identify and reverse the duplicate entry.
+
+---
+
+## 8. Senior Principal Architect Review Checklist
+
+Before approving any payment processing pipeline for production deployment, verify the following:
+
+- [ ] **Payload Fingerprint**: Are incoming requests validated against a hash of canonicalized JSON fields to detect mutated payload replay?
+- [ ] **State Machine Invariant**: Does the idempotency entity enforce explicit state transitions (`PENDING` ➔ `EXECUTING` ➔ `COMPLETED` / `FAILED`)?
+- [ ] **Fencing & Distributed Locks**: Are in-flight duplicate requests blocked at the gateway with an immediate `409 Conflict` or `425 Too Early` instead of hitting core banking?
+- [ ] **Outbox Pattern**: Are all outbound payment events written to an outbox table in the same transaction as ledger debits, eliminating the dual-write problem?
+- [ ] **Full Jitter**: Do all retry loops enforce full jitter to prevent thundering herds during recovery?
+- [ ] **Reverse Inquiry**: When network timeouts occur during rail dispatch, does the system query downstream status using `UETR` before initiating refunds or retries?
+- [ ] **3-Way Reconciliation**: Is an automated reconciliation job configured to reconcile internal ledger entries against scheme statements (`camt.053`) daily?
+
+---
+
+## Related Documentation
+
+- [Payment Security Architecture: Ingress & Core Defense](./payment_security.md)
+- [Payment Hub Architecture](./payment_hub.md)
+- [Confirmation of Payee (CoP)](./cop.md)
+- [NPP - New Payments Platform](./npp.md)
+- [SWIFT Cross-Border Rails](./swift.md)
+- [Debit Posting Mechanics](./debit_post.md)
+- [Reconciliation & Exception Management](./reconciliation.md)

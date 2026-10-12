@@ -282,7 +282,7 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
         <Link
           key={itemKey}
           to={item.href}
-          className={clsx('custom-menu-link', isActive && 'active', isRead && 'page-read')}
+          className={clsx('custom-menu-link', depth === 0 && 'top-level-menu-link', isActive && 'active', isRead && 'page-read')}
           style={depth > 0 ? { paddingLeft: '12px' } : undefined}
           title={cleanLabel}
         >

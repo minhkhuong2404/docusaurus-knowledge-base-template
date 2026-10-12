@@ -115,8 +115,10 @@ Then exception messages:
 9. [Testing in Banking and Payments](./testing_banking.md)
 
 ### Stage 6 - Architecture and Engineering Patterns (Advanced)
-1. [Idempotency in Payments](./idempotency.md)
-2. [Payment Hub Architecture](./payment_hub.md)
+1. [Payment Processing Resilience & Idempotency](./idempotency.md)
+2. [Payment Security & Cryptography](./payment_security.md)
+3. [Payment Hub Architecture](./payment_hub.md)
+4. [Testing in Banking and Payments](./testing_banking.md)
 
 ### Stage 7 - Modernization and Strategy
 1. [ISO 20022 Migration](./iso20022_migration.md)

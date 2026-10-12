@@ -1587,6 +1587,174 @@ redisTemplate.expire("cart:" + userId, Duration.ofDays(30));`
     detail: 'Nếu 1 message tốn 100ms, batch 500 messages tốn 50s (vẫn an toàn). Nhưng nếu có lỗi mạng khiến 1 message tốn 1s, cả batch tốn 500s (> 300s mặc định) ➔ Bão Rebalance kích hoạt! Luôn đặt max.poll.records = 50 và max.poll.interval.ms = 600,000 (10 phút).',
     codeBad: `max.poll.records=500 nhưng trong listener gọi API bên thứ 3 chậm 1 giây / message`,
     codeGood: `max.poll.records=50 kết hợp max.poll.interval.ms=600000 đảm bảo luôn xử lý xong trước hạn`
+  },
+  // ==========================================
+  // PHẦN 12: KỸ NĂNG SINH TỒN ENTRY-LEVEL ĐI LÀM (MẸO 111 - 120)
+  // ==========================================
+  {
+    id: 111,
+    category: 'Git & Tác Phong',
+    priority: 'Bắt Buộc',
+    title: 'Tuyệt đối không commit file chứa Secret, Password hoặc Token lên Git repository',
+    summary: 'Một khi password hay API key đã commit lên Git, dù xóa ở commit sau thì lịch sử Git vẫn lưu vết vĩnh viễn và các bot scanner trên mạng sẽ quét thấy trong vòng 30 giây.',
+    detail: 'Lỗi sơ đẳng kinh điển của fresher: Đẩy file application-prod.yml chứa mật khẩu DB hoặc file credentials.json lên GitHub cá nhân hay GitLab công ty. Luôn thêm các file nhạy cảm vào .gitignore ngay khi khởi tạo dự án. Thay vào đó, hãy commit một file mẫu application.yml.example chỉ chứa tên biến và dùng biến môi trường (Environment Variables) hoặc công cụ như HashiCorp Vault / AWS Secrets Manager.',
+    codeBad: `# ❌ Commit thẳng mật khẩu production lên Git:
+spring.datasource.password=SuperSecretDbPassword2026!
+jwt.secret=my-super-secret-key-that-everyone-can-see`,
+    codeGood: `# ✅ Đọc an toàn từ biến môi trường của hệ thống:
+spring.datasource.password=\${DB_PASSWORD}
+jwt.secret=\${JWT_SECRET_KEY}`
+  },
+  {
+    id: 112,
+    category: 'Spring Boot & REST',
+    priority: 'Bắt Buộc',
+    title: 'Luôn cấu hình cả Connection Timeout VÀ Read Timeout khi gọi API đối tác',
+    summary: 'Mặc định RestTemplate và HttpClient trong Java không có timeout (Timeout = 0 nghĩa là chờ vô tận). Nếu đối tác treo mạng, ứng dụng của bạn sẽ chết chùm do cạn kiệt luồng.',
+    detail: 'Khi gọi một API bên thứ ba (cổng thanh toán, SMS, vận chuyển), nếu đối tác bị đơ mạng mà bạn không đặt timeout, worker thread của Tomcat sẽ bị giữ chân vĩnh viễn. Khi có 200 khách cùng bấm thanh toán, 200 threads bị kẹt cứng làm toàn bộ server sập không thể nhận thêm bất kỳ request nào. Luôn đặt Connection Timeout (thường 2-3s) và Read Timeout (thường 5-10s).',
+    codeBad: `// ❌ Không cấu hình timeout - rủi ro treo vĩnh viễn:
+RestTemplate restTemplate = new RestTemplate();`,
+    codeGood: `// ✅ Cấu hình timeout chặt chẽ bằng ClientHttpRequestFactory:
+SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+factory.setConnectTimeout(3000); // 3 giây để bắt tay TCP
+factory.setReadTimeout(5000);    // 5 giây tối đa để chờ nhận dữ liệu
+RestTemplate restTemplate = new RestTemplate(factory);`
+  },
+  {
+    id: 113,
+    category: 'Database & JPA',
+    priority: 'Hiệu Năng',
+    title: 'Tránh dùng UUID.randomUUID() (UUIDv4) làm Clustered Primary Key trong MySQL InnoDB',
+    summary: 'UUIDv4 là ngẫu nhiên hoàn toàn. Chèn khóa chính ngẫu nhiên vào cây B+Tree khiến MySQL liên tục phải phân tách trang đĩa (Page Split) làm giảm 80% tốc độ Insert.',
+    detail: 'Trong MySQL InnoDB, bảng dữ liệu được tổ chức dưới dạng Clustered Index (chính là cây B+Tree sắp xếp vật lý theo Primary Key). Khi chèn khóa tăng dần (BIGINT AUTO_INCREMENT), bản ghi luôn được thêm vào cuối trang đĩa cực êm ái. Nhưng nếu dùng UUIDv4 ngẫu nhiên, dữ liệu phải chèn chen ngang vào giữa các trang đã đầy, buộc InnoDB phải tách trang (Page Split), gây phân mảnh ổ đĩa và suy kiệt I/O. Nếu cần UUID để tránh lộ số thứ tự, hãy dùng TSID hoặc UUIDv7 (sắp xếp theo thời gian).',
+    codeBad: `// ❌ UUIDv4 ngẫu nhiên gây Page Split thảm họa trên B+Tree:
+@Id
+@GeneratedValue(strategy = GenerationType.UUID)
+private UUID id;`,
+    codeGood: `// ✅ Sử dụng BIGINT AUTO_INCREMENT làm PK vật lý:
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
+// Hoặc dùng public_id dạng TSID/UUIDv7 sắp xếp theo thời gian để giao tiếp bên ngoài`
+  },
+  {
+    id: 114,
+    category: 'Clean Code & Logging',
+    priority: 'Bắt Buộc',
+    title: 'Không bao giờ "nuốt chửng" ngoại lệ bằng catch(Exception e) {} hoặc System.out.println()',
+    summary: 'Nuốt lỗi âm thầm biến bug thành bóng ma không dấu vết. Sau này khi dữ liệu trên DB bị sai, bạn sẽ mất hàng tuần cũng không thể tìm ra nguồn gốc lỗi ở đâu.',
+    detail: 'Catch một Exception mà không làm gì (Empty Catch Block) là tội lỗi lớn nhất của lập trình viên. System.out.println() cũng hoàn toàn vô dụng trên server vì nó không ghi nhận timestamp, thread name, log level hay correlation ID. Luôn dùng SLF4J Logger, log ở cấp độ WARN/ERROR kèm đầy đủ biến ngữ cảnh (context) và truyền đối tượng exception vào tham số cuối để in stack trace.',
+    codeBad: `try {
+    paymentService.process(order);
+} catch (Exception e) {
+    // ❌ Nuốt lỗi hoàn toàn hoặc chỉ in ra console vô nghĩa!
+    e.printStackTrace();
+}`,
+    codeGood: `try {
+    paymentService.process(order);
+} catch (PaymentException e) {
+    // ✅ Ghi log chuẩn SLF4J với ngữ cảnh rõ ràng:
+    log.error("Thanh toán thất bại cho orderId: {}, userId: {}, lý do: {}", 
+              order.getId(), order.getUserId(), e.getMessage(), e);
+    throw new BusinessException("Lỗi giao dịch: " + e.getMessage(), e);
+}`
+  },
+  {
+    id: 115,
+    category: 'Core Java & JVM',
+    priority: 'Bắt Buộc',
+    title: 'Không bao giờ so sánh hai đối tượng Wrapper (Integer, Long) bằng toán tử "=="',
+    summary: 'Toán tử == so sánh địa chỉ ô nhớ. Với số > 127, Java không dùng bộ nhớ đệm IntegerCache nên == sẽ trả về false dù hai số có giá trị giống hệt nhau.',
+    detail: 'Khi viết logic so sánh hai ID người dùng, ví dụ order.getUserId() == currentUser.getId(): Khi chạy thử trên máy local với user ID = 1 và 2, code chạy đúng vì Java cache từ -128 đến 127. Nhưng khi lên môi trường thật có hàng ngàn user, ID đạt 128 trở lên, biểu thức a == b lập tức trả về false, dẫn đến lỗi từ chối quyền truy cập bí ẩn. Luôn dùng Objects.equals(a, b) hoặc a.equals(b).',
+    codeBad: `Long id1 = 128L;
+Long id2 = 128L;
+if (id1 == id2) { // ❌ FALSE! Hai đối tượng nằm ở hai địa chỉ ô nhớ khác nhau trên Heap!
+    allowAccess();
+}`,
+    codeGood: `Long id1 = 128L;
+Long id2 = 128L;
+if (Objects.equals(id1, id2)) { // ✅ TRUE! So sánh an toàn giá trị logic và chống null
+    allowAccess();
+}`
+  },
+  {
+    id: 116,
+    category: 'Spring Boot & REST',
+    priority: 'Kiến Trúc',
+    title: 'Sử dụng HTTP Status Code chuẩn ngữ nghĩa RESTful: 200, 201, 204, 400, 401, 403, 404, 422',
+    summary: 'Không bao giờ trả về HTTP 200 kèm body {"code": 500, "message": "Lỗi"}. Hãy để các tầng Proxy, Gateway và Frontend tận dụng đúng chuẩn HTTP.',
+    detail: 'Quy chuẩn RESTful quốc tế: - 200 OK: Thành công có trả về dữ liệu; - 201 Created: Tạo mới thành công (thường kèm Location header); - 204 No Content: Xóa hoặc cập nhật thành công và không cần trả về body; - 400 Bad Request: Sai cú pháp JSON gửi lên; - 401 Unauthorized: Chưa đăng nhập; - 403 Forbidden: Đã đăng nhập nhưng không có quyền; - 404 Not Found: Không tìm thấy tài nguyên; - 422 Unprocessable: Dữ liệu vi phạm validation nghiệp vụ; - 500: Lỗi sập server nội bộ.',
+    codeBad: `// ❌ Lỗi server nhưng vẫn trả về HTTP 200 OK:
+@PostMapping("/pay")
+public ResponseEntity<?> pay() {
+    return ResponseEntity.ok(Map.of("status", "FAIL", "msg", "Tài khoản không đủ tiền"));
+}`,
+    codeGood: `// ✅ Trả về đúng mã 422 hoặc 400 kèm chuẩn lỗi RFC 7807:
+@PostMapping("/pay")
+public ResponseEntity<PaymentResponse> pay(@Valid @RequestBody PaymentRequest req) {
+    PaymentResponse res = paymentService.process(req);
+    return ResponseEntity.status(HttpStatus.CREATED).body(res);
+}`
+  },
+  {
+    id: 117,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Sử dụng "git rebase" khi đồng bộ nhánh tính năng từ main để giữ lịch sử commit thẳng thớm',
+    summary: 'Lạm dụng git merge liên tục tạo ra hàng loạt commit rác "Merge branch main into feature" làm ô nhiễm đồ thị Git và khiến việc truy vết bug trở thành ác mộng.',
+    detail: 'Khi bạn làm một nhánh feature/login trong 3 ngày, trong lúc đó nhánh main của team đã có 10 commit mới. Thay vì đứng ở feature gõ git merge main (tạo ra commit hợp nhất rác), hãy dùng: git fetch origin && git rebase origin/main. Git sẽ gỡ các commit của bạn ra, đặt lên trên đỉnh các commit mới nhất của main, giữ toàn bộ lịch sử commit của nhánh thẳng tắp như một đường thẳng.',
+    codeBad: `# ❌ Tạo commit merge rác tràn lan:
+git checkout feature/order
+git merge main # Sinh commit: Merge branch 'main' into feature/order`,
+    codeGood: `# ✅ Rebase mượt mà, lịch sử commit thẳng tắp:
+git checkout feature/order
+git fetch origin
+git rebase origin/main
+# Nếu có conflict: Sửa xong gõ "git add ." rồi "git rebase --continue"`
+  },
+  {
+    id: 118,
+    category: 'Database & JPA',
+    priority: 'Hiệu Năng',
+    title: 'Luôn chạy EXPLAIN cho các câu query phức tạp trước khi nộp Pull Request',
+    summary: 'Một câu query chạy trên máy dev (10 dòng dữ liệu) mất 5ms, nhưng khi lên production (1 triệu dòng) có thể mất 30 giây nếu bị dính Full Table Scan.',
+    detail: 'Trước khi tạo PR liên quan đến thay đổi DB hoặc viết query mới trong Repository, hãy bật EXPLAIN chạy thử trên Database. Chú ý 3 chỉ số báo động đỏ: 1. type = ALL: Đang quét toàn bộ bảng (Full Table Scan), cần bổ sung Index; 2. rows: Số lượng dòng dự kiến phải duyệt qua; 3. Extra = Using filesort / Using temporary: Đang phải sắp xếp ngoài RAM/đĩa, cần tối ưu lại Composite Index.',
+    codeBad: `// ❌ Nộp PR câu query tìm kiếm phức tạp mà chưa từng kiểm tra Execution Plan`,
+    codeGood: `-- ✅ Luôn kiểm tra kế hoạch thực thi trước khi deploy:
+EXPLAIN SELECT id, total_amount FROM orders 
+WHERE user_id = 100 AND status = 'COMPLETED' 
+ORDER BY created_at DESC LIMIT 20;`
+  },
+  {
+    id: 119,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Sử dụng "git stash" và "git cherry-pick" khi cần chuyển đổi ngữ cảnh khẩn cấp',
+    summary: 'Đang làm dở tính năng thì Lead giao task hotfix gấp: Đừng commit ẩu "temp" hay "wip" lên remote! Dùng git stash để cất code tạm vào ngăn kéo.',
+    detail: 'git stash save "dang lam do login" giúp đưa toàn bộ thay đổi chưa commit vào ngăn kéo an toàn và đưa working directory về trạng thái sạch sẽ để bạn chuyển sang nhánh hotfix. Sau khi fix xong, quay lại nhánh cũ và gõ git stash pop để khôi phục lại code đang dở. Khi muốn lấy 1 commit sửa bug cụ thể từ nhánh khác về nhánh của mình mà không muốn gộp toàn bộ nhánh, dùng git cherry-pick <commit-hash>.',
+    codeBad: `# ❌ Commit code gãy nửa vời chỉ để chuyển nhánh:
+git commit -m "wip luu tam"`
+  },
+  {
+    id: 120,
+    category: 'Spring Boot & REST',
+    priority: 'Hiệu Năng',
+    title: 'Luôn giới hạn kích thước phân trang tối đa (Max Page Size = 100) trên mọi API',
+    summary: 'Nếu API cho phép client truyền size tùy ý mà không chặn trần, một hacker hoặc tool crawl gửi size=1000000 sẽ kéo hàng triệu dòng vào RAM và đánh sập server ngay lập tức.',
+    detail: 'Khi thiết kế API phân trang trong Spring Boot bằng Pageable, luôn đặt giới hạn tối đa cho tham số size (ví dụ trần 100 hoặc 50 bản ghi). Nếu người dùng truyền size > 100, backend tự động ép về 100 hoặc quăng lỗi 400 Bad Request. Có thể cấu hình toàn cục trong file cấu hình Spring hoặc kiểm tra trực tiếp ở tầng Controller/DTO.',
+    codeBad: `// ❌ Client truyền ?page=0&size=5000000 là ứng dụng bị OutOfMemoryError ngay:
+@GetMapping("/items")
+public Page<ItemDto> getItems(@PageableDefault(size = 20) Pageable pageable) {
+    return itemService.findAll(pageable);
+}`,
+    codeGood: `// ✅ Giới hạn trần an toàn bằng PageableHandlerMethodArgumentResolver hoặc logic:
+@GetMapping("/items")
+public Page<ItemDto> getItems(@PageableDefault(size = 20) Pageable pageable) {
+    int safeSize = Math.min(pageable.getPageSize(), 100); // Tối đa 100 bản ghi
+    Pageable safePageable = PageRequest.of(pageable.getPageNumber(), safeSize, pageable.getSort());
+    return itemService.findAll(safePageable);
+}`
   }
 ];
+
 

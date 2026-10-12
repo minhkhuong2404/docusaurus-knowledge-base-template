@@ -96,11 +96,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Overview",
-    "permalink": "/security"
-  },
-  "next": {
     "title": "Web Security Fundamentals",
     "permalink": "/technical-knowledge/security/web-security-fundamentals"
+  },
+  "next": {
+    "title": "Cookies, Sessions & JWT",
+    "permalink": "/technical-knowledge/security/cookies-vs-sessions-vs-jwt"
   }
 }

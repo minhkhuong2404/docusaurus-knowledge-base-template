@@ -107,7 +107,7 @@ Why AWS SQS Excels for Web Crawlers:
 1. **Kafka's Partition Cursor**: Each partition is assigned to one consumer thread. If URL 2 times out or fails, the consumer cannot simply commit offset 3 and leave 2 uncommitted. If it pauses or retries locally, the entire partition stops processing, creating catastrophic consumer lag.
 2. **SQS's Visibility Timeout**: Worker 2 attempts URL 2 and encounters a 503. SQS makes URL 2 invisible for 30 seconds. In the meantime, Workers 3 and 4 process URLs 3 and 4 with zero delay. If Worker 2 never deletes URL 2, SQS automatically makes it visible again for another worker, and eventually sends it to a DLQ after `maxReceiveCount` failures.
 
-:::tip Architectural Takeaway
+:::tip[Architectural Takeaway]
 For uncoordinated worker task execution with independent transient failures, **AWS SQS** is often superior to Kafka because it avoids the complexity of building custom non-blocking retry topics.
 :::
 
@@ -178,7 +178,7 @@ Broker Sizing Estimator:
 
 In system design interviews, candidates often panic when asked: *"What happens if Kafka goes down?"*
 
-:::info Principal Architect Interview Technique
+:::info[Principal Architect Interview Technique]
 Push back gently on the premise. Kafka is **always available, sometimes consistent** under standard distributed systems operation.
 A production Kafka cluster runs across multiple availability zones (AZs) with:
 1. **Partition Replication**: A replication factor of 3 (1 Leader + 2 Followers) distributed across separate physical racks/AZs.

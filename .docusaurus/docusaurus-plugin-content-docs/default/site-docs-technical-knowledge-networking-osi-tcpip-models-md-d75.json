@@ -64,7 +64,7 @@
     "permalink": "/technical-knowledge/networking/"
   },
   "next": {
-    "title": "IP Addressing & Routing",
-    "permalink": "/technical-knowledge/networking/ip-addressing-routing"
+    "title": "MAC Addressing, ARP & Layer 2 Forwarding",
+    "permalink": "/technical-knowledge/networking/mac-address-and-layer-2"
   }
 }

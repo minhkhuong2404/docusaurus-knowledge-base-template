@@ -88,7 +88,7 @@
     "permalink": "/technical-knowledge/security/refresh-token-security-invalidation"
   },
   "next": {
-    "title": "Cryptography",
-    "permalink": "/technical-knowledge/security/cryptography-secure-design"
+    "title": "API Security",
+    "permalink": "/technical-knowledge/security/api-security"
   }
 }

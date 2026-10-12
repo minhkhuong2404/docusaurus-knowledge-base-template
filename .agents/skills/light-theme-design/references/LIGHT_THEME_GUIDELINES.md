@@ -93,20 +93,51 @@ On button or answer option hovers, text must NOT flip to white:
 
 ## 3. Glassmorphism & Subtle Borders
 
-### Active Page Link in Left Menu Bar
-Avoid bold or harsh active borders. Use a soft, natural frosted glass look:
-```css
-[data-theme="light"] .custom-menu-link.active {
-  background: rgba(255, 255, 255, 0.8) !important;
-  color: var(--brand-green) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  border-radius: 9px !important;
-  font-weight: 600 !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-}
-```
+### Left Menu Bar Styling (Consistent with Dark Theme)
+- **All Topics Headings**: Must be pure solid black (`#000000`) and bold (`700`), with no other color on idle, hover, or active-child:
+  ```css
+  [data-theme="light"] .custom-menu-category-header,
+  [data-theme="light"] .custom-menu-category,
+  [data-theme="light"] .custom-menu-category-header .menu-label,
+  [data-theme="light"] .custom-menu-category-items .custom-menu-category-header,
+  [data-theme="light"] .custom-menu-category-items .custom-menu-category-header .menu-label,
+  [data-theme="light"] .navbar-sidebar .menu__link--sublist-caret {
+    color: #000000 !important;
+    font-weight: 700 !important;
+    font-size: 0.89rem !important;
+    letter-spacing: -0.01em;
+  }
+  [data-theme="light"] .custom-menu-category-header .menu-caret svg {
+    color: #000000 !important;
+    stroke: #000000 !important;
+  }
+  ```
+- **Active Page Link & Gradient Highlight**: Matches dark mode with theme-adaptive active background (`var(--sidebar-active-bg)`), colored border (`var(--sidebar-active-border)`), neon glow (`var(--neon-glow-color)`), vertical gradient left bar (`::before`), and animated shimmer sweep (`::after`):
+  ```css
+  [data-theme="light"] .custom-menu-link.active {
+    background: var(--sidebar-active-bg) !important;
+    color: var(--sidebar-active-text) !important;
+    border: 1px solid var(--sidebar-active-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 0 0 1px var(--sidebar-active-border), 0 4px 18px var(--neon-glow-color), inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+    font-weight: 700 !important;
+    position: relative;
+    overflow: hidden;
+  }
+  [data-theme="light"] .custom-menu-link.active::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 15%;
+    height: 70%;
+    width: 3.5px;
+    border-radius: 2px;
+    opacity: 1 !important;
+    transform: scaleY(1) !important;
+    background: linear-gradient(180deg, var(--brand-green), var(--brand-green-mid)) !important;
+    box-shadow: 0 0 8px var(--neon-glow-color);
+  }
+  ```
 
 ### Avatar Icon Hover
 On avatar hover, the border must be light and natural, never harsh:
@@ -205,10 +236,28 @@ Never end gradients with `#1e1b4b` or dark navy/black. Use radiant matching tint
 
 ---
 
-## 6. Interactive Diagrams Light Mode Adaptation
+## 6. Interactive Diagrams Exception: Dark Telemetry Canvas in Both Themes
 
-- Diagram containers must inherit `--ifm-font-family-base`.
-- Outer card background: `#ffffff` or `#F7FDF9`, border `1px solid #D9D9D9`.
-- Node boxes: soft background (`#F2F2F2` or `#F7FDF9`), border `1.5px solid #98A2B3`.
-- Arrow conduits: darker solid SVG strokes (`#98A2B3`) with vibrant moving overlays.
-- Never use bright unshaded neon highlights on white surfaces; use dark saturated primary tones.
+> 🚨 **MANDATORY INVARIANT FOR ALL INTERACTIVE DIAGRAMS**:
+> All interactive diagrams (`.interactive-diagram-container`) are **cyber telemetry instruments**.
+> They **APPLY FOR DARK THEME AND KEEP THE EXACT SAME DARK THEME COLORS IN LIGHT THEME**.
+
+- **Enforced via `src/css/diagrams.css`**:
+  ```css
+  [data-theme="light"] .interactive-diagram-container {
+    --ifm-color-content: #f8fafc;
+    --ifm-color-content-secondary: #94a3b8;
+    background: #0b0f19 !important;
+    border: 1px solid var(--sidebar-border, rgba(74, 222, 128, 0.18)) !important;
+    color: #f8fafc !important;
+  }
+  [data-theme="light"] .interactive-diagram-svg-wrapper {
+    background-color: #0d0f1e !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+  ```
+- **Diagram Containers**: Always dark `#090b14` / `#0b0f19`, inner SVG canvas `#0d0f1e` with dot grid, detail panels `#0c0e17`.
+- **Node Boxes**: Dark fills (`rgba(15, 23, 42, 0.85)` or `rgba(255, 255, 255, 0.04)`), active fills `${color}25`, glowing neon borders (`#38bdf8`, `#34d399`, `#fbbf24`, `#a78bfa`, `#f87171`).
+- **Conduits & Flowing Particles**: Vibrant colored dashed paths (`.interactive-diagram-flowing-path`) and glowing arrow markers.
+- **Typography inside Diagrams**: High contrast light text (`#ffffff` for titles/active items, `#e2e8f0` for body/code, `#94a3b8` for subtitles/hints).
+- **NEVER use light theme tokens inside diagrams**: Do not use `#F7FDF9`, `#D9D9D9`, `#F2F2F2`, `#ffffff` backgrounds, or `#0f172a` dark text inside `.interactive-diagram-container`. Diagram components must look identical in both dark and light modes.

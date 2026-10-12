@@ -98,6 +98,76 @@ startupProbe:        # Is the app done starting? Don't liveness-kill a slow star
   periodSeconds: 10
 ```
 
+### The Deep Health Check Trap (Cascading Failure Anti-Pattern)
+
+A frequent and catastrophic failure mode in distributed systems is configuring a load balancer or Kubernetes probe to perform a **deep health check** that queries downstream databases, caches, or third-party APIs:
+
+```
+[ Load Balancer Probe: GET /health/deep ] ──▶ [ App Pod ] ──▶ [ Database: SELECT 1 FROM orders ]
+```
+
+```
+                     CASCADING COLLAPSE TIMELINE:
+T=00s: Database experiences transient lock contention or unindexed query spike.
+T=05s: Database query latency spikes from 2ms to 3,000ms.
+T=10s: Load balancer health probe times out on App Pod 1; marks it UNHEALTHY.
+T=15s: Health checks fail on App Pods 2 through 50 simultaneously.
+T=20s: Load balancer evicts 100% of healthy application pods from the target group!
+RESULT: A transient database slow-down causes a 100% catastrophic total application outage.
+```
+
+**The Architectural Fix:**
+- **Liveness & Ingress Health Checks MUST be Shallow:** Probe only local process viability (e.g. `GET /health/live` checking JVM thread availability and local HTTP server response in &lt; 2ms). Never check downstream networked dependencies in an ingress health probe.
+- **Deep Health Probes (`/health/deep`) are for Telemetry & Alerting Only:** Expose deep dependency status to Prometheus/Datadog dashboards and SRE on-call pagers, but decouple them from automated traffic kill-switches.
+
+---
+
+## Single Point of Failure (SPOF) Analysis Across Every Tier
+
+True service reliability requires eliminating Single Points of Failure at every layer of the distributed request pipeline:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          SPOF MITIGATION BY LAYER                           │
+├───────────────────┬─────────────────────────┬───────────────────────────────┤
+│ ARCHITECTURAL TIER│ SPOF VULNERABILITY      │ PRODUCTION MITIGATION         │
+├───────────────────┼─────────────────────────┼───────────────────────────────┤
+│ 1. DNS Layer      │ Single authoritative    │ Multi-provider Anycast DNS    │
+│                   │ DNS provider outage     │ (Route 53 + Cloudflare)       │
+├───────────────────┼─────────────────────────┼───────────────────────────────┤
+│ 2. Load Balancer  │ Single proxy host crash │ Keepalived / VRRP Floating IP │
+│                   │ or interface failure    │ or ECMP BGP Active-Active     │
+├───────────────────┼─────────────────────────┼───────────────────────────────┤
+│ 3. Application    │ Host crash or AZ outage │ Multi-AZ stateless fleet with │
+│                   │ taking down instances   │ pod anti-affinity rules       │
+├───────────────────┼─────────────────────────┼───────────────────────────────┤
+│ 4. Cache Tier     │ In-memory node reboot   │ Redis Cluster with 3+ masters │
+│                   │ drops all session state │ and Sentinel auto-failover    │
+├───────────────────┼─────────────────────────┼───────────────────────────────┤
+│ 5. Database Tier  │ Primary node disk crash │ Semi-sync replication, Raft   │
+│                   │ or network split        │ quorum, automated promotion   │
+└───────────────────┴─────────────────────────┴───────────────────────────────┘
+```
+
+---
+
+## Session Persistence: Sticky Sessions vs Externalized Backplane
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         SESSION PERSISTENCE STYLES                          │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│     COOKIE-BASED STICKY SESSIONS     │   EXTERNALIZED STATELESS SESSIONS    │
+├──────────────────────────────────────┼──────────────────────────────────────┤
+│ • LB injects tracking cookie         │ • App instances are 100% stateless   │
+│   (e.g., AWSALB=Server-02)           │ • Sessions stored in Redis Cluster   │
+│ • Client pinned to same server node  │ • Any pod can process any request    │
+│ • Drawbacks: Uneven traffic skew,    │ • Advantages: Uniform load balance,  │
+│   cache hot-spots, session loss      │   seamless autoscaling, zero data    │
+│   when pinned server is terminated   │   loss on pod restarts or deploys    │
+└──────────────────────────────────────┴──────────────────────────────────────┘
+```
+
 ---
 
 ## Failover Strategies

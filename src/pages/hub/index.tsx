@@ -4,6 +4,7 @@ import Link from '@docusaurus/Link';
 import { FIFTY_PRACTICAL_TIPS, PracticalTip } from '../../data/hubFiftyTipsData';
 import { INTERVIEW_QUESTIONS, InterviewQuestion } from '../../data/hubInterviewQuestionsData';
 import { KNOWLEDGE_MODULES, KnowledgeModule, LessonTopic } from '../../data/hubKnowledgeModulesData';
+import MockInterviewStudio from '../../components/mock-interview/MockInterviewStudio';
 
 // ==========================================
 // 2. DATA: CV & JOB HUNTING STRATEGY
@@ -42,6 +43,64 @@ const CV_SECTIONS: CvSectionBreakdown[] = [
       'Nhồi nhét từ khóa đao to búa lớn (Kafka, Kubernetes, Microservices, CI/CD) khi chỉ mới đọc lướt qua lý thuyết.'
     ],
     exampleText: '✅ Languages: Java (17/21), SQL (PostgreSQL, MySQL)\nFrameworks & Libraries: Spring Boot 3, Spring Data JPA, Spring Security (JWT), Hibernate, Lombok\nTesting: JUnit 5, Mockito, MockMvc\nDevOps & Tools: Docker, Docker Compose, Git, Maven, Postman, IntelliJ IDEA'
+  },
+  {
+    sectionTitle: '3. Học Vấn, Điểm Số & Môn Học Trọng Tâm (Education & GPA)',
+    doThis: [
+      'Ghi rõ trường Đại học, chuyên ngành (Công nghệ Thông tin / Khoa học Máy tính) và năm tốt nghiệp dự kiến.',
+      'Nếu GPA >= 3.0 / 4.0 (hoặc >= 7.5 / 10), hãy tự tin làm nổi bật trong CV.',
+      'Liệt kê các môn học nền tảng kỹ thuật then chốt: Cấu trúc dữ liệu & Giải thuật, Hệ quản trị cơ sở dữ liệu, Lập trình hướng đối tượng (OOP), Mạng máy tính, Hệ điều hành.'
+    ],
+    dontDoThis: [
+      'Nếu GPA dưới 2.5 thì không nên đưa vào mục tiêu điểm; thay vào đó hãy bù đắp bằng dự án thực chiến và link GitHub chất lượng.',
+      'Liệt kê các môn đại cương không liên quan (Triết học, Thể dục, Pháp luật đại cương).',
+      'Khai gian điểm số hoặc gian lận xếp loại học lực (sẽ bị phát hiện ngay khi nộp bảng điểm lúc nhận việc).'
+    ],
+    exampleText: '✅ "Đại học Bách Khoa Hà Nội — Chuyên ngành Khoa học Máy tính (2022 - 2026)\nGPA: 3.42 / 4.0 (Top 10% khóa)\nMôn học trọng tâm: Data Structures & Algorithms (A), Database Management Systems (A+), Object-Oriented Programming (A), Computer Networks (B+)\nGiải thưởng: Học bổng Khuyến khích học tập 3 kỳ liên tiếp."'
+  },
+  {
+    sectionTitle: '4. Kinh Nghiệm Thực Tập & Đồ Án Tốt Nghiệp (Work Experience)',
+    doThis: [
+      'Nếu chưa từng đi làm công ty: Hãy viết Đồ án tốt nghiệp, Research Lab tại trường hoặc Dự án Capstone theo chuẩn của một vị trí kỹ sư Backend.',
+      'Nêu rõ vai trò của bạn (Sole Developer hay Backend Lead nhóm 4 người), quy trình làm việc (Agile/Scrum, Git Flow, Jira sprint 2 tuần).',
+      'Làm nổi bật tác động thực tế: Số lượng API đã viết, tỷ lệ test coverage, hiệu năng cải thiện trước và sau khi tối ưu.'
+    ],
+    dontDoThis: [
+      'Bỏ trống phần kinh nghiệm và than thở: "Em là sinh viên mới ra trường nên chưa có kinh nghiệm gì".',
+      'Kể lể các công việc bán thời gian không liên quan đến IT (phục vụ bàn, bán hàng online) chiếm quá nhiều diện tích CV.',
+      'Viết trách nhiệm mơ hồ: "Tham gia phát triển dự án cùng nhóm và sửa một số lỗi".'
+    ],
+    exampleText: '✅ "Backend Engineering Intern — ABC Tech Solution (06/2025 - 12/2025)\n• Thiết kế và phát triển 12 RESTful endpoints cho phân hệ Quản lý Kho hàng bằng Spring Boot 3 và PostgreSQL.\n• Tái cấu trúc cơ sở dữ liệu và đánh B-Tree Composite Index giúp giảm thời gian truy vấn báo cáo tồn kho từ 2.4s xuống 320ms.\n• Viết bộ Integration Tests với Testcontainers (PostgreSQL & Redis) đạt 85% line coverage, tích hợp vào GitHub Actions CI pipeline.\n• Phối hợp cùng 2 Frontend Dev và 1 QA theo quy trình Scrum, hoàn thành 100% story points trong 6 sprints liên tiếp."'
+  },
+  {
+    sectionTitle: '5. Chiến Lược GitHub Repo & Portfolio 30 Giây (GitHub Strategy)',
+    doThis: [
+      'Đặt tên repo ngắn gọn, chuyên nghiệp (ví dụ: ecommerce-backend-api, booking-engine-service).',
+      'Đầu tư file README.md như một trang sản phẩm: Có sơ đồ kiến trúc (Architecture Diagram), hướng dẫn chạy 1-click bằng "docker compose up", và tài liệu Swagger UI.',
+      'Lịch sử commit đều đặn, commit message tuân thủ Conventional Commits (feat:, fix:, refactor:, test:).'
+    ],
+    dontDoThis: [
+      'Dẫn link GitHub rỗng hoặc chỉ có 1 commit duy nhất "Initial commit" chứa toàn bộ mã nguồn đẩy lên một lần.',
+      'Đẩy các file rác (.DS_Store, target/, .idea/, node_modules/) lên repo vì thiếu file .gitignore.',
+      'Để lộ các thông tin bí mật (DB Password, API Key, Token bí mật) trong commit history.'
+    ],
+    exampleText: '✅ GitHub README chuẩn mực bao gồm:\n1. Tech Stack Badges (Java 21, Spring Boot 3, PostgreSQL, Docker, Redis)\n2. Architecture Flowchart (Mermaid / SVG minh họa luồng dữ liệu qua Spring Security & Database)\n3. Quick Start (Chỉ cần gõ: docker compose up -d && ./mvnw spring-boot:run)\n4. API Documentation (Đường link Swagger UI: http://localhost:8080/swagger-ui.html)\n5. CI/CD Status Badge (GitHub Actions: Build Passing 100%)'
+  },
+  {
+    sectionTitle: '6. Những Lỗi "Chết Người" Khiến CV Bị Loại Từ Vòng Gửi Xe (Fatal Red Flags)',
+    doThis: [
+      'Xuất file dưới định dạng PDF chuẩn, đặt tên file chuyên nghiệp: "NguyenVanA_Java_Backend_Junior.pdf".',
+      'Độ dài hoàn hảo cho Intern/Fresher là đúng 1 TRANG A4 (tối đa 2 trang nếu dự án có chiều sâu đặc biệt).',
+      'Viết email ứng tuyển (Cover Letter) ngắn gọn 3 đoạn lịch sự: Giới thiệu bản thân - Lý do phù hợp với JD - Lời cảm ơn và đính kèm CV.'
+    ],
+    dontDoThis: [
+      'Gửi file .doc / .docx (rất dễ bị lệch format, vỡ font chữ trên máy của HR).',
+      'Đặt tên file cẩu thả: "CV.pdf", "CV_moi.pdf", "Ban_sao_CV(1).pdf".',
+      'Sai chính tả các từ khóa kỹ thuật cơ bản: "Jav", "springboot", "MySql", "postman", "git hub" (Đánh mất 100% ấn tượng chuyên nghiệp).',
+      'Sử dụng địa chỉ email thiếu nghiêm túc thời học sinh: "hoangtubuon9x@gmail.com", "boydeptrai_hp@yahoo.com".',
+      'Gửi email apply mà tiêu đề hoặc nội dung email để trống trơn, chỉ đính kèm mỗi file PDF.'
+    ],
+    exampleText: '✅ Tiêu đề email chuẩn mực:\n"[Họ và Tên] — Ứng Tuyển Vị Trí Java Backend Fresher / Junior"\n\nNội dung email:\n"Kính gửi Ban Tuyển dụng và Bộ phận Kỹ thuật [Tên Công ty],\nEm tên là Nguyễn Văn A, tốt nghiệp chuyên ngành CNTT trường Đại học ABC. Qua tìm hiểu, em được biết Quý công ty đang mở tuyển vị trí Java Backend Fresher...\nEm xin gửi kèm CV tổng hợp kinh nghiệm dự án Spring Boot, tối ưu SQL và link GitHub cá nhân. Em rất mong có cơ hội được trao đổi trực tiếp trong buổi phỏng vấn sắp tới.\nEm xin chân thành cảm ơn!"'
   }
 ];
 
@@ -542,6 +601,198 @@ public DataSource determineCurrentLookupKey() {
     return isRecentlyWrittenUser() ? DataSourceType.MASTER : DataSourceType.SLAVE;
 }`,
     goodExplanation: 'Sticky Master Routing chỉ định tuyến người dùng vừa thực hiện hành vi ghi đọc từ Master trong vài giây ngắn ngủi, vừa bảo đảm tính nhất quán tức thì vừa không làm quá tải Master.'
+  },
+  {
+    id: 'integer-cache-equals',
+    title: '17. So Sánh Bằng "==" vs ".equals()" & Bẫy Integer Cache (-128 Đến 127)',
+    category: 'Core Java',
+    impactBadge: 'Triệt tiêu 100% bug so sánh ID ngầm trên Prod',
+    badTitle: '❌ Thói quen ở trường (Dùng toán tử == so sánh hai đối tượng Wrapper)',
+    badCode: `// ❌ CẠM BẪY CHẾT NGƯỜI VỚI KHÓA ID:
+public boolean canAccessResource(Order order, User currentUser) {
+    // Khi test ở local với userId = 1 và 2: Code chạy ĐÚNG vì Java cache [-128..127]!
+    // Nhưng lên Production khi userId chạm ngưỡng 128:
+    // order.getUserId() == currentUser.getId() TRẢ VỀ FALSE DÙ HAI ID BẰNG NHAU!
+    return order.getUserId() == currentUser.getId(); 
+}`,
+    badExplanation: 'Toán tử == so sánh địa chỉ ô nhớ trên Heap. Với kiểu Wrapper (Integer, Long), Java chỉ tái sử dụng object trong dải cache -128 đến 127. Ngoài dải này, hai số 128 được cấp phát tại hai địa chỉ hoàn toàn khác nhau khiến biểu thức == trả về false, dẫn đến bug nghiêm trọng chặn quyền truy cập của khách hàng.',
+    goodTitle: '✅ Chuẩn đi làm (Dùng Objects.equals() hoặc .equals() an toàn tuyệt đối)',
+    goodCode: `// ✅ SO SÁNH NỘI DUNG LOGIC & AN TOÀN TRƯỚC NULL:
+public boolean canAccessResource(Order order, User currentUser) {
+    if (order == null || currentUser == null) {
+        return false;
+    }
+    // Objects.equals kiểm tra: (a == b || (a != null && a.equals(b)))
+    // Chạy chính xác 100% với mọi giá trị ID từ 1 đến hàng tỷ tỷ:
+    return Objects.equals(order.getUserId(), currentUser.getId());
+}`,
+    goodExplanation: 'Objects.equals(a, b) so sánh giá trị logic nội dung bên trong đối tượng, đồng thời xử lý an toàn kịch bản 1 trong 2 biến bị null mà không bao giờ ném NullPointerException.'
+  },
+  {
+    id: 'swallowed-exception-vs-rfc7807',
+    title: '18. Nuốt Lỗi Âm Thầm catch(Exception e) {} vs Custom Exception + RFC 7807',
+    category: 'Clean Code',
+    impactBadge: 'Chuẩn truy vết lỗi & Không tạo bug ma',
+    badTitle: '❌ Thói quen ở trường (Catch chung chung, in e.printStackTrace() hoặc nuốt lỗi)',
+    badCode: `// ❌ LỖI "NUỐT LỖI" KHIẾN HỆ THỐNG MÙ MỜ HOÀN TOÀN:
+public UserResponse getUser(Long id) {
+    try {
+        User user = userRepository.findById(id).get();
+        return convertToDto(user);
+    } catch (Exception e) {
+        // Nuốt lỗi hoặc in ra console - server không lưu vết gì trên log phân tán:
+        e.printStackTrace();
+        return null; // Frontend nhận HTTP 200 với body rỗng và lăn đùng ra sập!
+    }
+}`,
+    badExplanation: 'Nuốt ngoại lệ biến bug thành bóng ma. Phía Frontend nhận HTTP 200 nhưng body rỗng hoặc null, còn phía Backend không có cảnh báo nào, khiến việc bảo trì sau này mất hàng tuần truy vết.',
+    goodTitle: '✅ Chuẩn đi làm (Custom Business Exception + @RestControllerAdvice RFC 7807)',
+    goodCode: `// ✅ KHAI BÁO RÕ RÀNG VÀ ĐỂ GLOBAL HANDLER ĐỊNH DẠNG:
+public UserResponse getUser(Long id) {
+    User user = userRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng có id: " + id));
+    return userMapper.toDto(user);
+}
+
+// Global Exception Handler chuyển hóa thành chuẩn RFC 7807 (Problem Details):
+@ExceptionHandler(ResourceNotFoundException.class)
+public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
+    ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    problem.setProperty("timestamp", Instant.now());
+    problem.setProperty("errorCode", "USER_NOT_FOUND");
+    return problem;
+}`,
+    goodExplanation: 'Ném Custom Exception có ngữ cảnh rõ ràng và gom việc định dạng phản hồi lỗi về một nơi duy nhất bằng @RestControllerAdvice theo chuẩn RFC 7807 của Spring Boot 3.'
+  },
+  {
+    id: 'return-null-vs-empty-collection',
+    title: '19. Trả Về null vs Collections.emptyList() & Optional',
+    category: 'Clean Code',
+    impactBadge: 'Diệt tận gốc NullPointerException dây chuyền',
+    badTitle: '❌ Thói quen ở trường (Không có dữ liệu thì return null)',
+    badCode: `// ❌ GÂY RA DỊCH BỆNH NULLPOINTEREXCEPTION CHO TOÀN BỘ CALLER:
+public List<Order> getOrdersByUser(Long userId) {
+    List<Order> orders = orderRepository.findByUserId(userId);
+    if (orders.isEmpty()) {
+        return null; // ❌ Trả về null khi danh sách rỗng!
+    }
+    return orders;
+}
+
+// Bên gọi (Caller): Nếu quên kiểm tra == null sẽ bị sập ngay lập tức:
+// for (Order o : getOrdersByUser(id)) { ... } ➔ CRASH!`,
+    badExplanation: 'Trả về null cho kiểu Collection buộc mọi nơi gọi hàm đều phải nhớ viết if (list != null), chỉ cần 1 lập trình viên sơ suất là toàn bộ màn hình người dùng bị crash với NullPointerException.',
+    goodTitle: '✅ Chuẩn đi làm (Luôn trả về Collections.emptyList() hoặc Optional)',
+    goodCode: `// ✅ DANH SÁCH RỖNG LÀ MỘT DANH SÁCH CÓ 0 PHẦN TỬ, KHÔNG PHẢI NULL:
+public List<Order> getOrdersByUser(Long userId) {
+    List<Order> orders = orderRepository.findByUserId(userId);
+    if (orders == null || orders.isEmpty()) {
+        return Collections.emptyList(); // ✅ Tái sử dụng đối tượng rỗng bất biến, 0 byte RAM
+    }
+    return Collections.unmodifiableList(orders);
+}
+
+// Bên gọi lặp qua danh sách êm ru mà không cần bất kỳ câu if check null nào:
+for (Order o : getOrdersByUser(id)) { 
+    // Nếu rỗng: Vòng lặp đơn giản là không chạy, an toàn 100%!
+}`,
+    goodExplanation: 'Collections.emptyList() trả về một instance Singleton bất biến không cấp phát thêm bộ nhớ, cho phép phía gọi sử dụng an toàn trong foreach hoặc Stream mà không bao giờ gặp lỗi null.'
+  },
+  {
+    id: 'legacy-date-vs-java-time',
+    title: '20. java.util.Date & SimpleDateFormat vs java.time (Instant, OffsetDateTime UTC)',
+    category: 'Core Java',
+    impactBadge: 'Chuẩn múi giờ UTC & Thread-safe 100%',
+    badTitle: '❌ Thói quen ở trường (Dùng Date và SimpleDateFormat tĩnh dùng chung)',
+    badCode: `// ❌ LỖI RACE CONDITION KINH ĐIỂN VÌ SIMPLEDATEFORMAT KHÔNG THREAD-SAFE:
+public class DateUtils {
+    // SimpleDateFormat lưu trạng thái nội bộ trong Calendar:
+    // Khi 2 thread cùng gọi parse() hoặc format() sẽ gây sai lệch ngày tháng nghiêm trọng!
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static Date parseDate(String str) throws ParseException {
+        return SDF.parse(str); // ❌ Dính Race Condition trên môi trường đa luồng!
+    }
+}`,
+    badExplanation: 'SimpleDateFormat chứa biến trạng thái mutable bên trong. Khi nhiều request HTTP gọi chung một static SimpleDateFormat, các luồng ghi đè dữ liệu lên nhau làm xuất hiện ngày tháng sai lệch hoàn toàn (ví dụ năm 2026 biến thành năm 1970).',
+    goodTitle: '✅ Chuẩn đi làm (Dùng java.time từ Java 8+: Instant, OffsetDateTime, DateTimeFormatter)',
+    goodCode: `// ✅ BẤT BIẾN, THREAD-SAFE 100% VÀ CHUẨN HÓA MÚI GIỜ UTC:
+public class SafeDateTimeService {
+    // DateTimeFormatter trong java.time là IMMUTABLE và THREAD-SAFE:
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+    // Lưu trữ dưới Database luôn là mốc thời gian tuyệt đối UTC:
+    public Instant getCurrentUtcTimestamp() {
+        return Instant.now();
+    }
+
+    // Định dạng chuỗi theo múi giờ mong muốn một cách an toàn:
+    public String formatTimestamp(Instant instant, ZoneId zoneId) {
+        return instant.atZone(zoneId).format(FORMATTER);
+    }
+}`,
+    goodExplanation: 'Bộ thư viện java.time (JSR-310) thiết kế toàn bộ đối tượng là Immutable và Thread-safe. Lưu trữ dữ liệu thời gian bằng Instant (UTC) giúp hệ thống không bao giờ bị lỗi sai lệch múi giờ khi chuyển đổi server giữa các quốc gia.'
+  },
+  {
+    id: 'hardcoded-credentials-vs-env-profiles',
+    title: '21. Hardcode Password Trong application.properties vs Biến Môi Trường & Profiles',
+    category: 'Architecture',
+    impactBadge: 'Bảo mật chuẩn ISO 27001 & Chống lộ secret',
+    badTitle: '❌ Thói quen ở trường (Ghi thẳng tài khoản DB vào file cấu hình rồi commit)',
+    badCode: `# ❌ COMMIT THẲNG TÀI KHOẢN MẬT KHẨU LÊN GITHUB CÔNG KHAI:
+spring.datasource.url=jdbc:mysql://production-db.company.com:3306/prod_db
+spring.datasource.username=root
+spring.datasource.password=CongTyMinhDepTrai2026!
+jwt.secret-key=cai-khoa-nay-ai-cung-nhin-thay-duoc-tren-github`,
+    badExplanation: 'Commit mật khẩu lên Git là nguyên nhân số 1 khiến các công ty bị hacker tống tiền hoặc cài mã độc đào tiền ảo. Các bot scanner trên Internet quét các commit mới trên GitHub 24/7 và phát hiện mật khẩu trong vòng 30 giây.',
+    goodTitle: '✅ Chuẩn đi làm (Externalized Configuration với Biến Môi Trường & Spring Profiles)',
+    goodCode: `# ✅ ĐỌC AN TOÀN TỪ BIẾN MÔI TRƯỜNG CỦA HỆ THỐNG / KUBERNETES SECRETS:
+spring.datasource.url=\${DB_URL:jdbc:mysql://localhost:3306/dev_db}
+spring.datasource.username=\${DB_USERNAME:root}
+spring.datasource.password=\${DB_PASSWORD:}
+jwt.secret-key=\${JWT_SECRET}
+
+# Tách riêng cấu hình dev và prod bằng profiles:
+# application-dev.yml: Chạy H2 hoặc Docker MySQL local
+# application-prod.yml: Chạy RDS Database thực thụ`,
+    goodExplanation: 'Externalized Configuration tách biệt mã nguồn với cấu hình bảo mật. Mật khẩu được bơm động từ Kubernetes Secrets hoặc biến môi trường lúc container khởi động, không bao giờ xuất hiện trên Git history.'
+  },
+  {
+    id: 'uuid-v4-vs-tsid-page-split',
+    title: '22. UUIDv4 Ngẫu Nhiên vs BIGINT / TSID Làm Clustered Primary Key InnoDB',
+    category: 'Database / JPA',
+    impactBadge: 'Tăng tốc độ Insert gấp 5 lần & Chống Page Split',
+    badTitle: '❌ Thói quen ở trường (Dùng UUID.randomUUID() làm Khóa Chính PK)',
+    badCode: `// ❌ UUIDv4 HOÀN TOÀN NGẪU NHIÊN PHÁ NÁT CÂY B+TREE CỦA INNODB:
+@Entity
+@Table(name = "transactions")
+public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id; // UUID ngẫu nhiên (UUIDv4)
+
+    private BigDecimal amount;
+    // Mỗi lần chèn 1 dòng mới, khóa ngẫu nhiên chen vào giữa các trang B+Tree đã đầy!
+    // Bắt buộc InnoDB phải tách trang (Page Split) và ghi lại toàn bộ trang đĩa!
+}`,
+    badExplanation: 'Trong MySQL InnoDB, Clustered Index sắp xếp dữ liệu vật lý theo Primary Key. UUIDv4 hoàn toàn ngẫu nhiên nên khi chèn bản ghi mới, nó không được thêm vào cuối mà chen ngang vào các trang đĩa ở giữa, gây bão phân tách trang (Page Split) và làm giảm 80% tốc độ Insert.',
+    goodTitle: '✅ Chuẩn đi làm (BIGINT AUTO_INCREMENT hoặc Time-Sorted TSID / UUIDv7)',
+    goodCode: `// ✅ KHÓA CHÍNH TĂNG DẦN THEO THỜI GIAN (MONOTONICALLY INCREASING):
+@Entity
+@Table(name = "transactions")
+public class Transaction {
+    // 1. Sử dụng BIGINT AUTO_INCREMENT làm PK vật lý để tối ưu 100% B+Tree:
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // 2. Sử dụng TSID (Time-Sorted Unique Identifier) hoặc UUIDv7 làm mã công khai ra API:
+    @Column(name = "public_id", unique = true, updatable = false, length = 13)
+    private String publicId; // TSID: Vừa không lộ số lượng đơn hàng, vừa sắp xếp theo thời gian!
+
+    private BigDecimal amount;
+}`,
+    goodExplanation: 'Khóa chính tăng dần theo thời gian đảm bảo các bản ghi mới luôn được ghi tuần tự vào trang đĩa cuối cùng (Append-only style), loại bỏ 100% hiện tượng Page Split và tận dụng tối đa bộ nhớ đệm Buffer Pool.'
   }
 ];
 
@@ -757,7 +1008,7 @@ function FormattedDocContent({ text, accentColor }: { text: string; accentColor:
 // ==========================================
 
 export default function CareerHubPage(): React.JSX.Element {
-  const [activeMainTab, setActiveMainTab] = useState<'lessons' | 'tips50' | 'interview' | 'battles' | 'cv' | 'probation'>('lessons');
+  const [activeMainTab, setActiveMainTab] = useState<'lessons' | 'mock-interview' | 'interview' | 'tips50' | 'battles' | 'cv' | 'probation'>('lessons');
 
   // Lessons state
   const [selectedModuleId, setSelectedModuleId] = useState<string>('core-java');
@@ -823,6 +1074,16 @@ export default function CareerHubPage(): React.JSX.Element {
       const saved = localStorage.getItem('hub_probation_checklist_v2');
       if (saved) setCheckedProbation(JSON.parse(saved));
     } catch (e) {}
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam === 'mock-interview' || tabParam === 'mock') {
+        setActiveMainTab('mock-interview');
+      } else if (tabParam === 'lessons' || tabParam === 'interview' || tabParam === 'tips50' || tabParam === 'battles' || tabParam === 'cv' || tabParam === 'probation') {
+        setActiveMainTab(tabParam as any);
+      }
+    }
   }, []);
 
   const toggleCheck = (id: string) => {
@@ -836,21 +1097,33 @@ export default function CareerHubPage(): React.JSX.Element {
   };
 
   const PROBATION_TASKS = [
+    // Phase 1: Tuần 1: Onboarding
     { id: 'p-1', phase: 'Tuần 1: Onboarding', text: 'Chạy thành công dự án Local trong 48h đầu (JDK, Maven, Docker DB)', desc: 'Không cần hỏi Senior những lỗi cơ bản đã có trong README.' },
     { id: 'p-2', phase: 'Tuần 1: Onboarding', text: 'Đọc và hiểu luồng kiến trúc nghiệp vụ (Domain & Data Flow)', desc: 'Nắm được luồng request từ Gateway -> Controller -> Service -> DB.' },
     { id: 'p-3', phase: 'Tuần 1: Onboarding', text: 'Nắm vững quy tắc Git branching và commit message của team', desc: 'Quy chuẩn tên branch: feature/JIRA-123-ten-task, atomic commits.' },
     { id: 'p-4', phase: 'Tuần 1: Onboarding', text: 'Chủ động cập nhật lại file README nếu thấy tài liệu cũ bị thiếu', desc: 'Điểm cộng cực lớn giúp bạn ghi điểm chu đáo ngay từ tuần đầu.' },
     { id: 'p-5', phase: 'Tuần 1: Onboarding', text: 'Cấu hình SSH Key, GPG Signing và VPN công ty an toàn trong 24h', desc: 'Đảm bảo môi trường làm việc bảo mật, không commit bằng thông tin cá nhân sai lệch.' },
-    { id: 'p-6', phase: 'Tuần 2-4: First Tasks', text: 'Mở 3 PR gần nhất của Senior để học hỏi Coding Convention', desc: 'Bắt chước cách đặt tên biến, package, xử lý exception và ghi log.' },
-    { id: 'p-7', phase: 'Tuần 2-4: First Tasks', text: 'Luôn viết Unit Test đi kèm mọi dòng code mới', desc: 'Không nộp PR thiếu test; test bao phủ cả happy path và error path.' },
-    { id: 'p-8', phase: 'Tuần 2-4: First Tasks', text: 'Thái độ cầu thị và lịch sự khi nhận Code Review', desc: 'Không tự ái, cảm ơn khi được góp ý và sửa triệt để trước khi ping lại.' },
-    { id: 'p-9', phase: 'Tuần 2-4: First Tasks', text: 'Tự phác thảo tài liệu API Specs (OpenAPI/Swagger) trước khi code', desc: 'Trao đổi và thống nhất hợp đồng API với Frontend trước khi triển khai.' },
-    { id: 'p-10', phase: 'Tuần 2-4: First Tasks', text: 'Biết cách đọc và cấu hình Application Profiler & Actuator Metrics', desc: 'Theo dõi chỉ số JVM memory, heap allocation và database query count.' },
-    { id: 'p-11', phase: 'Tháng 2: Ownership', text: 'Báo cáo Daily Standup ngắn gọn: Làm gì - Sắp làm gì - Blocker', desc: 'Không nói chung chung "em đang nghiên cứu", nói rõ kết quả và rào cản.' },
-    { id: 'p-12', phase: 'Tháng 2: Ownership', text: 'Estimate thời gian có vùng đệm an toàn (Buffer 1.5x)', desc: 'Dự kiến 1 ngày thì estimate 1.5 ngày để dành thời gian viết test và fix bug.' },
-    { id: 'p-13', phase: 'Tháng 2: Ownership', text: 'Tự điều tra lỗi 15-30 phút trước khi nhờ Senior trợ giúp', desc: 'Áp dụng quy tắc 4 bước hỏi bài để Senior hỗ trợ nhiệt tình nhất.' },
-    { id: 'p-14', phase: 'Tháng 2: Ownership', text: 'Chủ động đề xuất xóa nợ kỹ thuật (Technical Debt) cho module cũ', desc: 'Tái cấu trúc code bẩn, bổ sung unit test cho các đoạn code thiếu test.' },
-    { id: 'p-15', phase: 'Tháng 2: Ownership', text: 'Tham gia quan sát và hỗ trợ Incident Response cùng các anh Senior', desc: 'Học cách đọc log phân tán, tra cứu traceId và xử lý khủng hoảng lúc deploy.' }
+    { id: 'p-6', phase: 'Tuần 1: Onboarding', text: 'Nắm cấu hình CI/CD Pipeline (GitHub Actions / GitLab CI) & Quality Gate', desc: 'Hiểu các rule Checkstyle, SonarQube và ngưỡng coverage bắt buộc khi merge.' },
+    { id: 'p-7', phase: 'Tuần 1: Onboarding', text: 'Tự thiết lập Postman / Swagger Collection để test luồng API chính', desc: 'Lưu trữ các request mẫu kèm token xác thực giúp tăng tốc độ kiểm thử hàng ngày.' },
+
+    // Phase 2: Tuần 2-4: First Tasks & Tiếp Nhận Codebase
+    { id: 'p-8', phase: 'Tuần 2-4: First Tasks', text: 'Mở 3 PR gần nhất của Senior để học hỏi Coding Convention', desc: 'Bắt chước cách đặt tên biến, package, xử lý exception và ghi log.' },
+    { id: 'p-9', phase: 'Tuần 2-4: First Tasks', text: 'Luôn viết Unit Test đi kèm mọi dòng code mới (Tối thiểu 80% coverage)', desc: 'Không nộp PR thiếu test; test bao phủ cả happy path và error path.' },
+    { id: 'p-10', phase: 'Tuần 2-4: First Tasks', text: 'Thái độ cầu thị và lịch sự khi nhận Code Review', desc: 'Không tự ái, cảm ơn khi được góp ý và sửa triệt để trước khi ping lại.' },
+    { id: 'p-11', phase: 'Tuần 2-4: First Tasks', text: 'Tự phác thảo tài liệu API Specs (OpenAPI/Swagger) trước khi code', desc: 'Trao đổi và thống nhất hợp đồng API với Frontend trước khi triển khai.' },
+    { id: 'p-12', phase: 'Tuần 2-4: First Tasks', text: 'Biết cách đọc và cấu hình Application Profiler & Actuator Metrics', desc: 'Theo dõi chỉ số JVM memory, heap allocation và database query count.' },
+    { id: 'p-13', phase: 'Tuần 2-4: First Tasks', text: 'Chạy EXPLAIN kiểm tra hiệu năng câu query SQL trước khi tạo PR', desc: 'Loại bỏ ngay nguy cơ Full Table Scan (type: ALL) và Using filesort.' },
+    { id: 'p-14', phase: 'Tuần 2-4: First Tasks', text: 'Nắm vững luồng phân quyền Spring Security & JWT Filters', desc: 'Hiểu cách context SecurityContextHolder trích xuất thông tin người dùng hiện tại.' },
+    { id: 'p-15', phase: 'Tuần 2-4: First Tasks', text: 'Phối hợp chặt chẽ với QA/Tester, viết reproduction steps rõ ràng', desc: 'Khi bàn giao tính năng hoặc trao đổi bug, luôn cung cấp đầy đủ payload và curl test.' },
+
+    // Phase 3: Tháng 2: Ownership & Tác Phong Kỹ Sư
+    { id: 'p-16', phase: 'Tháng 2: Ownership', text: 'Báo cáo Daily Standup ngắn gọn: Làm gì - Sắp làm gì - Blocker', desc: 'Không nói chung chung "em đang nghiên cứu", nói rõ kết quả và rào cản.' },
+    { id: 'p-17', phase: 'Tháng 2: Ownership', text: 'Estimate thời gian có vùng đệm an toàn (Buffer 1.5x)', desc: 'Dự kiến 1 ngày thì estimate 1.5 ngày để dành thời gian viết test và fix bug.' },
+    { id: 'p-18', phase: 'Tháng 2: Ownership', text: 'Tự điều tra lỗi 15-30 phút trước khi nhờ Senior trợ giúp', desc: 'Áp dụng quy tắc 4 bước hỏi bài để Senior hỗ trợ nhiệt tình nhất.' },
+    { id: 'p-19', phase: 'Tháng 2: Ownership', text: 'Chủ động đề xuất xóa nợ kỹ thuật (Technical Debt) cho module cũ', desc: 'Tái cấu trúc code bẩn, bổ sung unit test cho các đoạn code thiếu test.' },
+    { id: 'p-20', phase: 'Tháng 2: Ownership', text: 'Tham gia quan sát và hỗ trợ Incident Response cùng các anh Senior', desc: 'Học cách đọc log phân tán, tra cứu traceId và xử lý khủng hoảng lúc deploy.' },
+    { id: 'p-21', phase: 'Tháng 2: Ownership', text: 'Đóng góp ý kiến xây dựng trong buổi Sprint Retrospective', desc: 'Đề xuất cải tiến nhỏ về quy trình hoặc công cụ giúp cả nhóm làm việc mượt mà hơn.' },
+    { id: 'p-22', phase: 'Tháng 2: Ownership', text: 'Chuẩn bị bản báo cáo đánh giá thử việc (Probation Presentation) tự tin', desc: 'Tổng kết các đầu việc hoàn thành, chỉ số đo lường và định hướng phát triển quý tiếp theo.' }
   ];
 
   const completedCount = Object.values(checkedProbation).filter(Boolean).length;
@@ -880,15 +1153,12 @@ export default function CareerHubPage(): React.JSX.Element {
           {/* HERO BANNER */}
           {/* ======================================================== */}
           <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-            <div style={{
+            <div className="hub-hero-badge" style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
               padding: '6px 16px',
               borderRadius: '20px',
-              background: 'rgba(56, 189, 248, 0.1)',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
-              color: '#38bdf8',
               fontSize: '13px',
               fontWeight: 800,
               letterSpacing: '0.05em',
@@ -898,18 +1168,14 @@ export default function CareerHubPage(): React.JSX.Element {
               <span>🎓 DÀNH CHO INTERN • FRESHER • JUNIOR BACKEND</span>
             </div>
 
-            <h1 style={{
+            <h1 className="hub-hero-title" style={{
               fontSize: '2.75rem',
               fontWeight: 900,
               letterSpacing: '-0.02em',
               margin: '0 0 14px 0',
               lineHeight: 1.25
             }}>
-              <span style={{
-                background: 'linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #fbbf24 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}>
+              <span>
                 Java Career Accelerator Hub
               </span>
             </h1>
@@ -932,65 +1198,108 @@ export default function CareerHubPage(): React.JSX.Element {
               gap: '12px'
             }}>
               {[
-                { label: `${KNOWLEDGE_MODULES.length} Khối Kiến Thức (${totalTopicsCount} Chuyên Đề)`, desc: 'Java • Spring • JPA • Test • Clean Code • Redis • Kafka • Security • Tải Cao', color: '#38bdf8' },
+                { label: `${KNOWLEDGE_MODULES.length} Khối Kiến Thức (${totalTopicsCount} Chuyên Đề)`, desc: 'Java • Spring • JPA • Test • Clean Code • Redis • Kafka • Security • Tải Cao • Entry-Level', color: '#38bdf8' },
                 { label: `${FIFTY_PRACTICAL_TIPS.length} Bí Quyết Thực Chiến`, desc: 'Quy tắc vàng sống còn khi đi làm', color: '#ec4899' },
-                { label: 'Chiến Thuật Phỏng Vấn', desc: 'Bẫy phỏng vấn & Cách trả lời 10 điểm', color: '#fbbf24' },
-                { label: 'Checklist 60 Ngày Thử Việc', desc: `Tiến độ: ${progressPercent}% hoàn thành`, color: '#f97316' }
+                { label: `${INTERVIEW_QUESTIONS.length} Câu Hỏi "Trúng Tủ"`, desc: 'Bẫy phỏng vấn & Cách trả lời 10 điểm', color: '#fbbf24' },
+                { label: 'Checklist 60 Ngày Thử Việc', desc: `Tiến độ: ${progressPercent}% (${completedCount}/${PROBATION_TASKS.length})`, color: '#f97316' }
               ].map((chip, i) => (
-                <div key={i} style={{
+                <div key={i} className={`hub-metric-card metric-${i}`} style={{
                   padding: '10px 16px',
                   borderRadius: '10px',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   fontSize: '14px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   minWidth: '180px'
                 }}>
-                  <span style={{ color: chip.color, fontWeight: 800 }}>{chip.label}</span>
-                  <span style={{ color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))', fontSize: '12.5px', marginTop: '3px' }}>{chip.desc}</span>
+                  <span className="hub-metric-label" style={{ fontWeight: 800 }}>{chip.label}</span>
+                  <span className="hub-metric-desc" style={{ fontSize: '12.5px', marginTop: '3px' }}>{chip.desc}</span>
                 </div>
               ))}
+            </div>
+
+            {/* Mock Interview Studio CTA Banner */}
+            <div className="hub-mock-banner" style={{
+              margin: '20px auto 0 auto',
+              maxWidth: '860px',
+              borderRadius: '14px',
+              padding: '16px 24px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '14px'
+            }}>
+              <div style={{ textAlign: 'left' }}>
+                <div className="hub-mock-banner-title" style={{ fontWeight: 800, fontSize: '15px' }}>
+                  🎙️ Phòng Luyện Phỏng Vấn Thử (Mock Interview Studio)
+                </div>
+                <div className="hub-mock-banner-desc" style={{ fontSize: '13px', marginTop: '2px' }}>
+                  Đề ngẫu nhiên 4 môn (Java, Spring Boot, Database, Network), tự động chấm điểm và đánh giá độ khớp đại ý 1-1.
+                </div>
+              </div>
+              <button
+                type="button"
+                className="hub-mock-banner-btn"
+                onClick={() => {
+                  setActiveMainTab('mock-interview');
+                  const navEl = document.getElementById('hub-main-nav');
+                  if (navEl) navEl.scrollIntoView({ behavior: 'smooth' });
+                }}
+                style={{
+                  padding: '9px 20px',
+                  borderRadius: '8px',
+                  fontWeight: 800,
+                  fontSize: '13.5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                Vào Phòng Phỏng Vấn ➔
+              </button>
             </div>
           </div>
 
           {/* ======================================================== */}
           {/* MAIN NAVIGATION BAR */}
           {/* ======================================================== */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '10px',
-            flexWrap: 'wrap',
-            marginBottom: '32px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-            paddingBottom: '16px'
-          }}>
+          <div
+            id="hub-main-nav"
+            className="hub-main-nav"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '10px',
+              flexWrap: 'wrap',
+              marginBottom: '32px',
+              paddingBottom: '16px'
+            }}
+          >
             {[
               { id: 'lessons', label: '📘 Kho Tri Thức Thực Chiến', color: '#38bdf8' },
+              { id: 'mock-interview', label: '🎙️ Phỏng Vấn Thử (AI Evaluator)', color: '#0ea5e9' },
+              { id: 'interview', label: `🎯 Phỏng Vấn "Trúng Tủ" (${INTERVIEW_QUESTIONS.length} Câu)`, color: '#34d399' },
               { id: 'tips50', label: `⚡ ${FIFTY_PRACTICAL_TIPS.length} Bí Quyết Đi Làm`, color: '#ec4899' },
-              { id: 'interview', label: '🎯 Phỏng Vấn "Trúng Tủ"', color: '#34d399' },
               { id: 'battles', label: `⚔️ Trường Học vs Đi Làm (${CODE_BATTLES.length} Trận)`, color: '#fbbf24' },
-              { id: 'cv', label: '📄 Bí Kíp Viết CV Backend', color: '#a78bfa' },
+              { id: 'cv', label: `📄 Bí Kíp Viết CV (${CV_SECTIONS.length} Phần)`, color: '#a78bfa' },
               { id: 'probation', label: `📋 Checklist Thử Việc (${progressPercent}%)`, color: '#f97316' }
             ].map((tab) => {
               const isActive = activeMainTab === tab.id;
               return (
                 <button
                   key={tab.id}
+                  className={`hub-main-nav-tab tab-${tab.id} ${isActive ? 'active' : ''}`}
                   onClick={() => setActiveMainTab(tab.id as any)}
                   style={{
                     padding: '11px 20px',
                     borderRadius: '10px',
-                    background: isActive ? `${tab.color}22` : 'rgba(255, 255, 255, 0.03)',
-                    border: `1px solid ${isActive ? tab.color : 'rgba(255, 255, 255, 0.1)'}`,
-                    color: isActive ? tab.color : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.8))',
                     fontWeight: isActive ? 800 : 600,
                     fontSize: '15px',
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: isActive ? `0 0 15px ${tab.color}33` : 'none'
+                    transition: 'all 0.2s ease'
                   }}
                 >
                   {tab.label}
@@ -1024,7 +1333,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     return (
                       <div
                         key={mod.id}
-                        className={`hub-module-card ${isSelected ? 'active' : ''}`}
+                        className={`hub-module-card mod-${mod.id} ${isSelected ? 'active' : ''}`}
                         onClick={() => {
                           setSelectedModuleId(mod.id);
                           setSelectedTopicId(mod.topics[0].id);
@@ -1032,9 +1341,6 @@ export default function CareerHubPage(): React.JSX.Element {
                         style={{
                           padding: '14px 16px',
                           borderRadius: '12px',
-                          background: isSelected
-                            ? `linear-gradient(135deg, ${mod.accentColor}22 0%, rgba(255, 255, 255, 0.03) 100%)`
-                            : 'rgba(255, 255, 255, 0.025)',
                           border: `1.5px solid ${isSelected ? mod.accentColor : 'rgba(255, 255, 255, 0.08)'}`,
                           cursor: 'pointer',
                           transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -1070,22 +1376,28 @@ export default function CareerHubPage(): React.JSX.Element {
                             #{modNum} • {mod.topics.length} bài
                           </span>
                         </div>
-                        <div style={{
-                          fontSize: '15px',
-                          fontWeight: 800,
-                          color: isSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.85))',
-                          lineHeight: 1.35,
-                          marginBottom: '4px'
-                        }}>
+                        <div
+                          className="hub-module-title"
+                          style={{
+                            fontSize: '15px',
+                            fontWeight: 800,
+                            color: isSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.85))',
+                            lineHeight: 1.35,
+                            marginBottom: '4px'
+                          }}
+                        >
                           {mod.title}
                         </div>
-                        <div style={{
-                          fontSize: '12px',
-                          color: isSelected ? mod.accentColor : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}>
+                        <div
+                          className="hub-module-tagline"
+                          style={{
+                            fontSize: '12px',
+                            color: isSelected ? mod.accentColor : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}
+                        >
                           {mod.tagline}
                         </div>
                       </div>
@@ -1094,18 +1406,20 @@ export default function CareerHubPage(): React.JSX.Element {
                 </div>
 
                 {/* 2. Active Module Hero Strip */}
-                <div style={{
-                  padding: '16px 20px',
-                  borderRadius: '12px',
-                  background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
-                  border: `1px solid ${activeModule.accentColor}35`,
-                  marginBottom: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '12px'
-                }}>
+                <div
+                  className="hub-active-mod-strip"
+                  style={{
+                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    border: `1px solid ${activeModule.accentColor}35`,
+                    marginBottom: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '12px'
+                  }}
+                >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{
                       fontSize: '28px',
@@ -1175,14 +1489,17 @@ export default function CareerHubPage(): React.JSX.Element {
                   `}</style>
 
                   {/* Left Column: Topic Index Pills */}
-                  <div style={{
-                    background: 'rgba(15, 23, 42, 0.6)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '14px',
-                    padding: '14px',
-                    position: 'sticky',
-                    top: '20px'
-                  }}>
+                  <div
+                    className="hub-topic-index-pane"
+                    style={{
+                      background: 'rgba(15, 23, 42, 0.6)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '14px',
+                      padding: '14px',
+                      position: 'sticky',
+                      top: '20px'
+                    }}
+                  >
                     <div style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -1207,6 +1524,7 @@ export default function CareerHubPage(): React.JSX.Element {
                           <div
                             key={t.id}
                             onClick={() => setSelectedTopicId(t.id)}
+                            className={`hub-topic-item ${isTopicSelected ? 'selected' : ''}`}
                             style={{
                               padding: '11px 13px',
                               borderRadius: '10px',
@@ -1241,12 +1559,15 @@ export default function CareerHubPage(): React.JSX.Element {
                                 {t.badge}
                               </span>
                             </div>
-                            <div style={{
-                              fontSize: '13.5px',
-                              fontWeight: isTopicSelected ? 800 : 600,
-                              color: isTopicSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.8))',
-                              lineHeight: 1.35
-                            }}>
+                            <div
+                              className="hub-topic-item-title"
+                              style={{
+                                fontSize: '13.5px',
+                                fontWeight: isTopicSelected ? 800 : 600,
+                                color: isTopicSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.8))',
+                                lineHeight: 1.35
+                              }}
+                            >
                               {t.title}
                             </div>
                           </div>
@@ -1256,23 +1577,29 @@ export default function CareerHubPage(): React.JSX.Element {
                   </div>
 
                   {/* Right Column: Deep-Dive Document Reader */}
-                  <div style={{
-                    background: 'rgba(13, 17, 23, 0.85)',
-                    border: `1px solid ${activeModule.accentColor}35`,
-                    borderRadius: '16px',
-                    padding: '30px 32px',
-                    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
-                    backdropFilter: 'blur(10px)'
-                  }}>
+                  <div
+                    className="hub-reader-card"
+                    style={{
+                      background: 'rgba(13, 17, 23, 0.85)',
+                      border: `1px solid ${activeModule.accentColor}35`,
+                      borderRadius: '16px',
+                      padding: '30px 32px',
+                      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                  >
                     {/* Breadcrumbs Tag */}
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      fontSize: '12.5px',
-                      color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
-                      marginBottom: '14px'
-                    }}>
+                    <div
+                      className="hub-reader-breadcrumbs"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '12.5px',
+                        color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
+                        marginBottom: '14px'
+                      }}
+                    >
                       <span>Kho Tri Thức</span>
                       <span>/</span>
                       <span style={{ color: activeModule.accentColor }}>{activeModule.title}</span>
@@ -1304,13 +1631,16 @@ export default function CareerHubPage(): React.JSX.Element {
                         </span>
                       </div>
 
-                      <h1 style={{
-                        margin: '8px 0 14px 0',
-                        fontSize: '1.95rem',
-                        fontWeight: 900,
-                        color: 'var(--ifm-color-content, #ffffff)',
-                        lineHeight: 1.3
-                      }}>
+                      <h1
+                        className="hub-reader-title"
+                        style={{
+                          margin: '8px 0 14px 0',
+                          fontSize: '1.95rem',
+                          fontWeight: 900,
+                          color: 'var(--ifm-color-content, #ffffff)',
+                          lineHeight: 1.3
+                        }}
+                      >
                         {activeTopic.title}
                       </h1>
 
@@ -1579,6 +1909,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             setSelectedTopicId(prevTopic.id);
                             window.scrollTo({ top: 400, behavior: 'smooth' });
                           }}
+                          className="hub-reader-nav-btn hub-reader-prev-btn"
                           style={{
                             padding: '10px 18px',
                             borderRadius: '10px',
@@ -1607,6 +1938,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             setSelectedTopicId(nextTopic.id);
                             window.scrollTo({ top: 400, behavior: 'smooth' });
                           }}
+                          className="hub-reader-nav-btn hub-reader-next-btn"
                           style={{
                             padding: '10px 20px',
                             borderRadius: '10px',
@@ -1633,6 +1965,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             setSelectedTopicId(nextModule.topics[0].id);
                             window.scrollTo({ top: 400, behavior: 'smooth' });
                           }}
+                          className="hub-reader-nav-btn hub-reader-next-btn"
                           style={{
                             padding: '10px 20px',
                             borderRadius: '10px',
@@ -1661,6 +1994,15 @@ export default function CareerHubPage(): React.JSX.Element {
           })()}
 
           {/* ======================================================== */}
+          {/* TAB: PHÒNG PHỎNG VẤN THỬ (MOCK INTERVIEW STUDIO) */}
+          {/* ======================================================== */}
+          {activeMainTab === 'mock-interview' && (
+            <div style={{ marginTop: '8px' }}>
+              <MockInterviewStudio onSwitchTab={(tab) => setActiveMainTab(tab as any)} />
+            </div>
+          )}
+
+          {/* ======================================================== */}
           {/* TAB: 50 BÍ QUYẾT ĐI LÀM THỰC CHIẾN */}
           {/* ======================================================== */}
           {activeMainTab === 'tips50' && (
@@ -1668,30 +2010,35 @@ export default function CareerHubPage(): React.JSX.Element {
               {/* Category Filter & Search Bar */}
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '22px', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {['All', 'Core Java & JVM', 'Spring Boot & REST', 'Database & JPA', 'Testing & QA', 'Clean Code & Logging', 'Git & Tác Phong', 'Hạ Tầng & Security', 'Hệ Thống & Tải Cao'].map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setTipsCategoryFilter(cat)}
-                      style={{
-                        padding: '7px 16px',
-                        borderRadius: '8px',
-                        background: tipsCategoryFilter === cat ? 'rgba(236, 72, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${tipsCategoryFilter === cat ? '#ec4899' : 'rgba(255, 255, 255, 0.1)'}`,
-                        color: tipsCategoryFilter === cat ? '#ec4899' : 'rgba(255, 255, 255, 0.75)',
-                        fontSize: '13.5px',
-                        fontWeight: tipsCategoryFilter === cat ? 800 : 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      {cat === 'All' ? `Tất cả (${FIFTY_PRACTICAL_TIPS.length})` : cat}
-                    </button>
-                  ))}
+                  {['All', 'Core Java & JVM', 'Spring Boot & REST', 'Database & JPA', 'Testing & QA', 'Clean Code & Logging', 'Git & Tác Phong', 'Hạ Tầng & Security', 'Hệ Thống & Tải Cao'].map(cat => {
+                    const isActive = tipsCategoryFilter === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setTipsCategoryFilter(cat)}
+                        className={`hub-filter-btn ${isActive ? 'active' : ''}`}
+                        style={{
+                          padding: '7px 16px',
+                          borderRadius: '8px',
+                          background: isActive ? 'rgba(236, 72, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${isActive ? '#ec4899' : 'rgba(255, 255, 255, 0.1)'}`,
+                          color: isActive ? '#db2777' : 'var(--ifm-color-content-secondary, #334155)',
+                          fontSize: '13.5px',
+                          fontWeight: isActive ? 800 : 600,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        {cat === 'All' ? `Tất cả (${FIFTY_PRACTICAL_TIPS.length})` : cat}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div style={{ minWidth: '280px', flex: '1 1 auto', maxWidth: '420px' }}>
                   <input
                     type="text"
+                    className="hub-search-input"
                     placeholder={`Tìm nhanh trong ${FIFTY_PRACTICAL_TIPS.length} mẹo (vd: N+1, Lua, Deadlock, Idempotent, DLX)...`}
                     value={tipsSearchQuery}
                     onChange={(e) => setTipsSearchQuery(e.target.value)}
@@ -1779,26 +2126,32 @@ export default function CareerHubPage(): React.JSX.Element {
                             {tip.id}
                           </span>
 
-                          <span style={{
-                            fontSize: '12px',
-                            fontWeight: 800,
-                            padding: '3px 8px',
-                            borderRadius: '4px',
-                            background: 'rgba(255, 255, 255, 0.06)',
-                            color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.8))'
-                          }}>
+                          <span
+                            className="hub-tip-cat-badge"
+                            style={{
+                              fontSize: '12px',
+                              fontWeight: 800,
+                              padding: '3px 8px',
+                              borderRadius: '4px',
+                              background: 'rgba(255, 255, 255, 0.06)',
+                              color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.8))'
+                            }}
+                          >
                             {tip.category}
                           </span>
 
-                          <span style={{
-                            fontSize: '12px',
-                            fontWeight: 800,
-                            padding: '3px 8px',
-                            borderRadius: '4px',
-                            background: `${priorityColor}22`,
-                            color: priorityColor,
-                            border: `1px solid ${priorityColor}44`
-                          }}>
+                          <span
+                            className={`hub-tip-priority-badge priority-${tip.priority === 'Bắt Buộc' ? 'mandatory' : tip.priority === 'Hiệu Năng' ? 'performance' : 'architecture'}`}
+                            style={{
+                              fontSize: '12px',
+                              fontWeight: 800,
+                              padding: '3px 8px',
+                              borderRadius: '4px',
+                              background: `${priorityColor}22`,
+                              color: priorityColor,
+                              border: `1px solid ${priorityColor}44`
+                            }}
+                          >
                             {tip.priority}
                           </span>
 
@@ -1843,13 +2196,19 @@ export default function CareerHubPage(): React.JSX.Element {
                           {(tip.codeBad || tip.codeGood) && (
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
                               {tip.codeBad && (
-                                <div style={{
-                                  background: 'rgba(248, 113, 113, 0.05)',
-                                  border: '1px solid rgba(248, 113, 113, 0.25)',
-                                  borderRadius: '8px',
-                                  overflow: 'hidden'
-                                }}>
-                                  <div style={{ background: 'rgba(248, 113, 113, 0.15)', padding: '8px 12px', fontSize: '13px', fontWeight: 700, color: '#f87171' }}>
+                                <div
+                                  className="hub-tip-code-bad"
+                                  style={{
+                                    background: 'rgba(248, 113, 113, 0.05)',
+                                    border: '1px solid rgba(248, 113, 113, 0.25)',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden'
+                                  }}
+                                >
+                                  <div
+                                    className="hub-tip-code-bad-header"
+                                    style={{ background: 'rgba(248, 113, 113, 0.15)', padding: '8px 12px', fontSize: '13px', fontWeight: 700, color: '#f87171' }}
+                                  >
                                     ❌ Sai lầm thường gặp
                                   </div>
                                   <pre style={{ margin: 0, padding: '12px', fontSize: '13px', background: 'transparent', color: '#fca5a5', overflowX: 'auto', lineHeight: 1.5 }}>
@@ -1859,13 +2218,19 @@ export default function CareerHubPage(): React.JSX.Element {
                               )}
 
                               {tip.codeGood && (
-                                <div style={{
-                                  background: 'rgba(52, 211, 153, 0.05)',
-                                  border: '1px solid rgba(52, 211, 153, 0.25)',
-                                  borderRadius: '8px',
-                                  overflow: 'hidden'
-                                }}>
-                                  <div style={{ background: 'rgba(52, 211, 153, 0.15)', padding: '8px 12px', fontSize: '13px', fontWeight: 700, color: '#34d399' }}>
+                                <div
+                                  className="hub-tip-code-good"
+                                  style={{
+                                    background: 'rgba(52, 211, 153, 0.05)',
+                                    border: '1px solid rgba(52, 211, 153, 0.25)',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden'
+                                  }}
+                                >
+                                  <div
+                                    className="hub-tip-code-good-header"
+                                    style={{ background: 'rgba(52, 211, 153, 0.15)', padding: '8px 12px', fontSize: '13px', fontWeight: 700, color: '#34d399' }}
+                                  >
                                     ✅ Chuẩn đi làm (Best Practice)
                                   </div>
                                   <pre style={{ margin: 0, padding: '12px', fontSize: '13px', background: 'transparent', color: '#a7f3d0', overflowX: 'auto', lineHeight: 1.5 }}>
@@ -1890,25 +2255,31 @@ export default function CareerHubPage(): React.JSX.Element {
           {activeMainTab === 'interview' && (
             <div>
               {/* Filter and Search Bar */}
-              <div style={{
-                background: 'rgba(15, 23, 42, 0.7)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '12px',
-                padding: '20px',
-                marginBottom: '22px'
-              }}>
+              <div
+                className="hub-interview-filter-card"
+                style={{
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  marginBottom: '22px'
+                }}
+              >
                 {/* Search Bar & Stats */}
                 <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{
-                      padding: '6px 12px',
-                      borderRadius: '6px',
-                      background: 'rgba(52, 211, 153, 0.15)',
-                      border: '1px solid rgba(52, 211, 153, 0.3)',
-                      color: '#34d399',
-                      fontSize: '13.5px',
-                      fontWeight: 800
-                    }}>
+                    <span
+                      className="hub-count-badge"
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(52, 211, 153, 0.15)',
+                        border: '1px solid rgba(52, 211, 153, 0.3)',
+                        color: '#34d399',
+                        fontSize: '13.5px',
+                        fontWeight: 800
+                      }}
+                    >
                       🎯 Đang hiển thị {filteredInterviewQuestions.length} / {INTERVIEW_QUESTIONS.length} câu hỏi
                     </span>
                     <span style={{ fontSize: '13px', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))' }}>
@@ -1919,6 +2290,7 @@ export default function CareerHubPage(): React.JSX.Element {
                   <div style={{ minWidth: '280px', flex: '1 1 auto', maxWidth: '420px' }}>
                     <input
                       type="text"
+                      className="hub-search-input"
                       placeholder="Tìm câu hỏi, từ khóa, bẫy phỏng vấn..."
                       value={interviewSearch}
                       onChange={(e) => setInterviewSearch(e.target.value)}
@@ -1946,25 +2318,29 @@ export default function CareerHubPage(): React.JSX.Element {
                     { id: 'Intern', label: '🌱 Intern (Thực tập sinh)' },
                     { id: 'Fresher', label: '🚀 Fresher (Mới ra trường)' },
                     { id: 'Junior', label: '⚡ Junior (1-2 năm kn)' }
-                  ].map(lvl => (
-                    <button
-                      key={lvl.id}
-                      onClick={() => setSelectedLevelFilter(lvl.id)}
-                      style={{
-                        padding: '6px 14px',
-                        borderRadius: '6px',
-                        background: selectedLevelFilter === lvl.id ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${selectedLevelFilter === lvl.id ? '#38bdf8' : 'rgba(255, 255, 255, 0.08)'}`,
-                        color: selectedLevelFilter === lvl.id ? '#38bdf8' : 'rgba(255, 255, 255, 0.75)',
-                        fontSize: '13px',
-                        fontWeight: selectedLevelFilter === lvl.id ? 800 : 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease'
-                      }}
-                    >
-                      {lvl.label}
-                    </button>
-                  ))}
+                  ].map(lvl => {
+                    const isActive = selectedLevelFilter === lvl.id;
+                    return (
+                      <button
+                        key={lvl.id}
+                        onClick={() => setSelectedLevelFilter(lvl.id)}
+                        className={`hub-filter-btn ${isActive ? 'active' : ''}`}
+                        style={{
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          background: isActive ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${isActive ? '#38bdf8' : 'rgba(255, 255, 255, 0.08)'}`,
+                          color: isActive ? '#0284c7' : 'var(--ifm-color-content-secondary, #334155)',
+                          fontSize: '13px',
+                          fontWeight: isActive ? 800 : 500,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {lvl.label}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Category Filters */}
@@ -1982,25 +2358,29 @@ export default function CareerHubPage(): React.JSX.Element {
                     'Hạ Tầng & Security',
                     'Hệ Thống & Tải Cao',
                     'Kỹ Năng & Live Coding'
-                  ].map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      style={{
-                        padding: '6px 14px',
-                        borderRadius: '6px',
-                        background: selectedCategory === cat ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${selectedCategory === cat ? '#34d399' : 'rgba(255, 255, 255, 0.08)'}`,
-                        color: selectedCategory === cat ? '#34d399' : 'rgba(255, 255, 255, 0.75)',
-                        fontSize: '13px',
-                        fontWeight: selectedCategory === cat ? 800 : 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease'
-                      }}
-                    >
-                      {cat === 'All' ? 'Tất cả chủ đề' : cat}
-                    </button>
-                  ))}
+                  ].map(cat => {
+                    const isActive = selectedCategory === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`hub-filter-btn ${isActive ? 'active' : ''}`}
+                        style={{
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          background: isActive ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${isActive ? '#34d399' : 'rgba(255, 255, 255, 0.08)'}`,
+                          color: isActive ? '#059669' : 'var(--ifm-color-content-secondary, #334155)',
+                          fontSize: '13px',
+                          fontWeight: isActive ? 800 : 500,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {cat === 'All' ? 'Tất cả chủ đề' : cat}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -2054,28 +2434,34 @@ export default function CareerHubPage(): React.JSX.Element {
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', flex: 1, marginRight: '16px' }}>
-                            <span style={{
-                              fontSize: '12px',
-                              fontWeight: 800,
-                              padding: '3px 9px',
-                              borderRadius: '4px',
-                              background: `${levelBadgeColor}20`,
-                              border: `1px solid ${levelBadgeColor}50`,
-                              color: levelBadgeColor,
-                              textTransform: 'uppercase'
-                            }}>
+                            <span
+                              className={`hub-level-badge level-${q.level.toLowerCase()}`}
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: 800,
+                                padding: '3px 9px',
+                                borderRadius: '4px',
+                                background: `${levelBadgeColor}20`,
+                                border: `1px solid ${levelBadgeColor}50`,
+                                color: levelBadgeColor,
+                                textTransform: 'uppercase'
+                              }}
+                            >
                               {q.level}
                             </span>
 
-                            <span style={{
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              padding: '3px 9px',
-                              borderRadius: '4px',
-                              background: `${catBadgeColor}15`,
-                              border: `1px solid ${catBadgeColor}35`,
-                              color: catBadgeColor
-                            }}>
+                            <span
+                              className="hub-cat-badge"
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                padding: '3px 9px',
+                                borderRadius: '4px',
+                                background: `${catBadgeColor}15`,
+                                border: `1px solid ${catBadgeColor}35`,
+                                color: catBadgeColor
+                              }}
+                            >
                               {q.category}
                             </span>
 
@@ -2127,16 +2513,25 @@ export default function CareerHubPage(): React.JSX.Element {
                               </div>
                             </div>
 
-                            <div style={{
-                              padding: '12px 16px',
-                              borderRadius: '8px',
-                              background: 'rgba(248, 113, 113, 0.08)',
-                              border: '1px solid rgba(248, 113, 113, 0.25)'
-                            }}>
-                              <div style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: '#f87171', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <div
+                              className="hub-question-trap-box"
+                              style={{
+                                padding: '12px 16px',
+                                borderRadius: '8px',
+                                background: 'rgba(248, 113, 113, 0.08)',
+                                border: '1px solid rgba(248, 113, 113, 0.25)'
+                              }}
+                            >
+                              <div
+                                className="hub-question-trap-title"
+                                style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: '#f87171', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                              >
                                 <span>⚠️</span> Bẫy phỏng vấn viên sẽ hỏi tiếp
                               </div>
-                              <div style={{ fontSize: '14px', color: '#fca5a5', lineHeight: 1.6 }}>
+                              <div
+                                className="hub-question-trap-content"
+                                style={{ fontSize: '14px', color: '#fca5a5', lineHeight: 1.6 }}
+                              >
                                 {q.trapWarning}
                               </div>
                             </div>
@@ -2155,13 +2550,16 @@ export default function CareerHubPage(): React.JSX.Element {
           {/* ======================================================== */}
           {activeMainTab === 'battles' && (
             <div>
-              <div style={{
-                background: 'rgba(15, 23, 42, 0.7)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '12px',
-                padding: '22px',
-                marginBottom: '22px'
-              }}>
+              <div
+                className="hub-battle-container"
+                style={{
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '12px',
+                  padding: '22px',
+                  marginBottom: '22px'
+                }}
+              >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '18px' }}>
                   <div>
                     <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -2186,26 +2584,30 @@ export default function CareerHubPage(): React.JSX.Element {
 
                 {/* Battle Switcher */}
                 <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '8px' }}>
-                  {CODE_BATTLES.map((battle, idx) => (
-                    <button
-                      key={battle.id}
-                      onClick={() => setSelectedBattleIndex(idx)}
-                      style={{
-                        padding: '9px 16px',
-                        borderRadius: '8px',
-                        background: selectedBattleIndex === idx ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${selectedBattleIndex === idx ? '#fbbf24' : 'rgba(255, 255, 255, 0.1)'}`,
-                        color: selectedBattleIndex === idx ? '#fbbf24' : 'rgba(255, 255, 255, 0.75)',
-                        fontWeight: selectedBattleIndex === idx ? 800 : 500,
-                        fontSize: '13.5px',
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap',
-                        transition: 'all 0.15s ease'
-                      }}
-                    >
-                      {battle.title}
-                    </button>
-                  ))}
+                  {CODE_BATTLES.map((battle, idx) => {
+                    const isActive = selectedBattleIndex === idx;
+                    return (
+                      <button
+                        key={battle.id}
+                        onClick={() => setSelectedBattleIndex(idx)}
+                        className={`hub-filter-btn ${isActive ? 'active' : ''}`}
+                        style={{
+                          padding: '9px 16px',
+                          borderRadius: '8px',
+                          background: isActive ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${isActive ? '#fbbf24' : 'rgba(255, 255, 255, 0.1)'}`,
+                          color: isActive ? '#d97706' : 'var(--ifm-color-content-secondary, #334155)',
+                          fontWeight: isActive ? 800 : 500,
+                          fontSize: '13.5px',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {battle.title}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -2214,18 +2616,21 @@ export default function CareerHubPage(): React.JSX.Element {
                 const currentBattle = CODE_BATTLES[selectedBattleIndex] || CODE_BATTLES[0];
                 return (
                   <div>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      flexWrap: 'wrap',
-                      gap: '12px',
-                      marginBottom: '16px',
-                      padding: '12px 18px',
-                      borderRadius: '10px',
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.06)'
-                    }}>
+                    <div
+                      className="hub-battle-header"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '12px',
+                        marginBottom: '16px',
+                        padding: '12px 18px',
+                        borderRadius: '10px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid rgba(255, 255, 255, 0.06)'
+                      }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{
                           padding: '4px 10px',
@@ -2237,7 +2642,10 @@ export default function CareerHubPage(): React.JSX.Element {
                         }}>
                           {currentBattle.category}
                         </span>
-                        <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}>
+                        <span
+                          className="hub-battle-title"
+                          style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}
+                        >
                           {currentBattle.title}
                         </span>
                       </div>
@@ -2308,13 +2716,16 @@ export default function CareerHubPage(): React.JSX.Element {
           {/* ======================================================== */}
           {activeMainTab === 'cv' && (
             <div>
-              <div style={{
-                background: 'rgba(15, 23, 42, 0.7)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '12px',
-                padding: '26px',
-                marginBottom: '22px'
-              }}>
+              <div
+                className="hub-cv-container"
+                style={{
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '12px',
+                  padding: '26px',
+                  marginBottom: '22px'
+                }}
+              >
                 <h2 style={{ margin: '0 0 14px 0', fontSize: '1.6rem', color: '#a78bfa' }}>
                   📄 4 Tiêu Chuẩn Vàng Viết CV Cho Fresher / Junior
                 </h2>
@@ -2324,12 +2735,16 @@ export default function CareerHubPage(): React.JSX.Element {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                   {CV_SECTIONS.map((sec, idx) => (
-                    <div key={idx} style={{
-                      background: 'rgba(255, 255, 255, 0.02)',
-                      border: '1px solid rgba(255, 255, 255, 0.06)',
-                      borderRadius: '10px',
-                      padding: '18px'
-                    }}>
+                    <div
+                      key={idx}
+                      className="hub-cv-card"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid rgba(255, 255, 255, 0.06)',
+                        borderRadius: '10px',
+                        padding: '18px'
+                      }}
+                    >
                       <div style={{ fontSize: '16px', fontWeight: 800, color: '#38bdf8', marginBottom: '12px' }}>
                         {sec.sectionTitle}
                       </div>
@@ -2354,15 +2769,18 @@ export default function CareerHubPage(): React.JSX.Element {
                         </div>
                       </div>
 
-                      <div style={{
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        padding: '12px 16px',
-                        borderRadius: '8px',
-                        border: '1px solid rgba(255, 255, 255, 0.05)',
-                        fontSize: '13.5px',
-                        color: '#a7f3d0',
-                        lineHeight: 1.6
-                      }}>
+                      <div
+                        className="hub-cv-example-box"
+                        style={{
+                          background: 'rgba(0, 0, 0, 0.3)',
+                          padding: '12px 16px',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(255, 255, 255, 0.05)',
+                          fontSize: '13.5px',
+                          color: '#a7f3d0',
+                          lineHeight: 1.6
+                        }}
+                      >
                         {sec.exampleText}
                       </div>
                     </div>
@@ -2378,13 +2796,16 @@ export default function CareerHubPage(): React.JSX.Element {
           {activeMainTab === 'probation' && (
             <div>
               {/* Progress Bar */}
-              <div style={{
-                background: 'rgba(15, 23, 42, 0.7)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '12px',
-                padding: '22px',
-                marginBottom: '22px'
-              }}>
+              <div
+                className="hub-probation-container"
+                style={{
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '12px',
+                  padding: '22px',
+                  marginBottom: '22px'
+                }}
+              >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <div style={{ fontSize: '16.5px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}>
                     Tiến Độ Sẵn Sàng Vượt Qua 2 Tháng Thử Việc (Probation Survival Tracker)

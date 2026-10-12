@@ -84,8 +84,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Network Security",
-    "permalink": "/technical-knowledge/networking/network-security"
+    "title": "Tor, Onion Routing & Privacy Networks",
+    "permalink": "/technical-knowledge/networking/tor-and-privacy-networks"
   },
   "next": {
     "title": "Networking Interview Questions — Master List",

@@ -204,6 +204,6 @@ public class ParallelCalculator {
 
 ---
 
-:::tip Master Architecture Guide
+:::tip[Master Architecture Guide]
 For the complete 4-dimensional breakdown covering **Sync vs Async**, **Blocking vs Non-blocking (the 2×2 Matrix)**, and **Async vs Multi-threading Models (Single-threaded Event Loop vs Thread Pools)** with an interactive visualizer, see: [Concurrency, Asynchrony, Blocking & Threading Models](../system-design/concurrency-async-threading-models.md).
 :::

@@ -3,9 +3,11 @@ import { useLocation } from "@docusaurus/router";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { UserProgressProvider } from "../context/UserProgressContext";
+import { FocusMusicProvider } from "../context/FocusMusicContext";
 import PremiumGate from "../components/PremiumGate";
 import ScrollProgressButton from "../components/ScrollProgressButton";
 import LevelUpToast from "../components/gamification/LevelUpToast";
+import FocusMusicPlayer from "../components/FocusMusicPlayer";
 
 const PREMIUM_STATE_KEY = "premium_session_state";
 
@@ -105,9 +107,12 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <div className="universal-item nebula-2" />
       </div>
       <UserProgressProvider>
-        <LevelUpToast />
-        <ScrollProgressButton />
-        {isPremiumRoute ? <PremiumGate>{children}</PremiumGate> : children}
+        <FocusMusicProvider>
+          <LevelUpToast />
+          <ScrollProgressButton />
+          <FocusMusicPlayer />
+          {isPremiumRoute ? <PremiumGate>{children}</PremiumGate> : children}
+        </FocusMusicProvider>
       </UserProgressProvider>
     </>
   );

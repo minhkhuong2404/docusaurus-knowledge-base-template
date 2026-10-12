@@ -47,8 +47,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "AQS Internals",
-    "permalink": "/technical-knowledge/java/java-aqs-internals"
+    "title": "LMAX Disruptor Pattern",
+    "permalink": "/technical-knowledge/java/java-lmax-disruptor"
   },
   "next": {
     "title": "Stack vs Heap Memory in Java",

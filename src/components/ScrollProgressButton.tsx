@@ -163,7 +163,7 @@ export default function ScrollProgressButton() {
         className="scroll-progress-wrapper"
         style={{
           position: 'fixed',
-          bottom: '24px',
+          bottom: '84px',
           right: '24px',
           zIndex: 99999,
           opacity: isVisible ? 1 : 0,

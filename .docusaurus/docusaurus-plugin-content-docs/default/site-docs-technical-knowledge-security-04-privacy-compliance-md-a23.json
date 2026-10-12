@@ -90,8 +90,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "API Security",
-    "permalink": "/technical-knowledge/security/api-security"
+    "title": "Keys, Signing & TLS",
+    "permalink": "/technical-knowledge/security/keys-signing-tls"
   },
   "next": {
     "title": "IAM",

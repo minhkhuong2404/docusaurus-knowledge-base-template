@@ -12,6 +12,15 @@ import CosmicRankBadge from '../../components/gamification/CosmicRankBadge';
 import { getRankForLevel, getExpProgressInCurrentLevel } from '../../data/gamificationData';
 import { defaultGamificationState } from '../../services/userProgressService';
 
+import { useColorMode } from '@docusaurus/theme-common';
+import {
+  THEME_PRESETS,
+  getStoredThemePreset,
+  setStoredThemePreset,
+  applyThemePreset,
+  ThemePreset,
+} from '../../utils/themePresets';
+
 const UserProfileModal = React.lazy(() => import('../../components/auth/UserProfileModal'));
 
 // Module-scoped variable to remember client mount state across Docusaurus page navigations.
@@ -32,7 +41,45 @@ export default function CustomUserNavbarItem() {
     revokePremium,
     resetQuizProgress,
     formatTimeOnline,
+    saveThemePreference,
   } = useUserProgress();
+  const { colorMode, setColorMode } = useColorMode();
+  const [activePreset, setActivePreset] = useState<string>('emerald');
+
+  // Sync theme preset state with localStorage and document on mount
+  useEffect(() => {
+    const saved = getStoredThemePreset();
+    setActivePreset(saved);
+    applyThemePreset(saved);
+  }, []);
+
+  // Sync theme preset state from Firestore when user progress loads/updates
+  useEffect(() => {
+    const remotePref = progress?.themePreference;
+    if (remotePref?.preset && remotePref.preset !== activePreset) {
+      setActivePreset(remotePref.preset);
+      setStoredThemePreset(remotePref.preset);
+    }
+    if (remotePref?.colorMode && remotePref.colorMode !== colorMode) {
+      setColorMode(remotePref.colorMode);
+    }
+  }, [progress?.themePreference?.preset, progress?.themePreference?.colorMode]);
+
+  const handleSelectPreset = (presetId: string) => {
+    setActivePreset(presetId);
+    setStoredThemePreset(presetId);
+    if (currentUser?.uid && saveThemePreference) {
+      saveThemePreference(presetId, (colorMode || 'dark') as 'light' | 'dark');
+    }
+  };
+
+  const handleModeChange = (mode: 'light' | 'dark') => {
+    setColorMode(mode);
+    if (currentUser?.uid && saveThemePreference) {
+      saveThemePreference(activePreset, mode);
+    }
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const [showKeyModal, setShowKeyModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
@@ -195,6 +242,170 @@ export default function CustomUserNavbarItem() {
         >
           🔑 Login
         </button>
+        <button
+          ref={buttonRef}
+          type="button"
+          className="login-nav-button user-profile-avatar-button guest"
+          onClick={handleToggleDropdown}
+          aria-expanded={isOpen}
+          aria-label="Theme and appearance settings"
+          title="Theme & Appearance"
+        >
+          <span
+            className="user-nav-avatar-initial"
+            style={{
+              backgroundColor: 'var(--sidebar-active-bg, rgba(255, 255, 255, 0.08))',
+              color: 'var(--brand-green, #4ade80)',
+              fontSize: '0.88rem',
+            }}
+          >
+            🎨
+          </span>
+        </button>
+
+        {isOpen && isMounted && coords.top > 0 && ReactDOM.createPortal(
+          <div
+            ref={dropdownRef}
+            className="user-account-dropdown-menu"
+            style={{
+              position: 'fixed',
+              top: `${coords.top}px`,
+              right: `${Math.max(8, coords.right)}px`,
+              width: 'min(290px, calc(100vw - 16px))',
+              maxWidth: 'calc(100vw - 16px)',
+              opacity: 1,
+              zIndex: 9999999,
+              backdropFilter: 'none',
+              WebkitBackdropFilter: 'none',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '6px 8px',
+                marginBottom: '0.65rem',
+                borderRadius: '10px',
+                borderBottom: '1px solid var(--ifm-color-emphasis-200, rgba(255, 255, 255, 0.08))',
+              }}
+            >
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--sidebar-active-bg, rgba(74, 222, 128, 0.15))',
+                  color: 'var(--brand-green, #4ade80)',
+                  fontSize: '1.1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  border: '1.5px solid var(--sidebar-border, rgba(74, 222, 128, 0.3))',
+                }}
+              >
+                👤
+              </div>
+              <div style={{ overflow: 'hidden', flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--ifm-color-content, #ffffff)' }}>
+                  Guest Learner
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--ifm-color-content-secondary, #94a3b8)' }}>
+                  Sign in to sync your progress
+                </div>
+              </div>
+            </div>
+
+            {/* Theme & Appearance Section */}
+            <div className="user-dropdown-theme-section">
+              <div className="user-dropdown-theme-header">
+                <div className="user-dropdown-theme-title">
+                  <span>🎨</span>
+                  <span>Theme & Appearance</span>
+                </div>
+                <span className="user-dropdown-theme-badge">
+                  {THEME_PRESETS.find((p) => p.id === activePreset)?.name || 'Emerald'}
+                </span>
+              </div>
+
+              {/* Mode Toggle */}
+              <div className="user-dropdown-mode-grid">
+                <button
+                  type="button"
+                  className={`user-dropdown-mode-btn ${colorMode === 'light' ? 'active' : ''}`}
+                  onClick={() => handleModeChange('light')}
+                  title="Switch to Light Mode"
+                >
+                  <span>☀️</span> Light
+                </button>
+                <button
+                  type="button"
+                  className={`user-dropdown-mode-btn ${colorMode === 'dark' ? 'active' : ''}`}
+                  onClick={() => handleModeChange('dark')}
+                  title="Switch to Dark Mode"
+                >
+                  <span>🌙</span> Dark
+                </button>
+              </div>
+
+              {/* 6 Presets */}
+              <div className="user-dropdown-preset-grid">
+                {THEME_PRESETS.map((preset: ThemePreset) => {
+                  const isSelected = activePreset === preset.id;
+                  const swatchGradient = colorMode === 'light' ? preset.gradientLight : preset.gradientDark;
+                  const dotColor = colorMode === 'light' ? preset.primaryLight : preset.primaryDark;
+
+                  return (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      className={`user-dropdown-preset-swatch ${isSelected ? 'active' : ''}`}
+                      onClick={() => handleSelectPreset(preset.id)}
+                      title={`${preset.name}: ${preset.subtitle}`}
+                      aria-label={`Select ${preset.name} theme`}
+                      style={{
+                        background: swatchGradient,
+                        borderColor: isSelected ? dotColor : undefined,
+                        boxShadow: isSelected ? `0 0 8px ${dotColor}` : 'none',
+                      }}
+                    >
+                      {isSelected && (
+                        <span
+                          style={{
+                            width: '5px',
+                            height: '5px',
+                            borderRadius: '50%',
+                            backgroundColor: '#ffffff',
+                            boxShadow: '0 0 2px rgba(0, 0, 0, 0.6)',
+                          }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="user-dropdown-menu-list" style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '6px' }}>
+              <button
+                type="button"
+                className="user-dropdown-item highlight"
+                onClick={() => {
+                  setIsOpen(false);
+                  if (typeof window !== 'undefined') {
+                    const returnTo = `${window.location.pathname}${window.location.search}`;
+                    window.location.href = `/login?returnTo=${encodeURIComponent(returnTo)}`;
+                  }
+                }}
+              >
+                <span className="user-dropdown-item-icon">🔑</span>
+                <span className="user-dropdown-item-label">Sign In / Register</span>
+              </button>
+            </div>
+          </div>,
+          document.body
+        )}
       </div>
     );
   }
@@ -513,6 +724,76 @@ export default function CustomUserNavbarItem() {
                 <span className="user-dropdown-item-label">Unlock Premium</span>
               </button>
             )}
+
+            {/* Theme & Appearance Section */}
+            <div className="user-dropdown-theme-section">
+              <div className="user-dropdown-theme-header">
+                <div className="user-dropdown-theme-title">
+                  <span>🎨</span>
+                  <span>Theme & Appearance</span>
+                </div>
+                <span className="user-dropdown-theme-badge">
+                  {THEME_PRESETS.find((p) => p.id === activePreset)?.name || 'Emerald'}
+                </span>
+              </div>
+
+              {/* Mode Toggle: Light / Dark */}
+              <div className="user-dropdown-mode-grid">
+                <button
+                  type="button"
+                  className={`user-dropdown-mode-btn ${colorMode === 'light' ? 'active' : ''}`}
+                  onClick={() => handleModeChange('light')}
+                  title="Switch to Light Mode"
+                >
+                  <span>☀️</span> Light
+                </button>
+                <button
+                  type="button"
+                  className={`user-dropdown-mode-btn ${colorMode === 'dark' ? 'active' : ''}`}
+                  onClick={() => handleModeChange('dark')}
+                  title="Switch to Dark Mode"
+                >
+                  <span>🌙</span> Dark
+                </button>
+              </div>
+
+              {/* 6 Palette Presets */}
+              <div className="user-dropdown-preset-grid">
+                {THEME_PRESETS.map((preset: ThemePreset) => {
+                  const isSelected = activePreset === preset.id;
+                  const swatchGradient = colorMode === 'light' ? preset.gradientLight : preset.gradientDark;
+                  const dotColor = colorMode === 'light' ? preset.primaryLight : preset.primaryDark;
+
+                  return (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      className={`user-dropdown-preset-swatch ${isSelected ? 'active' : ''}`}
+                      onClick={() => handleSelectPreset(preset.id)}
+                      title={`${preset.name}: ${preset.subtitle}`}
+                      aria-label={`Select ${preset.name} theme`}
+                      style={{
+                        background: swatchGradient,
+                        borderColor: isSelected ? dotColor : undefined,
+                        boxShadow: isSelected ? `0 0 8px ${dotColor}` : 'none',
+                      }}
+                    >
+                      {isSelected && (
+                        <span
+                          style={{
+                            width: '5px',
+                            height: '5px',
+                            borderRadius: '50%',
+                            backgroundColor: '#ffffff',
+                            boxShadow: '0 0 2px rgba(0, 0, 0, 0.6)',
+                          }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             <div className="user-dropdown-divider" />
 

@@ -78,8 +78,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "OSI & TCP/IP Models",
-    "permalink": "/technical-knowledge/networking/osi-tcpip-models"
+    "title": "MAC Addressing, ARP & Layer 2 Forwarding",
+    "permalink": "/technical-knowledge/networking/mac-address-and-layer-2"
   },
   "next": {
     "title": "TCP, UDP & Transport Layer",

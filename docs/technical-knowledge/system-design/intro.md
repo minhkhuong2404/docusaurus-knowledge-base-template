@@ -16,6 +16,7 @@ tags: [system-design, overview, architecture, interview-prep]
 | Topic | Description |
 |---|---|
 | [🎯 45 Problem Breakdowns](/technical-knowledge/system-design/problem-breakdowns) | Master syllabus of 45 real-world FAANG interview problems with deep architectural designs |
+| [🎓 Full System Design Course](/technical-knowledge/system-design/full-system-design-course) | Master course: Single server to production infra (Databases, L4/L7 LB, TCP/UDP, APIs, Auth, Multi-tier Caching) |
 | [Architecture Fundamentals](/technical-knowledge/system-design/architecture-fundamentals) | CAP theorem, consistency models, trade-offs |
 | [Capacity Planning & Estimation](/technical-knowledge/system-design/capacity-planning) | Back-of-envelope math, traffic/storage estimation |
 | [Interview Framework](/technical-knowledge/system-design/interview-framework) | Structured approach to design interviews |
@@ -30,6 +31,7 @@ tags: [system-design, overview, architecture, interview-prep]
 | [Database Design](/technical-knowledge/database/database-design) | Normalization, indexing, partitioning |
 | [Caching Strategies](/technical-knowledge/system-design/caching-strategies) | Cache aside, write-through, eviction policies |
 | [Message Queues & Streaming](/technical-knowledge/system-design/message-queues) | Kafka, RabbitMQ, pub/sub, event sourcing |
+| [Data-Driven vs Event-Driven](/technical-knowledge/system-design/data-driven-vs-event-driven) | Paradigms, ACID vs eventual consistency, Outbox, CDC, CQRS |
 | [API Design](/technical-knowledge/system-design/api-design) | REST, gRPC, GraphQL, versioning |
 | [Distributed Systems](/technical-knowledge/system-design/distributed-systems) | Consensus, leader election, clock sync |
 | [Security Patterns](/technical-knowledge/system-design/security-patterns) | AuthN/AuthZ, rate limiting, zero trust |

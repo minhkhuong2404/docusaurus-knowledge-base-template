@@ -230,8 +230,11 @@ public class CdrBankingController {
 ---
 
 ## Related Concepts
-- [account_types.md](/technical-knowledge/banking/account_types) — Account types exposed via CDR
-- [npp.md](/technical-knowledge/banking/npp) — NPP PayTo is the CDR payment initiation mechanism
-- [direct_debit.md](/technical-knowledge/banking/direct_debit) — CDR will include direct debit authority APIs
-- [fis.md](/technical-knowledge/banking/fis) — Data Holders are ADIs (financial institutions)
-- [aml_kyc.md](/technical-knowledge/banking/aml_kyc) — Data sharing must respect AML/privacy obligations
+
+- [Account Types](./account_types.md) — Account types exposed via CDR
+- [PayTo Mandates](./payto.md) — NPP PayTo is the CDR payment initiation mechanism
+- [Direct Debit](./direct_debit.md) — CDR includes direct debit authority APIs
+- [Financial Institutions](./fis.md) — Data Holders are ADIs (financial institutions)
+- [AML, CTF & KYC](./aml_kyc.md) — Data sharing must respect AML/privacy obligations
+- [Payment Security Architecture](./payment_security.md) — FAPI and mTLS client certificates
+- [Payment Hub Architecture](./payment_hub.md) — Orchestrating CDR inbound requests

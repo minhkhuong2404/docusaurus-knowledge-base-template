@@ -84,7 +84,7 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Proxies, NAT & Firewalls",
+    "title": "Proxies, Firewalls, NAT & VPNs",
     "permalink": "/technical-knowledge/networking/proxies-nat-firewalls"
   },
   "next": {

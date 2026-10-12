@@ -87,9 +87,24 @@ Never use dark navy or near-black gradient endpoints (e.g. `#1e1b4b`). Use lumin
 
 ---
 
-## 5. Verification Checklist
+## 5. Interactive Diagrams Exception: Dark Telemetry Canvas in Both Themes
+
+> 🚨 **MANDATORY INVARIANT FOR ALL INTERACTIVE DIAGRAMS**:
+> All interactive diagrams (`.interactive-diagram-container`) are **cyber telemetry instruments**.
+> They **APPLY FOR DARK THEME AND KEEP THE EXACT SAME DARK THEME COLORS IN LIGHT THEME**.
+
+- Enforced via `src/css/diagrams.css` (`[data-theme="light"] .interactive-diagram-container` sets dark background `#0b0f19 !important` and light text `#f8fafc !important`).
+- SVG canvas wrappers must use `.interactive-diagram-svg-wrapper.interactive-diagram-grid-bg` (`#0d0f1e`).
+- Nodes must use dark fills (`rgba(15, 23, 42, 0.85)` / `rgba(255, 255, 255, 0.04)`) with glowing neon borders.
+- Typography inside diagrams must ALWAYS be light and high-contrast: `#ffffff` for titles, `#e2e8f0` for body/code, `#94a3b8` for subtitles/hints.
+- **NEVER** use light theme page tokens (`#F7FDF9`, `#D9D9D9`, `#0f172a` text, `#F2F2F2`) inside interactive diagram components.
+
+---
+
+## 6. Verification Checklist
 
 Whenever modifying light theme styles:
 1. `node scripts/checkstyle.js --quiet` — Must pass with 0 errors across 800 files.
 2. Verify in both `[data-theme="light"]` and `[data-theme="dark"]` for no text invisibility or clashing borders.
 3. Do NOT run `yarn build` or `yarn test` unless explicitly requested.
+

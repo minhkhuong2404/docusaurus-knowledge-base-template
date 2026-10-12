@@ -696,6 +696,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev",
+              "path": "/technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/ai-agents/loop-engineering",
               "path": "/technical-knowledge/ai-agents/loop-engineering",
               "sidebar": "tutorialSidebar"
@@ -733,6 +738,61 @@
             {
               "id": "technical-knowledge/ai-agents/vibe-coding",
               "path": "/technical-knowledge/ai-agents/vibe-coding",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/api-design-interview-questions",
+              "path": "/technical-knowledge/api-design/api-design-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/api-security-owasp-checklist",
+              "path": "/technical-knowledge/api-design/api-security-owasp-checklist",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/contract-governance-testing",
+              "path": "/technical-knowledge/api-design/contract-governance-testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/errors-pagination-filtering",
+              "path": "/technical-knowledge/api-design/errors-pagination-filtering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/intro",
+              "path": "/technical-knowledge/api-design/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/naming-conventions",
+              "path": "/technical-knowledge/api-design/naming-conventions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/openapi-swagger-fundamentals",
+              "path": "/technical-knowledge/api-design/openapi-swagger-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/reliability-idempotency-webhooks",
+              "path": "/technical-knowledge/api-design/reliability-idempotency-webhooks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/resource-modeling-http-semantics",
+              "path": "/technical-knowledge/api-design/resource-modeling-http-semantics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/spring-boot-springdoc-openapi",
+              "path": "/technical-knowledge/api-design/spring-boot-springdoc-openapi",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/api-design/versioning-evolution",
+              "path": "/technical-knowledge/api-design/versioning-evolution",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -952,7 +1012,8 @@
             },
             {
               "id": "technical-knowledge/banking/becs",
-              "path": "/technical-knowledge/banking/becs"
+              "path": "/technical-knowledge/banking/becs",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/bpay",
@@ -975,6 +1036,31 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/card_anatomy_emv",
+              "path": "/technical-knowledge/banking/card_anatomy_emv",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/card_clearing_settlement",
+              "path": "/technical-knowledge/banking/card_clearing_settlement",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/card_disputes_lcr",
+              "path": "/technical-knowledge/banking/card_disputes_lcr",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/card_iso8583",
+              "path": "/technical-knowledge/banking/card_iso8583",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/card_tokenization_3ds",
+              "path": "/technical-knowledge/banking/card_tokenization_3ds",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/cards",
               "path": "/technical-knowledge/banking/cards",
               "sidebar": "tutorialSidebar"
@@ -986,7 +1072,8 @@
             },
             {
               "id": "technical-knowledge/banking/cop",
-              "path": "/technical-knowledge/banking/cop"
+              "path": "/technical-knowledge/banking/cop",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/core_banking",
@@ -995,7 +1082,8 @@
             },
             {
               "id": "technical-knowledge/banking/correspondent_banking",
-              "path": "/technical-knowledge/banking/correspondent_banking"
+              "path": "/technical-knowledge/banking/correspondent_banking",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/credit_post",
@@ -1024,7 +1112,8 @@
             },
             {
               "id": "technical-knowledge/banking/error_codes",
-              "path": "/technical-knowledge/banking/error_codes"
+              "path": "/technical-knowledge/banking/error_codes",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/fis",
@@ -1048,7 +1137,8 @@
             },
             {
               "id": "technical-knowledge/banking/idempotency",
-              "path": "/technical-knowledge/banking/idempotency"
+              "path": "/technical-knowledge/banking/idempotency",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/inbound",
@@ -1067,7 +1157,8 @@
             },
             {
               "id": "technical-knowledge/banking/liquidity",
-              "path": "/technical-knowledge/banking/liquidity"
+              "path": "/technical-knowledge/banking/liquidity",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/npp",
@@ -1136,7 +1227,8 @@
             },
             {
               "id": "technical-knowledge/banking/payment_hub",
-              "path": "/technical-knowledge/banking/payment_hub"
+              "path": "/technical-knowledge/banking/payment_hub",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/payment_lifecycle_101",
@@ -1149,8 +1241,14 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/payment_security",
+              "path": "/technical-knowledge/banking/payment_security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/payto",
-              "path": "/technical-knowledge/banking/payto"
+              "path": "/technical-knowledge/banking/payto",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/reconciliation",
@@ -1159,11 +1257,13 @@
             },
             {
               "id": "technical-knowledge/banking/regulatory_reporting",
-              "path": "/technical-knowledge/banking/regulatory_reporting"
+              "path": "/technical-knowledge/banking/regulatory_reporting",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/rtgs",
-              "path": "/technical-knowledge/banking/rtgs"
+              "path": "/technical-knowledge/banking/rtgs",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/sanction",
@@ -1183,6 +1283,86 @@
             {
               "id": "technical-knowledge/banking/testing_banking",
               "path": "/technical-knowledge/banking/testing_banking",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/become-senior-developer/7-coding-laws",
+              "path": "/technical-knowledge/become-senior-developer/7-coding-laws",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/consensus/consensus-mechanisms",
+              "path": "/technical-knowledge/blockchain/consensus/consensus-mechanisms",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/defi/defi-amm-mev",
+              "path": "/technical-knowledge/blockchain/defi/defi-amm-mev",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/enterprise/permissioned-ledgers",
+              "path": "/technical-knowledge/blockchain/enterprise/permissioned-ledgers",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/fundamentals/cryptography-primitives",
+              "path": "/technical-knowledge/blockchain/fundamentals/cryptography-primitives",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/fundamentals/ledger-models",
+              "path": "/technical-knowledge/blockchain/fundamentals/ledger-models",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/fundamentals/what-is-blockchain",
+              "path": "/technical-knowledge/blockchain/fundamentals/what-is-blockchain",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/interview/blockchain-interview-questions",
+              "path": "/technical-knowledge/blockchain/interview/blockchain-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/intro",
+              "path": "/technical-knowledge/blockchain/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/platforms/bitcoin-internals",
+              "path": "/technical-knowledge/blockchain/platforms/bitcoin-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/platforms/ethereum-evm",
+              "path": "/technical-knowledge/blockchain/platforms/ethereum-evm",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/production/blockchain-production-engineering",
+              "path": "/technical-knowledge/blockchain/production/blockchain-production-engineering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/scaling/sharding-rollups-scaling",
+              "path": "/technical-knowledge/blockchain/scaling/sharding-rollups-scaling",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/smart-contracts/smart-contract-security",
+              "path": "/technical-knowledge/blockchain/smart-contracts/smart-contract-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/storage/ipfs-decentralized-storage",
+              "path": "/technical-knowledge/blockchain/storage/ipfs-decentralized-storage",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/blockchain/web3/web3-architecture",
+              "path": "/technical-knowledge/blockchain/web3/web3-architecture",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1478,6 +1658,11 @@
             {
               "id": "technical-knowledge/database/transactions-concurrency",
               "path": "/technical-knowledge/database/transactions-concurrency",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/vector-databases-deep-dive",
+              "path": "/technical-knowledge/database/vector-databases-deep-dive",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5131,11 +5316,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/engineering-practices/how-to-become-senior-developer",
-              "path": "/technical-knowledge/engineering-practices/how-to-become-senior-developer",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/git/advanced/bisect",
               "path": "/technical-knowledge/git/advanced/bisect",
               "sidebar": "tutorialSidebar"
@@ -5591,6 +5771,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-classloaders-metaspace",
+              "path": "/technical-knowledge/java/java-classloaders-metaspace",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-collections",
               "path": "/technical-knowledge/java/java-collections",
               "sidebar": "tutorialSidebar"
@@ -5603,6 +5788,11 @@
             {
               "id": "technical-knowledge/java/java-diagnostics-troubleshooting",
               "path": "/technical-knowledge/java/java-diagnostics-troubleshooting",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-dynamic-bytecode-agents",
+              "path": "/technical-knowledge/java/java-dynamic-bytecode-agents",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5621,6 +5811,21 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-gc-g1-deep-dive",
+              "path": "/technical-knowledge/java/java-gc-g1-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-gc-zgc-generational",
+              "path": "/technical-knowledge/java/java-gc-zgc-generational",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-graalvm-aot",
+              "path": "/technical-knowledge/java/java-graalvm-aot",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-interview-questions",
               "path": "/technical-knowledge/java/java-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -5631,6 +5836,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-jit-compiler",
+              "path": "/technical-knowledge/java/java-jit-compiler",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-jmm-memory-model",
               "path": "/technical-knowledge/java/java-jmm-memory-model",
               "sidebar": "tutorialSidebar"
@@ -5638,6 +5848,16 @@
             {
               "id": "technical-knowledge/java/java-jvm",
               "path": "/technical-knowledge/java/java-jvm",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-lmax-disruptor",
+              "path": "/technical-knowledge/java/java-lmax-disruptor",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-lock-free-varhandle",
+              "path": "/technical-knowledge/java/java-lock-free-varhandle",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5656,6 +5876,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-object-layout-memory",
+              "path": "/technical-knowledge/java/java-object-layout-memory",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-off-heap-ffm-api",
               "path": "/technical-knowledge/java/java-off-heap-ffm-api",
               "sidebar": "tutorialSidebar"
@@ -5671,6 +5896,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-serialization-security",
+              "path": "/technical-knowledge/java/java-serialization-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-stack-vs-heap",
               "path": "/technical-knowledge/java/java-stack-vs-heap",
               "sidebar": "tutorialSidebar"
@@ -5683,6 +5913,11 @@
             {
               "id": "technical-knowledge/java/java-virtual-threads",
               "path": "/technical-knowledge/java/java-virtual-threads",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-zero-copy-serialization",
+              "path": "/technical-knowledge/java/java-zero-copy-serialization",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5809,7 +6044,8 @@
             },
             {
               "id": "technical-knowledge/kafka/core/kafka-partitioning-strategies",
-              "path": "/technical-knowledge/kafka/core/kafka-partitioning-strategies"
+              "path": "/technical-knowledge/kafka/core/kafka-partitioning-strategies",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/core/kafka-producers-consumers",
@@ -5817,7 +6053,13 @@
             },
             {
               "id": "technical-knowledge/kafka/core/kafka-vs-rabbitmq",
-              "path": "/technical-knowledge/kafka/core/kafka-vs-rabbitmq"
+              "path": "/technical-knowledge/kafka/core/kafka-vs-rabbitmq",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/kafka-zero-copy-page-cache",
+              "path": "/technical-knowledge/kafka/core/kafka-zero-copy-page-cache",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/core/kraft-vs-zookeeper",
@@ -5892,6 +6134,46 @@
             {
               "id": "technical-knowledge/kafka/producer/producer-transactions",
               "path": "/technical-knowledge/kafka/producer/producer-transactions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/interview-questions",
+              "path": "/technical-knowledge/kafka/streams/interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/overview",
+              "path": "/technical-knowledge/kafka/streams/overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/processor-api-dlq",
+              "path": "/technical-knowledge/kafka/streams/processor-api-dlq",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/production-runbook",
+              "path": "/technical-knowledge/kafka/streams/production-runbook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/spring-boot",
+              "path": "/technical-knowledge/kafka/streams/spring-boot",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/state-stores-rocksdb",
+              "path": "/technical-knowledge/kafka/streams/state-stores-rocksdb",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/topology-architecture",
+              "path": "/technical-knowledge/kafka/streams/topology-architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/streams/windowing-joins",
+              "path": "/technical-knowledge/kafka/streams/windowing-joins",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6010,6 +6292,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/networking/mac-address-and-layer-2",
+              "path": "/technical-knowledge/networking/mac-address-and-layer-2",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/networking/network-performance-optimization",
               "path": "/technical-knowledge/networking/network-performance-optimization",
               "sidebar": "tutorialSidebar"
@@ -6057,6 +6344,11 @@
             {
               "id": "technical-knowledge/networking/tcp-udp-transport-layer",
               "path": "/technical-knowledge/networking/tcp-udp-transport-layer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/tor-and-privacy-networks",
+              "path": "/technical-knowledge/networking/tor-and-privacy-networks",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6525,6 +6817,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/cockroachdb-architecture",
+              "path": "/technical-knowledge/system-design/cockroachdb-architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/common-interview-questions",
               "path": "/technical-knowledge/system-design/common-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -6560,8 +6857,18 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/data-driven-vs-event-driven",
+              "path": "/technical-knowledge/system-design/data-driven-vs-event-driven",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/database-per-service",
               "path": "/technical-knowledge/system-design/database-per-service",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/database-resharding-strategies",
+              "path": "/technical-knowledge/system-design/database-resharding-strategies",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6612,6 +6919,11 @@
             {
               "id": "technical-knowledge/system-design/feature-toggle",
               "path": "/technical-knowledge/system-design/feature-toggle",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/full-system-design-course",
+              "path": "/technical-knowledge/system-design/full-system-design-course",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6740,6 +7052,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/problem-breakdowns/digital-wallet",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/digital-wallet",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/problem-breakdowns/distributed-cache",
               "path": "/technical-knowledge/system-design/problem-breakdowns/distributed-cache",
               "sidebar": "tutorialSidebar"
@@ -6850,6 +7167,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/problem-breakdowns/nearby-friends",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/nearby-friends",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/problem-breakdowns/netflix",
               "path": "/technical-knowledge/system-design/problem-breakdowns/netflix",
               "sidebar": "tutorialSidebar"
@@ -6892,6 +7214,11 @@
             {
               "id": "technical-knowledge/system-design/problem-breakdowns/spotify",
               "path": "/technical-knowledge/system-design/problem-breakdowns/spotify",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/stock-exchange",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/stock-exchange",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -7017,6 +7344,11 @@
             {
               "id": "technical-knowledge/system-design/sidecar-pattern",
               "path": "/technical-knowledge/system-design/sidecar-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/split-brain-multi-leader-divergence",
+              "path": "/technical-knowledge/system-design/split-brain-multi-leader-divergence",
               "sidebar": "tutorialSidebar"
             },
             {

@@ -70,7 +70,7 @@
     "permalink": "/technical-knowledge/database/database-patterns-microservices"
   },
   "next": {
-    "title": "Data Warehousing & OLAP",
-    "permalink": "/technical-knowledge/database/data-warehousing-olap"
+    "title": "Vector Databases: Architecture, ANN Math & Comparative Deep Dive",
+    "permalink": "/technical-knowledge/database/vector-databases-deep-dive"
   }
 }

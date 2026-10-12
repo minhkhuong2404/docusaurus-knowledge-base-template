@@ -2,12 +2,12 @@
 id: index
 title: 🎯 System Design Interview Problem Breakdowns
 sidebar_label: 🎯 Master Breakdown Directory
-description: Master syllabus of 45 real-world System Design interview breakdowns engineered to Staff & Principal Architect standards.
+description: Master syllabus of 48 real-world System Design interview breakdowns engineered to Staff & Principal Architect standards.
 ---
 
 # 🎯 System Design Interview Problem Breakdowns
 
-Welcome to the **System Design Interview Problem Breakdowns** master repository. This comprehensive directory covers **45 battle-tested real-world system design interview questions** frequently asked at FAANG/MAMAA (Meta, Apple, Amazon, Netflix, Google), Uber, Stripe, ByteDance, and high-growth infrastructure startups.
+Welcome to the **System Design Interview Problem Breakdowns** master repository. This comprehensive directory covers **48 battle-tested real-world system design interview questions** frequently asked at FAANG/MAMAA (Meta, Apple, Amazon, Netflix, Google), Uber, Stripe, ByteDance, and high-growth infrastructure startups.
 
 Every breakdown is engineered through the lens of a **Staff / Principal Architect** (`senior-architect-review`), providing:
 1. **Mathematical Capacity Sizing**: Quantitative calculations for QPS, bandwidth, RAM, and 5-year storage projections.
@@ -46,7 +46,7 @@ Mastering system design requires disciplined time management and active conversa
 
 ---
 
-## 📊 Master Problem Breakdown Matrix (45 Real-World Systems)
+## 📊 Master Problem Breakdown Matrix (48 Real-World Systems)
 
 The problems below are categorized by primary architectural challenge and ordered from foundational classics to ultra-scale distributed infrastructure:
 
@@ -124,6 +124,9 @@ The problems below are categorized by primary architectural challenge and ordere
 | 43 | [Shopping Cart (Amazon)](./amazon-shopping-cart.md) | E-Commerce / Storage | Hard | Always-writable Dynamo AP model ($W=1$), guest-to-user session merge, vector clocks Add-Wins, CRDT PN-Counter |
 | 44 | [Pastebin (Text Sharing)](./pastebin.md) | Distributed Storage | Medium | Base62 unique IDs, tiered storage (hot Redis vs cold S3), dual-tier TTL expiration, syntax highlight caching |
 | 45 | [Cookie Consent Platform (CMP)](./cookie-consent.md) | Infra / Privacy & Compliance | Hard | Edge CDN policy evaluation (&lt;10ms via Cloudflare Workers), Geo-IP matching, IAB TCF v2.2 encoding, Merkle audit trail |
+| 46 | [Nearby Friends (Real-Time Location Fanout)](./nearby-friends.md) | Geospatial / Real-Time Fanout | Hard | WebSocket connection gateways, sharded Redis Pub/Sub cluster, consistent hash ring, Geohash 8-neighbor expansion |
+| 47 | [Digital Wallet (Distributed Ledger)](./digital-wallet.md) | Fintech / Distributed Transactions | Hard | Double-entry bookkeeping, 1M TPS in-memory event sourcing, Try-Confirm/Cancel (TC/C), Raft consensus replication |
+| 48 | [Stock Exchange (Matching Engine)](./stock-exchange.md) | Fintech / Ultra-Low-Latency | Hard | Price-Time Priority LOB (Skip List + Doubly Linked List), LMAX Disruptor lock-free ring buffer, deterministic sequencer, reliable UDP multicast (ITCH/OUCH) |
 
 ---
 

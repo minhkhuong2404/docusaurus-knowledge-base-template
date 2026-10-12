@@ -3,7 +3,9 @@ import Link from '@docusaurus/Link';
 import { useUserProgress } from '../../context/UserProgressContext';
 import { getRankForLevel, getExpProgressInCurrentLevel } from '../../data/gamificationData';
 import { subscribeToOnlineUsers } from '../../services/presenceService';
+import { useFocusMusicSafe } from '../../context/FocusMusicContext';
 import CosmicRankBadge from './CosmicRankBadge';
+
 
 
 // Singleton presence listener across all route navigations
@@ -48,6 +50,17 @@ export default function NavbarGamificationHUD() {
   }, []);
 
 
+  const focusMusic = useFocusMusicSafe();
+  const pomodoro = focusMusic?.pomodoro;
+  const isPomodoroActive = !!pomodoro && (pomodoro.isRunning || pomodoro.timeLeft < pomodoro.focusMinutes * 60 || pomodoro.sessionsCompleted > 0);
+  const isFocus = pomodoro?.mode === 'focus';
+
+  const formatPomodoroTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <>
       <div
@@ -58,6 +71,39 @@ export default function NavbarGamificationHUD() {
           gap: '6px',
         }}
       >
+        {/* Dynamic Live Pomodoro Pill (Visible Across Website When Active) */}
+        {isPomodoroActive && (
+          <button
+            type="button"
+            onClick={() => focusMusic?.openPlayer()}
+            title={`Pomodoro ${isFocus ? 'Focus' : 'Break'}: ${formatPomodoroTime(pomodoro.timeLeft)}. Click to open focus player.`}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '5px',
+              padding: '3px 9px',
+              height: '30px',
+              borderRadius: '10px',
+              backgroundColor: isFocus ? 'rgba(239, 68, 68, 0.14)' : 'rgba(245, 158, 11, 0.14)',
+              border: isFocus ? '1px solid #ef4444' : '1px solid #f59e0b',
+              color: isFocus ? '#ef4444' : '#f59e0b',
+              fontSize: '11.5px',
+              fontWeight: 800,
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+              cursor: 'pointer',
+              boxShadow: isFocus ? '0 0 10px rgba(239, 68, 68, 0.25)' : '0 0 10px rgba(245, 158, 11, 0.25)',
+              transition: 'transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease',
+              outline: 'none',
+            }}
+          >
+            <span>{isFocus ? '🍅' : '☕'}</span>
+            <span>{formatPomodoroTime(pomodoro.timeLeft)}</span>
+            <span style={{ fontSize: '10px', opacity: 0.85, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              {pomodoro.isRunning ? (isFocus ? 'Focus' : 'Break') : 'Paused'}
+            </span>
+          </button>
+        )}
+
         {/* Consolidated Gamification Level/Streak Pill */}
         <Link
           to="/profile"

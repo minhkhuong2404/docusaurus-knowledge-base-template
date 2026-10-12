@@ -1,7 +1,7 @@
 ---
-id: how-to-become-senior-developer
+id: 7-coding-laws
 title: How to Become a Senior Developer — 7 Coding Laws
-sidebar_label: 7 Senior Coding Laws
+sidebar_label: 7 Coding Laws
 description: A comprehensive guide to the 7 core coding laws that separate senior software engineers from junior developers — covering guard clauses, domain naming, anti-corruption boundaries, algebraic states, functional cores, structured error contracts, and atomic pull requests.
 tags: [career, senior-developer, software-engineering, clean-code, architecture, design-patterns]
 ---
