@@ -146,6 +146,10 @@ When traffic grows, the database must be decoupled from the application server o
   - **Isolation:** Concurrency control via Multi-Version Concurrency Control (MVCC) and Two-Phase Locking (2PL), preventing dirty reads and phantom reads.
   - **Durability:** Committed transactions are guaranteed to survive power outages by flushing to Write-Ahead Logs (WAL) on disk.
 - **Storage Engine:** Relational databases organize records into 8KB or 16KB disk pages arranged as balanced search trees (**B+Trees**), providing $O(\log N)$ search, insertion, and range scans.
+- **Primary Key Selection (Auto-Increment vs UUIDv4 vs UUIDv7):** Choosing the primary key type dictates write scalability and index performance:
+  - *Auto-Increment (`BIGSERIAL`)*: Sequential right-append to B+Tree leaf pages, but requires a central coordinator database lock and leaks business volume metrics (German Tank Problem).
+  - *Random UUID (`UUIDv4`)*: Unpredictable 122-bit entropy causes frequent 50% B+Tree page splits, 50% storage bloat, and severe buffer pool thrashing.
+  - *Time-Ordered UUID (`UUIDv7` - RFC 9562)*: Combines a 48-bit millisecond timestamp with 74 bits of entropy. Provides monotonic append-only B+Tree writes, zero coordinator locks, and client-side generation. *(Deep dive: [Time, Ordering & Unique IDs](./time-and-ordering-and-unique-ids.md))*.
 
 ### 2. NoSQL Document Databases (MongoDB, Couchbase)
 - Stores data as semi-structured, nested documents (JSON/BSON).

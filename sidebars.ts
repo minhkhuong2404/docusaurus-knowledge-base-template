@@ -145,6 +145,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/spring/spring-boot',
 								'technical-knowledge/spring/spring-boot-internals',
 								'technical-knowledge/spring/spring-boot-bootstrap-yml',
+								'technical-knowledge/spring/spring-boot-configuration-properties',
 								'technical-knowledge/spring/spring-boot-advanced',
 								'technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime',
 								'technical-knowledge/spring/spring-boot-interview-questions'
@@ -2067,6 +2068,7 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/ai-agents/skills',
 				'technical-knowledge/ai-agents/harness',
 				'technical-knowledge/ai-agents/vibe-coding',
+				'technical-knowledge/ai-agents/spec-driven-agentic-coding',
 				'technical-knowledge/ai-agents/prompt-engineering',
 				'technical-knowledge/ai-agents/prompt-caching',
 				'technical-knowledge/ai-agents/ai-tools-landscape',

@@ -42,6 +42,9 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'CockroachDbArchitectureDiagram.tsx',
     'SplitBrainMultiLeaderDiagram.tsx',
     'ReshardingStrategiesDiagram.tsx',
+    'TimeAndUniqueIdDiagram.tsx',
+    'SpringBootConfigPropertiesDiagram.tsx',
+    'CodingWithAiAgentsDiagram.tsx',
   ];
 
   for (const filename of criticalDiagrams) {

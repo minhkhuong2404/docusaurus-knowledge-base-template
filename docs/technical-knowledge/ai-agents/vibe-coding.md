@@ -288,6 +288,7 @@ By transitioning to the **Vibe Coding** paradigm, the developer shifts focus fro
 
 ## 📚 Go Deeper
 
+- **[Coding with AI Agents: The 5 Core Concepts](./spec-driven-agentic-coding)** — Master Spec-Driven Development, Conductor Orchestration, MCP context curation, Loop Engineering, and Security Sandboxing.
 - **[Context Engineering Guide](./context-engineering)** — Deep dive into context compaction, model routing, thinking budget, subagents, and all the advanced 2026 concepts referenced here.
 - **[AI Agent Architectures](./agents)** — ReAct loops, multi-agent patterns, and production engineering of agents.
 - **[Agent Skills: MCP, RAG & Memory](./skills)** — Tool design, Model Context Protocol (MCP), RAG, and memory systems.

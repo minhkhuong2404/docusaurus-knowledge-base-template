@@ -3,6 +3,7 @@ import { useUserProgress } from '../../../context/UserProgressContext';
 import { triggerFireworks } from '../../../utils/fireworks';
 import { arcadeAudio } from '../../../utils/arcadeAudio';
 import { fetchAllTabQuestions, QuizQuestion, QuizCategoryKey } from '../../../services/googleSheetQuizService';
+import { parseSnippetLines } from '../../../utils/codeSnippetHelper';
 
 interface BossOption {
   text: string;
@@ -72,18 +73,143 @@ const BOSS_THEMES: BossTheme[] = [
   { id: 'all', title: 'Universal Blackout', bossName: 'Chaos Titan', bossAvatar: '👑', badge: 'All Topics', color: '#0284c7', gradientEnd: '#38bdf8', description: 'Cross-disciplinary gauntlet' },
 ];
 
-const EMERGENCY_FALLBACK_QUESTIONS: BattleQuestion[] = [
-  {
-    id: 'em1',
-    question: 'Simultaneous cache expiry across 10,000 requests threatens DB collapse. What pattern mitigates this?',
-    options: [
-      { text: 'Singleflight mutex locking per key + Stale-While-Revalidate', correct: true, explanation: 'Only 1 DB fetch executes concurrently; others serve stale cache.', dmg: 25, selfDmg: 0 },
-      { text: 'Instantly restart all MySQL replicas', correct: false, explanation: 'Drops buffer pool cache and worsens downtime.', dmg: 0, selfDmg: 25 },
-      { text: 'Increase max_connections to 50,000', correct: false, explanation: 'Exhausts OS file descriptors and crashes thread scheduler.', dmg: 0, selfDmg: 25 },
-      { text: 'Flush Redis cache completely', correct: false, explanation: 'Forces 100% of traffic to hit database directly.', dmg: 0, selfDmg: 35 },
-    ],
-  },
+const EMERGENCY_FALLBACK_QUESTIONS: Record<QuizCategoryKey, BattleQuestion[]> = {
+  'system-design': [
+    {
+      id: 'sd-em1',
+      question: 'Simultaneous cache expiry across 10,000 requests threatens database collapse. Inspect the code snippet below. What mitigation fixes Line 4?',
+      codeSnippet: `1: public String getCachedUserProfile(String userId) {
+2:   String profile = redis.get("user:" + userId);
+3:   if (profile == null) {
+4:     profile = database.fetchUserProfile(userId); // LINE 4: Hot key expires
+5:     redis.setex("user:" + userId, 300, profile);
+6:   }
+7:   return profile;
+8: }`,
+      options: [
+        { text: 'Singleflight mutex locking per key or Probabilistic Early Expiration (XFetch)', correct: true, explanation: 'Only 1 DB query executes concurrently per key; all other threads await or use stale cache.', dmg: 25, selfDmg: 0 },
+        { text: 'Instantly restart all MySQL replicas', correct: false, explanation: 'Drops buffer pool cache and worsens downtime.', dmg: 0, selfDmg: 25 },
+        { text: 'Increase max_connections to 50,000', correct: false, explanation: 'Exhausts OS file descriptors and crashes thread scheduler.', dmg: 0, selfDmg: 25 },
+        { text: 'Flush Redis cache completely', correct: false, explanation: 'Forces 100% of traffic to hit database directly.', dmg: 0, selfDmg: 35 },
+      ],
+    },
+    {
+      id: 'sd-em2',
+      question: 'Payment webhook delivery experiences cascading failures. Inspect the event processor below. Which architectural change resolves Line 6 retry exhaustion?',
+      codeSnippet: `1: @RabbitListener(queues = "payment-events")
+2: public void onPaymentEvent(PaymentEvent event) {
+3:   try {
+4:     callThirdPartyBank(event);
+5:   } catch (BankTimeoutException ex) {
+6:     throw new AmqpRejectAndDontRequeueException(ex); // LINE 6
+7:   }
+8: }`,
+      options: [
+        { text: 'Route failed events to a Dead Letter Queue (DLQ) with exponential backoff and jitter', correct: true, explanation: 'Isolates poison messages without blocking queue consumption.', dmg: 25, selfDmg: 0 },
+        { text: 'Catch the exception and drop the payment record silently', correct: false, explanation: 'Causes ledger inconsistencies and lost funds.', dmg: 0, selfDmg: 35 },
+        { text: 'Set thread count to 1000 in consumer container', correct: false, explanation: 'Overwhelms the third-party banking API.', dmg: 0, selfDmg: 25 },
+        { text: 'Disable ACK acknowledgments on the queue', correct: false, explanation: 'Risks unacknowledged message storms upon restart.', dmg: 0, selfDmg: 25 },
+      ],
+    },
+  ],
+  java: [
+    {
+      id: 'java-em1',
+      question: 'Under high concurrency in a thread pool, Old Gen heap grows monotonically until OutOfMemoryError. Inspect the snippet below. Which line causes the memory leak?',
+      codeSnippet: `1: public class OrderProcessor {
+2:   private static final ThreadLocal<RequestContext> ctx = new ThreadLocal<>();
+3:   public void handleOrder(OrderRequest req) {
+4:     ctx.set(new RequestContext(req.getUserId()));
+5:     executePayment(req);
+6:     // Thread returns to worker pool without ctx.remove()
+7:   }
+8: }`,
+      options: [
+        { text: 'Line 6: ThreadLocal is never cleared with ctx.remove(), leaking context on pooled threads', correct: true, explanation: 'Thread pool worker threads live indefinitely; unremoved ThreadLocal entries leak along with their ClassLoaders.', dmg: 25, selfDmg: 0 },
+        { text: 'Line 2: ThreadLocal must be marked volatile', correct: false, explanation: 'volatile does not fix memory leaks in ThreadLocal maps.', dmg: 0, selfDmg: 25 },
+        { text: 'Line 4: RequestContext must implement Cloneable', correct: false, explanation: 'Cloneable is completely irrelevant to GC retention.', dmg: 0, selfDmg: 25 },
+        { text: 'Line 1: Class must implement Serializable', correct: false, explanation: 'Serialization is unrelated to JVM thread pool memory leaks.', dmg: 0, selfDmg: 25 },
+      ],
+    },
+    {
+      id: 'java-em2',
+      question: 'During peak flash sale, threads read half-initialized objects from getHelper(). Which fix prevents instruction reordering on Line 7?',
+      codeSnippet: `1: public class LazyInitService {
+2:   private static Helper helper;
+3:   public static Helper getHelper() {
+4:     if (helper == null) {
+5:       synchronized (LazyInitService.class) {
+6:         if (helper == null) {
+7:           helper = new Helper(); // LINE 7
+8:         }
+9:       }
+10:    }
+11:    return helper;
+12:  }
+13: }`,
+      options: [
+        { text: "Line 2: Declare 'private static volatile Helper helper' to introduce StoreStore/StoreLoad barriers", correct: true, explanation: 'volatile prevents JVM instruction reordering where memory allocation is published before constructor finishes.', dmg: 25, selfDmg: 0 },
+        { text: 'Line 4: Remove the outer null check', correct: false, explanation: 'Fixes race condition but introduces severe lock contention on every single read.', dmg: 0, selfDmg: 25 },
+        { text: 'Line 5: Synchronize on helper instead of LazyInitService.class', correct: false, explanation: 'helper is null initially, throwing NullPointerException.', dmg: 0, selfDmg: 35 },
+        { text: 'Line 7: Replace new Helper() with Helper.class.newInstance()', correct: false, explanation: 'Reflection does not establish memory visibility barriers.', dmg: 0, selfDmg: 25 },
+      ],
+    },
+  ],
+  'spring-boot': [
+    {
+      id: 'sb-em1',
+      question: 'When payment fails, chargeCard() fails to execute in an isolated transaction and rollback independently. Inspect the code snippet below. Which line causes the transactional proxy bypass?',
+      codeSnippet: `1: @Service
+2: public class BillingService {
+3:   public void processInvoice(Invoice invoice) {
+4:     validateInvoice(invoice);
+5:     chargeCard(invoice); // LINE 5: Internal self-invocation
+6:   }
+7:   @Transactional(propagation = Propagation.REQUIRES_NEW)
+8:   public void chargeCard(Invoice invoice) {
+9:     paymentGateway.charge(invoice);
+10:  }
+11: }`,
+      options: [
+        { text: "Line 5: Direct 'this' self-invocation bypasses the Spring CGLIB proxy, ignoring @Transactional", correct: true, explanation: 'Spring AOP proxies intercept calls from outside the bean; self-invocation calls the raw target method directly.', dmg: 25, selfDmg: 0 },
+        { text: 'Line 7: Spring Boot 3 does not support REQUIRES_NEW propagation', correct: false, explanation: 'REQUIRES_NEW is fully supported in Spring Boot.', dmg: 0, selfDmg: 25 },
+        { text: 'Line 1: @Service classes cannot contain @Transactional methods', correct: false, explanation: '@Service is the standard place for transactional boundaries.', dmg: 0, selfDmg: 25 },
+        { text: 'Line 8: chargeCard must be declared private', correct: false, explanation: 'Spring proxies cannot intercept private methods at all.', dmg: 0, selfDmg: 25 },
+      ],
+    },
+    {
+      id: 'sb-em2',
+      question: 'During transient database slow queries, connection pool is saturated and application drops requests. Inspect Line 8 below. What is the root cause?',
+      codeSnippet: `1: @Configuration
+2: public class DatabaseConfig {
+3:   @Bean
+4:   public DataSource dataSource() {
+5:     HikariConfig cfg = new HikariConfig();
+6:     cfg.setJdbcUrl("jdbc:postgresql://db.prod/app");
+7:     cfg.setMaximumPoolSize(100);
+8:     cfg.setConnectionTimeout(250); // LINE 8: 250ms connection timeout
+9:     return new HikariDataSource(cfg);
+10:  }
+11: }`,
+      options: [
+        { text: 'Line 8: 250ms connectionTimeout is too aggressive; any transient lock causes SQLTransientConnectionException', correct: true, explanation: 'HikariCP recommends at least 30,000ms connectionTimeout to handle temporary database load spikes.', dmg: 25, selfDmg: 0 },
+        { text: 'Line 7: maximumPoolSize cannot exceed 10 in HikariCP', correct: false, explanation: 'HikariCP supports arbitrary pool sizes, although pool sizing formula is pool = (core_count * 2) + disk_spindle.', dmg: 0, selfDmg: 25 },
+        { text: 'Line 4: Return type must be HikariDataSource instead of DataSource', correct: false, explanation: 'Polymorphic DataSource return type is idiomatic Spring.', dmg: 0, selfDmg: 25 },
+        { text: 'Line 9: HikariDataSource cannot be instantiated manually', correct: false, explanation: 'Programmatic HikariDataSource instantiation is completely valid.', dmg: 0, selfDmg: 25 },
+      ],
+    },
+  ],
+  'spot-the-bug': [],
+  all: [],
+};
+
+// Populate aggregate fallback lists
+EMERGENCY_FALLBACK_QUESTIONS.all = [
+  ...EMERGENCY_FALLBACK_QUESTIONS['system-design'],
+  ...EMERGENCY_FALLBACK_QUESTIONS.java,
+  ...EMERGENCY_FALLBACK_QUESTIONS['spring-boot'],
 ];
+EMERGENCY_FALLBACK_QUESTIONS['spot-the-bug'] = EMERGENCY_FALLBACK_QUESTIONS.all;
 
 function shuffle<T>(array: T[]): T[] {
   const arr = [...array];
@@ -212,7 +338,8 @@ export default function OutageBossBattleGame() {
       let rawList = questionsPool[themeId] || questionsPool.all || [];
 
       if (rawList.length === 0) {
-        return EMERGENCY_FALLBACK_QUESTIONS;
+        const fallbacks = EMERGENCY_FALLBACK_QUESTIONS[themeId] || EMERGENCY_FALLBACK_QUESTIONS.all;
+        return shuffle(fallbacks).slice(0, 5);
       }
 
       if (difficulty === 'easy') {
@@ -395,6 +522,9 @@ export default function OutageBossBattleGame() {
   };
 
   const currentQ = activeQuestions[currentQIdx];
+  const parsedSnippetLines = useMemo(() => {
+    return parseSnippetLines(currentQ?.codeSnippet);
+  }, [currentQ?.codeSnippet]);
 
   // 3-Phase Incident label
   const incidentPhaseLabel = useMemo(() => {
@@ -683,6 +813,75 @@ export default function OutageBossBattleGame() {
             </div>
           </div>
 
+          {/* Incident Source Code Snippet with Line Numbers */}
+          {parsedSnippetLines.length > 0 && (
+            <div
+              style={{
+                marginBottom: '16px',
+                borderRadius: '8px',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                background: '#070913',
+                overflow: 'hidden',
+                boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '6px 12px',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                  fontSize: '0.72rem',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  fontFamily: 'monospace',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fbbf24', display: 'inline-block' }} />
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#34d399', display: 'inline-block' }} />
+                  <span style={{ marginLeft: '4px', fontWeight: 700, color: '#38bdf8' }}>
+                    💻 INCIDENT SOURCE CODE (Line Numbers Referenced In Options):
+                  </span>
+                </div>
+                <span style={{ color: '#94a3b8' }}>{parsedSnippetLines.length} lines</span>
+              </div>
+              <div
+                style={{
+                  padding: '10px 14px',
+                  overflowX: 'auto',
+                  fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                  fontSize: '0.82rem',
+                  lineHeight: 1.55,
+                  color: '#e2e8f0',
+                  maxHeight: '260px',
+                  overflowY: 'auto',
+                }}
+              >
+                {parsedSnippetLines.map((line) => (
+                  <div key={line.lineNum} style={{ display: 'flex', gap: '12px', minWidth: 'fit-content' }}>
+                    <span
+                      style={{
+                        minWidth: '28px',
+                        textAlign: 'right',
+                        color: '#64748b',
+                        userSelect: 'none',
+                        fontFamily: 'monospace',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {line.lineNum}
+                    </span>
+                    <span style={{ color: '#334155', userSelect: 'none' }}>│</span>
+                    <span style={{ whiteSpace: 'pre', color: '#f1f5f9' }}>{line.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Options: 1 Option per Line */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>
             {currentQ.options.map((opt, idx) => {
@@ -834,6 +1033,137 @@ export default function OutageBossBattleGame() {
           <div style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '16px' }}>
             Final SLA: <strong>{uptimeHp}%</strong> • Score: <strong>{score} pts</strong>
           </div>
+
+          {/* Incident Retrospective & Post-Mortem Root Cause Analysis */}
+          {incidentLog.length > 0 && (
+            <div
+              style={{
+                marginTop: '20px',
+                marginBottom: '24px',
+                textAlign: 'left',
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                paddingTop: '16px',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '14px',
+                  flexWrap: 'wrap',
+                  gap: '8px',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '1.02rem',
+                    fontWeight: 800,
+                    color: '#38bdf8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <span>📋 Incident Retrospective & Root Cause Analysis</span>
+                </div>
+                <span style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                  {incidentLog.filter((i) => i.isCorrect).length} / {incidentLog.length} Mitigations Resolved
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {incidentLog.map((item, idx) => {
+                  const logSnippetLines = parseSnippetLines(item.codeSnippet);
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: `1px solid ${item.isCorrect ? 'rgba(52, 211, 153, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+                        borderRadius: '10px',
+                        padding: '14px 16px',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '8px',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: '0.76rem',
+                            fontWeight: 800,
+                            color: item.isCorrect ? '#34d399' : '#f87171',
+                          }}
+                        >
+                          Incident #{idx + 1} {item.isCorrect ? '✓ MITIGATED' : '✗ SLA BREACHED'}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px', lineHeight: 1.4 }}>
+                        {item.question}
+                      </div>
+
+                      {/* Code Snippet in Post-Mortem with Line Numbers */}
+                      {logSnippetLines.length > 0 && (
+                        <div
+                          style={{
+                            background: '#070913',
+                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                            borderRadius: '6px',
+                            padding: '8px 12px',
+                            fontSize: '0.78rem',
+                            fontFamily: 'monospace',
+                            color: '#cbd5e1',
+                            overflowX: 'auto',
+                            marginBottom: '10px',
+                            maxHeight: '180px',
+                            overflowY: 'auto',
+                          }}
+                        >
+                          {logSnippetLines.map((line) => (
+                            <div key={line.lineNum} style={{ display: 'flex', gap: '10px', minWidth: 'fit-content' }}>
+                              <span
+                                style={{
+                                  minWidth: '24px',
+                                  textAlign: 'right',
+                                  color: '#64748b',
+                                  userSelect: 'none',
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {line.lineNum}
+                              </span>
+                              <span style={{ color: '#334155', userSelect: 'none' }}>│</span>
+                              <span style={{ whiteSpace: 'pre', color: '#f1f5f9' }}>{line.text}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.8rem' }}>
+                        <div style={{ color: item.isCorrect ? '#34d399' : '#fca5a5' }}>
+                          <strong>Your Action:</strong> {item.chosenText}
+                        </div>
+                        {!item.isCorrect && (
+                          <div style={{ color: '#34d399' }}>
+                            <strong>Optimal Mitigation:</strong> {item.correctText}
+                          </div>
+                        )}
+                        <div style={{ color: 'rgba(255, 255, 255, 0.65)', marginTop: '4px', lineHeight: 1.45 }}>
+                          💡 <em>{item.explanation}</em>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <button
             type="button"
             onClick={() => {

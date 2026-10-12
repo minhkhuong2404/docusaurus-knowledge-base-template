@@ -65,6 +65,50 @@ CREATE TABLE order_items (
 
 ---
 
+## Primary Key Strategy: Natural Keys vs Surrogate Keys
+
+A crucial architectural decision in database design is selecting the **Primary Key (PK)** strategy:
+- **Natural Keys**: Attributes that already exist in the real world (e.g., SSN, Email, ISBN).
+  - *Pitfall*: Real-world identifiers change (users change email addresses, countries alter national tax IDs), triggering cascading updates across foreign keys and indices.
+- **Surrogate Keys**: System-generated synthetic identifiers with zero business meaning (e.g., auto-increment integers, UUIDs).
+
+### Surrogate Key Architecture: Auto-Increment vs. UUIDv4 vs. UUIDv7
+
+As highlighted by Monis Yousuf in modern distributed system design, choosing the wrong primary key type degrades write throughput, fragments indexes, or leaks proprietary business metrics:
+
+| Key Strategy | Storage Size | B-Tree Write Pattern | Coordination Overhead | IDOR / Security Risk | Best Use Case |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Auto-Increment (`BIGINT`)** | 8 bytes | Append-only (right-edge leaf) | **High** (requires central DB lock/sequence) | **Extreme** (German Tank Problem, sequential enumeration) | Single-instance DBs with internal-only APIs |
+| **Random UUID (`UUIDv4`)** | 16 bytes (or 36-char string) | Random insertion (frequent 50% page splits) | **None** (pure 122-bit client entropy) | **None** (unpredictable, cryptographically secure) | Ephemeral session tokens, password resets, trace IDs |
+| **Time-Ordered UUID (`UUIDv7`)** | 16 bytes | Monotonic append (ordered by timestamp) | **None** (client-side generation, millisecond prefix) | **Low** (timestamp visible in prefix, 74 bits entropy) | **Modern distributed primary keys (RFC 9562)** |
+
+#### 1. Why Auto-Increment Breaks in Distributed Systems
+1. **Central Coordinator Bottleneck**: Every client write must contact the primary database node to acquire `nextval('seq')`. Distributed clients cannot generate IDs locally prior to network transmission.
+2. **The German Tank Problem (Business Leakage)**: Because sequential IDs increase by $+1$, external attackers or competitors can easily gauge company growth metrics:
+   $$\text{Total Orders in Period} = \text{ID}_{\text{current}} - \text{ID}_{\text{previous}}$$
+3. **Insecure Direct Object Reference (IDOR)**: Predictable URLs like `/api/invoices/1042` allow simple scrapers to enumerate all customer records by incrementing the counter.
+
+#### 2. The Physical Disaster of UUIDv4 on B-Tree Indexes
+Because UUIDv4 has 122 bits of pure pseudorandom entropy, new IDs land unpredictably across random leaf pages of the database's clustered B-Tree index:
+- **Leaf Page Splits**: When an 8KB/16KB leaf page fills up, inserting an out-of-order UUIDv4 forces the database engine to allocate a new page, split the existing keys 50/50, and rewrite parent pointer nodes.
+- **50% Fill Factor Bloat**: Continuous page splits leave indexes only 50-60% full, effectively doubling the physical storage footprint on disk.
+- **Buffer Pool Thrashing**: As the table grows beyond available RAM, random writes require pulling cold pages from SSD into the database buffer pool, evicting hot pages and causing severe write latency spikes.
+
+#### 3. The Modern Standard: UUIDv7 (RFC 9562)
+Published in May 2024, **RFC 9562** standardizes UUIDv7:
+- **Bit 0–47 (48 bits)**: Unix epoch millisecond timestamp.
+- **Bit 48–51 (4 bits)**: UUID Version (`0111` for v7).
+- **Bit 52–63 (12 bits)**: Pseudorandom entropy (`rand_a`).
+- **Bit 64–65 (2 bits)**: RFC variant (`10`).
+- **Bit 66–127 (62 bits)**: Pseudorandom entropy (`rand_b`).
+
+**Why UUIDv7 Wins for Database Schemas**:
+1. **Append-Only B-Tree Writes**: Because the first 48 bits are monotonically increasing timestamps, inserts always append to the right-most leaf page, achieving 90-100% fill factor and eliminating random page splits.
+2. **Client-Side Generation**: Distributed services, edge functions, and offline mobile apps can generate unique primary keys locally without network roundtrips.
+3. **Free Created-At Index**: The record creation timestamp is physically encoded in the primary key, saving storage and indexing costs.
+
+---
+
 ## Normal Forms
 
 <DatabaseDesignNormalizationDiagram />

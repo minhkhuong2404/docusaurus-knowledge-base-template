@@ -32,9 +32,60 @@ Key properties:
 | **Composite Key** | PK made of two or more columns |
 | **Foreign Key (FK)** | References a PK in another table; enforces referential integrity |
 | **Candidate Key** | Any column(s) that could serve as PK |
-| **Surrogate Key** | Artificial key (e.g. auto-increment ID) with no business meaning |
+| **Surrogate Key** | Artificial key (e.g. auto-increment ID, UUIDv7) with no business meaning |
 | **Natural Key** | Key derived from real-world data (e.g. SSN, email) |
 | **Unique Key** | Enforces uniqueness but allows NULLs (unlike PK) |
+
+### Primary Key Architecture: Auto-Increment vs. UUIDv4 vs. UUIDv7
+
+Choosing the data type of your table's **Primary Key** is one of the most consequential architectural decisions in database design. In relational engines (InnoDB in MySQL, B+Tree indexes in PostgreSQL), tables are physically ordered by their primary key (Clustered Index).
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          PRIMARY KEY SCHEME SPECTRUM                        │
+├───────────────────┬──────────────────────┬──────────────────────────────────┤
+│ PRIMARY KEY TYPE  │ PHYSICAL STORAGE     │ B-TREE & DISTRIBUTED TRADE-OFFS  │
+├───────────────────┼──────────────────────┼──────────────────────────────────┤
+│ Auto-Increment    │ 4 or 8 Bytes         │ • Optimal B-Tree right appends   │
+│ (INT / BIGINT)    │ (Compact index)      │ • Central coordinator required   │
+│                   │                      │ • Predictable (German tank IDOR) │
+├───────────────────┼──────────────────────┼──────────────────────────────────┤
+│ UUIDv4            │ 16 Bytes (UUID)      │ • Zero coordination required     │
+│ (Random 128-bit)  │ (or 36-char string)  │ • Constant B-Tree page splits    │
+│                   │                      │ • Destroys buffer pool cache     │
+├───────────────────┼──────────────────────┼──────────────────────────────────┤
+│ UUIDv7 (RFC 9562) │ 16 Bytes (UUID)      │ • Time-ordered (Right appends)   │
+│ (Time-Ordered)    │ (Native 128-bit)     │ • Zero coordination (Client gen) │
+│                   │                      │ • Unguessable & secure           │
+└───────────────────┴──────────────────────┴──────────────────────────────────┘
+```
+
+#### 1. Why Auto-Increment Breaks in Distributed Systems
+- **Central Sequence Lock:** A single database primary must coordinate sequence generation. In multi-master or sharded clusters, this creates severe write serialization bottlenecks.
+- **Network Latency:** Application pods cannot generate primary keys offline; every insert requires a blocking round-trip to the database before the ID is known.
+- **The German Tank Problem (Predictability):** Sequential IDs leak business velocity (`/orders/1000` $\rightarrow$ `/orders/1100` tells competitors you processed exactly 100 orders). Furthermore, it invites **Insecure Direct Object Reference (IDOR)** attacks via simple URL enumeration.
+
+#### 2. The B-Tree Fragmentation Catastrophe of UUIDv4
+Because `UUIDv4` generates purely random 128-bit keys:
+1. **Constant Page Splits:** Leaf pages in a B+Tree must maintain sorted order. A random key lands unpredictably in the middle of a full 8KB/16KB page, forcing the database engine to split the page into two 50% empty pages.
+2. **50% Fill Factor & Index Bloat:** Half of every page remains empty space, nearly doubling table disk footprint and memory consumption.
+3. **Buffer Pool Eviction:** Random inserts constantly read cold pages from NVMe disk into RAM, evicting frequently queried hot cache lines and destroying p99 insert throughput.
+
+#### 3. Why UUIDv7 is the Gold Standard for Primary Keys
+Standardized in **RFC 9562** (May 2024), **UUIDv7** embeds a 48-bit Unix millisecond timestamp in the most significant bits:
+- **Right-Append B-Tree Efficiency:** Because the leading bits represent chronological time, new rows append sequentially to the right-most leaf page, achieving ~95%–100% fill factor with zero random page splits.
+- **Zero Coordination:** Any microservice or mobile client generates valid, collision-free UUIDv7 keys in parallel without contacting the database.
+- **Unguessable:** 74 bits of entropy prevent ID enumeration.
+- **Timestamp Extraction:** The record's creation time can be read directly from the ID without an extra `created_at` column.
+
+```sql
+-- PostgreSQL 18+ Native UUIDv7
+CREATE TABLE orders (
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
+    user_id UUID NOT NULL,
+    total DECIMAL(10, 2) NOT NULL
+);
+```
 
 ---
 

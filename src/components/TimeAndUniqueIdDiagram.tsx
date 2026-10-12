@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-type TabMode = 'clocks' | 'uuidv7' | 'btree';
+type TabMode = 'clocks' | 'uuidv7' | 'btree' | 'decision_matrix';
 
 interface ClockModel {
   id: string;
@@ -100,6 +100,7 @@ export default function TimeAndUniqueIdDiagram(): React.JSX.Element {
             { id: 'clocks', label: '⏱️ Clock Spectrum & HLC', color: '#38bdf8' },
             { id: 'uuidv7', label: '🆔 UUIDv7 vs Snowflake vs v4', color: '#34d399' },
             { id: 'btree', label: '🌲 B-Tree Index Fragmentation', color: '#fbbf24' },
+            { id: 'decision_matrix', label: '⚖️ Choosing The Right ID (Monis Yousuf)', color: '#a78bfa' },
           ].map((t) => (
             <button
               key={t.id}
@@ -393,6 +394,61 @@ export default function TimeAndUniqueIdDiagram(): React.JSX.Element {
               <li><strong>Hot Page in RAM:</strong> Only the current active leaf page is modified in the Buffer Pool, eliminating random physical disk reads.</li>
               <li><strong>Linear Scalability:</strong> Insert throughput remains flat whether your database has 10,000 or 500,000,000 rows.</li>
             </ul>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 4: Monis Yousuf: Choosing The Right ID */}
+      {activeTab === 'decision_matrix' && (
+        <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div style={{ background: '#080a12', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '8px', padding: '14px' }}>
+            <div style={{ color: '#a78bfa', fontSize: '14px', fontWeight: 700, marginBottom: '6px' }}>
+              ⚖️ Monis Yousuf Architecture Framework: Auto-Increment vs. UUIDv4 vs. UUIDv7
+            </div>
+            <p style={{ fontSize: '12.5px', color: 'var(--ifm-color-content-secondary)', margin: '0 0 12px 0', lineHeight: 1.5 }}>
+              Why sequential auto-increment IDs break under distributed scale, why random UUIDv4 destroys database indexes, and why UUIDv7 provides the optimal middle ground.
+            </p>
+
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', color: 'var(--ifm-color-content)' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)', textAlign: 'left' }}>
+                    <th style={{ padding: '8px', color: 'var(--ifm-color-content-secondary)' }}>ID Scheme</th>
+                    <th style={{ padding: '8px', color: '#38bdf8' }}>Storage Size</th>
+                    <th style={{ padding: '8px', color: '#34d399' }}>B-Tree Append?</th>
+                    <th style={{ padding: '8px', color: '#fbbf24' }}>Coordination</th>
+                    <th style={{ padding: '8px', color: '#f87171' }}>Guessable?</th>
+                    <th style={{ padding: '8px', color: '#a78bfa' }}>Best Production Use</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                    <td style={{ padding: '8px', fontWeight: 700 }}>Auto-Increment (BIGINT)</td>
+                    <td style={{ padding: '8px' }}>8 Bytes</td>
+                    <td style={{ padding: '8px', color: '#34d399' }}>✅ Optimal</td>
+                    <td style={{ padding: '8px', color: '#f87171' }}>Centralized DB Lock</td>
+                    <td style={{ padding: '8px', color: '#f87171' }}>❌ High (German Tank Problem)</td>
+                    <td style={{ padding: '8px' }}>Internal enum/lookup tables, small monoliths</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                    <td style={{ padding: '8px', fontWeight: 700 }}>UUIDv4 (Random)</td>
+                    <td style={{ padding: '8px' }}>16 Bytes</td>
+                    <td style={{ padding: '8px', color: '#f87171' }}>❌ Page Splits &amp; Bloat</td>
+                    <td style={{ padding: '8px', color: '#34d399' }}>✅ None (Client generated)</td>
+                    <td style={{ padding: '8px', color: '#34d399' }}>✅ Unguessable</td>
+                    <td style={{ padding: '8px' }}>Trace IDs, session tokens, security keys</td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: '8px', fontWeight: 700, color: '#34d399' }}>UUIDv7 (RFC 9562)</td>
+                    <td style={{ padding: '8px' }}>16 Bytes</td>
+                    <td style={{ padding: '8px', color: '#34d399' }}>✅ Optimal (Right append)</td>
+                    <td style={{ padding: '8px', color: '#34d399' }}>✅ None (Client generated)</td>
+                    <td style={{ padding: '8px', color: '#34d399' }}>✅ Unguessable (74b entropy)</td>
+                    <td style={{ padding: '8px', fontWeight: 700, color: '#34d399' }}>Distributed DB primary keys, public APIs</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

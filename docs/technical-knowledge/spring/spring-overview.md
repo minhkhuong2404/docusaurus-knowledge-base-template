@@ -16,16 +16,17 @@ A structured guide covering backend engineering with Spring, from framework fund
 |---|-------|-------------|
 | 1 | [Spring Boot](./spring-boot) | Bootstrapping, auto-configuration, starter ecosystem |
 | 2 | [Spring Boot Internals](./spring-boot-internals) | Lifecycle, configuration model, internals behavior |
-| 3 | [Spring Boot Advanced](./spring-boot-advanced) | Advanced production patterns and design trade-offs |
-| 4 | [Spring Boot Interview Questions](./spring-boot-interview-questions) | Targeted Q&A for practical backend interviews |
-| 5 | [Spring Framework](./spring-framework) | IoC, dependency injection, bean lifecycle |
-| 6 | [Spring Framework Deep Dive](./spring-framework-deep-dive) | Proxies, AOP, transaction boundaries, internals |
-| 7 | [Spring Interview Questions](./spring-interview-questions) | Core concepts and real-world troubleshooting angles |
-| 8 | [Spring Security](./spring-security) | Authentication, authorization, filters, method security |
-| 9 | [Spring Data JPA](./spring-data-jpa) | Repository model, ORM behavior, query strategies |
-| 10 | [Spring MVC](./spring-mvc) | Request flow, controllers, validation, exception handling |
-| 11 | [Spring Cloud](./spring-cloud) | Distributed systems, Eureka, Gateway, Config Server |
-| 12 | [Spring Batch](./spring-batch) | Chunk processing, scaling massive data jobs, ETL pipelines |
+| 3 | [Configuration & Properties](./spring-boot-configuration-properties) | Precedence hierarchy, env vars, relaxed binding, profiles, @ConfigurationProperties |
+| 4 | [Spring Boot Advanced](./spring-boot-advanced) | Advanced production patterns and design trade-offs |
+| 5 | [Spring Boot Interview Questions](./spring-boot-interview-questions) | Targeted Q&A for practical backend interviews |
+| 6 | [Spring Framework](./spring-framework) | IoC, dependency injection, bean lifecycle |
+| 7 | [Spring Framework Deep Dive](./spring-framework-deep-dive) | Proxies, AOP, transaction boundaries, internals |
+| 8 | [Spring Interview Questions](./spring-interview-questions) | Core concepts and real-world troubleshooting angles |
+| 9 | [Spring Security](./spring-security) | Authentication, authorization, filters, method security |
+| 10 | [Spring Data JPA](./spring-data-jpa) | Repository model, ORM behavior, query strategies |
+| 11 | [Spring MVC](./spring-mvc) | Request flow, controllers, validation, exception handling |
+| 12 | [Spring Cloud](./spring-cloud) | Distributed systems, Eureka, Gateway, Config Server |
+| 13 | [Spring Batch](./spring-batch) | Chunk processing, scaling massive data jobs, ETL pipelines |
 
 :::tip[Java / Architecture Tip]
 Pair this section with Java and Database knowledge base pages to build end-to-end backend decision-making skills.

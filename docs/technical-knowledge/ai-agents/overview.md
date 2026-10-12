@@ -121,7 +121,7 @@ AI Agents are no longer toys. In modern engineering teams, they are deployed for
 
 ## 🎓 Summary Checklist for Learners
 
-If you are beginning your journey with AI Agents, focus on understanding these core concepts (which we detail in the next chapters):
+- [ ] **Coding with AI Agents ([spec-driven-agentic-coding.md](./spec-driven-agentic-coding)):** The 5 core concepts from Cedric Clyburn (IBM Tech)—Spec-Driven Dev, Conductor Orchestration, Context & MCP, Loop Engineering, and Security Sandboxing.
 - [ ] **Agent Architectures ([agents.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/agents.md)):** Learn ReAct loops, planning frameworks, and multi-agent designs.
 - [ ] **Agentic Skills ([skills.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/skills.md)):** Understand how function calling, Vector DBs, and the new **Model Context Protocol (MCP)** work.
 - [ ] **Agent Harnesses ([harness.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/harness.md)):** Explore the runtimes that execute agents, keep them secure, and evaluate their success rates.

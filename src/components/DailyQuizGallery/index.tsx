@@ -9,6 +9,7 @@ import {
 } from '../../services/googleSheetQuizService';
 import { useUserProgress } from '../../context/UserProgressContext';
 import { QuizStateItem } from '../../services/userProgressService';
+import { parseSnippetLines } from '../../utils/codeSnippetHelper';
 
 interface DailyQuizGalleryProps {
   initialCategory?: QuizCategoryKey;
@@ -696,26 +697,44 @@ export default function DailyQuizGallery({
             {currentQuestion.questionText}
           </div>
 
-          {/* Code Snippet (if present) */}
-          {currentQuestion.codeSnippet && (
-            <div
-              style={{
-                background: '#070913',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '8px',
-                padding: '12px 14px',
-                fontFamily: 'var(--ifm-font-family-monospace, monospace)',
-                fontSize: '12.5px',
-                lineHeight: 1.55,
-                color: '#e2e8f0',
-                overflowX: 'auto',
-                whiteSpace: 'pre',
-                boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.5)',
-              }}
-            >
-              <code>{currentQuestion.codeSnippet}</code>
-            </div>
-          )}
+          {/* Code Snippet with Line Numbers (if present) */}
+          {currentQuestion.codeSnippet && (() => {
+            const parsedLines = parseSnippetLines(currentQuestion.codeSnippet);
+            return (
+              <div
+                style={{
+                  background: '#070913',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '8px',
+                  padding: '10px 14px',
+                  fontFamily: 'var(--ifm-font-family-monospace, monospace)',
+                  fontSize: '12.5px',
+                  lineHeight: 1.55,
+                  color: '#e2e8f0',
+                  overflowX: 'auto',
+                  boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                {parsedLines.map((l) => (
+                  <div key={l.lineNum} style={{ display: 'flex', gap: '10px', minWidth: 'fit-content' }}>
+                    <span
+                      style={{
+                        minWidth: '24px',
+                        textAlign: 'right',
+                        color: '#64748b',
+                        userSelect: 'none',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {l.lineNum}
+                    </span>
+                    <span style={{ color: '#334155', userSelect: 'none' }}>│</span>
+                    <span style={{ whiteSpace: 'pre', color: '#f1f5f9' }}>{l.text}</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
 
           {/* Interactive Option List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -785,6 +804,27 @@ export default function DailyQuizGallery({
                 </div>
               )}
               <div style={{ color: 'var(--ifm-color-content-secondary)' }}>{currentQuestion.explanation}</div>
+              {currentQuestion.fixSnippet && (
+                <div style={{ marginTop: '8px' }}>
+                  <div style={{ fontWeight: 700, color: '#38bdf8', fontSize: '11.5px', marginBottom: '4px' }}>
+                    Recommended Fix:
+                  </div>
+                  <pre
+                    style={{
+                      background: '#070913',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '6px',
+                      padding: '8px 12px',
+                      fontSize: '11.5px',
+                      color: '#34d399',
+                      margin: 0,
+                      overflowX: 'auto',
+                    }}
+                  >
+                    <code>{currentQuestion.fixSnippet}</code>
+                  </pre>
+                </div>
+              )}
             </div>
           )}
 
