@@ -746,3 +746,19 @@ A sharded system introduces failure modes that don't exist on single-server data
 - [Database Patterns for Microservices](./microservices-patterns.md)
 - [CAP Theorem & Consistency Models](./cap-theorem.md)
 - [Scaling Writes](./scaling-writes.md)
+
+---
+
+## Choosing a Shard Key by Workload
+
+From the freeCodeCamp *Design Software Systems Like a Senior Engineer* course.
+
+| System | Shard key | Why |
+|---|---|---|
+| Hotel reservations | `hotel_id` | A booking touches only one hotel, so the transaction stays single-shard. Cross-hotel queries go to the search index |
+| Chat inbox | `recipient_id` | A user's sync is a single-partition read. Sender-keyed sharding would scatter inbox reads |
+| Connection gateways | consistent hash of `user_id` | Reconnects land on the same gateway, so routing and presence stay cheap |
+
+Watch for hot shards (a festival-week hotel, a celebrity group chat) and mitigate with per-key rate limits, a waiting room, or splitting the hot key.
+
+See also: [Senior Engineer Design Course](./senior-engineer-design-course.md).

@@ -17,60 +17,97 @@ import DdosMitigationDiagram from '@site/src/components/DdosMitigationDiagram';
 
 ---
 
-## TLS Certificate Management
+## TLS Certificate Management & Public Key Infrastructure (PKI)
 
-### Certificate Lifecycle
-
-**Mitigations:**
-- TLS with certificate validation (never skip cert verification!)
-- HSTS (prevents SSL stripping)
-- Certificate Pinning (app hardcodes expected cert)
-- mTLS (both sides authenticated)
-
-**Mitigation**: HSTS (`Strict-Transport-Security: max-age=31536000`) — browser always uses HTTPS. HSTS preload list for maximum protection.
-
-### SYN Flood (DDoS)
-
-Attacker sends thousands of SYN packets, exhausting server's SYN backlog.
-
-**Mitigations:**
-- SYN cookies (Linux default)
-- Rate limiting SYNs per IP
-- Firewall rules
-- CDN/DDoS scrubbing services
-
-### IP Spoofing
-
-Attacker forges source IP in packets to impersonate another host or hide identity.
-
-**Mitigations:**
-- BCP38 (network ingress filtering by ISPs)
-- Hard to exploit for TCP (3-way handshake requires receiving replies)
-- Used in UDP-based amplification attacks
-
-### DNS Spoofing / Cache Poisoning
-
-Attacker injects false DNS records into resolver cache.
-
-**Mitigations:**
-- DNSSEC
-- DNS-over-HTTPS (DoH) / DNS-over-TLS (DoT)
-- Source port randomization (Kaminsky attack mitigation)
-
-### BGP Hijacking
-
-Attacker announces more-specific routes to steal traffic destined for another AS.
+### 1. The PKI Trust Chain
+A server certificate is not verified in isolation; the client builds and cryptographically validates a **Certificate Trust Chain**:
+1. **Root CA**: Pre-installed in the operating system / JVM trust store (`cacerts`). Self-signed, air-gapped, highly protected.
+2. **Intermediate CA**: Signed by the Root CA. Signs leaf certificates so the root private key remains offline.
+3. **Leaf (End-Entity) Certificate**: Contains the server's public key and Subject Alternative Name (`SAN: api.example.com`).
 
 ```
-AS65001 owns 203.0.113.0/24
-Attacker announces 203.0.113.0/25 (more specific → wins)
-Traffic for 203.0.113.0/25 routed to attacker
+[ Root CA (In OS Trust Store) ]
+              │ (Signs with Root Private Key)
+              ▼
+    [ Intermediate CA ]
+              │ (Signs with Intermediate Private Key)
+              ▼
+[ Leaf Server Certificate (Presented during TLS Handshake) ]
 ```
 
-**Mitigations:**
-- RPKI (Resource Public Key Infrastructure) — cryptographically validates route origins
-- BGP route filtering
-- Monitoring services (BGPmon)
+### 2. Certificate Revocation: CRL vs OCSP vs OCSP Stapling
+
+| Revocation Mechanism | Architecture | Production Failure Mode |
+|---|---|---|
+| **Certificate Revocation List (CRL)** | Client periodically downloads a monolithic file containing all revoked serial numbers. | **Scalability Disaster**: CRL files grow to hundreds of megabytes. Clients skip verification on timeout (fail-open). |
+| **OCSP (Online Certificate Status Protocol)** | Client sends synchronous HTTP query to CA's OCSP responder during TLS handshake. | **Privacy Leak & Latency Spike**: CA tracks every website the user visits. Adds $100\text{–}300\text{ ms}$ to TLS handshake; fails open if CA is down. |
+| **OCSP Stapling (RFC 6066 — Industry Standard)** | **The web server** periodically queries the CA's OCSP responder, caches the cryptographically timestamped response, and **"staples" it to the TLS Handshake**. | **Zero Latency & 100% Privacy**: Client validates CA signature directly from the stapled response without contacting external CAs. |
+
+```nginx
+# Nginx: Enable OCSP Stapling in production
+ssl_stapling on;
+ssl_stapling_verify on;
+ssl_trusted_certificate /etc/ssl/certs/fullchain.pem;
+resolver 1.1.1.1 8.8.8.8 valid=300s;
+resolver_timeout 5s;
+```
+
+---
+
+## Network Layer Attacks & Mitigation
+
+### 1. Man-in-the-Middle (MITM) & SSL Stripping
+An attacker intercepting traffic (via ARP spoofing, rogue Wi-Fi, or DNS cache poisoning) strips HTTPS, redirecting the victim's browser to plain HTTP while establishing an encrypted connection to the upstream server on the victim's behalf.
+
+**Defense Architecture**:
+- **HSTS (`Strict-Transport-Security`)**:
+  ```http
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  ```
+  Forces modern browsers to refuse unencrypted HTTP connections permanently, even on the very first visit if submitted to the **HSTS Preload List** (`hstspreload.org`).
+- **Certificate Transparency (CT Logs - RFC 6962)**: CAs must append all issued certificates to public, tamper-evident cryptographic Merkle tree audit logs. Browsers reject certificates that do not include valid Signed Certificate Timestamps (SCTs).
+
+### 2. TLS 1.3 0-RTT Anti-Replay Architecture (RFC 8446 §8)
+
+While TLS 1.3 0-RTT enables instant data transmission on reconnection, early data is vulnerable to **Replay Attacks**: an attacker eavesdropping on the network can record the 0-RTT packet and replay it to the server. If the payload is a money transfer or state-changing mutation, the server executes it twice!
+
+**Mitigations**:
+1. **Application-Level Enforcement**: Only allow idempotent, safe HTTP methods (GET, HEAD) in 0-RTT early data. Reject POST/PUT/DELETE requests with `425 Too Early` (RFC 8470), prompting the client to retry after the 1-RTT handshake completes.
+2. **Server-Side Strike Registers**: The server maintains a distributed in-memory cache of recently accepted `ClientHello` identifiers within a 10-second validity window. Any duplicate ClientHello inside this window is rejected immediately.
+3. **Single-Use Session Tickets**: Mark session resumption tickets as consumed in a distributed Redis store upon first read.
+
+### 3. BGP Hijacking & RPKI ROA Validation
+
+The Border Gateway Protocol (BGP) historically trusts route advertisements without cryptographic proof. In a **BGP Hijack**, an adversarial AS announces a more specific prefix (e.g. `203.0.113.0/25` over a legitimate `203.0.113.0/24`), diverting global internet traffic through the attacker's network.
+
+**RPKI (Resource Public Key Infrastructure)** provides cryptographic route authorization:
+1. The prefix owner generates a cryptographically signed **Route Origin Authorization (ROA)** binding their IP prefix and maximum prefix length to their authorized Autonomous System Number (ASN).
+2. Internet Service Providers run RPKI-validating routers (RTR protocol).
+3. The router evaluates BGP route advertisements into three states:
+   - **Valid**: Matches a signed ROA.
+   - **Invalid**: ASN or prefix length conflicts with a signed ROA $\implies$ **Router drops the route advertisement automatically**.
+   - **NotFound**: No ROA published yet.
+
+---
+
+## IPsec Architecture: AH vs ESP and NAT-T
+
+IPsec secures IP traffic at Layer 3 using two core protocols:
+
+| Dimension | Authentication Header (AH - Protocol 51) | Encapsulating Security Payload (ESP - Protocol 50) |
+|---|---|---|
+| **Confidentiality (Encryption)** | ❌ None (plaintext payload) | ✅ Full AES-GCM / ChaCha20 encryption |
+| **Integrity & Authentication** | ✅ Cryptographically signs **entire IP packet**, including outer IP headers | ✅ Authenticates payload and ESP header (not outer IP header) |
+| **NAT Traversal Compatibility** | ❌ **Completely Broken by NAT** (NAT rewrites IP addresses, invalidating AH hash!) | ⚠️ Requires **NAT-T (UDP Port 4500 Encapsulation)** |
+
+```
+Standard ESP Packet (Blocked by non-NAT-aware routers):
+[ Outer IP Header (Protocol 50) ] [ ESP Header ] [ Encrypted Payload ] [ ESP Auth Trailer ]
+
+NAT-T Encapsulated ESP (RFC 3948):
+[ Outer IP Header ] [ UDP Header (Port 4500) ] [ ESP Header ] [ Encrypted Payload ] [ ESP Auth ]
+(Allows intermediate stateful NAT devices to track source/dest ports in conntrack tables)
+```
 
 ---
 
@@ -95,13 +132,35 @@ DNS server → 3000 byte response → victim IP
 Amplification factor: up to 100x (50 byte query → 5000 byte response)
 ```
 
-**Mitigation**: disable ANY responses, rate-limit DNS, BCP38 (ISP ingress filtering).
+**Mitigation**: disable ANY responses, enforce Response Rate Limiting (RRL) on authoritative nameservers, configure BCP38 (ISP source address validation).
 
-### Slowloris Attack (Application Layer)
+### Slowloris & R-U-Dead-Yet (RUDY) L7 Connection Starvation
 
-Opens many HTTP connections, sends partial requests slowly — keeps connections open, exhausts server connection pool.
+Unlike volumetric floods that saturate bandwidth, Slowloris and RUDY exploit thread-per-connection architectures (like classical Apache or blocking Java servlets):
+- **Slowloris**: Opens thousands of TCP connections, sending incomplete HTTP headers at a trickle (e.g. `X-Custom-Header: value\r\n` every 15 seconds) but **never sending the terminating `\r\n\r\n`**. The server keeps a worker thread allocated waiting for the request to finish until all thread pool threads are exhausted!
+- **RUDY**: Sends a valid `POST` request with `Content-Length: 10000000`, then transmits 1 byte of the body every 10 seconds.
 
-**Mitigation**: connection timeouts, `request_timeout` in nginx, limit connections per IP.
+**Mitigation Architecture**:
+1. **Reverse Proxy Buffering (Nginx / Envoy)**: Deploy an event-driven reverse proxy in front of backend application servers. Nginx uses non-blocking `epoll` to buffer complete request headers and bodies before handing off to upstream worker threads.
+2. **Aggressive Header & Body Timeouts**:
+   ```nginx
+   # Drop slow headers and slow body transmissions
+   client_header_timeout 10s;
+   client_body_timeout 10s;
+   send_timeout 10s;
+   client_max_body_size 10m;
+   ```
+
+### Kernel SYN Cookies: Bitwise State Encoding
+
+When an attacker launches a SYN flood, the kernel's SYN backlog (`tcp_max_syn_backlog`) fills in milliseconds. Once full, the server drops all legitimate connection attempts.
+
+**SYN Cookies (`net.ipv4.tcp_syncookies = 1`)**:
+Instead of storing half-open connection state in memory, the kernel computes the **Initial Sequence Number (ISN)** cryptographically:
+$$\text{ISN} = \text{Top 5 bits: } t \pmod{32} \parallel \text{Next 3 bits: MSS index } \parallel \text{Bottom 24 bits: } \text{HMAC}(\text{src\_ip}, \text{dst\_ip}, \text{src\_port}, \text{dst\_port}, t, \text{secret})$$
+- The kernel discards all local connection state and transmits the `SYN-ACK` containing this generated ISN.
+- When a legitimate client sends back the final `ACK` (`ack = \text{ISN} + 1`), the kernel subtracts 1 to recover the ISN, re-computes the HMAC, verifies that $t$ is within 4 minutes, and extracts the MSS index.
+- If the HMAC matches, the kernel allocates the socket data structure in the accept queue. If the client was a spoofed bot that never returned the `ACK`, **zero server memory was ever wasted!**
 
 ### DDoS Mitigation Strategies
 

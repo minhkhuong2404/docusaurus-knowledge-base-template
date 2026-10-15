@@ -223,6 +223,29 @@ LIMIT 500;
 
 ---
 
+### Variant: Hotel Rooms (Per-Night Inventory)
+
+Hotel booking is the same oversell problem, but a stay spans multiple nights, so the unit of inventory is one `(hotel, room_type, date)` row, not one item.
+
+```sql
+-- Atomic conditional decrement per night, all in one transaction
+UPDATE room_inventory
+   SET reserved = reserved + 1
+ WHERE hotel_id = :h AND room_type_id = :rt
+   AND stay_date >= :check_in AND stay_date < :check_out
+   AND reserved < total_rooms;
+-- If rows_updated != number_of_nights: ROLLBACK (some night is full)
+```
+
+- The `WHERE reserved < total_rooms` predicate plus the increment is one atomic operation, so there is no read-modify-write race. A `CHECK (reserved <= total_rooms)` constraint is the last line of defence.
+- Create a `PENDING` reservation with `expires_at` and release inventory via the sweeper, exactly like the hold lifecycle above. Never keep a row lock open across the payment call.
+- Update nights in ascending date order so concurrent multi-night bookings lock rows in the same order and avoid deadlocks.
+- Shard by `hotel_id` so a booking stays a single-shard transaction. Search runs on an eventually consistent Elasticsearch index and is re-validated at hold time.
+
+Full design: [Senior Engineer Design Course](./senior-engineer-design-course.md).
+
+---
+
 ## 8. Summary: Key Takeaways
 
 1. **Beware the Seam**: Whenever state spans two independent storage systems (e.g. Redis for holds and MySQL for orders), true atomic consistency is impossible without complex distributed transactions.
@@ -233,6 +256,7 @@ LIMIT 500;
 ---
 
 ### Related Concepts
+- [Resilience Patterns for Payments & Ticketing](./resilience-patterns-payments-ticketing.md)
 - [Handling Contention & High-Concurrency Locks](./handling-contention.md)
 - [Real-World Case Studies: Hyper-Scale Architectures](./case-studies-architecture-scaling.md)
 - [PostgreSQL Heap Storage Architecture & Internals](../database/postgresql-heap-storage-architecture.md)

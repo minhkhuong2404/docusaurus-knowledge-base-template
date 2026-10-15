@@ -1,8 +1,8 @@
 {
-  "id": "2333",
-  "title": "Minimum Sum of Squared Difference",
-  "url": "https://leetcode.com/problems/minimum-sum-of-squared-difference/",
-  "difficulty": "medium",
-  "topic": "Array, Binary Search, Greedy, Sorting, Heap (Priority Queue)",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-10-10."
+  "id": "2913",
+  "title": "Subarrays Distinct Element Sum of Squares I",
+  "url": "https://leetcode.com/problems/subarrays-distinct-element-sum-of-squares-i/",
+  "difficulty": "easy",
+  "topic": "Array, Hash Table, Binary Indexed Tree, Segment Tree",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-10-15."
 }

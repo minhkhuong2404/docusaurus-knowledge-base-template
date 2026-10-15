@@ -156,6 +156,32 @@ The interviewer will guide this. Common deep dives:
 
 ---
 
+## What Interviewers Actually Score
+
+Beyond the diagram, interviewers (and the freeCodeCamp *Design Software Systems Like a Senior Engineer* course) grade four signals:
+
+| Signal | What it looks like |
+|---|---|
+| Problem navigation | You drive the conversation, cut scope explicitly, state assumptions |
+| Technical depth | You explain *why* a component is chosen and how it fails |
+| Tradeoff reasoning | You name the cost of each choice (latency, consistency, cost, complexity) |
+| Communication | You check in, summarise, and adapt when challenged |
+
+### The Same Flow as a 5-Step Version
+
+RADIO maps onto the course's 5 steps: **Requirements, Estimation, API + Data Model, High-Level Design, Deep Dives + Tradeoffs**. The extra emphasis is on estimation as a *decision tool*. For example, a hotel booking system has about 1 booking QPS but about 10k search QPS, so the hard problem is correctness under contention for writes and scale for search, not write throughput.
+
+### Closing Tradeoff Checklist
+
+- Which operations need strong consistency (money, inventory) and which tolerate eventual (search, counters)?
+- What does each cache or replica buy in latency, and what does it cost in staleness?
+- Start with one primary database and justify every step away from it.
+- Finish with extensions: analytics, personalisation, fraud checks, multi-region.
+
+Worked example with numbers, schema, and concurrency handling: [Senior Engineer Design Course](./senior-engineer-design-course.md).
+
+---
+
 ## Common Pitfalls
 
 | Pitfall | Fix |

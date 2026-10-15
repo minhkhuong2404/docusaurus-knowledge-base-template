@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "bootstrap.yml Guide",
-    "permalink": "/technical-knowledge/spring/spring-boot-bootstrap-yml"
+    "title": "Configuration & Properties",
+    "permalink": "/technical-knowledge/spring/spring-boot-configuration-properties"
   },
   "next": {
     "title": "Kubernetes & Spring Boot 3.x — Zero-Downtime Graceful Shutdown",

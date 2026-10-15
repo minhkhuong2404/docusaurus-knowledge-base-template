@@ -1829,3 +1829,20 @@ public class TransactionalMemory {
 * **[Rate Limiting Algorithms](./rate-limiting-algorithms.md)**: Explore the conceptual design, comparison, and pseudocode implementations of all core rate-limiting algorithms.
 
 
+
+---
+
+## Case Study: Hotel Double Booking
+
+From the freeCodeCamp *Design Software Systems Like a Senior Engineer* course. Two users read `reserved = 9` of `10` rooms and both write `10`, so both succeed on the last room.
+
+| Defense | Mechanism | Tradeoff |
+|---|---|---|
+| Pessimistic lock | `SELECT ... FOR UPDATE` on the inventory row | Correct, but contention on hot hotels. Never hold it across a payment call |
+| Optimistic version | `WHERE version = ?`, retry on 0 rows | No locks, but retry storms under contention |
+| Conditional decrement | `UPDATE ... SET reserved = reserved + 1 WHERE reserved < total_rooms` | One atomic statement and the best default. Multi-night stays update all nights in one transaction in ascending date order |
+| Hold with TTL | `PENDING` reservation with `expires_at`, confirm after payment | Avoids long locks. Needs an expiry sweeper |
+
+Back the application logic with a `CHECK (reserved <= total_rooms)` constraint as the last line of defence.
+
+See also: [Senior Engineer Design Course](./senior-engineer-design-course.md), [Inventory Reservation System](./inventory-reservation-system.md).

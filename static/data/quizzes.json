@@ -1,5 +1,5 @@
 {
-  "timestamp": 1791474954983,
+  "timestamp": 1791998068102,
   "counts": {
     "java": 5096,
     "spring-boot": 5120,
@@ -1680,7 +1680,7 @@
         "topic": "Methods and Encapsulation",
         "difficulty": "medium",
         "questionText": "What happens when attempting to compile the following class?",
-        "codeSnippet": "1: public class Rope {\n2:   public static void swing() { System.out.print(\"swing \"); }\n3:   public void climb() { System.out.println(\"climb \"); }\n4:   public static void play() {\n5:     swing();\n6:     // ...\n7:     // ...\n8:     // ...\n9:     // ...\n10:    climb(); // LINE 10\n11:  }\n12:  public static void main(String[] args) {\n13:    Rope.play();\n14:  }\n15: }",
+        "codeSnippet": "public class Rope {\n  public static void swing() { System.out.print(\"swing \"); }\n  public void climb() { System.out.println(\"climb \"); }\n  public static void play() {\n    swing();\n    climb(); // LINE 10\n  }\n  public static void main(String[] args) {\n    Rope.play();\n  }\n}\n",
         "options": [
           "Compiles and prints 'swing climb '",
           "Compilation error on line 10 because a static method cannot directly call an instance method",
@@ -2230,7 +2230,7 @@
         "topic": "Class Design",
         "difficulty": "medium",
         "questionText": "What happens when attempting to compile and run class Whale and Orca?",
-        "codeSnippet": "1: public abstract class Whale {\n2:   public abstract void dive() {}; // LINE 2\n3: }\n4: // ...\n5: // ...\n6: // ...\n7: // ...\n8: class Orca extends Whale {\n9:   public void dive(int depth) { System.out.println(\"Orca diving\"); } // LINE 9\n10: }",
+        "codeSnippet": "public abstract class Whale {\n  public abstract void dive() {}; // LINE 2\n}\nclass Orca extends Whale {\n  public void dive(int depth) { System.out.println(\"Orca diving\"); } // LINE 9\n}",
         "options": [
           "Outputs Orca diving",
           "Fails compilation on line 2 because abstract methods cannot have a body {}",

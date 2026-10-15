@@ -17,11 +17,39 @@ import SocketLifecycleDiagram from '@site/src/components/SocketLifecycleDiagram'
 
 ---
 
-## Sockets
+## The 5 Linux I/O Models
 
-A **socket** is a software abstraction for a bidirectional network endpoint — identified by `(IP address, port, protocol)`.
+Every network application running on Linux interacts with sockets through one of 5 distinct kernel I/O models:
 
-**Used by**: Node.js, Nginx, Redis, Netty (Java), Vert.x.
+| I/O Model | Phase 1: Wait for Data in Socket Buffer | Phase 2: Copy from Kernel Buffer to User Buffer | Scalability Profile |
+|---|---|---|---|
+| **1. Blocking I/O (BIO)** | Thread sleeps until data arrives | Thread sleeps while kernel copies bytes | $O(N)$ threads; collapses at high concurrency ($C10K$). |
+| **2. Non-Blocking I/O (NIO Polling)** | Returns `EAGAIN` / `EWOULDBLOCK` immediately | Thread blocks during memory copy | Inefficient CPU spin; wastes clock cycles in loops. |
+| **3. I/O Multiplexing (`epoll` / `kqueue`)** | Thread blocks on `epoll_wait()` across $100\text{k}+$ FDs | Thread blocks during user-space `read()` | **Industry Standard**: Event-driven (Nginx, Netty, Redis, Node.js). |
+| **4. Signal-Driven I/O (`SIGIO`)** | Kernel issues `SIGIO` signal when data arrives | Thread blocks during user-space `read()` | Rare; signal handling overhead is high under load. |
+| **5. Asynchronous I/O (Linux `io_uring`)** | Kernel waits for data asynchronously | **Kernel copies data into user buffer directly** | True async; zero context switches on hot path. |
+
+### Under the Hood: `select()` vs `poll()` vs `epoll()`
+
+```
+select() / poll() [O(N) Complexity]:
+  User Space ──► Copy entire array of 10,000 FDs to Kernel
+                 Kernel scans all 10,000 FDs linearly (O(N))
+  User Space ◄── Copy array back; user app scans 10,000 FDs to find 2 active sockets
+
+epoll() [O(1) Event-Driven Architecture]:
+  1. epoll_create: Allocates Red-Black Tree (monitored FDs) + Ready List (active FDs)
+  2. epoll_ctl:    Inserts FD into Red-Black Tree ONCE (O(log N))
+  3. Driver Event: When NIC DMA fills buffer, interrupt callback appends FD to Ready List
+  4. epoll_wait:   Sleeps only on Ready List; returns ONLY active FDs in O(1)!
+```
+
+### Level-Triggered (LT) vs Edge-Triggered (ET) Starvation Hazard
+
+In Linux `epoll`:
+- **Level-Triggered (`EPOLLLT` — Java NIO Default)**: `epoll_wait()` continues to return the FD on every invocation as long as the socket buffer has unread bytes. Safe, but generates redundant wake-up notifications if you read in small chunks.
+- **Edge-Triggered (`EPOLLET` — Netty Native Transport)**: `epoll_wait()` fires **only once** when new data transitions into the buffer.
+  - ⚠️ **The Production Bug Trap**: In Edge-Triggered mode, the application **MUST loop `read()` until it explicitly receives `EAGAIN` or `EWOULDBLOCK`**. If your code reads only 1 KB of a 4 KB arrival and exits, the remaining 3 KB will sit in the buffer forever because no new edge transition occurs!
 
 ---
 
@@ -233,6 +261,114 @@ socket.setReceiveBufferSize(65536);  // SO_RCVBUF: receive buffer size
 ```
 
 **Nagle's Algorithm**: buffers small writes and sends them together to reduce packet count. Good for bulk transfer. Bad for real-time protocols (disable with `TCP_NODELAY`).
+
+---
+
+## The Thundering Herd Problem & `SO_REUSEPORT`
+
+In multi-threaded or multi-process network architectures (such as Nginx workers or multi-threaded Netty acceptors), multiple threads often wait for incoming connections simultaneously.
+
+### The Problem
+When multiple threads call `epoll_wait()` or `accept()` on the **same shared listening socket**:
+1. A new client TCP connection completes the 3-way handshake.
+2. The operating system kernel wakes up **all $N$ waiting worker threads**.
+3. The first thread successfully calls `accept()` and receives the client FD.
+4. The remaining $N-1$ threads wake up, fail with `EAGAIN` or `EWOULDBLOCK`, and immediately context-switch back to sleep.
+5. Under high connection churn (e.g. 50,000 conn/sec), this causes severe CPU thrashing and context-switch overhead.
+
+### The Solution: `SO_REUSEPORT` (Linux 3.9+)
+
+Instead of sharing a single listening socket and a single accept queue, `SO_REUSEPORT` allows **multiple independent sockets** to bind to the exact same IP:port combination:
+
+```
+Without SO_REUSEPORT (Contended Shared Accept Queue):
+[ SYN Influx ] ──► [ Single Accept Queue (Mutex Lock) ] ──► Wakes ALL N Workers (Thundering Herd)
+
+With SO_REUSEPORT (Kernel 4-Tuple Hashed Load Balancing):
+[ SYN Influx ] ──► [ Kernel 4-Tuple Hash ] ──┬──► [ Queue 1 ] ──► Worker 1 (No Mutex Lock)
+                                             ├──► [ Queue 2 ] ──► Worker 2 (No Mutex Lock)
+                                             └──► [ Queue N ] ──► Worker N (No Mutex Lock)
+```
+
+In Netty:
+```java
+// Enable SO_REUSEPORT in Netty using Linux Epoll native transport
+ServerBootstrap b = new ServerBootstrap();
+b.group(bossGroup, workerGroup)
+ .channel(EpollServerSocketChannel.class)
+ .option(EpollChannelOption.SO_REUSEPORT, true);
+```
+
+---
+
+## Zero-Copy Architecture: `sendfile()`, `splice()`, and Off-Heap Buffers
+
+When serving static assets, video segments, or Kafka message logs, copying data between kernel buffers and user-space memory creates massive CPU and memory bandwidth bottlenecks.
+
+### Traditional I/O vs Zero-Copy `sendfile()`
+
+```
+1. Traditional sys_read / sys_write (4 Context Switches, 2 CPU Copies, 2 DMA Copies):
+   [ Disk ] ──(DMA)──► [ OS Page Cache ] ──(CPU Copy)──► [ User Heap Buffer ]
+                                                                 │
+   [ Network Wire ] ◄──(DMA)── [ Socket Buffer ] ◄──(CPU Copy)───┘
+
+2. Zero-Copy sys_sendfile (2 Context Switches, 0 CPU Copies, 2 DMA Copies via Scatter-Gather):
+   [ Disk ] ──(DMA)──► [ OS Page Cache ] ──(Scatter-Gather DMA Descriptor)──► [ NIC DMA ]
+```
+
+### Java `FileChannel.transferTo()` and Off-Heap Buffers
+
+Java exposes `sendfile(2)` via `FileChannel.transferTo()`:
+```java
+try (FileChannel fileChannel = FileChannel.open(filePath, StandardOpenOption.READ);
+     SocketChannel socketChannel = SocketChannel.open(serverAddress)) {
+    // Directly transfers from disk page cache to socket descriptor with zero JVM memory copy
+    fileChannel.transferTo(0, fileChannel.size(), socketChannel);
+}
+```
+
+#### Why Netty Uses Off-Heap `DirectByteBuffer`
+In standard Java I/O, passing a heap `byte[]` to `socketChannel.write()` forces the JVM to copy the data into a temporary **off-heap native C buffer** first. Why? Because the JVM Garbage Collector is free to relocate `byte[]` objects in memory during a GC compaction phase at any moment! Direct ByteBuffers (`ByteBuffer.allocateDirect()` or Netty's `PooledByteBufAllocator`) allocate memory off the JVM heap via `malloc()`, eliminating the JVM GC copy penalty.
+
+---
+
+## Java 21 Virtual Threads (Project Loom) vs Netty EventLoops
+
+Java 21 introduced **Virtual Threads**, allowing developers to write straightforward synchronous blocking code while the JVM schedules millions of lightweight threads onto a small pool of OS **Carrier Threads** (`ForkJoinPool`).
+
+### How Virtual Threads Handle Socket I/O
+When code calls `Socket.getInputStream().read()`:
+1. Under the hood, the JDK detects blocking and calls `VirtualThread.park()`.
+2. The virtual thread's stack frame is copied from the carrier thread onto the JVM heap.
+3. The carrier thread is immediately freed to run another virtual thread.
+4. An internal JDK `Poller` (backed by `epoll` or `kqueue`) monitors the socket FD. When data arrives, the poller unparks the virtual thread, which resumes on any available carrier thread.
+
+### ⚠️ The Carrier Thread Pinning Trap
+A virtual thread is **pinned** to its underlying OS carrier thread when:
+1. It executes inside a `synchronized` block or method:
+   ```java
+   // ❌ DANGEROUS: Carrier thread pinning!
+   public synchronized byte[] readPayload(Socket socket) throws IOException {
+       return socket.getInputStream().readNBytes(1024); // Pins OS carrier thread while blocked!
+   }
+
+   // ✅ SAFE: Use ReentrantLock instead of synchronized
+   private final ReentrantLock lock = new ReentrantLock();
+   public byte[] readPayloadSafe(Socket socket) throws IOException {
+       lock.lock();
+       try {
+           return socket.getInputStream().readNBytes(1024); // Safely unmounts carrier thread!
+       } finally {
+           lock.unlock();
+       }
+   }
+   ```
+2. It invokes a native method via JNI or Foreign Function & Memory (FFM) API.
+
+**Netty EventLoops vs Virtual Threads**:
+- For standard CRUD microservices with relational database calls, Virtual Threads provide superior developer ergonomics.
+- For hyper-scale network gateways ($> 100{,}000$ active long-lived WebSocket or TLS connections), Netty's native `epoll` event-loop architecture remains the staff-engineer standard because it completely avoids stack copying, eliminates thread pinning risks, and provides fine-grained control over Linux socket options like `SO_REUSEPORT` and `TCP_DEFER_ACCEPT`.
 
 ---
 

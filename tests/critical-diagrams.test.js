@@ -45,6 +45,7 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'TimeAndUniqueIdDiagram.tsx',
     'SpringBootConfigPropertiesDiagram.tsx',
     'CodingWithAiAgentsDiagram.tsx',
+    'DistributedResiliencePaymentsTicketingDiagram.tsx',
   ];
 
   for (const filename of criticalDiagrams) {

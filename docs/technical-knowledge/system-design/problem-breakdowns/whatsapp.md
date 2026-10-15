@@ -217,3 +217,30 @@ How does E2EE ensure that even if the server is subpoenaed or compromised, no me
 - Explains the Signal Protocol cryptographic handshake (X3DH and Double Ratchet forward secrecy) and its impact on multi-device synchronization.
 - Designs cross-region geo-routing: Directing users to edge connection gateways nearest to their physical location while maintaining reliable inter-datacenter message routing.
 - Details operational crash recovery: What happens when Gateway Node 1 abruptly crashes with 100,000 active sockets? (Thundering reconnect mitigation with exponential backoff and jitter).
+
+---
+
+## 7. Additional Lessons from the Senior Engineer Design Course
+
+Notes from the freeCodeCamp *Design Software Systems Like a Senior Engineer* messaging chapter, covering gaps in the sections above.
+
+### Multi-Device Sync and Offline Delivery
+- Give every recipient inbox a **monotonic sequence number**. Each device stores the last acknowledged sequence and syncs `GET /sync?after=<seq>` on reconnect, so no device needs the others online.
+- Delivery is **at-least-once**. The client dedupes by `message_id`, which gives effectively-once behaviour.
+- Message state (`SENT`, `DELIVERED`, `READ`) only moves forward, so concurrent receipts from several devices merge by taking the highest state.
+
+### Media Storage and CDN Delivery
+- Never push media through chat servers. The client uploads to object storage via a **pre-signed URL**, and the message carries only the media key, size, and thumbnail.
+- Recipients download through a CDN. Large group media is therefore uploaded once and fetched many times.
+
+### Event-Driven Processing and Batch Jobs
+- Push notifications, receipts fan-out, and analytics run asynchronously off a queue (Kafka), so a slow push provider never blocks the send path.
+- Batch jobs handle retention: purge delivered messages, expire stale media, and compact inboxes.
+
+### Rate Limiting, Sharding, and Failure Handling
+- **Rate limit** per user and per device (token bucket) to stop spam and abusive broadcast. See [Rate Limiting Algorithms](../rate-limiting-algorithms.md).
+- **Shard** the inbox store by `recipient_id` so one user's sync is a single-partition read. Shard connection gateways by consistent hashing on `user_id`.
+- **Degrade gracefully:** if presence or receipts are overloaded, drop them first and keep message delivery alive.
+- **Roll out safely** with feature flags and percentage rollouts. See [Feature Toggles](../feature-toggle.md).
+
+Full course notes: [Senior Engineer Design Course](../senior-engineer-design-course.md).

@@ -472,3 +472,16 @@ class CheckoutIntegrationTest {
 6. **Inconsistent Flag State Across Instances:**
    - *Anti-Pattern:* Pod A has flag cached as disabled (30s old cache), Pod B has it as enabled (just refreshed). User gets different behavior depending on which pod handles the request.
    - *Fix:* Acceptable for percentage rollouts. Not acceptable for kill switches. Use shorter TTL (5s) for ops toggles, and Spring Cloud Bus refresh for instant propagation.
+
+---
+
+## Rollouts for Major System Changes
+
+From the freeCodeCamp *Design Software Systems Like a Senior Engineer* course (messaging app rollout section).
+
+- Ship risky changes (new delivery pipeline, new storage engine, new encryption scheme) **dark** behind a flag and enable by percentage: internal users, then 1%, 10%, 50%, and 100%.
+- Watch guardrail metrics at each step (error rate, p99 latency, delivery lag). Define the auto-rollback threshold before starting.
+- Keep the old path working until the new one is fully ramped. A kill switch should restore it in seconds without a deploy.
+- Combine with a graceful-degradation flag for non-critical features (typing indicators, presence) so they can be shed under load.
+
+See also: [Senior Engineer Design Course](./senior-engineer-design-course.md).

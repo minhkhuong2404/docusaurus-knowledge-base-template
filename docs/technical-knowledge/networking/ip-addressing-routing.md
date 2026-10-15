@@ -214,6 +214,63 @@ Types:
 
 ---
 
+## Subnetting Worked Example
+
+From the "Networking topics explained" video (Cloud X Berry): a subnet is a slice of a larger network, and the **prefix length** says how many leading bits identify the network.
+
+Given `192.168.10.0/26`:
+
+| Item | Calculation | Result |
+|---|---|---|
+| Host bits | 32 - 26 | 6 |
+| Addresses | 2^6 | 64 |
+| Usable hosts | 64 - 2 (network and broadcast) | 62 |
+| Network address | first address | `192.168.10.0` |
+| Broadcast address | last address | `192.168.10.63` |
+| Usable range | | `192.168.10.1` to `192.168.10.62` |
+| Next subnet | add 64 | `192.168.10.64/26` |
+
+Two hosts are on the **same subnet** when `ip AND mask` gives the same network address. If they are, the sender talks to the host directly (ARP then Ethernet frame). If not, it sends to the **default gateway**. Cloud note: AWS reserves 5 addresses per subnet, so a `/28` gives only 11 usable.
+
+---
+
+## How a Router Forwards a Packet
+
+1. The router looks up the destination IP in its routing table and picks the **longest prefix match** (`10.1.2.0/24` beats `10.1.0.0/16`, which beats `0.0.0.0/0`).
+2. It decrements the IP **TTL**. At 0 it drops the packet and sends ICMP *Time Exceeded*. This is how `traceroute` discovers each hop.
+3. It resolves the next hop's MAC with ARP and **rewrites the Ethernet header**. The source and destination MACs change at every hop, while the source and destination IPs stay the same (except across NAT).
+
+---
+
+## DHCP: The DORA Exchange
+
+A new host has no IP, so it uses broadcast with source `0.0.0.0`:
+
+1. **Discover**: client broadcasts to `255.255.255.255` (UDP 67).
+2. **Offer**: server offers an IP, mask, gateway, DNS, and lease time.
+3. **Request**: client broadcasts that it accepts one offer (other servers withdraw).
+4. **Acknowledge**: server confirms the lease.
+
+The client tries to renew at 50% of the lease (T1) by unicast, and rebinds by broadcast at 87.5% (T2). A DHCP relay agent forwards broadcasts across routers so one server can serve many subnets.
+
+---
+
+## NAT Translation Table Mechanics
+
+With PAT, the router keeps a table that maps each private flow to a public IP and port:
+
+| Private (inside) | Public (outside) | Remote |
+|---|---|---|
+| `192.168.1.10:51000` | `203.0.113.5:40001` | `93.184.216.34:443` |
+| `192.168.1.11:51000` | `203.0.113.5:40002` | `93.184.216.34:443` |
+
+- Outbound packets get their source rewritten. Replies are matched by public port and rewritten back.
+- Unsolicited inbound traffic has no table entry and is dropped, which is why NAT acts as an accidental firewall. It is not a security control.
+- Entries expire on idle timeouts. Long-lived idle connections can be silently dropped, so use TCP keepalives or application heartbeats.
+- Reaching a server behind NAT needs **port forwarding** (DNAT). See [Proxies, NAT & Firewalls](./proxies-nat-firewalls.md).
+
+---
+
 ## Interview Questions
 
 ### Q1. What is CIDR and why was it introduced?

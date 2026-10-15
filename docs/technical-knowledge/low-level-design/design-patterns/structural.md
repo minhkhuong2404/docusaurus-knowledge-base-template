@@ -733,4 +733,80 @@ public class CachingVideoProxy implements VideoService {
 | **Flyweight** | Sharing immutable state | "My app allocates 10 million nodes and is running out of memory." |
 | **Proxy** | Intercepting execution | "I need to transparently add security, lazy-loading, or caching." |
 
+---
+
+## 🏛️ Senior/Staff Interview Playbook: Structural Patterns in Production
+
+Structural patterns manage object composition. In production systems, senior engineers use them to isolate legacy subsystems, enforce cross-cutting concerns, and optimize memory footprints.
+
+```mermaid
+flowchart TD
+    subgraph Comparison["The 'Big 4' Structural Disambiguation Matrix"]
+        A["Adapter"] -->|Changes Interface| M1["Makes Incompatible Classes Work Together"]
+        F["Facade"] -->|Simplifies Interface| M2["Unified High-Level Entry Point to Complex Subsystem"]
+        D["Decorator"] -->|Enhances Behavior| M3["Dynamically Stacks Responsibilities (Same Interface)"]
+        P["Proxy"] -->|Controls Access| M4["Surrogate Intercepts & Manages Target (Same Interface)"]
+    end
+
+    style A fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#fff
+    style F fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
+    style D fill:#042f2e,stroke:#2dd4bf,stroke-width:2px,color:#fff
+    style P fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#fff
+```
+
+---
+
+### 1. The "Big 4" Confusion Disambiguation
+
+Interviewers love testing whether candidates understand the exact subtle differences between Adapter, Facade, Decorator, and Proxy:
+
+| Dimension | Adapter | Facade | Decorator | Proxy |
+|---|---|---|---|---|
+| **Interface Status** | **Changes** interface from old to new | **Creates** a new simplified high-level interface | **Preserves** exact same interface | **Preserves** exact same interface |
+| **Primary Intent** | Interoperability between incompatible APIs | Developer ergonomics; reduce subsystem coupling | Add dynamic responsibilities without subclass explosion | Access control, lifecycle caching, AOP interception |
+| **Relationship** | Wraps an existing Adaptee | Orchestrates multiple subsystem classes | Wraps instance recursively (`T wraps T`) | Wraps single concrete Subject (`Proxy implements T`) |
+| **Real Example** | `InputStreamReader(InputStream)` | `Spring's JdbcTemplate` | `BufferedInputStream(FileInputStream)` | Spring `@Transactional` proxy |
+
+---
+
+### 2. Production Gotchas & Anti-Patterns
+
+#### A. The Decorator Order-of-Execution Trap
+The order of wrapping in Decorators can cause **catastrophic silent bugs or performance penalties**:
+```java
+// ❌ CRITICAL BUG: Encrypting then Compressing
+OutputStream os = new GZIPOutputStream(new CipherOutputStream(rawStream, cipher));
+// Why it fails: Strong encryption outputs pseudo-random bytes with maximal entropy.
+// GZIP compression relies on repetitive patterns. Compressing encrypted data yields 0% compression 
+// and wastes 100% of the CPU compression cycles!
+
+// ✅ Correct Order: Compress plaintext FIRST, then encrypt the compressed stream
+OutputStream os = new CipherOutputStream(new GZIPOutputStream(rawStream), cipher);
+```
+
+#### B. The Proxy Self-Invocation Bypass
+In Spring Framework or CDI, invoking an annotated method from within the same class (`this.otherMethod()`) bypasses the proxy.
+- **Why**: The caller is already inside the real target instance, so `this` points to the unwrapped object, bypassing transactional and security interceptors.
+- **The Senior Fix**: Refactor to a separate collaborator bean, or use `ObjectProvider<SelfService>` to invoke via the proxy.
+
+#### C. Flyweight Memory Optimization vs. Thread Safety
+Flyweight pools shared immutable state (intrinsic state) while passing unique state (extrinsic state) as parameters.
+- **Production Hazard**: If any thread mutates an intrinsic field in the shared Flyweight pool, the corruption instantly affects **all threads across the entire application**.
+- **Rule**: Intrinsic state fields in Flyweights must be strictly `final` and unmodifiable.
+
+---
+
+### 3. Senior Candidate Verbal Defense Scripts
+
+#### "How do you distinguish Decorator from Proxy in 10 seconds?"
+> **Candidate Defense Script**:
+> *"Both share the exact same interface as the wrapped object, but their intents are fundamentally different. A **Decorator** adds new functional behavior dynamically at runtime (e.g. adding compression or encryption to an I/O stream), and decorators are typically assembled by the caller. A **Proxy** controls access, lazy initialization, or cross-cutting lifecycle concerns (e.g. authentication or database transaction commit/rollback), and the proxy usually manages or hides the creation of the underlying subject."*
+
+#### "When is an Adapter preferred over rewriting the downstream code?"
+> **Candidate Defense Script**:
+> *"When integrating with third-party vendor SDKs, legacy systems with frozen release lifecycles, or shared enterprise libraries where we lack source-code ownership. Writing an Adapter preserves the Open/Closed Principle: our domain code remains clean and idiomatic against our own domain interface, while the Adapter isolates vendor-specific schema shifts and breaking changes to a single translation boundary."*
+
+---
+
 **Next →** [Behavioral Patterns](./behavioral)
+

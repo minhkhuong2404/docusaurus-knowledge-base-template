@@ -174,3 +174,21 @@ For Spring Boot service at ~10,000 RPS per instance:
 
 **A:** Use access distribution (often Zipf-like), TTL, and cache size relative to hot keys to model hit rate. Key cardinality growth, invalidation frequency, and burstiness strongly affect real outcomes.
 
+
+---
+
+## Course Worked Examples: Hotel Booking and Messaging
+
+From the freeCodeCamp *Design Software Systems Like a Senior Engineer* course. The point of estimation is to **choose the architecture**.
+
+| System | Inputs | Result | Architectural conclusion |
+|---|---|---|---|
+| Hotel search | 10M DAU x 20 searches / 86,400 s | about 2,300 QPS avg, about 10k peak | Search needs caching and a dedicated index (Elasticsearch) |
+| Hotel booking | 10M DAU x 1% = 100k bookings/day | about 1.2 QPS avg, about 10 to 50 peak | Write throughput is trivial. The hard part is correctness under contention |
+| Hotel inventory | 500k hotels x 10 room types x 365 nights | about 1.8B rows/year | Needs sharding by `hotel_id` plus partition pruning by date |
+| Messaging | 500M DAU x 40 msgs = 20B/day | about 230k QPS avg, about 700k peak | Needs sharded gateways, partitioned queues, and short server retention |
+| Message storage | 20B x about 100 B | about 2 TB/day text | Delete after delivery and keep media in object storage |
+
+Rule of thumb: a read:write ratio of 100:1 means optimise reads (cache, replicas, search index). A tiny write QPS with strict invariants means optimise correctness, not throughput.
+
+See also: [Senior Engineer Design Course](./senior-engineer-design-course.md).

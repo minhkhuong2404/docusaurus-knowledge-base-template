@@ -329,4 +329,172 @@ public class SUV extends Vehicle {
 | Inheritance | is-a relationships | *"I'd use composition here — this is a has-a, not an is-a."* |
 | Polymorphism | One call, many behaviors | *"Because this uses an interface, I can swap implementations without changing this code."* |
 
+---
+
+## 🏛️ Senior/Staff Interview Playbook: Passing OOP in Senior Interviews
+
+Senior and staff interviewers evaluate OOP through the lens of **domain integrity, concurrency safety, and long-term maintenance costs**. They actively look for candidates who transcend textbook definitions and understand modern enterprise OOP realities.
+
+```mermaid
+flowchart TD
+    subgraph JuniorOOP["Junior Mindset (Textbook OOP)"]
+        J1["Deep Class Hierarchies (extends)"] --> J2["Getters/Setters for All Fields"]
+        J2 --> J3["Anemic Domain Models (Logic in Services)"]
+        J3 --> J4["Mutable Shared State & Leaked References"]
+    end
+
+    subgraph SeniorOOP["Senior/Staff Mindset (Modern Enterprise OOP)"]
+        S1["Composition over Inheritance (has-a)"] --> S2["Rich Domain Entities (Invariant Protection)"]
+        S2 --> S3["Immutability by Default (Records & Value Objects)"]
+        S3 --> S4["Sealed Hierarchies & Pattern Matching (Java 17/21)"]
+    end
+
+    style JuniorOOP fill:#1e1b4b,stroke:#f43f5e,stroke-width:2px,color:#fff
+    style SeniorOOP fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff
+```
+
+---
+
+### 1. Modern OOP: Data-Oriented Programming (Java 17/21)
+
+Classical OOP combined state and logic into heavy mutable classes. Modern production Java leverages **Data-Oriented Programming (DOP)**:
+
+```java
+// Modern Java 17/21: Model state with immutable records and sealed algebraic types
+public sealed interface PaymentMethod permits CreditCard, BankTransfer, CryptoWallet {}
+
+public record CreditCard(String cardNumber, YearMonth expiry, String cvv) implements PaymentMethod {
+    public CreditCard {
+        // Compact constructor enforces validation invariants at creation time
+        Objects.requireNonNull(cardNumber, "Card number cannot be null");
+        if (expiry.isBefore(YearMonth.now())) {
+            throw new IllegalArgumentException("Card is expired");
+        }
+    }
+}
+
+public record BankTransfer(String iban, String swift) implements PaymentMethod {}
+public record CryptoWallet(String walletAddress, NetworkType network) implements PaymentMethod {}
+
+// Polymorphic dispatch via exhaustive pattern matching switch (compiler-enforced):
+public String processPayment(PaymentMethod method, BigDecimal amount) {
+    return switch (method) {
+        case CreditCard cc     -> "Charging card ending in " + cc.cardNumber().substring(12);
+        case BankTransfer bt   -> "Initiating SEPA wire to " + bt.iban();
+        case CryptoWallet cw   -> "Transacting on " + cw.network() + " to " + cw.walletAddress();
+    }; // No default branch needed: sealed hierarchy guarantees exhaustiveness at compile time
+}
+```
+
+---
+
+### 2. The Anemic Domain Model vs. Rich Domain Model Trap
+
+:::caution[The #1 Interview Architecture Trap]
+Junior candidates often write **Anemic Domain Models** (Martin Fowler anti-pattern): classes containing only private fields, getters, and setters, while services handle all validation, mutation, and calculations.
+:::
+
+```java
+// ❌ Anemic Model Anti-Pattern: BankAccount is a passive data bucket
+public class AnemicAccount {
+    private BigDecimal balance;
+    public BigDecimal getBalance() { return balance; }
+    public void setBalance(BigDecimal balance) { this.balance = balance; }
+}
+
+// Service is forced to manage invariants, causing logic duplication across multiple callers:
+public class AccountService {
+    public void withdraw(AnemicAccount acc, BigDecimal amount) {
+        if (acc.getBalance().compareTo(amount) >= 0) {
+            acc.setBalance(acc.getBalance().subtract(amount)); // Invariant not protected by entity!
+        }
+    }
+}
+
+// ✅ Rich Domain Model: Entity owns its invariants and enforces transactional boundaries
+public class RichAccount {
+    private final AccountId id;
+    private BigDecimal balance;
+    private final List<TransactionRecord> ledger = new ArrayList<>();
+
+    public RichAccount(AccountId id, BigDecimal initialDeposit) {
+        this.id = Objects.requireNonNull(id);
+        this.balance = Objects.requireNonNull(initialDeposit);
+    }
+
+    // Encapsulation + Tell-Don't-Ask: State mutation is strictly guarded
+    public synchronized TransactionReceipt withdraw(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive");
+        }
+        if (this.balance.compareTo(amount) < 0) {
+            throw new InsufficientFundsException("Account " + id + " has insufficient funds");
+        }
+        this.balance = this.balance.subtract(amount);
+        TransactionRecord record = new TransactionRecord(TransactionType.DEBIT, amount, Instant.now());
+        ledger.add(record);
+        return new TransactionReceipt(id, record.id(), this.balance);
+    }
+
+    // Defensive copy prevents outside callers from mutating internal state
+    public List<TransactionRecord> getLedger() {
+        return List.copyOf(ledger);
+    }
+}
+```
+
+---
+
+### 3. The Fragile Base Class Problem & Defensive Copying
+
+#### The Fragile Base Class Gotcha
+When a parent class alters internal method dispatch, subclasses break invisibly:
+
+```java
+// Parent class in 3rd-party library:
+public class InstrumentedSet<E> extends HashSet<E> {
+    private int addCount = 0;
+
+    @Override
+    public boolean add(E e) {
+        addCount++;
+        return super.add(e);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
+        addCount += c.size();
+        return super.addAll(c); // ⚠️ HashSet.addAll() internally calls this.add()!
+    }
+}
+// Calling addAll(List.of("A", "B", "C")) results in addCount = 6 (double-counted)!
+```
+
+> **Senior Rule**: *Design and document for inheritance, or else prohibit it.* Mark classes `final` unless explicitly intended for subclassing. Prefer **forwarding / decorator composition** instead.
+
+#### Defensive Copying
+Never return raw references to mutable collections or date objects:
+```java
+// ❌ Exposing internal collection: outside callers can clear() or add() directly!
+public List<Item> getItems() { return this.items; }
+
+// ✅ Java 10+ Immutable snapshot: guarantees true immutability
+public List<Item> getItems() { return List.copyOf(this.items); }
+```
+
+---
+
+### 4. Senior Candidate Verbal Defense Scripts
+
+#### "Why shouldn't I generate Getters and Setters for all fields?"
+> **Candidate Defense Script**:
+> *"Generating indiscriminate getters and setters strips the entity of encapsulation, degrading it into an Anemic Domain Model. When external classes can arbitrarily invoke setters, business invariants are scattered across service layers rather than protected at the aggregate root. I provide getters only for data callers genuinely need, and expose intention-revealing business methods—like `order.cancel(reason)` rather than `order.setStatus('CANCELLED')`—to ensure state transitions remain valid and audited."*
+
+#### "How do you explain Polymorphism without class inheritance?"
+> **Candidate Defense Script**:
+> *"Polymorphism means 'many forms'—it is about uniform interfaces, not class inheritance trees. In modern Java, we achieve polymorphism through interface implementation, higher-order functions (passing `@FunctionalInterface` lambdas as Strategy arguments), and Java 17/21 sealed interface pattern matching. Composition with interfaces decouples clients from concrete implementations without the brittle coupling of class inheritance."*
+
+---
+
 **Next →** [Design Principles (SOLID)](./principles)
+

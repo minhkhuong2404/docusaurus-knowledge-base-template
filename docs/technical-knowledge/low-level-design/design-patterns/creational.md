@@ -590,4 +590,100 @@ public class MonsterSpawner {
 | **Builder** | Step-by-step construction | Dynamic / Runtime steps | Build complex, immutable objects cleanly. |
 | **Prototype** | State replication | Runtime cloning | Avoid initialization cost of pre-configured states. |
 
+---
+
+## 🏛️ Senior/Staff Interview Playbook: Creational Patterns in Production
+
+In production systems, object creation is tightly coupled to **memory allocation, thread safety, and immutability guarantees**.
+
+```mermaid
+flowchart TD
+    Q1{"How many parameters & variability?"}
+    Q1 -->|"< 4 fields, fixed data"| REC["Java Record / Constructor"]
+    Q1 -->|"> 4 fields, optional combinations"| BLD["Builder Pattern"]
+    
+    Q2{"Who decides the concrete type?"}
+    Q2 -->|"Single class / static lookup"| SFM["Static Factory Method (of/from)"]
+    Q2 -->|"Subclasses decide at runtime"| FM["Factory Method Pattern"]
+    Q2 -->|"Entire family of compatible objects"| AF["Abstract Factory Pattern"]
+
+    Q3{"Instantiation Cost?"}
+    Q3 -->|"Heavy I/O, DB, or complex state tree"| PROTO["Prototype Pattern / Copy Constructor"]
+    Q3 -->|"Shared coordination resource"| SGT["Managed Singleton (via DI Container)"]
+
+    style REC fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
+    style BLD fill:#042f2e,stroke:#2dd4bf,stroke-width:2px,color:#fff
+    style SFM fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#fff
+    style FM fill:#312e81,stroke:#a78bfa,stroke-width:2px,color:#fff
+    style AF fill:#581c87,stroke:#c084fc,stroke-width:2px,color:#fff
+    style PROTO fill:#701a75,stroke:#f472b6,stroke-width:2px,color:#fff
+    style SGT fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#fff
+```
+
+---
+
+### 1. Production Gotchas & Anti-Patterns
+
+#### A. The Singleton in Distributed Environments
+- **The Junior Blindspot**: *"I will use a Singleton to ensure only one thread generates invoice numbers."*
+- **The Senior Reality**: A Java Singleton guarantees uniqueness **per JVM ClassLoader**, NOT across a Kubernetes cluster of 10 pods. Multiple pods running the same Singleton will generate duplicate numbers concurrently.
+- **The Fix**: Use a centralized distributed coordinator (Redis `INCR`, database sequence, or distributed lock via Raft/etcd).
+
+#### B. The Lombok `@Builder` Collection Null-Pointer Trap
+```java
+// ❌ Dangerous Lombok Builder: items will be NULL if caller doesn't specify it!
+@Builder
+public class Order {
+    private final String id;
+    private final List<Item> items = new ArrayList<>(); // IGNORED by standard @Builder!
+}
+// Calling Order.builder().id("123").build().getItems() returns NULL, causing NPE!
+
+// ✅ Safe Production Builder: enforce @Singular or explicit builder defaults
+@Builder
+public class SafeOrder {
+    private final String id;
+    @Singular
+    private final List<Item> items; // Lombok initializes immutable empty list if omitted
+}
+```
+
+#### C. Static Factory Methods vs. Abstract Factory Hell
+Do not create abstract factory interfaces when **Static Factory Methods** suffice:
+```java
+// ✅ Effective Java Item 1: Consider static factory methods instead of constructors
+public final class Money {
+    private final BigDecimal amount;
+    private final Currency currency;
+
+    private Money(BigDecimal amount, Currency currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
+    public static Money of(BigDecimal amount, Currency currency) {
+        return new Money(amount, currency);
+    }
+
+    public static Money zero(Currency currency) {
+        return new Money(BigDecimal.ZERO, currency);
+    }
+}
+```
+
+---
+
+### 2. Senior Candidate Verbal Defense Scripts
+
+#### "When would you reject the Builder pattern?"
+> **Candidate Defense Script**:
+> *"I reject Builder when an entity has fewer than 4 fields or when all fields are mandatory. In those cases, a standard constructor or Java record is clearer, incurs zero object-allocation overhead (no transient builder instance), and enforces compile-time completeness. Builder is justified when there are numerous optional parameters, telescoping constructors would be unreadable, or when building complex immutable domain objects with validation."*
+
+#### "Why use Factory Method instead of direct instantiation via `new`?"
+> **Candidate Defense Script**:
+> *"Directly invoking `new` couples the caller to the concrete implementation class and the specific constructor parameters. Factory Method encapsulates this knowledge, allowing us to substitute subclasses, return cached or pooled instances, or return mock instances during testing without changing client code."*
+
+---
+
 **Next →** [Structural Patterns](./structural)
+

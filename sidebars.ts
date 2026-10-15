@@ -357,6 +357,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/system-design/full-system-design-course',
+								'technical-knowledge/system-design/senior-engineer-design-course',
 								'technical-knowledge/system-design/architecture-fundamentals',
 								'technical-knowledge/system-design/what-breaks-at-scale',
 								'technical-knowledge/system-design/capacity-planning',
@@ -408,6 +409,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/long-running-tasks',
 								'technical-knowledge/system-design/handling-contention',
 								'technical-knowledge/system-design/inventory-reservation-system',
+								'technical-knowledge/system-design/resilience-patterns-payments-ticketing',
 								'technical-knowledge/system-design/crdt-collaborative-systems',
 								'technical-knowledge/system-design/real-time-updates',
 							],

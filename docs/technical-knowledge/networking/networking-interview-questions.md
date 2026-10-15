@@ -188,3 +188,37 @@ A curated compilation of the most common and important networking questions in s
 
 ### Q: What would you check if API response times suddenly increased by 2x?
 > Step 1: Determine scope — one endpoint or all? One region or global? Step 2: Correlate with deployment, traffic spike, dependency change. Step 3: Measure where time is spent — DB query time? External service latency? GC pause? Network? Use tracing (Jaeger/Zipkin). Step 4: Network-specific checks — DNS TTL change? New TLS handshakes? Connection pool exhaustion? Replication lag? Step 5: `curl -w` timing to isolate DNS vs TCP vs TLS vs TTFB. Step 6: Check CDN hit rates dropped. Step 7: Check connection pool metrics (awaiting connections = undersized pool).
+
+---
+
+## 🏛️ Senior Principal Architect Deep Dives
+
+### Q: What is a Linux `nf_conntrack` table exhaustion, and how does it manifest in Kubernetes clusters?
+> **Answer**: Linux `iptables` and NAT rely on the `nf_conntrack` kernel module to maintain state for every active flow (tracking 5-tuples and TCP states). In Kubernetes clusters with heavy microservice churn or high-rate UDP DNS queries, the number of tracked flows can exceed `net.netfilter.nf_conntrack_max`.
+> **Symptoms**: The kernel logs `nf_conntrack: table full, dropping packet`. Inbound and outbound connections randomly time out or drop silently with zero TCP RST flags.
+> **Fix**:
+> 1. Check current utilization: `sysctl net.netfilter.nf_conntrack_count` vs `net.netfilter.nf_conntrack_max`.
+> 2. Increase capacity: `sysctl -w net.netfilter.nf_conntrack_max=1048576` and expand hash buckets: `echo 262144 > /sys/module/nf_conntrack/parameters/hashsize`.
+> 3. Reduce aggressive idle timeouts: `sysctl -w net.netfilter.nf_conntrack_tcp_timeout_established=86400` (down from 432000s / 5 days).
+> 4. Migrate Kubernetes networking from iptables-based `kube-proxy` to **Cilium with eBPF**, bypassing connection tracking tables entirely for pod-to-pod routing.
+
+### Q: How does eBPF/XDP achieve 40M+ pps packet filtering compared to standard Linux iptables?
+> **Answer**:
+> - **iptables**: Sits deep inside the Linux kernel network stack (`Netfilter` hooks in Layer 3/4). Before iptables inspects a packet, the kernel must execute Hard IRQ, NAPI poll, allocate a heavy $\sim 240\text{-byte } sk\_buff$ structure in memory, and linearly scan $O(N)$ sequential rule chains. Under a 10M pps DDoS flood, memory allocation and lock contention alone saturate all CPU cores.
+> - **eBPF/XDP (eXpress Data Path)**: Injects verified eBPF bytecode directly into the network interface card (NIC) driver DMA ring buffer *before* $sk\_buff$ memory allocation. Malicious packets returning `XDP_DROP` are discarded in nanoseconds at physical wire speed ($\approx 24\text{–}40\text{ million pps}$ on a single core).
+
+### Q: What is an MTU Black Hole and how does MSS Clamping resolve it across VPNs/tunnels?
+> **Answer**:
+> Senders transmit with standard 1500-byte MTU and the `DF` (Don't Fragment) bit set. When packets enter an encapsulation tunnel (IPsec, VXLAN, WireGuard), encapsulation adds $40\text{–}80\text{ bytes}$ of headers, exceeding the intermediate router's MTU (e.g. 1420 bytes). The intermediate router drops the oversized packet and generates an ICMP `Type 3 Code 4` (*Fragmentation Needed, DF set*).
+> **The Black Hole**: If an overzealous firewall blocks all inbound ICMP, the sender never learns of the drop. The TCP 3-way handshake succeeds (small 60-byte packets), but any large response (TLS cert, HTTP body) hangs indefinitely.
+> **Solution**: Enable **MSS Clamping** on intermediate gateways:
+> `iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu`.
+> This intercepts SYN packets during connection establishment and rewrites the Advertised MSS header to match the tunnel path, forcing endpoints to send smaller segments from the start.
+
+### Q: Why does a sudden surge of `CLOSE_WAIT` sockets in production point to an application bug rather than a network partition?
+> **Answer**:
+> In the TCP 4-way teardown sequence:
+> 1. The remote peer initiates closure by sending `FIN`.
+> 2. The local kernel stack automatically responds with `ACK` and transitions the local socket into `CLOSE_WAIT`.
+> 3. The socket remains in `CLOSE_WAIT` **until the local user application explicitly calls `socket.close()` (or closes the Java InputStream/Reader)**.
+> When thousands of `CLOSE_WAIT` sockets accumulate, it proves the network is functioning and the peer sent a clean FIN, but the application code leaked the socket—usually due to missing `try-with-resources`, unhandled exception branches, or deadlocked background processing threads failing to invoke `close()`.

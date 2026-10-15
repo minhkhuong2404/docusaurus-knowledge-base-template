@@ -477,24 +477,68 @@ public DataSource defaultDataSource() { ... }  // Only created if user didn't de
 
 ---
 
-## Advanced Editorial Pass: Spring Interview Answers That Stand Out
+## 🧠 Senior/Staff Interview Playbook: How to Ace Spring Framework Interviews
 
-### Upgrade Path for Responses
-- Translate conceptual answers into architecture and production implications.
-- Highlight boundaries: container concern, application concern, platform concern.
-- Show explicit trade-offs and failure containment strategy.
+In Senior and Staff-level interviews, interviewers expect you to know **how Spring works under the hood** (proxies, reflection, bytecode manipulation via CGLIB/ByteBuddy, and BeanPostProcessor lifecycle) and where standard framework abstractions fail in production.
 
-### Red Flags to Avoid
-- Memorized definitions without decision criteria.
-- Ignoring observability, rollout, and rollback implications.
-- Assuming default framework behavior is always safe at scale.
+---
 
-### Deliberate Practice
-1. Pair each answer with one performance and one reliability consideration.
-2. Add one anti-pattern and how you would detect it in production.
-3. Practice concise, layered explanations: concept, trade-off, implementation.
+### 1. The Five Classic Spring Traps & Principal Rebuttals
+
+#### Trap 1: "Why does `@Transactional` or `@Async` fail silently when called from another method inside the same class?"
+* **Junior/Mid Answer:** *"Spring annotations don't work with private methods."*
+* **Principal Rebuttal:**
+  > *"It fails because of the **AOP Proxy Bypass (Self-Invocation Trap)**. Spring manages transactions and asynchronous execution by wrapping beans in dynamic proxies (CGLIB class-based subclasses or JDK Dynamic Proxies). When an external client calls `orderService.createOrder()`, the call hits the proxy, which begins the transaction and delegates to the target object.
+  > However, if `createOrder()` calls `this.savePayment()` internally, `this` references the **raw target instance**, NOT the proxy! The proxy interceptor is completely bypassed, meaning **no transaction is started, and no asynchronous thread is dispatched**.
+  > **Fixes:**
+  > 1. Architecturally separate the concern into a dedicated collaborator bean (best practice).
+  > 2. Self-inject the bean via `@Lazy private OrderService self;` and call `self.savePayment()`.
+  > 3. Use `TransactionTemplate` programmatically."*
+
+#### Trap 2: "What is wrong with `@Autowired` field injection, and what happens with circular dependencies in constructor injection?"
+* **Junior/Mid Answer:** *"Field injection makes unit testing hard because you have to use reflection. Constructor injection is preferred."*
+* **Principal Rebuttal:**
+  > *"Beyond testability, **field injection hides architectural smells and tight coupling**. With field injection, a class can easily accumulate 15 dependencies without warning. Constructor injection makes class bloat visually repulsive.
+  > Furthermore, **field injection masks circular dependencies** (Bean A needs Bean B; Bean B needs Bean A). In field injection, Spring instantiates both raw objects and injects fields later, allowing circular spaghetti code. With constructor injection, Spring cannot instantiate either bean, resulting in a **`BeanCurrentlyInCreationException`** at startup. This fail-fast behavior forces engineers to break the cycle using domain events, interfaces, or `@Lazy`."*
+
+#### Trap 3: "If an exception is thrown inside a `@Transactional` method, is the transaction guaranteed to roll back?"
+* **Junior/Mid Answer:** *"Yes, `@Transactional` automatically rolls back whenever an exception occurs."*
+* **Principal Rebuttal:**
+  > *"NO! That is one of the most dangerous misconceptions in Spring. **By default, Spring `@Transactional` ONLY rolls back on unchecked exceptions (`RuntimeException` and `Error`).** If your code throws a checked exception (e.g. `IOException`, `SQLException`, or a custom `PaymentFailedException extends Exception`), Spring will **COMMIT the transaction to the database**!
+  > In production enterprise systems, you must always declare:
+  > ```java
+  > @Transactional(rollbackFor = Exception.class)
+  > ```
+  > Furthermore, if an exception is caught in a `try-catch` block inside the method and not rethrown, Spring never sees the exception and commits normally."*
+
+#### Trap 4: "What happens when you inject a `@Scope("prototype")` bean into a standard `@Service` singleton bean?"
+* **Junior/Mid Answer:** *"Every time the service method is called, a new prototype bean instance is created."*
+* **Principal Rebuttal:**
+  > *"No! The prototype bean is **instantiated exactly ONCE** during application startup when the singleton bean's dependencies are injected. Subsequent method calls on the singleton will reuse that same initial prototype instance forever, completely defeating the prototype scope.
+  > **To obtain fresh instances on each call:**
+  > 1. Use **`ObjectProvider<MyPrototypeBean>`** or `Provider<T>`: `provider.getObject()`.
+  > 2. Use method injection with **`@Lookup`**: Spring overrides the method at runtime via CGLIB to fetch a fresh bean from the `ApplicationContext`."*
+
+#### Trap 5: "Why do enterprise microservices prefer `ApplicationContext` over `BeanFactory` if `BeanFactory` uses less memory?"
+* **Junior/Mid Answer:** *"Because `ApplicationContext` has more features like i18n."*
+* **Principal Rebuttal:**
+  > *"`BeanFactory` initializes beans lazily (on-demand when first requested). In a high-traffic production service, lazy initialization is catastrophic: the very first user who hits an endpoint experiences huge latency spikes while classes load and beans instantiate. Even worse, **configuration errors (missing properties, classloading failures) remain hidden until runtime**.
+  > `ApplicationContext` eagerly pre-instantiates all singletons at startup. If a bean fails to wire or a database connection is unreachable, the application **fails fast during container startup**, preventing a broken deployment from ever passing Kubernetes readiness probes."*
+
+---
+
+### 2. The Senior Framing: Sounding Like a Principal Engineer in Spring Interviews
+
+| Concept | Mid-Level Candidate Mentions | Principal Candidate Demonstrates |
+|:---|:---|:---|
+| **Bean Lifecycle** | *"Spring creates beans, injects them, and destroys them."* | *"Constructor $\to$ Setter/Field DI $\to$ `BeanNameAware` $\to$ `BeanPostProcessor.postProcessBeforeInitialization` $\to$ `@PostConstruct` / `InitializingBean` $\to$ `postProcessAfterInitialization` (where AOP proxies are created!)."* |
+| **AOP Proxies** | *"Spring uses reflection for AOP."* | *"Spring selects CGLIB (subclass bytecode generation via ByteBuddy) by default in Spring Boot, or JDK Dynamic Proxies when interfaces are present."* |
+| **Transaction Propagation** | *"Use `REQUIRES_NEW` to run in a new transaction."* | *"`REQUIRES_NEW` suspends the outer transaction and checks out a **SECOND physical database connection** from HikariCP. Under high concurrency, 100 threads needing 2 connections each will deadlock the connection pool!"* |
+
+---
 
 ### Compare Next
 - [Spring Boot: Interview Questions](./spring-boot-interview-questions.md)
-- [Spring Framework: Deep Dive](./spring-framework-deep-dive.md)
-- [Spring MVC - Complete Guide](./spring-mvc.md)
+- [Spring Transactional Deep Dive](./spring-transactional-deep-dive.md)
+- [Spring Data JPA: Interview Questions](./spring-data-jpa-interview-questions.md)
+- [Spring Security Architecture](./spring-security.md)

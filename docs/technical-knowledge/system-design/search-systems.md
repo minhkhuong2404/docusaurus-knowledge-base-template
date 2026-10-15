@@ -391,3 +391,17 @@ public void onProductChange(DebeziumMessage msg) {
 
 **A:** Tune analyzers, field boosts, synonym handling, and business signals (freshness/popularity). Evaluate with offline judgments and online A/B metrics like CTR and conversion.
 
+
+---
+
+## Case Study: Hotel Search at Scale
+
+From the freeCodeCamp *Design Software Systems Like a Senior Engineer* course.
+
+- Index one document per hotel with a `geo_point`, amenities, rating, and a denormalised price and availability summary.
+- Query with a `geo_distance` filter plus `terms` filters for amenities and a `range` filter for price. Sort by relevance blended with price or rating.
+- Date availability is the hard filter. Keep a precomputed per-night availability summary in the index, and treat it as **approximate**.
+- Feed the index from `inventory.changed` events (outbox or CDC). A lag of a few seconds is acceptable.
+- **Search is a hint, booking is the truth.** The booking path re-checks the OLTP database at hold time, so staleness costs a rare "just sold out" message, never a double booking.
+
+See also: [Senior Engineer Design Course](./senior-engineer-design-course.md), [Inventory Reservation System](./inventory-reservation-system.md).

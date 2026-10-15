@@ -736,6 +736,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/ai-agents/spec-driven-agentic-coding",
+              "path": "/technical-knowledge/ai-agents/spec-driven-agentic-coding",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/ai-agents/vibe-coding",
               "path": "/technical-knowledge/ai-agents/vibe-coding",
               "sidebar": "tutorialSidebar"
@@ -6657,6 +6662,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/spring/spring-boot-configuration-properties",
+              "path": "/technical-knowledge/spring/spring-boot-configuration-properties",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/spring-boot-internals",
               "path": "/technical-knowledge/spring/spring-boot-internals",
               "sidebar": "tutorialSidebar"
@@ -7282,6 +7292,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/resilience-patterns-payments-ticketing",
+              "path": "/technical-knowledge/system-design/resilience-patterns-payments-ticketing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/retry-pattern",
               "path": "/technical-knowledge/system-design/retry-pattern",
               "sidebar": "tutorialSidebar"
@@ -7314,6 +7329,11 @@
             {
               "id": "technical-knowledge/system-design/security-patterns",
               "path": "/technical-knowledge/system-design/security-patterns",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/senior-engineer-design-course",
+              "path": "/technical-knowledge/system-design/senior-engineer-design-course",
               "sidebar": "tutorialSidebar"
             },
             {

@@ -280,6 +280,55 @@ WebClient client = WebClient.builder()
 
 ---
 
+## DNS on the Wire: UDP, TCP, EDNS and Encrypted DNS
+
+- Queries normally use **UDP port 53**. The classic limit is 512 bytes. **EDNS0** raises it (up to 4096), but since the 2020 DNS Flag Day resolvers advertise about **1232 bytes** to avoid IP fragmentation.
+- If the answer does not fit, the server sets the **TC (truncated) bit** and the client retries over **TCP port 53**. Zone transfers (AXFR) and large DNSSEC answers also use TCP, so blocking TCP/53 breaks DNS in subtle ways.
+- **DoT** (DNS over TLS, port 853) and **DoH** (DNS over HTTPS, port 443) encrypt the stub-to-resolver hop. Note that DoH can bypass enterprise DNS filtering, and neither one encrypts the resolver-to-authoritative hop.
+
+---
+
+## Negative Caching, CNAME Rules and Record Gotchas
+
+- **NXDOMAIN** (name does not exist) and NODATA (name exists, no such type) are cached too, for the TTL given by the zone's **SOA minimum / negative TTL** (RFC 2308). A name created right after a failed lookup can stay "missing" for minutes.
+- **SERVFAIL** means the resolver could not get an answer (broken DNSSEC, unreachable authoritative servers). It is a different failure from NXDOMAIN and resolvers may retry other servers.
+- A **CNAME cannot exist at the zone apex** (it would conflict with the mandatory SOA and NS records) and cannot coexist with other records of the same name. Providers offer ALIAS/ANAME flattening for `example.com` pointing at a load balancer hostname.
+- Lowering a TTL only helps after the **old TTL has expired**. Before a migration, drop the TTL a full old-TTL period in advance, then cut over. Some resolvers and clients ignore low TTLs, so expect a long tail.
+- DNS-based load balancing cannot drain a node precisely. Clients cache answers and ignore health, so pair it with real health checks and low TTLs, or use an L4/L7 load balancer.
+
+```bash
+dig +trace example.com            # walk root -> TLD -> authoritative
+dig +norecurse example.com @8.8.8.8   # cache-only check
+dig example.com +tcp              # confirm TCP/53 works
+dig -x 93.184.216.34              # reverse lookup
+```
+
+---
+
+## Kubernetes DNS: The `ndots:5` Trap
+
+Pods get `/etc/resolv.conf` with several **search domains** and `options ndots:5`. A name with fewer than 5 dots is tried against each search suffix **before** being tried as an absolute name:
+
+```
+search default.svc.cluster.local svc.cluster.local cluster.local
+options ndots:5
+```
+
+So resolving `api.example.com` (2 dots) first queries `api.example.com.default.svc.cluster.local`, then `...svc.cluster.local`, then `...cluster.local` (each returning NXDOMAIN), and only then the real name, for both A and AAAA. One lookup becomes about 8 queries.
+
+Mitigations:
+- Use a **trailing dot** (`api.example.com.`) for external hosts in hot paths.
+- Set `dnsConfig.options: ndots: 2` per pod when most lookups are external.
+- Run **NodeLocal DNSCache** to cache on each node and upgrade the upstream hop to TCP.
+- Known failure mode: UDP DNS through conntrack can hit a race that drops packets and causes 5-second resolution stalls. Symptoms are random 5 s latency spikes. NodeLocal DNSCache is the standard fix.
+- Remember the JVM caches lookups too (see Java DNS Configuration above), so check both layers.
+
+## Dual-Stack: Happy Eyeballs
+
+When a host has both A and AAAA records, clients using **Happy Eyeballs** (RFC 8305) start IPv6 first and, if it has not connected within about 250 ms, race an IPv4 attempt. A broken IPv6 path therefore costs about 250 ms, not a timeout, but only in clients that implement it. Plain socket code may still hang on a dead AAAA address.
+
+---
+
 ## Interview Questions
 
 ### Q1. Describe the full DNS resolution process for `api.example.com`.

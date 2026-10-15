@@ -178,6 +178,33 @@ tracert google.com      # Windows
 
 ---
 
+## Journey of a Request: All Layers Together
+
+Following one request from the "Networking topics explained" video, for `https://example.com` from a laptop on home Wi-Fi:
+
+| Step | Layer | What happens |
+|---|---|---|
+| 1 | L7 + DHCP | The laptop already got its IP, mask, gateway, and DNS server from DHCP (DORA) |
+| 2 | L7 DNS | Resolver cache miss, then root, `.com` TLD, and authoritative servers return an A record (UDP 53) |
+| 3 | L3 | Destination IP is outside the local subnet, so the next hop is the **default gateway** |
+| 4 | L2 | ARP resolves the gateway's MAC. The frame goes to that MAC, with the destination IP unchanged |
+| 5 | L3 NAT | The home router rewrites the private source IP and port to its public IP and a fresh port |
+| 6 | L3 routing | Each router does a longest-prefix lookup, decrements TTL, and rewrites the MAC headers hop by hop |
+| 7 | L4 TCP | Three-way handshake to destination port 443 from an ephemeral source port |
+| 8 | L5/6 TLS | Handshake negotiates keys and verifies the certificate chain |
+| 9 | L7 HTTP | Request goes over the encrypted connection. A load balancer or firewall in front may pick a backend |
+| 10 | Reverse path | The response is matched via the NAT table and delivered back to the laptop |
+
+### Where Each Middlebox Sits
+
+- **Firewall:** filters on IPs and ports (L3/L4) or on application content (L7), and tracks connection state.
+- **Load balancer:** L4 balances TCP connections by IP and port, while L7 reads HTTP and can route by path, host, or header, and terminate TLS.
+- **NAT gateway:** rewrites addresses and ports at L3/L4 and keeps state per flow.
+
+Debug bottom-up: link and IP (`ip addr`, `ping gateway`), DNS (`dig`), route (`traceroute`), port (`nc -vz host 443`), TLS (`openssl s_client`), then HTTP (`curl -v`).
+
+---
+
 ## Interview Questions
 
 ### Q1. What is the OSI model and why does it exist?

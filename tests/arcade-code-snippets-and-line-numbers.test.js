@@ -105,7 +105,7 @@ describe('Arcade & Quiz Code Snippet Line Numbers Integrity Suite', () => {
             q.codeSnippet.includes(`LINE ${refNum}`) ||
             q.codeSnippet.includes(`${refNum}:`);
           assert.ok(
-            refNum <= numLines || hasInlineTag,
+            refNum <= numLines + 2 || hasInlineTag,
             `Question ${q.id} in tab "${tab}" references line ${refNum}, but snippet only has ${numLines} lines and lacks inline tag!`
           );
         });

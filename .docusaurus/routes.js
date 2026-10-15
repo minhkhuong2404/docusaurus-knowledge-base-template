@@ -84,11 +84,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '4dc'),
+    component: ComponentCreator('/', '022'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '1ee'),
+        component: ComponentCreator('/', 'cba'),
         routes: [
           {
             path: '/tags',
@@ -2981,6 +2981,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/environment-variables',
+            component: ComponentCreator('/tags/environment-variables', 'fe3'),
+            exact: true
+          },
+          {
             path: '/tags/envoy',
             component: ComponentCreator('/tags/envoy', '7d3'),
             exact: true
@@ -3486,6 +3491,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/freecodecamp',
+            component: ComponentCreator('/tags/freecodecamp', '941'),
+            exact: true
+          },
+          {
             path: '/tags/fresher',
             component: ComponentCreator('/tags/fresher', '55a'),
             exact: true
@@ -3923,6 +3933,11 @@ export default [
           {
             path: '/tags/hot-optimization',
             component: ComponentCreator('/tags/hot-optimization', 'bfb'),
+            exact: true
+          },
+          {
+            path: '/tags/hotel-reservation',
+            component: ComponentCreator('/tags/hotel-reservation', 'eb0'),
             exact: true
           },
           {
@@ -6581,6 +6596,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/profiles',
+            component: ComponentCreator('/tags/profiles', '6ef'),
+            exact: true
+          },
+          {
             path: '/tags/profiling',
             component: ComponentCreator('/tags/profiling', 'cf5'),
             exact: true
@@ -6613,6 +6633,11 @@ export default [
           {
             path: '/tags/propagation',
             component: ComponentCreator('/tags/propagation', '053'),
+            exact: true
+          },
+          {
+            path: '/tags/properties',
+            component: ComponentCreator('/tags/properties', '4da'),
             exact: true
           },
           {
@@ -7811,6 +7836,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/spec-driven-development',
+            component: ComponentCreator('/tags/spec-driven-development', 'c6e'),
+            exact: true
+          },
+          {
             path: '/tags/spiffe',
             component: ComponentCreator('/tags/spiffe', 'e05'),
             exact: true
@@ -8356,6 +8386,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/tcc',
+            component: ComponentCreator('/tags/tcc', 'a4e'),
+            exact: true
+          },
+          {
             path: '/tags/tcp',
             component: ComponentCreator('/tags/tcp', 'bb4'),
             exact: true
@@ -8513,6 +8548,11 @@ export default [
           {
             path: '/tags/throughput',
             component: ComponentCreator('/tags/throughput', '3f5'),
+            exact: true
+          },
+          {
+            path: '/tags/ticketing',
+            component: ComponentCreator('/tags/ticketing', 'abe'),
             exact: true
           },
           {
@@ -8996,6 +9036,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/waiting-room',
+            component: ComponentCreator('/tags/waiting-room', '972'),
+            exact: true
+          },
+          {
             path: '/tags/wal',
             component: ComponentCreator('/tags/wal', '8a2'),
             exact: true
@@ -9317,7 +9362,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '870'),
+            component: ComponentCreator('/', '75d'),
             routes: [
               {
                 path: '/aws',
@@ -10390,6 +10435,12 @@ export default [
               {
                 path: '/technical-knowledge/ai-agents/skills',
                 component: ComponentCreator('/technical-knowledge/ai-agents/skills', 'd9f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/ai-agents/spec-driven-agentic-coding',
+                component: ComponentCreator('/technical-knowledge/ai-agents/spec-driven-agentic-coding', '27a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -17465,6 +17516,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/spring/spring-boot-configuration-properties',
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-configuration-properties', 'fbb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/spring/spring-boot-internals',
                 component: ComponentCreator('/technical-knowledge/spring/spring-boot-internals', 'eba'),
                 exact: true,
@@ -18209,6 +18266,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/system-design/resilience-patterns-payments-ticketing',
+                component: ComponentCreator('/technical-knowledge/system-design/resilience-patterns-payments-ticketing', '433'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/system-design/retry-pattern',
                 component: ComponentCreator('/technical-knowledge/system-design/retry-pattern', '236'),
                 exact: true,
@@ -18247,6 +18310,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/security-patterns',
                 component: ComponentCreator('/technical-knowledge/system-design/security-patterns', '100'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/senior-engineer-design-course',
+                component: ComponentCreator('/technical-knowledge/system-design/senior-engineer-design-course', 'f24'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

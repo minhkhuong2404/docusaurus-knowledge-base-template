@@ -796,3 +796,15 @@ Queues are inherently designed for work that can happen *later*. Introducing one
 * **[Scaling Reads](./scaling-reads.md)**: Explore cache-aside/event-driven invalidation and read replication concepts.
 * **[Scaling Writes](./scaling-writes.md)**: Explore async write pipelines, producer configurations, batching, and Kafka throughput settings.
 
+
+---
+
+## Where Queues Fit in the Course Designs
+
+From the freeCodeCamp *Design Software Systems Like a Senior Engineer* course.
+
+- **Hotel booking:** the reservation commit writes an outbox row, and a relay publishes `reservation.confirmed` to Kafka. Email, analytics, and search indexing consume it, so a slow consumer never delays the booking response.
+- **Messaging:** push notifications, receipts, and retention jobs run off queues, which keeps the send path fast and isolates provider outages.
+- **Rule:** use a queue for work the user does not wait on. Use the synchronous path for anything whose result the user needs immediately, such as the inventory hold and payment result.
+
+See also: [Outbox Pattern](./outbox-pattern.md), [Senior Engineer Design Course](./senior-engineer-design-course.md).

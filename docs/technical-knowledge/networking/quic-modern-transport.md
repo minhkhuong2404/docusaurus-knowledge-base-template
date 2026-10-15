@@ -56,7 +56,6 @@ QUIC is a **multiplexed, low-latency transport protocol** built on top of UDP, w
 
 HTTP/2 multiplexes over a **single TCP connection** — but TCP treats the connection as a single byte stream. One lost packet stalls **all streams**:
 
-```
 <QuicMultiplexingDiagram />
 
 **QUIC stream types:**
@@ -71,7 +70,6 @@ TCP connections are identified by **4-tuple**: `(src IP, src port, dst IP, dst p
 
 QUIC uses a **Connection ID** — an opaque identifier exchanged during handshake. When the client's IP changes, it sends a PATH_CHALLENGE/RESPONSE to prove ownership of the new path, then **migrates** the connection:
 
-```
 <QuicConnectionMigrationDiagram />
 
 ---
@@ -211,10 +209,39 @@ WebClient client = WebClient.builder()
 ## QUIC Security
 
 - **TLS 1.3 mandatory** — no negotiation to weaker crypto possible
-- **All handshake messages encrypted** (except Initial — which is encrypted but not authenticated against a known server key)
+- **All handshake messages encrypted** (except Initial — which is encrypted with well-known salt keys but not authenticated against a known server key)
 - **Connection IDs encrypted** in short-header packets (prevents linkability tracking)
 - **Retry mechanism** — server can issue Retry to validate client IP (anti-amplification)
 - **Stateless reset** — server can reset connections without full handshake context
+
+### Deep Dive: 3x Anti-Amplification Limit & Address Validation (RFC 9000 §8.1)
+
+Because UDP source IPs can be spoofed trivially, an attacker could send a tiny 50-byte `Initial` packet with a spoofed victim IP, hoping the server replies with a multi-kilobyte TLS certificate chain (amplification DDoS).
+
+To prevent this:
+1. **The 3x Quota**: Before the client's IP is cryptographically validated, a QUIC server **MUST NOT send more than 3× the total bytes received from that IP address**.
+2. **Client Initial Padding**: Clients pad `Initial` datagrams with `PADDING` frames to at least **1200 bytes**. This guarantees:
+   - The path MTU meets the minimum QUIC requirement ($1200\text{ bytes}$).
+   - The server is legally permitted to reply with up to $3 \times 1200 = 3600\text{ bytes}$ of handshake data (`Initial [ServerHello]`, `Handshake [EncryptedExtensions, Certificate]`).
+3. **The `Retry` Token Fallback**: If the server's certificate chain exceeds 3600 bytes and requires more RTTs to transmit, or under heavy load, the server responds with a lightweight **`Retry` packet** containing an encrypted `Retry Token` ($HMAC(\text{server\_secret}, \text{client\_ip} \parallel \text{timestamp})$). The client must reflect this token in its next `Initial`, proving IP ownership without the server maintaining any state.
+
+### Deep Dive: Stateless Reset Tokens (RFC 9000 §10.3)
+
+In TCP, if a server crashes and reboots, any incoming packet for a dead connection triggers an immediate `RST` flag. In QUIC, blind reset packets over UDP would open a trivial off-path Denial-of-Service vector.
+
+QUIC solves this using **Stateless Reset Tokens**:
+1. During the handshake, each endpoint negotiates a 16-byte random token associated with each Connection ID (`stateless_reset_token`).
+2. If a server node crashes or an anycast router forwards packets to an uncoordinated worker that has no memory of the Connection ID, it generates a Stateless Reset packet.
+3. The server computes the token statelessly using a cluster-wide secret: $\text{Token} = \text{HMAC-SHA256}(\text{ClusterSecret}, \text{Received CID})[0..15]$.
+4. The packet ends with these 16 bytes. The receiving client compares the trailer against its registered tokens; if it matches, the client immediately tears down the socket cleanly without waiting for idle timeouts.
+
+### Deep Dive: Kernel UDP Offloads (GSO & `sendmmsg`)
+
+Because QUIC runs in userspace over UDP, a 10 Gbps stream sending 1200-byte datagrams would require $\sim 1{,}000{,}000$ `sendto()` system calls per second, completely saturating the CPU in kernel context switching.
+
+Production QUIC engines (Cloudflare `quiche`, Envoy, Google Chromium) utilize two critical Linux kernel features:
+1. **UDP GSO (`UDP_SEGMENT`)**: Senders pass a single large buffer (up to 64 KB) to the kernel via `setsockopt(..., SOL_UDP, UDP_SEGMENT, 1200)`. The kernel or the NIC hardware segmentation engine divides the payload into individual 1200-byte UDP packets right before the wire, cutting syscall overhead by $50\times$.
+2. **Batch I/O (`recvmmsg` / `sendmmsg`)**: Allows receiving or transmitting up to 64 datagrams in a single context switch.
 
 ---
 

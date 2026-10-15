@@ -1102,4 +1102,98 @@ public class ExportVisitor implements ReportVisitor {
 | **Template Method** | Do subclasses share a workflow sequence? | Core frameworks, servlet lifecycles, database operations. |
 | **Visitor** | Can I add new operations to a hierarchy without edits? | Code compilers (AST), document exporters (PDF, HTML). |
 
+---
+
+## 🏛️ Senior/Staff Interview Playbook: Behavioral Patterns in Production
+
+Behavioral patterns manage algorithms, control flow, and communication contracts. In high-scale distributed systems, choosing the right behavioral pattern dictates system resilience, latency, and throughput.
+
+```mermaid
+flowchart TD
+    subgraph Decision["Behavioral Core Diagnostic"]
+        C1{"What is the primary communication challenge?"}
+        C1 -->|"Interchangeable algorithms"| STRAT["Strategy Pattern"]
+        C1 -->|"Lifecycle state transitions"| STATE["State Pattern"]
+        C1 -->|"1-to-many broadcast notifications"| OBS["Observer / Event Bus"]
+        C1 -->|"Ordered sequential processing"| COR["Chain of Responsibility"]
+        C1 -->|"Queued, logged, or undoable actions"| CMD["Command Pattern"]
+    end
+
+    style Decision fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#fff
+    style STRAT fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
+    style STATE fill:#042f2e,stroke:#2dd4bf,stroke-width:2px,color:#fff
+    style OBS fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#fff
+    style COR fill:#312e81,stroke:#a78bfa,stroke-width:2px,color:#fff
+    style CMD fill:#581c87,stroke:#c084fc,stroke-width:2px,color:#fff
+```
+
+---
+
+### 1. The Classic Showdown: Strategy vs. State
+
+Both patterns share almost identical UML diagrams (context delegating to an interface), but their **architectural intent and lifecycle dynamics** are opposites:
+
+| Dimension | Strategy Pattern | State Pattern |
+|---|---|---|
+| **Intent** | Encapsulate interchangeable algorithms | Encapsulate state-dependent behavior & transitions |
+| **Knowledge & Selection** | The **client** usually chooses or injects the strategy | The **Context / State** manages transitions automatically |
+| **Statefulness** | Usually **stateless** (pure calculation function) | Usually **stateful** (tracks current lifecycle status) |
+| **Coupling** | Strategies are completely decoupled from each other | Concrete states often know about the next sibling state |
+| **Example** | `DiscountStrategy` (Seasonal, Loyalty, VIP) | `OrderState` (Created $\to$ Paid $\to$ Shipped $\to$ Delivered) |
+
+---
+
+### 2. Production Gotchas & Anti-Patterns
+
+#### A. The Observer Synchronous Blocking Trap
+```java
+// ❌ Dangerous Synchronous Observer: one slow subscriber stalls the publisher!
+public void notifyObservers(OrderEvent event) {
+    for (OrderObserver observer : observers) {
+        observer.onOrderEvent(event); // If observer #2 makes a 5s HTTP call, the whole publisher blocks!
+    }
+}
+
+// ✅ Resilient Asynchronous Observer with Bounded Thread Pool
+public class AsyncOrderPublisher {
+    private final ExecutorService executor = Executors.newFixedThreadPool(8);
+    private final List<OrderObserver> observers = new CopyOnWriteArrayList<>();
+
+    public void publish(OrderEvent event) {
+        for (OrderObserver observer : observers) {
+            executor.submit(() -> {
+                try {
+                    observer.onOrderEvent(event);
+                } catch (Exception e) {
+                    log.error("Failed to notify observer", e);
+                }
+            });
+        }
+    }
+}
+```
+
+#### B. The Chain of Responsibility "Black Hole"
+In request validation or middleware chains, if a request does not match any handler and no default terminal handler exists, the request is silently dropped without an error response.
+- **Rule**: Every Chain of Responsibility MUST end with an explicit **Terminal / Fallback Handler** that logs unhandled requests or returns an HTTP `400 Bad Request` / `404 Not Found`.
+
+#### C. Visitor Pattern vs. Java 21 Sealed Interfaces
+The classic GoF Visitor pattern requires intrusive double dispatch (`element.accept(visitor)` $\to$ `visitor.visit(this)`).
+- **The Modern Senior Alternative**: Replace Visitor with Java 21 `sealed interface` and exhaustive pattern matching `switch`. It achieves the exact same Open/Closed Principle benefits for operations without polluting domain entities with `accept()` methods.
+
+---
+
+### 3. Senior Candidate Verbal Defense Scripts
+
+#### "How do you prevent thread starvation in an Observer-based architecture?"
+> **Candidate Defense Script**:
+> *"In an in-process Observer pattern, synchronous event dispatch couples the latency and failure mode of every subscriber to the publishing thread. If one observer performs blocking I/O or deadlocks, the publisher and all subsequent observers are starved. I decouple them by making the dispatch asynchronous using a bounded thread pool or an event queue (like Disruptor or `ArrayBlockingQueue`). In distributed systems, this pattern is replaced by Kafka or RabbitMQ with consumer groups, giving each subscriber independent retry semantics, DLQs, and backpressure isolation."*
+
+#### "Why use Command instead of directly calling service methods?"
+> **Candidate Defense Script**:
+> *"Calling service methods directly tightly couples the invocation trigger (e.g., a button click, an API request, or a cron job) to the specific receiver and parameters. The Command pattern reifies a request into a first-class object (`Runnable`, `Callable`, or custom `Command`). This lets us decouple the invoker, queue commands for asynchronous execution, persist commands to an append-only log for crash recovery (Event Sourcing / WAL), and easily implement transactional rollback (undo/redo stacks)."*
+
+---
+
 **Next →** [Concurrency — Correctness](../concurrency/correctness)
+

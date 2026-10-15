@@ -242,3 +242,14 @@ Candidate Song (Audio, Genre, BPM)  ──► [Item Neural Tower] ──► 128-
 - Formulates Approximate Nearest Neighbor (ANN) vector search topologies using Annoy/HNSW for real-time recommendations.
 - Analyzes audio streaming over lossy cellular networks using HTTP/3 QUIC connection migration (switching from Wi-Fi to 5G without stream interruption).
 - Designs global multi-region active-active playlist synchronization with CRDT conflict resolution.
+
+---
+
+## 7. Additional Lessons from the Senior Engineer Design Course
+
+- **Separate metadata from audio.** Song, album, and playlist metadata is small, relational, and read-heavy (SQL or document DB plus cache). Audio files are large immutable blobs in object storage served by a CDN. They scale and fail independently.
+- **Capacity first.** Estimate play-start QPS and egress bandwidth before choosing components. For example, 100M daily listeners x 30 plays gives about 35k average play-starts per second. CDN egress, not the database, is the dominant cost.
+- **Scaling to millions:** cache hot catalog data, pre-warm CDN edges for new releases (a release-day spike is a thundering herd), and keep the playback API stateless behind a load balancer.
+- **API design:** keep the start-playback endpoint cheap. It returns a signed CDN URL and the client streams ranges directly.
+
+Full course notes: [Senior Engineer Design Course](../senior-engineer-design-course.md).

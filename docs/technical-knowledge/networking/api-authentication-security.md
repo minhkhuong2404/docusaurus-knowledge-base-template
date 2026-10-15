@@ -26,53 +26,125 @@ import CorsProtocolDiagram from '@site/src/components/CorsProtocolDiagram';
 
 ---
 
-## API Key Authentication
+## API Key Authentication & Timing Attacks
 
-The simplest mechanism — a secret token passed with each request.
+API keys provide simple machine identification for developer APIs and public SDKs:
 
-:::tip[Refresh Token Security & Session Invalidation]
-For detailed patterns on managing long-lived refresh tokens, refresh token rotation (RTR), stolen token reuse detection, emergency account compromise response, and multi-device session invalidation during password updates, see [Refresh Token Security & Multi-Device Session Invalidation](../security/refresh-token-security-invalidation.md).
-:::
-
-#### PKCE (Proof Key for Code Exchange)
-
-Required for public clients (SPAs, mobile apps) that can't keep a client secret:
+### 1. Security Invariants for API Keys
+- **Header Transmission Only**: Always require API keys in custom headers (`X-API-Key: <key>` or `Authorization: ApiKey <key>`). **Never accept API keys in URL query parameters** (`/api/v1/data?api_key=...`), which are leaked into Nginx access logs, browser history, forward proxy logs, and `Referer` headers.
+- **One-Way Cryptographic Hashing**: Treat API keys like passwords. Never store raw API keys in your database. Store `SHA-256(raw_key)` so an SQL injection or backup leak does not compromise customer keys.
+- **Constant-Time Verification**: Standard string comparison (`key.equals(storedKey)`) terminates early on the first mismatched byte, allowing attackers to measure microscopic timing variations ($\sim 10\text{–}50\text{ ns}$) and guess the secret key byte-by-byte (Timing Side-Channel Attack). Always use `MessageDigest.isEqual()`:
 
 ```java
-// Spring Boot: client credentials with WebClient
+// Java: Constant-time API Key verification preventing timing attacks
+public boolean verifyApiKey(String providedKey, String expectedHash) {
+    byte[] providedHash = MessageDigest.getInstance("SHA-256")
+        .digest(providedKey.getBytes(StandardCharsets.UTF_8));
+    byte[] expectedBytes = HexFormat.of().parseHex(expectedHash);
+    
+    // Constant-time byte array comparison (does not short-circuit on mismatch)
+    return MessageDigest.isEqual(providedHash, expectedBytes);
+}
+```
+
+---
+
+## OAuth 2.0 Authorization Framework
+
+OAuth 2.0 (RFC 6749) decouples resource owners, client applications, and resource servers using scoped access tokens.
+
+### 1. Authorization Code Flow with PKCE (RFC 7636)
+
+PKCE (Proof Key for Code Exchange) is **mandatory for all public clients** (Single Page Apps, iOS/Android mobile apps) that cannot securely embed a client secret:
+
+```
+[ User Browser / Mobile App ]        [ Authorization Server ]        [ Backend API ]
+              │                                  │                          │
+  1. Generate code_verifier                      │                          │
+     challenge = S256(verifier)                  │                          │
+              │                                  │                          │
+  2. GET /authorize?response_type=code           │                          │
+     &code_challenge=...&method=S256 ───────────►│                          │
+              │                                  │                          │
+  3. User Authenticates & Consents               │                          │
+     Redirect with auth_code ◄───────────────────┘                          │
+              │                                  │                          │
+  4. POST /token                                 │                          │
+     grant_type=authorization_code               │                          │
+     &code=auth_code&code_verifier=... ─────────►│                          │
+              │                                  │                          │
+  5. Auth Server verifies:                       │                          │
+     S256(code_verifier) == code_challenge       │                          │
+     Returns access_token + refresh_token ◄──────┘                          │
+              │                                                             │
+  6. GET /api/resource (Authorization: Bearer <token>) ────────────────────►│
+```
+
+### 2. Client Credentials Flow (M2M Service-to-Service)
+
+Used for daemon processes, cron jobs, and internal backend microservices communicating without a user context:
+
+```java
+// Spring Boot: configure reactive OAuth2 Client Credentials with WebClient
 @Configuration
 public class OAuth2ClientConfig {
 
     @Bean
-    public WebClient serviceClient(
-            ReactiveOAuth2AuthorizedClientManager manager) {
+    public WebClient serviceClient(ReactiveOAuth2AuthorizedClientManager manager) {
         ServerOAuth2AuthorizedClientExchangeFilterFunction filter =
             new ServerOAuth2AuthorizedClientExchangeFilterFunction(manager);
-        filter.setDefaultClientRegistrationId("service-b");
+        filter.setDefaultClientRegistrationId("inventory-service");
 
         return WebClient.builder()
-            .filter(filter)  // auto-attaches Bearer token
-            .baseUrl("https://service-b.internal")
+            .filter(filter)  // automatically fetches, caches, and attaches Bearer token
+            .baseUrl("https://inventory.internal")
             .build();
     }
 }
+```
 
+```yaml
 # application.yml
 spring:
   security:
     oauth2:
       client:
         registration:
-          service-b:
+          inventory-service:
             provider: keycloak
-            client-id: service-a
+            client-id: order-service
             client-secret: ${CLIENT_SECRET}
             authorization-grant-type: client_credentials
-            scope: read:orders
+            scope: inventory:read,inventory:write
         provider:
           keycloak:
-            token-uri: https://auth.example.com/realms/myapp/protocol/openid-connect/token
+            token-uri: https://auth.internal/realms/production/protocol/openid-connect/token
 ```
+
+### 3. Demonstrating Proof-of-Possession (DPoP - RFC 9449)
+
+Standard Bearer tokens behave like cash: whoever steals the token from a compromised browser `localStorage` or memory dump can impersonate the victim from any IP on the globe.
+
+**DPoP (RFC 9449)** binds tokens to an asymmetric key pair generated in the client:
+1. The client generates an in-memory asymmetric key pair (e.g. Ed25519 or ES256).
+2. When requesting a token from `/token`, the client includes a signed **DPoP Proof JWT** in the `DPoP` header containing the public key (`jwk`).
+3. The Auth Server issues a DPoP-bound access token (`token_type: DPoP`) containing the thumbprint of the client's public key (`jkt` claim).
+4. Every subsequent request to resource servers must include a fresh DPoP proof header signed by the client's private key, bound to the specific HTTP method and URI (`htu` and `htm` claims) with a timestamp.
+5. Even if an attacker intercepts the access token, it is completely useless without the private key!
+
+---
+
+## Zero-Trust Workload Identity: SPIFFE & SPIRE
+
+In cloud-native Kubernetes environments, hardcoding client secrets or managing long-lived static certificates creates severe attack surfaces.
+
+**SPIFFE (Secure Production Identity Framework for Everyone)** standardizes machine identity:
+- **SPIFFE ID**: A URI identifying the service: `spiffe://prod.internal/ns/default/sa/payment-service`.
+- **SVID (SPIFFE Verifiable Identity Document)**: An X.509 certificate carrying the SPIFFE ID in the `Subject Alternative Name (SAN: URI:...)`.
+- **SPIRE (SPIFFE Runtime Engine)**: Node agents attest the workload's cryptographic integrity (Kubernetes namespace, service account, cgroup) and automatically inject short-lived X.509 certificates (rotated every 60 minutes) directly into the pod via a local Unix domain socket.
+- When Service A opens an mTLS connection to Service B, both sides validate each other's SPIFFE IDs inside the TLS handshake, establishing continuous zero-trust identity with zero static secrets.
+
+---
 
 #### Device Code Flow
 
