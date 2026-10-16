@@ -440,3 +440,15 @@ The critical link is the **traceId** — the same value in log lines, spans, and
 6. **Not Testing Log Output:**
    - *Anti-Pattern:* Refactoring a class name changes the logger name — your Kibana dashboard alert query breaks silently.
    - *Fix:* Use log capture in tests (`@ExtendWith(OutputCaptureExtension.class)`) to assert that critical business events are logged correctly.
+
+7. **Swallowing Stack Traces or Truncating Root Causes at 16KB:**
+   - *Anti-Pattern:* Calling `log.error("Failed: {}", ex.getMessage())` (drops the stack trace) or printing 250-line default stack traces where Kubernetes truncates the bottom-most `Caused by:` root cause at the 16KB container stdout line limit.
+   - *Fix:* Always pass the `Throwable` as the trailing argument (`log.error("Failed orderId={}", id, ex)`) and configure `ShortenedThrowableConverter` with `<rootCauseFirst>true</rootCauseFirst>` so the deepest root cause is printed on Line 1.
+
+---
+
+## See Also
+
+- **[SLF4J, Log Levels & Error Stacktrace Printout Internals](../java/java-logging-slf4j-stacktrace.md)** — Complete deep dive into SLF4J 2.x facade binding, log level severity gates, line-by-line stack trace printout anatomy, `Suppressed:` vs `Caused by:`, and JVM `fillInStackTrace()` mechanics.
+- **[Exception Handling in Spring Boot (`@RestControllerAdvice`)](../spring/spring-exception-handling.md)**
+

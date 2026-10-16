@@ -254,13 +254,28 @@ public TokenResponse refresh(@RequestBody RefreshRequest req) {
 
 ---
 
-## OAuth 2.0 Flows
+## OAuth 2.0 & OAuth 2.1 Flows
 
-### Authorization Code Flow + PKCE (Most Secure — Web & Mobile)
+:::tip[Principal Architecture Deep Dive]
+For an under-the-hood engineering guide covering JOSE (`JWS` vs `JWE` vs `JWKS`), `RS256` $\to$ `HS256` key confusion exploits, OAuth 2.1 changes, the Phantom Token Pattern, OAuth 2.0 Token Exchange (RFC 8693), and Sender-Constrained Tokens (DPoP RFC 9449 & mTLS RFC 8705), see [JWT, OAuth 2.1 & OpenID Connect (OIDC) — Principal Architecture Deep Dive](./jwt-oauth2-oidc-deep-dive.md).
+:::
+
+### Authorization Code Flow + PKCE (Mandatory in OAuth 2.1 — Web, Mobile & Confidential Clients)
 
 <OAuthPkceFlowDiagram />
 
-**PKCE protects against:** Authorization code interception — even if the code is stolen, attacker cannot exchange it without the `code_verifier`.
+**PKCE (Proof Key for Code Exchange — RFC 7636) Cryptographic Equation:**
+$$\text{code\_challenge} = \text{Base64UrlNoPad}\left(\text{SHA-256}(\text{ASCII}(\text{code\_verifier}))\right)$$
+
+**Why We Need Both `state`, `PKCE`, and OIDC `nonce`:**
+| Parameter | Where Sent | What Attack It Prevents |
+|---|---|---|
+| **`state`** | `/authorize` $\to$ echoed on `/callback` | **Cross-Site Login CSRF** (prevents an attacker from tricking a victim's browser into completing a login callback bound to the attacker's account). |
+| **`PKCE` (`code_challenge` + `code_verifier`)** | Hash on `/authorize` (front-channel); plaintext verifier on `POST /token` (back-channel) | **Authorization Code Interception & Injection** — even if an attacker intercepts the `authorization_code` from a mobile URI scheme or proxy log, they cannot exchange it at `/token` without the high-entropy `code_verifier`. |
+| **`nonce`** | `/authorize` $\to$ embedded inside signed `id_token` | **OIDC ID Token Replay & Mix-Up** — cryptographically binds the `id_token` to the specific client session that initiated the login. |
+
+> [!WARNING]
+> **Deprecated Flows in OAuth 2.1:** Both the **Implicit Grant (`response_type=token`)** (which leaked access tokens in URL fragments and browser history) and the **Resource Owner Password Credentials Grant (`grant_type=password`)** (which exposed raw user passwords to client applications and broke MFA/Passkeys) are **completely removed in OAuth 2.1**.
 
 ### Client Credentials Flow (Machine-to-Machine)
 
@@ -272,7 +287,7 @@ POST /token
   &client_secret=SERVICE_A_SECRET
   &scope=read:orders
 
-// Response: { access_token, expires_in }
+// Response: { access_token, expires_in, token_type: "Bearer" }
 // Service A → GET /orders (Authorization: Bearer access_token)
 ```
 
@@ -282,7 +297,10 @@ POST /token
 
 <OidcFlowDiagram />
 
-**Rule:** Use `access_token` to call APIs. Use `id_token` to establish user identity in your app.
+**The Iron Law of Token Separation (`id_token` vs. `access_token`):**
+- **`id_token` (Authentication Context for the Client)**: Always a signed JWT (`JWS`) whose `aud` (Audience) claim **must equal the `client_id`** of your application. Contains identity claims (`sub`, `email`, `name`, `auth_time`, `amr`, `nonce`, `at_hash`). Consumed **exclusively by the Client/BFF** to establish the user session. **Never send an `id_token` as a `Bearer` token to backend Resource APIs!**
+- **`access_token` (Authorization Credential for Resource APIs)**: Typed as `typ: "at+jwt"` (RFC 9068) with `aud` set to the target Resource API URI (e.g., `https://api.orders.example.com`) and scoped permissions (`scope`). Sent in `Authorization: Bearer <access_token>` to Resource Servers.
+- **OIDC Discovery (`/.well-known/openid-configuration`)**: Standard JSON metadata endpoint publishing `issuer`, `authorization_endpoint`, `token_endpoint`, `userinfo_endpoint`, `jwks_uri`, and supported signing algorithms (`id_token_signing_alg_values_supported`).
 
 ---
 
@@ -557,3 +575,49 @@ public PasswordEncoder passwordEncoder() {
 
 > In systems where signing keys are rotated regularly, the Auth Server maintains multiple active public keys in its JWKS (JSON Web Key Set). 
 > The `kid` claim in the JWT header tells the validating resource server exactly **which public key** to retrieve from the JWKS list to verify the token signature. Without this claim, the resource server would have to try every key in the set sequentially, impacting performance and authentication latency.
+
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace Authentication & Authorization Interviews
+
+### 1. The Senior Framing Strategy (First 60 Seconds)
+
+When asked to design or review an authentication and authorization architecture, immediately structure your answer around **four physical & cryptographic boundaries**:
+1. **Identity Protocol vs. Wire Format**: Clarify that **OIDC** authenticates the human user (`id_token`), **OAuth 2.1** authorizes client API delegation (`access_token` with `typ: at+jwt`), and **JWT (`JWS`)** is the self-contained cryptographic container verified via asymmetric **JWKS (`ES256` / `RS256`)**.
+2. **Edge vs. Core Token Topology (Phantom Token / BFF)**: Never expose raw JWTs containing internal roles or PII to untrusted browser `localStorage`. Use a **BFF Token Handler** with `__Host-` `HttpOnly; Secure; SameSite=Strict` cookies for SPAs, or issue opaque reference tokens at the edge and swap them for internal JWS tokens at the API Gateway (**Phantom Token Pattern**).
+3. **Revocation vs. Statelessness Math**: Acknowledge that pure stateless JWTs cannot be revoked before `exp`. Quantify the blast-radius window (e.g., $5\text{–}15\text{ min}$ Access Token TTL + stateful **Refresh Token Rotation** family tracking + sub-millisecond Redis `revoked_before` watermarks at the API Gateway for emergency account locks).
+4. **Coarse-Grained vs. Fine-Grained Authorization**: Separate **Edge AuthZ** (API Gateway checking JWT signature, `aud`, and top-level scopes) from **Domain AuthZ** (Microservices enforcing RBAC/ABAC/ReBAC resource ownership via `@PreAuthorize` or Google Zanzibar/OPA).
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "Why can't our mobile app just send the OIDC `id_token` in the `Authorization: Bearer` header to our backend microservices? It's already a signed JWT from Okta/Auth0 with the user's `sub` and `email`!"
+* **Junior/Mid Answer:** "You can use `id_token` if you want since both are signed JWTs, though `access_token` is more common."
+* **Principal Rebuttal:** "Accepting an `id_token` as an API Bearer token creates a critical **Confused Deputy / Token Substitution vulnerability**. An `id_token`'s `aud` (Audience) is the *Client Application*, not your Resource API. If a user logs into any third-party client application sharing the same IdP realm, that client legitimately receives an `id_token` for the user. If your Resource API accepts `id_token`s without checking that `aud` matches your specific API URI and `typ == 'at+jwt'` (RFC 9068), that third-party app can replay the `id_token` against your API to impersonate the user. Always keep `id_token` at the Client for identity context and require audience-restricted `access_token`s at Resource Servers."
+
+#### Trap 2: "We switched our password hashing from SHA-256 to BCrypt with cost factor 14 (`~1.2s` per hash) to be super secure. During a marketing campaign login spike, our Auth Server CPU hit 100% and crashed. What went wrong?"
+* **Junior/Mid Answer:** "BCrypt is slow by design; we should lower the cost factor to 8 or scale up more pods."
+* **Principal Rebuttal:** "Password hashing is intentionally CPU/memory-hard (`BCrypt` / `Argon2id`), which turns your `/login` endpoint into an **asymmetric CPU amplification vector**: a $200\text{-byte}$ HTTP POST forces $1{,}200\text{ ms}$ of CPU work (Little's Law: at $100\text{ logins/sec}$, $L = 100 \times 1.2\text{s} = 120$ pinned CPU cores!). Furthermore, BCrypt silently truncates passwords at **72 bytes**! In production:
+  1. Target **$250\text{–}350\text{ ms}$** latency (e.g., `Argon2id` with $19\text{ MiB}$ memory, 2 iterations, or `BCrypt` cost 11–12).
+  2. Isolate password verification onto a **bounded Bulkhead thread pool / dedicated worker fleet** so login spikes never starve `/token/refresh` or JWKS endpoints.
+  3. Enforce pre-auth rate limiting (IP + username Token Bucket + Proof-of-Work/CAPTCHA) *before* invoking `PasswordEncoder.matches()`."
+
+#### Trap 3: "What happens if a user's admin role is revoked in the database, but their stateless JWT access token still has `"roles": ["ROLE_ADMIN"]` for the next 14 minutes?"
+* **Junior/Mid Answer:** "We have to wait 14 minutes for the JWT to expire, or check the database on every request."
+* **Principal Rebuttal:** "We solve this without querying PostgreSQL on every request by combining **Event-Driven Security Watermarks** with **Tiered Sensitivity**:
+  1. When an admin role is revoked or an account is suspended, the IAM service publishes an event that writes a lightweight key in Redis: `SET user:revoked_before:<userId> <now_epoch> EX 900` (TTL equals the 15-minute access token lifetime).
+  2. The API Gateway checks `jwt.iat < revoked_before` in $< 0.5\text{ ms}$ (or via a local Caffeine near-cache subscribed to Redis Pub/Sub invalidation channels) and forces an immediate token refresh (`401`), which mints a new JWT with updated roles.
+  3. For destructive high-privilege mutations (wire transfers, IAM changes), the target service always performs a live authorization check against the policy engine."
+
+---
+
+### 3. Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **`401` vs. `403` Semantics** | "`401` means not logged in; `403` means not allowed." | "`401 Unauthorized` means missing/invalid/expired authentication credentials (must include `WWW-Authenticate` header per RFC 9110). `403 Forbidden` means the principal is authenticated, but policy evaluation denied access (re-authenticating will not help)." |
+| **PKCE in OAuth 2.1** | "PKCE is for mobile apps that don't have a client secret." | "PKCE (`S256` SHA-256 `code_challenge`) is mandatory for **all** clients in OAuth 2.1—including confidential backend servers—to prevent both code interception and authorization code injection." |
+| **MFA Architecture** | "Use SMS OTP or Google Authenticator TOTP." | "Deprecate SMS OTP (vulnerable to SIM swapping & SS7 interception). Support RFC 6238 TOTP ($\pm 1$ window skew tolerance + replay cache of used OTPs) and prioritize **WebAuthn / FIDO2 Passkeys** (origin-bound asymmetric cryptography immune to real-time adversary-in-the-middle phishing)." |
+| **Multi-Service Authorization** | "Put the user's roles in the JWT and check `@PreAuthorize`." | "Keep JWTs lean (identity + coarse scopes) to avoid Fat-JWT header bloat (`>8KB`), and evaluate fine-grained resource relationships using **ABAC (`PermissionEvaluator`)** or **ReBAC (Google Zanzibar / OpenFGA)**." |
+

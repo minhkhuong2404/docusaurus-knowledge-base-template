@@ -157,6 +157,27 @@ describe('Senior/Staff Interview Playbook Test Suite (Java & Spring)', () => {
     assert.ok(content.includes('The Observer Synchronous Blocking Trap'));
     assert.ok(content.includes('The Chain of Responsibility "Black Hole"'));
   });
+
+  it('senior-interview-playbook skill and reference manual must exist and enforce mandatory interview tips & traps', () => {
+    const skillPath = '.agents/skills/senior-interview-playbook/SKILL.md';
+    const refPath = '.agents/skills/senior-interview-playbook/references/INTERVIEW_PLAYBOOK_GUIDELINES.md';
+    const agentsPath = '.agents/AGENTS.md';
+
+    assert.ok(fs.existsSync(skillPath), `${skillPath} must exist`);
+    assert.ok(fs.existsSync(refPath), `${refPath} must exist`);
+    assert.ok(fs.existsSync(agentsPath), `${agentsPath} must exist`);
+
+    const skillContent = fs.readFileSync(skillPath, 'utf8');
+    assert.ok(skillContent.includes('name: senior-interview-playbook'));
+    assert.ok(skillContent.includes('The Senior Framing Strategy'));
+    assert.ok(skillContent.includes('Classic Interviewer Traps & Principal Rebuttals'));
+    assert.ok(skillContent.includes('Mid-Level vs. Principal Candidate Cheat Sheet'));
+
+    const refContent = fs.readFileSync(refPath, 'utf8');
+    assert.ok(refContent.includes('Domain-Specific Interview Trap Catalog'));
+    assert.ok(refContent.includes('Ready-to-Use Markdown Template'));
+
+    const agentsContent = fs.readFileSync(agentsPath, 'utf8');
+    assert.ok(agentsContent.includes('MANDATORY: Always Apply senior-interview-playbook Skill for Every Knowledge Added'));
+  });
 });
-
-

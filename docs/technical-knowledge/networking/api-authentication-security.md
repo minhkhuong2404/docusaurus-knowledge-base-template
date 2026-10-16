@@ -375,3 +375,62 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
 ### Q8. What is token introspection and when would you use it over local JWT validation?
 > Token introspection (RFC 7662) involves calling the auth server's `/introspect` endpoint on every request to check if a token is still valid and active. Unlike local validation (check signature + expiry), introspection can detect revoked tokens immediately. Trade-off: adds a network call to every request (~5–20ms). Use local JWT validation with short expiry for most cases; use introspection for high-security scenarios (banking, healthcare) where immediate revocation is critical.
+
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace API Authentication, OAuth 2.0 & Zero-Trust Interviews
+
+### 1. The Senior Framing Strategy (First 60 Seconds)
+
+When designing API authentication across external clients and internal microservices, frame your architecture around **Three Trust Perimeters**:
+1. **North-South Edge Perimeter (External Client $\to$ API Gateway)**:
+   - Human users authenticate via **OIDC + OAuth 2.1 Authorization Code + PKCE (`S256`)**; external B2B integrations use **mTLS (RFC 8705)** or **Prefix-Tagged Hashed API Keys** (`sk_live_<random>`, verified via constant-time `MessageDigest.isEqual(SHA256(key), expected)`).
+   - Use the **Phantom Token Pattern** at the API Gateway: external clients present an opaque token (zero internal claim leakage, instant revocation), and the Gateway exchanges it (with Redis caching) for a signed internal JWT (`JWS`).
+2. **East-West Internal Mesh Perimeter (Service A $\to$ Service B)**:
+   - Separate **Workload Identity** from **User Identity**. Every pod proves its machine identity via **mTLS with SPIFFE/SPIRE X.509 SVIDs** rotated hourly, while propagating user context via **OAuth 2.0 Token Exchange (RFC 8693)** with narrow `aud` and `act` (Actor) claims.
+3. **Cryptographic Sender Constraint**:
+   - Upgrade high-value tokens from bearer semantics (`Authorization: Bearer`) to proof-of-possession (**DPoP RFC 9449** `Authorization: DPoP <token>` + `DPoP: <proof_jwt>`) so exfiltrated tokens cannot be replayed.
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "For internal service-to-service communication in Kubernetes, we just configure OAuth 2.0 Client Credentials with a `CLIENT_SECRET` environment variable in each Deployment YAML. What's the problem with that?"
+* **Junior/Mid Answer:** "Environment variables are fine as long as you put them in Kubernetes Secrets instead of ConfigMaps."
+* **Principal Rebuttal:** "Static shared `CLIENT_SECRET` strings in environment variables violate Zero-Trust workload identity in three ways:
+  1. **Secret Sprawl & Exfiltration**: Any heap dump, `/proc/self/environ` read, or misconfigured logging agent leaks a long-lived credential that works from outside the cluster if the IdP is reachable.
+  2. **Rotation Downtime**: Rotating static secrets across 200 microservices requires coordinated config rollouts.
+  3. **Bearer Replay**: The resulting Client Credentials access token is still a Bearer token.
+  - **The Principal Fix**: Eliminate static client secrets entirely using **SPIFFE/SPIRE mTLS X.509 SVIDs** or **Kubernetes Projected ServiceAccount Token Volume Mounts** (`private_key_jwt` / OIDC Workload Identity Federation) with 1-hour auto-rotating lifetimes bound to the pod's cryptographic identity."
+
+#### Trap 2: "We use Token Introspection (RFC 7662) on every microservice request so we get instant token revocation. At 25,000 RPS, our Auth Server became a single point of failure and crashed. How do you fix this without losing revocation?"
+* **Junior/Mid Answer:** "Scale up the Auth Server database or switch to stateless JWTs with 15-minute expiration."
+* **Principal Rebuttal:** "Calling `/oauth/introspect` synchronously from every downstream microservice creates an **$O(N \times M)$ Synchronous Fan-Out Amplification Storm**: 1 external user request that fans out across 6 internal microservices triggers **6 synchronous HTTP calls** to the Auth Server ($25{,}000\text{ RPS} \times 6 = 150{,}000\text{ introspection RPS}$)!
+  - **The Principal Fix (Phantom Token + Edge Introspection Cache)**:
+    1. Perform Token Introspection **exactly once** at the Edge API Gateway—never inside internal microservices.
+    2. Cache the introspection response (the signed internal JWS) at the API Gateway for a short TTL (e.g., 60 seconds) and invalidate via an event-driven Redis Pub/Sub revocation stream when a token is revoked.
+    3. Forward the signed JWS to the 6 internal microservices, which verify the signature locally in $\sim 30\ \mu\text{s}$ with **zero calls** to the Auth Server."
+
+#### Trap 3: "How do you design API keys like Stripe (`sk_live_...`) or GitHub (`ghp_...`) so that leaked keys in public GitHub repos can be detected and revoked automatically in seconds, while keeping DB verification under 1ms?"
+* **Junior/Mid Answer:** "Add a `sk_live_` prefix to a UUID and hash it with BCrypt in the database."
+* **Principal Rebuttal:** "If you hash a random API key with salted `BCrypt` and store only the hash, **how do you query the database on an incoming request?** You can't run `WHERE api_key_bcrypt = ...` because BCrypt uses a random salt per hash—you would have to scan and run `BCrypt.checkpw()` against every row in the table!
+  - **The Principal API Key Format**: `<prefix>_<key_id>_<random_secret>_<crc32_checksum>` (e.g., `sk_live_01HQ8X9_7f9a8b2c..._a1b2c3d4`):
+    1. **Prefix + CRC32 Checksum**: Secret scanners (GitHub Secret Scanning / Gitleaks) verify the 8-char CRC32 checksum offline in microseconds to eliminate regex false positives and call your revocation webhook automatically.
+    2. **Split Lookup vs. High-Entropy Secret**: Because the secret has 256 bits of cryptographic entropy (immune to brute-force dictionary attacks, unlike human passwords), compute a fast **`HMAC-SHA256(server_pepper, full_key)`** for an indexed $O(1)$ B-Tree lookup, and verify the digest in constant time using `MessageDigest.isEqual()`."
+
+---
+
+### 3. Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **API Key Verification** | "Compare `providedKey.equals(dbKey)` or use BCrypt." | "Use structured keys (`prefix_id_secret_crc32`), store `HMAC-SHA256(pepper, key)` in DB, and compare digests with constant-time `MessageDigest.isEqual()` to prevent timing side-channels." |
+| **Token Introspection vs. JWT** | "Introspection is stateful; JWT is stateless." | "Combine both via the **Phantom Token Pattern**: Edge API Gateway introspects/caches opaque tokens and translates them into audience-scoped `ES256` JWS tokens for internal microservices." |
+| **Bearer Token Theft** | "Use HTTPS so tokens aren't sniffed on the wire." | "HTTPS only protects data in transit, not token theft from endpoints/logs. Enforce **DPoP (RFC 9449)** or **mTLS (RFC 8705)** sender-constrained tokens with `cnf` thumbprint binding." |
+| **Microservice M2M Auth** | "Share an API key or `client_secret` between services." | "Deploy **SPIFFE/SPIRE** to issue short-lived X.509 SVIDs over a local Unix domain socket for automatic mTLS, combined with **RFC 8693 Token Exchange** for user delegation." |
+
+### Related Deep-Dive Guides
+- [JWT, OAuth 2.1 & OpenID Connect (OIDC) — Principal Architecture Deep Dive](../security/jwt-oauth2-oidc-deep-dive.md)
+- [Authentication & Authorization](../security/01-authentication-authorization.md)
+- [JWT Multi-Device Session Management & Invalidation](../security/refresh-token-security-invalidation.md)
+

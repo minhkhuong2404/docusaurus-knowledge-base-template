@@ -97,7 +97,8 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/java/java-graalvm-aot',
 								'technical-knowledge/java/java-virtual-threads',
 								'technical-knowledge/java/production-oom-debugging-guide',
-								'technical-knowledge/java/java-diagnostics-troubleshooting'
+								'technical-knowledge/java/java-diagnostics-troubleshooting',
+								'technical-knowledge/java/java-logging-slf4j-stacktrace'
 							]
 						},
 						{
@@ -554,6 +555,7 @@ const sidebars: SidebarsConfig = {
 							items: [
 								'technical-knowledge/security/web-security-fundamentals',
 								'technical-knowledge/security/authentication-authorization',
+								'technical-knowledge/security/jwt-oauth2-oidc-deep-dive',
 								'technical-knowledge/security/cookies-vs-sessions-vs-jwt',
 								'technical-knowledge/security/refresh-token-security-invalidation',
 								'technical-knowledge/security/web-vulnerabilities',

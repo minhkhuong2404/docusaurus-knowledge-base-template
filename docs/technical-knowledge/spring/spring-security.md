@@ -366,7 +366,48 @@ public class ResourceServerConfig {
 - **Global Exception Consistency:** Ensure that your `AccessDeniedHandler`, `AuthenticationEntryPoint`, and `@ControllerAdvice` all return the exact same JSON error payload structure (e.g., RFC 7807 Problem Details for HTTP APIs).
 - **Migration Strategy:** When migrating legacy Spring applications to Spring Boot 3, factor in the architectural shift from `AccessDecisionManager`/`Voter` classes to the new `AuthorizationManager` interfaces.
 
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace Spring Security, OAuth2 & JWT Interviews
+
+### 1. The Senior Framing Strategy (First 60 Seconds)
+
+When explaining Spring Security in a Senior/Staff interview, walk through the **Three Execution Boundaries**:
+1. **Servlet Container vs. Spring ApplicationContext Boundary**: Explain how `DelegatingFilterProxy` (registered in Tomcat/Jetty) bridges to `FilterChainProxy` (a Spring Bean), which selects the matching `SecurityFilterChain` bean.
+2. **Authentication vs. Authorization Filter Ordering**:
+   - Authentication filters (`BearerTokenAuthenticationFilter`, `UsernamePasswordAuthenticationFilter`) extract credentials, delegate to `AuthenticationManager` $\to$ `AuthenticationProvider` (`JwtAuthenticationProvider` / `DaoAuthenticationProvider`), and populate `SecurityContextHolder` (`ThreadLocal`).
+   - `ExceptionTranslationFilter` wraps the downstream `AuthorizationFilter` (Spring Security 6+) to translate `AuthenticationException` into `401` (`AuthenticationEntryPoint`) and `AccessDeniedException` into `403` (`AccessDeniedHandler`).
+3. **Thread & Reactive Context Propagation**: Proactively call out `MODE_THREADLOCAL` pitfalls in `@Async`, `CompletableFuture`, and Virtual Threads (`DelegatingSecurityContextAsyncTaskExecutor`) vs. `ReactiveSecurityContextHolder` in Spring WebFlux.
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "We annotated a private helper method—or a method called via `this.deleteOrder()` inside the same `@Service` class—with `@PreAuthorize("hasRole('ADMIN')")`, and a regular user was able to execute it! Why did Spring Security fail?"
+* **Junior/Mid Answer:** "`@EnableMethodSecurity` might be missing in the configuration."
+* **Principal Rebuttal:** "Spring's `@PreAuthorize` is implemented via **Spring AOP proxies (`AuthorizationAdvisorProxyFactory`)**. When an external bean calls `orderService.process()`, it invokes the CGLIB/JDK proxy, which intercepts the call and evaluates the SpEL expression. However, **self-invocation (`this.deleteOrder()`) bypasses the Spring proxy completely** and invokes `this` directly on the target instance, skipping `AuthorizationManagerBeforeMethodInterceptor`! Similarly, `private` or `final` methods cannot be subclassed by CGLIB proxies. To enforce method security on internal calls, either extract the secured method into a separate collaborator bean, inject self via `@Lazy`, or use AspectJ bytecode weaving (`mode = AdviceMode.ASPECTJ`)."
+
+#### Trap 2: "Why did our custom `@RestControllerAdvice` catch `AccessDeniedException` when thrown by `@PreAuthorize`, but completely ignore `JwtException` / `AuthenticationException` thrown inside our custom `OncePerRequestFilter`?"
+* **Junior/Mid Answer:** "You need to add `@ExceptionHandler(AuthenticationException.class)` to `@RestControllerAdvice`."
+* **Principal Rebuttal:** "Look at the **Servlet execution stack**: `FilterChainProxy` (and any `OncePerRequestFilter`) executes in the **Servlet Filter Chain *before* `DispatcherServlet.doDispatch()` is ever entered**. `@RestControllerAdvice` is a Spring MVC construct (`ExceptionHandlerExceptionResolver`) that only wraps controller invocations *inside* `DispatcherServlet` (which is why AOP `@PreAuthorize` on a Controller/Service *is* caught by `@RestControllerAdvice`). Exceptions thrown inside a Filter never reach `DispatcherServlet`! To route filter exceptions through your unified `@RestControllerAdvice` RFC 7807 handler, inject `@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver` into your custom `AuthenticationEntryPoint` / Filter and invoke `resolver.resolveException(request, response, null, authException)`."
+
+#### Trap 3: "In our Spring Boot 3 OAuth2 Resource Server, we configured `spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.example.com`. If the Auth Server is temporarily down when our microservice boots up, what happens?"
+* **Junior/Mid Answer:** "It will fetch the public keys when the first user request arrives."
+* **Principal Rebuttal:** "If you use `issuer-uri` (`JwtDecoders.fromIssuerLocation()`), Spring Boot performs a **synchronous HTTP GET to `/.well-known/openid-configuration` during bean initialization at startup**! If the IdP is unreachable during a cluster-wide deployment or power recovery, **every microservice pod crashes on startup (`BeanCreationException`)**, causing a cascading cold-start deadlock. Instead, configure `jwk-set-uri` (`NimbusJwtDecoder.withJwkSetUri(...)`) which initializes lazily on the first token verification without blocking `ApplicationContext` startup, and configure `JWKSourceBuilder.outageTolerant()` to survive IdP blips."
+
+---
+
+### 3. Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **Spring Security 5 vs. 6 AuthZ** | "Use `authorizeRequests()` and `FilterSecurityInterceptor`." | "Spring Security 6 replaced `FilterSecurityInterceptor` + `AccessDecisionManager` + `AccessDecisionVoter` with `AuthorizationFilter` + `AuthorizationManager<RequestAuthorizationContext>`, and enforces lazy `SecurityContext` loading." |
+| **OAuth2 Resource Server JWT** | "Write a custom `OncePerRequestFilter` using `io.jsonwebtoken` (JJWT)." | "Use native `http.oauth2ResourceServer(oauth2 -> oauth2.jwt(...))` backed by `BearerTokenAuthenticationFilter` + `NimbusJwtDecoder` for built-in JWKS rotation, algorithm pinning, and clock-skew validation." |
+| **` issuer-uri` vs. `jwk-set-uri`** | "They do the same thing." | "`issuer-uri` queries OIDC discovery synchronously at **startup** (failing pod boot if IdP is down); `jwk-set-uri` fetches keys lazily at runtime, decoupling microservice startup from IdP availability." |
+| **Filter Double-Execution Bug** | "Add `@Component` to your custom `Filter` class." | "Adding `@Component` causes Spring Boot to register the filter **twice**: once in the global Servlet container `FilterRegistrationBean` and once inside `SecurityFilterChain`. Always extend `OncePerRequestFilter` or disable `FilterRegistrationBean.setEnabled(false)`." |
+
 ### Compare Next
+- [JWT, OAuth 2.1 & OpenID Connect (OIDC) — Principal Architecture Deep Dive](../security/jwt-oauth2-oidc-deep-dive.md)
 - [Spring MVC - Complete Guide](./spring-mvc.md)
 - [Spring Boot - Advanced Topics](./spring-boot-advanced.md)
 - [Spring Data JPA - Best Practices](./spring-data-jpa.md)

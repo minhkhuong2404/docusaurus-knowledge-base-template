@@ -398,8 +398,52 @@ To solve this with zero latency:
 
 ---
 
+## 🧠 Senior/Staff Interview Playbook: How to Ace Multi-Device JWT & Session Invalidation Interviews
+
+### 1. The Senior Framing Strategy (First 60 Seconds)
+
+When asked *"How do you support 'Manage Devices', 'Sign Out Everywhere', and instant fraud lockouts if you use stateless JWTs?"*, frame the solution as a **Two-Tier Hybrid State Machine**:
+1. **Device-Scoped Stateful Control Plane (Refresh Tier)**: Every login creates an explicit row in `user_sessions` (and a Redis Hash entry `HSET user:<id>:sessions <session_id>`) containing `device_id`, `session_id`, `family_id`, and `SHA-256(refresh_token)`.
+2. **Short-Lived Stateless Data Plane (Access Tier)**: Access Tokens ($5\text{–}15\text{ min}$ TTL) embed `sub`, `session_id`, and `iat`.
+3. **Granular vs. Global Eviction Primitives**:
+   - **Single-Device Logout**: Delete only `session_id` from the session registry + write `blacklist:jti:<jti>` (TTL = remaining access token seconds). Zero impact on the user's other devices.
+   - **Global Logout / Password Reset**: Wipe the user's session registry + write a single Redis watermark `SET user:<id>:revoked_before <now_epoch> EX 900`. Any in-flight Access Token on any device with `jwt.iat < revoked_before` is immediately rejected at the API Gateway in $< 1\text{ ms}$.
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "When our mobile app user is on a flaky 3G train connection and refreshes their token, the server rotates $RT_1 \to RT_2$, commits to the DB, and sends $RT_2$ back, but the TCP response drops. The mobile app retries with $RT_1$, and our Refresh Token Rotation (RTR) logic flags it as a hacker replay and nukes the user's session! How do you fix this in production?"
+* **Junior/Mid Answer:** "Don't revoke the family on the first reuse, or increase the HTTP client timeout."
+* **Principal Rebuttal:** "Network drops during `/auth/refresh` are a well-known production race condition in Refresh Token Rotation. If you strictly enforce zero-tolerance reuse on millisecond 0, flaky mobile networks cause massive false-positive session evictions. The Principal fix combines **Grace-Window Idempotent Rotation** or **DPoP Sender-Constrained Refresh Tokens (RFC 9449)**:
+  1. **Grace Window ($5\text{–}10\text{ seconds}$) with Same-Context Fingerprint**: When $RT_1$ is rotated to $RT_2$, record `rotated_at` and cache the encrypted response pair $(AT_2, RT_2)$ keyed by `hash(RT_1)` for 10 seconds. If a retry with $RT_1$ arrives within 10 seconds from the same `device_id`/TLS session and $RT_2$ has **not yet been used**, return the cached $(AT_2, RT_2)$ idempotently. If $RT_1$ is replayed *after* the grace window or *after* $RT_2$ has already been used on an API call, trigger immediate `family_id` revocation.
+  2. **DPoP Binding**: If the refresh token is cryptographically bound to the mobile device's Secure Enclave private key (`cnf.jkt`), you don't even need destructive rotation because a stolen refresh token cannot be used without the hardware key."
+
+#### Trap 2: "If a user opens 5 browser tabs in our React SPA and the Access Token expires at 12:00:00, all 5 tabs simultaneously call `POST /auth/refresh` with the same Refresh Token $RT_1$. Won't 4 of the 5 tabs trigger a false-positive Token Theft alarm?"
+* **Junior/Mid Answer:** "Make the React app refresh earlier before the token expires."
+* **Principal Rebuttal:** "Cross-tab concurrent refresh is one of the most common causes of production logout loops. You must solve it on **both the Client and the Server**:
+  - **Client-Side (Browser Web Locks API / `BroadcastChannel`)**: Use `navigator.locks.request('auth_refresh_lock', async () => { ... })` so only **one leader tab** executes the network `POST /auth/refresh` call while the other 4 follower tabs await the lock and receive the new Access Token via `BroadcastChannel`.
+  - **Server-Side (Distributed Mutex + Idempotency Window)**: Acquire a short Redis lock `SET lock:refresh:<family_id> 1 NX PX 3000` during token rotation so concurrent requests for the same `family_id` are serialized rather than racing on `is_used`."
+
+#### Trap 3: "Should we store raw Refresh Tokens in the `user_sessions` PostgreSQL table so we can look them up on `/auth/refresh`?"
+* **Junior/Mid Answer:** "Yes, put a unique B-Tree index on the `refresh_token` column."
+* **Principal Rebuttal:** "**Never store raw Refresh Tokens in the database!** A Refresh Token is a long-lived bearer credential equivalent to a password for 30 days. If an attacker achieves read-only SQL injection or steals a database snapshot, raw refresh tokens allow immediate account takeover of every active user. Always generate a 256-bit cryptographically random token, send the raw value to the client once, and store only **`SHA-256(raw_refresh_token)`** in PostgreSQL and Redis."
+
+---
+
+### 3. Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **Single-Device vs. Global Logout** | "Bump the user's `token_version` in the `users` table on logout." | "Bumping `users.token_version` logs out *all* devices. For single-device logout, delete only `(user_id, session_id)` in Redis/DB; reserve `token_version` / `revoked_before` for global eviction." |
+| **Database Storage of Refresh Tokens** | "Store the refresh token UUID in the database." | "Generate 32 bytes of `SecureRandom` entropy and store only the hex-encoded **`SHA-256` digest** (`token_hash`) so DB read leaks cannot hijack sessions." |
+| **Concurrent Multi-Tab Refresh** | "Each tab refreshes when it gets a 401." | "Coordinate tabs using the browser **Web Locks API (`navigator.locks`)** + `BroadcastChannel`, backed by a server-side 10-second idempotent rotation grace window." |
+| **Zero-Latency Account Ban** | "Set `users.is_locked = true` in PostgreSQL." | "Write `SET user:<id>:is_locked 1` in Redis and enforce a `<1ms` check at the API Gateway (or local gateway memory cache synced via Redis Client-Side Caching / PubSub) to block in-flight 15m JWTs." |
+
 ## Related References & Guides
 
+- [JWT, OAuth 2.1 & OpenID Connect (OIDC) — Principal Architecture Deep Dive](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/security/jwt-oauth2-oidc-deep-dive.md) — JOSE (`JWS`/`JWE`/`JWKS`), PKCE `S256` math, Phantom Token pattern, and DPoP (RFC 9449).
 - [Cookies vs Sessions vs JWT](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/security/cookies-vs-sessions-vs-jwt.md) — Fundamental tradeoffs between cookie session state and stateless JWTs.
 - [Authentication & Authorization](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/security/01-authentication-authorization.md) — OAuth 2.0, OpenID Connect, and Spring Security.
 - [PostgreSQL Heap Storage & Internals](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/database/postgresql-heap-storage-architecture.md) — How PostgreSQL stores and indexes session and token tables.
+

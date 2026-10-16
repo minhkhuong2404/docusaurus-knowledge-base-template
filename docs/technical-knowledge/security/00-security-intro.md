@@ -33,6 +33,9 @@ You don't need to be a security specialist. You need to know **enough to write s
 | Topic | Description |
 |---|---|
 | [Authentication & Authorization](/technical-knowledge/security/authentication-authorization) | Sessions, JWT, OAuth 2.0, OIDC, MFA, RBAC, ABAC, passkeys |
+| [JWT, OAuth 2.1 & OIDC Deep Dive](/technical-knowledge/security/jwt-oauth2-oidc-deep-dive) | JOSE (JWS/JWE/JWKS), PKCE S256 math, Phantom Token pattern, DPoP (RFC 9449), Token Exchange (RFC 8693) |
+| [Cookies vs. Sessions vs. JWT](/technical-knowledge/security/cookies-vs-sessions-vs-jwt) | Stateful sessions vs. stateless JWTs, Refresh Token Rotation, Bloom filter revocation |
+| [JWT Multi-Device & Session Invalidation](/technical-knowledge/security/refresh-token-security-invalidation) | Isolated single-device logout, global eviction, password reset, and token theft containment |
 | [Web Vulnerabilities & Defenses](/technical-knowledge/security/web-vulnerabilities) | OWASP Top 10 — SQL injection, XSS, CSRF, SSRF, IDOR and mitigations |
 | [Cryptography & Secure Design](/technical-knowledge/security/cryptography-secure-design) | AES-GCM, RSA, HMAC, signatures, TLS internals, key management |
 | [Privacy & Compliance](/technical-knowledge/security/privacy-compliance) | GDPR, CCPA, PCI-DSS, HIPAA, data classification, right to erasure |

@@ -27,9 +27,10 @@ Dành riêng cho Intern, Fresher và Junior học Java thực chiến để ứn
 | 6 | [Java Memory Model](./java-jmm-memory-model) | Happens-Before relationship, StampedLock, and ThreadLocal internals |
 | 7 | [JVM Internals](./java-jvm) | Class loading, memory areas, GC, JIT, tuning basics |
 | 8 | [Diagnostics & Troubleshooting](./java-diagnostics-troubleshooting) | Production troubleshooting, thread contention, and memory analysis |
-| 9 | [I/O and NIO](./java-io) | Streams, channels, buffers, file operations |
-| 10 | [Modern Java Features](./java-new-features) | Lambdas, streams, records, sealed types, recent updates |
-| 11 | [Interview Questions](./java-interview-questions) | Practical Q&A across core and advanced topics |
+| 9 | [SLF4J, Log Levels & Stacktraces](./java-logging-slf4j-stacktrace) | SLF4J 2.x facade, log level severity gates, stacktrace anatomy, and `fillInStackTrace()` internals |
+| 10 | [I/O and NIO](./java-io) | Streams, channels, buffers, file operations |
+| 11 | [Modern Java Features](./java-new-features) | Lambdas, streams, records, sealed types, recent updates |
+| 12 | [Interview Questions](./java-interview-questions) | Practical Q&A across core and advanced topics |
 
 :::tip[Backend Engineering Tip]
 Use this section as the foundation before diving into Spring, Kafka, and system design topics.
@@ -63,4 +64,6 @@ Use this section as the foundation before diving into Spring, Kafka, and system 
 - [Java Memory Model](./java-jmm-memory-model.md)
 - [JVM Internals](./java-jvm.md)
 - [Diagnostics & Troubleshooting](./java-diagnostics-troubleshooting.md)
+- [SLF4J, Log Levels & Error Stacktrace Internals](./java-logging-slf4j-stacktrace.md)
+
 

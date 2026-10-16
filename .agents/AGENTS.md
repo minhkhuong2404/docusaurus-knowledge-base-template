@@ -61,6 +61,17 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 6. **Visual Model Integration**: Accompany key architectures and protocol flows with interactive React SVG diagrams following `design-diagrams`.
 7. **Workspace Registration**: Always register new pages in `sidebars.ts` and link them in the parent topic category index.
 
+## MANDATORY: Always Apply senior-interview-playbook Skill for Every Knowledge Added
+
+**Whenever adding, creating, expanding, or updating ANY technical knowledge page, system design guide, concept deep dive, or interview article in this website (`docs/technical-knowledge/`), you MUST ALWAYS apply the `senior-interview-playbook` skill (`.agents/skills/senior-interview-playbook/SKILL.md`) and adhere strictly to the playbook guidelines at:**
+[`.agents/skills/senior-interview-playbook/references/INTERVIEW_PLAYBOOK_GUIDELINES.md`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/.agents/skills/senior-interview-playbook/references/INTERVIEW_PLAYBOOK_GUIDELINES.md)
+
+### Required Senior/Staff Interview Playbook Components:
+1. **Dedicated Section Header**: Every technical page added or updated must include `## 🧠 Senior/Staff Interview Playbook: How to Ace [Topic] Interviews`.
+2. **The Senior Framing Strategy**: Explain how a Senior/Staff/Principal Engineer frames the problem in the first 60 seconds (non-negotiable physical invariants, back-of-the-envelope capacity math / Little's Law, proactive failure-boundary identification, and Day-2 operational observability/reconciliation).
+3. **Classic Interviewer Traps & Principal Rebuttals (3–5 Traps Minimum)**: Document deceptive follow-up questions interviewers ask (`#### Trap N: "..."`), contrasting the surface-level `* **Junior/Mid Answer:**` against an authoritative `* **Principal Rebuttal:**` backed by under-the-hood engine mechanics and production code/patterns.
+4. **Mid-Level vs. Principal Candidate Cheat Sheet**: Include a Markdown comparison table (`| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |`) showing concrete phrasing upgrades.
+
 ## MANDATORY: Light Theme Design System & UI Specifications (Always Follow)
 
 **Whenever designing, modifying, or auditing ANY component, page, arcade game, sidebar, navigation, or interactive diagram in this knowledge base, you MUST ALWAYS adhere strictly to the Light Theme Design System (`.agents/skills/light-theme-design/SKILL.md`) and the detailed reference rubric at:**

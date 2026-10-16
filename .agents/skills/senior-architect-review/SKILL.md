@@ -94,7 +94,13 @@ Every conceptual sequence, distributed handshake, or data flow must be accompani
 - Must feature visual animated SVG paths with flowing/moving arrows (`.interactive-diagram-flowing-path`).
 - Monospace ASCII schema inspectors or static plain tables for complex flows are forbidden.
 
-### Step 5: Navigation & Workspace Verification
+### Step 5: Senior/Staff Interview Playbook Audit (Enforce `senior-interview-playbook`)
+Every technical knowledge page added or updated in `docs/technical-knowledge/` MUST include a dedicated `## 🧠 Senior/Staff Interview Playbook: How to Ace [Topic] Interviews` section following [`.agents/skills/senior-interview-playbook/SKILL.md`](../senior-interview-playbook/SKILL.md):
+- **The Senior Framing Strategy**: 3–4 upfront points covering invariants, capacity math, failure boundaries, and Day-2 ops.
+- **Classic Interviewer Traps & Principal Rebuttals**: 3–5 probing traps contrasting the naive `Junior/Mid Answer` against the `Principal Rebuttal` backed by physical engine truth.
+- **Mid-Level vs. Principal Candidate Cheat Sheet**: Markdown comparison table upgrading surface statements into Staff-level architectural depth.
+
+### Step 6: Navigation & Workspace Verification
 - **Sidebar Registration**: Confirm the document ID is added to [`sidebars.ts`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/sidebars.ts) in the proper category.
 - **Topic Index Link**: Ensure the topic is linked in the relevant category hub page (e.g. `docs/technical-knowledge/database/index.md`).
 - **TypeScript Check**: Run Babel AST check or `npx tsc --noEmit` on any new React diagrams.

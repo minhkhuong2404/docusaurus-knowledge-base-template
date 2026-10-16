@@ -1008,13 +1008,17 @@ public ErrorResponse handleUnexpected(Exception ex) {
 }
 ```
 
-| Exception category | Log level | Stack trace? |
-|-------------------|----------|-------------|
-| Validation / bad request (4xx) | `WARN` | No |
-| Business rule violation (4xx) | `WARN` | No |
-| Not found (404) | `WARN` | No |
-| Server / infrastructure (5xx) | `ERROR` | Yes |
-| Unexpected catch-all | `ERROR` + alert | Yes |
+| Exception category | Log level | Stack trace? | SLF4J Invocation Pattern |
+|-------------------|----------|-------------|--------------------------|
+| Validation / bad request (4xx) | `WARN` | No | `log.warn("[{}] {} — path={}", code, ex.getMessage(), uri)` |
+| Business rule violation (4xx) | `WARN` | No | `log.warn("[{}] {} — path={}", code, ex.getMessage(), uri)` |
+| Not found (404) | `WARN` / `DEBUG` | No | `log.warn("[{}] {} — path={}", code, ex.getMessage(), uri)` |
+| Server / infrastructure (5xx) | `ERROR` | **Yes** | `log.error("[{}] {} — path={}", code, ex.getMessage(), uri, ex)` |
+| Unexpected catch-all | `ERROR` + alert | **Yes** | `log.error("Unhandled on {}: {}", uri, ex.getMessage(), ex)` |
+
+:::caution[The SLF4J Trailing `Throwable` Rule]
+In SLF4J, to print the full stack trace, the exception object (`ex`) **must be the final argument** passed to `log.error(...)` and **must NOT have a `{}` placeholder** claiming it. Writing `log.error("Failed: {}", ex.getMessage())` or putting `ex` before another argument swallows the entire stack trace! For a complete line-by-line breakdown of stack trace anatomy, `Suppressed:` blocks, `... N common frames omitted`, and `rootCauseFirst` JSON formatting, see **[SLF4J, Log Levels & Error Stacktrace Printout Internals](../java/java-logging-slf4j-stacktrace.md)**.
+:::
 
 </details>
 
@@ -1146,6 +1150,7 @@ class UserControllerExceptionTest {
 | Using `500` for all errors | Clients can't distinguish client errors from server errors | Map exception types to correct HTTP status codes |
 | Not handling `MethodArgumentNotValidException` | Validation errors return Spring's ugly default HTML error page | Add explicit handler returning structured JSON |
 | Catching `Exception` without logging | Errors are silently swallowed | Always `log.error(...)` in the catch-all handler |
+| Passing `ex.getMessage()` instead of `ex` to `log.error()` | Destroys the entire stack trace and `Caused by:` chain | Pass `ex` as the final argument: `log.error("Failed id={}", id, ex)` |
 | One giant `try-catch` in each controller | Duplicated handling, inconsistent shapes | Use `@RestControllerAdvice` and remove try-catch from controllers |
 | Using checked exceptions in Spring services | Forces ugly `throws` declarations on every method in the call chain | Wrap checked exceptions at the boundary and rethrow as unchecked |
 
@@ -1178,7 +1183,8 @@ class UserControllerExceptionTest {
 
 ## See Also
 
-- Spring Validation & Bean Validation Guide
+- [SLF4J, Log Levels & Error Stacktrace Printout Internals](../java/java-logging-slf4j-stacktrace.md)
+- [Log Aggregation Pattern (ELK, Loki & MDC)](../system-design/log-aggregation.md)
 - [Spring Security](./spring-security.md)
 - [Microservices Patterns](../system-design/microservices-patterns.md)
-- Exception Handling in Spring WebFlux (Reactive)
+

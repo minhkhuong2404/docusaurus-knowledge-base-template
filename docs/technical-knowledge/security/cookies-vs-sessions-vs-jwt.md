@@ -664,3 +664,55 @@ Spring Security calls `sessionFixation().migrateSession()` by default on success
 **Mobile clients:** OAuth 2.0 with PKCE flow. The app receives JWT access tokens + refresh tokens stored in the device's secure enclave (iOS Keychain, Android Keystore — never in-memory or shared preferences). No client secret required (PKCE replaces it with a code challenge).
 
 A single authorization server (Spring Authorization Server, Keycloak, Auth0) issues tokens for both client types. The resource server validates tokens identically regardless of origin. The difference is purely in how tokens are delivered and stored on the client.
+
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace Cookies, Sessions & JWT Interviews
+
+### 1. The Senior Framing Strategy (First 60 Seconds)
+
+When asked *"Should we use Sessions or JWTs for our application?"*, never give a dogmatic one-word answer. Frame the trade-off as a **Separation of Delivery Mechanism vs. State Storage**:
+1. **Decouple Storage/Transport from Token Format**:
+   - **Cookie vs. `Authorization` Header** is a *transport/storage mechanism*.
+   - **Opaque Session ID vs. Signed JWT (`JWS`)** is a *token format* (stateful reference vs. stateless value).
+   - You can transport a stateless JWT inside an `HttpOnly; Secure; SameSite=Strict` cookie (`__Host-token`), or transport an opaque session token inside an `Authorization: Bearer` header!
+2. **Quantify the Latency & Revocation Trade-Off**:
+   - **Stateful Redis Session**: $O(1)$ network hop ($\sim 0.5\text{–}1.5\text{ ms}$) per request, $32\text{-byte}$ cookie payload, **instantaneous $0\text{ ms}$ revocation**.
+   - **Stateless Asymmetric JWT (`ES256` / `RS256`)**: $0\text{ ms}$ network I/O ($\sim 30\text{–}70\ \mu\text{s}$ local CPU signature check), $800\text{–}2{,}000\text{ B}$ header payload, **eventual revocation** bounded by Access Token TTL ($5\text{–}15\text{ min}$) unless augmented by a Redis `jti` blocklist / `revoked_before` watermark or Bloom filter.
+3. **Browser Threat Surface Balance (XSS vs. CSRF)**:
+   - `localStorage` + `Bearer` header = immune to CSRF, **catastrophically vulnerable to XSS** (silent global token exfiltration).
+   - `HttpOnly; Secure; SameSite=Lax/Strict` Cookie = immune to XSS token read, requires CSRF defense on state-changing requests.
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "If we store the JWT in an `HttpOnly` cookie, is our application 100% protected against XSS?"
+* **Junior/Mid Answer:** "Yes, because `HttpOnly` prevents malicious JavaScript from reading `document.cookie`, so XSS cannot steal the JWT."
+* **Principal Rebuttal:** "`HttpOnly` prevents **token exfiltration** (the attacker cannot copy the raw JWT string and replay it from their own server in another country), which is a massive win. However, `HttpOnly` does **not** prevent **in-browser XSS Riding (Session Riding)**: while the victim's browser tab is open, injected XSS JavaScript running in the same origin can still call `fetch('/api/transfer', { method: 'POST', credentials: 'include' })`, and the browser will automatically attach the `HttpOnly` cookie! Therefore, `HttpOnly` cookies must be paired with a strict **Content Security Policy (`CSP: script-src 'strict-dynamic' 'nonce-...'`)** and **Step-Up Authentication (WebAuthn / MFA challenge)** for sensitive mutations."
+
+#### Trap 2: "Why did you add a `jti` blacklist in Redis for logged-out JWTs? Doesn't hitting Redis on every request turn JWTs back into stateful sessions—with 10x larger headers?"
+* **Junior/Mid Answer:** "Yes, it makes it stateful again, which is the downside of needing instant logout."
+* **Principal Rebuttal:** "Not if you architect the **Negative-State Cache** properly. In a traditional session store, Redis holds **100% of active users** ($10\text{M}$ keys), and if Redis fails, 100% of users are logged out. In a JWT `jti` blocklist + `revoked_before` architecture:
+  1. Redis holds **only revoked tokens that haven't yet reached their natural 15-minute `exp`** ($\ll 0.5\%$ of active tokens).
+  2. You can place an **in-memory Bloom Filter** (or Caffeine local cache synchronized via Redis Pub/Sub) inside each API Gateway pod. A 1-million-entry Bloom filter takes only $\sim 1.2\text{ MB}$ of RAM: $99.9\%$ of requests hit $0$ network calls (`mightContain(jti) == false`), and only the $0.1\%$ positive checks make a Redis network hop!"
+
+#### Trap 3: "We set `SameSite=Lax` on our session cookie. Does that mean a subdomain like `marketing.example.com` cannot affect `app.example.com`?"
+* **Junior/Mid Answer:** "Yes, `SameSite` blocks requests from other domains."
+* **Principal Rebuttal:** "No! In browser cookie specifications, **'Site' is defined as `scheme + eTLD+1` (Effective Top-Level Domain + 1)**, whereas **'Origin' is `scheme + full-host + port`**. Therefore, `evil-compromised-marketing.example.com` and `app.example.com` are **Same-Site** (both share `example.com`), meaning `SameSite=Strict` and `SameSite=Lax` cookies ARE sent on requests triggered from any sibling subdomain! Furthermore, a compromised subdomain can set a cookie with `Domain=.example.com` to overwrite `app.example.com`'s session cookie (**Cookie Tossing Attack**). To defend against sibling subdomains, always prefix session cookies with **`__Host-`** (which enforces `Secure`, `Path=/`, and forbids the `Domain` attribute) and validate the `Origin` header."
+
+---
+
+### 3. Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **Session vs. JWT Choice** | "JWT is better because it's modern and stateless." | "Use **Redis-backed Sessions (`Spring Session`)** for monolithic/SSR apps needing instant revocation; use **BFF + Short-Lived Asymmetric JWTs (`ES256`) + Refresh Token Rotation** for polyglot microservice meshes." |
+| **Algorithm Confusion (`RS256` $\to$ `HS256`)** | "Always verify the JWT signature." | "Pin the exact `JWSAlgorithm` in the verifier (`verifyWith(rsaPublicKey)` / `JWSVerificationKeySelector`) so an attacker cannot sign a token with `HS256` using the public RSA key bytes as an HMAC secret." |
+| **Cookie Hardening** | "Set `HttpOnly` and `Secure`." | "Use **`__Host-session`** naming (`Secure; HttpOnly; SameSite=Strict; Path=/` with no `Domain` attribute) to prevent both XSS exfiltration and sibling-subdomain Cookie Tossing." |
+| **Refresh Token Reuse** | "Delete the old refresh token when issuing a new one." | "Store a `family_id` lineage tree in the database. Rather than deleting used tokens, mark `used = true`; if a `used` token is ever presented again, immediately revoke the entire `family_id` to contain token theft." |
+
+### Related Deep-Dive Guides
+- [JWT, OAuth 2.1 & OpenID Connect (OIDC) — Principal Architecture Deep Dive](./jwt-oauth2-oidc-deep-dive.md)
+- [JWT Multi-Device Session Management & Invalidation](./refresh-token-security-invalidation.md)
+

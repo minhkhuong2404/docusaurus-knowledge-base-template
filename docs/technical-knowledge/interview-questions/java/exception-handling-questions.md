@@ -269,4 +269,18 @@ try (
 * **Can an `Error` (like `OutOfMemoryError` or `StackOverflowError`) be thrown or caught explicitly?**
   Yes, `Error` extends `Throwable`, so you can write `throw new OutOfMemoryError()` or `catch (Error e)`. However, **catching `Error` is considered an anti-pattern** because errors represent fatal JVM infrastructure failures from which the application cannot safely recover.
 
+* **Why does `log.error("Failed for id={}: {}", id, ex.getMessage())` break production incident debugging, and how does SLF4J handle `Throwable` arguments?**
+  Passing `ex.getMessage()` logs only a single string (or `"null"` for a `NullPointerException`) and **destroys the entire stack trace and `Caused by:` chain**. In SLF4J, if the **final argument** passed to `log.error(...)` is a `Throwable` with no corresponding `{}` placeholder (`log.error("Failed for id={}", id, ex)`), SLF4J attaches it as the event's `ThrowableProxy` and prints the full stack trace, `Suppressed:` exceptions, and root cause chain.
+
+* **What does `... 35 common frames omitted` (or `... 35 more`) in a printed stack trace mean? Did the logger truncate and lose stack frames?**
+  **No data is lost.** When printing a chained `Caused by:` exception (`Throwable.printEnclosedStackTrace`), the JVM compares the bottom frames of the inner cause's `StackTraceElement[]` array against the outer wrapper's stack trace array. Because both were captured along the same call stack, the matching tail suffix is elided as `... N common frames omitted` (referring directly to the bottom `N` frames already printed in the parent trace right above it).
+
+* **Why would a production JVM suddenly log `java.lang.NullPointerException: null` with ZERO stack frames underneath?**
+  The HotSpot C2 JIT compiler enables `-XX:+OmitStackTraceInFastThrow` by default. If an implicit built-in exception (`NullPointerException`, `ArrayIndexOutOfBoundsException`, `ArithmeticException`, `ClassCastException`) is thrown thousands of times at a hot bytecode location, C2 avoids the expensive native `Throwable.fillInStackTrace()` stack walk and throws a pre-allocated shared singleton exception with an empty stack trace. Search earlier logs right after pod startup (before the C2 compilation threshold was crossed) to see the full stack trace, or pass `-XX:-OmitStackTraceInFastThrow`.
+
 ---
+
+## See Also
+
+- **[SLF4J, Log Levels & Error Stacktrace Printout Internals](../../java/java-logging-slf4j-stacktrace.md)** — Deep dive into SLF4J 2.x facade binding, log level gates, line-by-line stack trace printout anatomy, and `rootCauseFirst` Logback configuration.
+- **[Exception Handling in Spring Boot (`@RestControllerAdvice`)](../../spring/spring-exception-handling.md)**
