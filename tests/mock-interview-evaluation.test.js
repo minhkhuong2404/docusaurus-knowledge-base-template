@@ -374,8 +374,19 @@ describe('Mock Interview Studio & Evaluation Engine Suite', () => {
       assert.strictEqual(summary.averageScore, 78);
       assert.strictEqual(summary.trend, 16);
     });
+
+    it('GitHub Actions deploy.yml must only run test and build on pull_request (skip Pages setup, artifact upload, and deploy)', () => {
+      const workflowPath = path.resolve(__dirname, '../.github/workflows/deploy.yml');
+      const workflowContent = fs.readFileSync(workflowPath, 'utf-8');
+      const prGuardMatches = workflowContent.match(/if:\s*github\.event_name\s*!=\s*'pull_request'\s*&&\s*github\.ref\s*==\s*'refs\/heads\/master'/g);
+      assert.ok(
+        prGuardMatches && prGuardMatches.length >= 3,
+        'Expected Setup Pages, Upload artifact, and Deploy job to all be guarded against pull_request events'
+      );
+    });
   });
 });
+
 
 
 
