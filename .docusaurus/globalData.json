@@ -7027,6 +7027,16 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/opensearch-indexing-schema-operations-guide",
+              "path": "/technical-knowledge/system-design/opensearch-indexing-schema-operations-guide",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/opensearch-query-search-best-practices",
+              "path": "/technical-knowledge/system-design/opensearch-query-search-best-practices",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/opensearch-splunk-migration-guide",
               "path": "/technical-knowledge/system-design/opensearch-splunk-migration-guide",
               "sidebar": "tutorialSidebar"
@@ -7579,6 +7589,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }
