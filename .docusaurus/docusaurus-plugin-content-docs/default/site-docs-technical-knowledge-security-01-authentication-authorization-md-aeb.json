@@ -71,8 +71,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1792169348000,
   "sidebarPosition": 1,
   "frontMatter": {
     "id": "authentication-authorization",
@@ -100,7 +100,7 @@
     "permalink": "/technical-knowledge/security/web-security-fundamentals"
   },
   "next": {
-    "title": "Cookies, Sessions & JWT",
-    "permalink": "/technical-knowledge/security/cookies-vs-sessions-vs-jwt"
+    "title": "JWT, OAuth 2.1 & OIDC Deep Dive",
+    "permalink": "/technical-knowledge/security/jwt-oauth2-oidc-deep-dive"
   }
 }

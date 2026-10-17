@@ -449,6 +449,7 @@ The critical link is the **traceId** — the same value in log lines, spans, and
 
 ## See Also
 
+- **[OpenSearch Architecture Deep Dive & Splunk-to-OpenSearch Migration Guide](./opensearch-splunk-migration-guide.md)** — Lucene Segment internals (FST, `DocValues`, BKD-Trees), Segment Replication, Splunk SPL to OpenSearch PPL/DSL translation, Data Prepper pipelines, and ISM Hot/UltraWarm/Cold tiering.
 - **[SLF4J, Log Levels & Error Stacktrace Printout Internals](../java/java-logging-slf4j-stacktrace.md)** — Complete deep dive into SLF4J 2.x facade binding, log level severity gates, line-by-line stack trace printout anatomy, `Suppressed:` vs `Caused by:`, and JVM `fillInStackTrace()` mechanics.
 - **[Exception Handling in Spring Boot (`@RestControllerAdvice`)](../spring/spring-exception-handling.md)**
 

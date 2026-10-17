@@ -35,6 +35,7 @@ tags: [system-design, overview, architecture, interview-prep]
 | [API Design](/technical-knowledge/system-design/api-design) | REST, gRPC, GraphQL, versioning |
 | [Distributed Systems](/technical-knowledge/system-design/distributed-systems) | Consensus, leader election, clock sync |
 | [Security Patterns](/technical-knowledge/system-design/security-patterns) | AuthN/AuthZ, rate limiting, zero trust |
+| [OpenSearch & Splunk Migration](/technical-knowledge/system-design/opensearch-splunk-migration-guide) | Lucene segments, FSTs, DocValues, Segment Replication, SPL-to-PPL translation, Data Prepper & ISM tiering |
 | [60 Days of System Design](/technical-knowledge/system-design/60-days-of-system-design) | Structured 60-day syllabus categorized into 7 modules + 12 high-impact scenario breakdowns |
 | [Common Interview Questions](/technical-knowledge/system-design/common-interview-questions) | Full question bank with discussion points |
 

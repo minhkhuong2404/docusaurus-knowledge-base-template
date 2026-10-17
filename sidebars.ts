@@ -464,6 +464,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/security-patterns',
 								'technical-knowledge/system-design/observability',
 								'technical-knowledge/system-design/log-aggregation',
+								'technical-knowledge/system-design/opensearch-splunk-migration-guide',
 								'technical-knowledge/system-design/distributed-tracing',
 								'technical-knowledge/system-design/opentelemetry-sampling-strategies',
 							],

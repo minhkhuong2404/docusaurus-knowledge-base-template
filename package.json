@@ -7,18 +7,18 @@
     "yarn": ">=1.22.0"
   },
   "scripts": {
-    "start": "python scratch/fetch_leetcode_daily.py && docusaurus start",
+    "start": "node scripts/fetch_leetcode_daily.js && docusaurus start",
     "sync-quizzes": "node scripts/sync_quiz_snapshot.js",
     "test": "node scripts/run_tests.js",
     "lint": "node scripts/checkstyle.js --quiet",
     "lint:fix": "node scripts/checkstyle.js --fix",
     "checkstyle": "node scripts/checkstyle.js",
     "checkstyle:xml": "node scripts/checkstyle.js --xml",
-    "build": "yarn lint && yarn test && python scratch/fetch_leetcode_daily.py && node scripts/sync_quiz_snapshot.js && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
+    "build": "node scripts/checkstyle.js --quiet && node scripts/run_tests.js && node scripts/fetch_leetcode_daily.js && node scripts/sync_quiz_snapshot.js && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
     "build:analyze": "docusaurus build --bundle-analyzer",
     "build:debug-search": "DEBUG=search-local:* docusaurus build",
     "serve": "docusaurus serve",
-    "deploy": "yarn lint && yarn test && docusaurus deploy"
+    "deploy": "node scripts/checkstyle.js --quiet && node scripts/run_tests.js && docusaurus deploy"
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.2",

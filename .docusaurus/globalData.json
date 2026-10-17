@@ -5871,6 +5871,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-logging-slf4j-stacktrace",
+              "path": "/technical-knowledge/java/java-logging-slf4j-stacktrace",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-new-features",
               "path": "/technical-knowledge/java/java-new-features",
               "sidebar": "tutorialSidebar"
@@ -6527,6 +6532,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/security/jwt-oauth2-oidc-deep-dive",
+              "path": "/technical-knowledge/security/jwt-oauth2-oidc-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/security/keys-signing-tls",
               "path": "/technical-knowledge/security/keys-signing-tls",
               "sidebar": "tutorialSidebar"
@@ -7014,6 +7024,11 @@
             {
               "id": "technical-knowledge/system-design/observability",
               "path": "/technical-knowledge/system-design/observability",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/opensearch-splunk-migration-guide",
+              "path": "/technical-knowledge/system-design/opensearch-splunk-migration-guide",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -7564,6 +7579,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }
