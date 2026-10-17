@@ -24,6 +24,7 @@ tags: [system-design, overview, architecture, interview-prep]
 | [Scaling Writes](/technical-knowledge/system-design/scaling-writes) | Sharding, partitioning, write-ahead log |
 | [Real-Time Updates](/technical-knowledge/system-design/real-time-updates) | WebSocket, SSE, polling strategies |
 | [Handling Contention](/technical-knowledge/system-design/handling-contention) | Locks, MVCC, optimistic concurrency |
+| [16 Concurrency Concepts](/technical-knowledge/system-design/16-concurrency-concepts-master-guide) | Processes/Threads, Race Conditions, Mutexes, Deadlocks (Coffman), CAS, Thread Pools, Event Loops, DB Locks & Fencing Tokens |
 | [Large Blob Storage](/technical-knowledge/system-design/large-blobs) | Object storage, chunking, CDN delivery |
 | [Multi-Step Processes](/technical-knowledge/system-design/saga-pattern) | Sagas, orchestration, choreography |
 | [Long-Running Tasks](/technical-knowledge/system-design/long-running-tasks) | Job queues, async patterns, progress tracking |

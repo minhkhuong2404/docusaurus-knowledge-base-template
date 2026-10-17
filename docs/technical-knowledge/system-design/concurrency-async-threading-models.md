@@ -282,3 +282,11 @@ Trong các hệ sinh thái Reactive (Spring WebFlux, Node.js, Netty), lỗi ki�
 
 ### Q4: Java 21 Virtual Threads giải quyết mâu thuẫn giữa Code Simplicity và High Concurrency như thế nào?
 > **Trả lời:** Trước Java 21, muốn scale hàng trăm nghìn kết nối, lập trình viên buộc phải viết mã Reactive phức tạp (WebFlux/RxJava) để không block OS Thread. Virtual Threads giải quyết việc này ở tầng JVM: Lập trình viên vẫn viết code blocking tuần tự đơn giản (`thread-per-request`), nhưng khi code gặp thao tác I/O blocking, JVM tự động tháo gỡ (unmount) Virtual Thread ra khỏi Carrier OS Thread và gắn Virtual Thread khác vào chạy tiếp. Khi I/O hoàn tất, Virtual Thread được gắn lại (mount) để tiếp tục thực thi.
+
+---
+
+## See Also
+
+- **[16 Concurrency Concepts: From Hardware & Threads to Distributed Systems](./16-concurrency-concepts-master-guide.md)** — Master guide covering the 16 core concepts: Processes vs Threads, Race Conditions, Mutexes, Deadlocks (Coffman), CAS, Thread Pools (Little's Law), Event Loops, Database Pessimistic/Optimistic Locks, Distributed Locks, and Fencing Tokens.
+- **[Handling Contention in Distributed Systems](./handling-contention.md)** — Deep dive into MVCC, 2PL, distributed locks, and queue-based serialization.
+- **[Inventory Reservation & Ticketing Systems](./inventory-reservation-system.md)** — Designing high-throughput reservation pipelines under severe concurrency contention.

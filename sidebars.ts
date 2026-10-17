@@ -373,6 +373,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/system-design/concurrency-async-threading-models',
+								'technical-knowledge/system-design/16-concurrency-concepts-master-guide',
 								'technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
 								'technical-knowledge/system-design/nginx-internals',
 								'technical-knowledge/system-design/load-balancing-reliability',
