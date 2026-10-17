@@ -36,6 +36,8 @@ tags: [system-design, overview, architecture, interview-prep]
 | [Distributed Systems](/technical-knowledge/system-design/distributed-systems) | Consensus, leader election, clock sync |
 | [Security Patterns](/technical-knowledge/system-design/security-patterns) | AuthN/AuthZ, rate limiting, zero trust |
 | [OpenSearch & Splunk Migration](/technical-knowledge/system-design/opensearch-splunk-migration-guide) | Lucene segments, FSTs, DocValues, Segment Replication, SPL-to-PPL translation, Data Prepper & ISM tiering |
+| [OpenSearch Query & Search Guide](/technical-knowledge/system-design/opensearch-query-search-best-practices) | Filter Context Roaring Bitmaps, `PIT + search_after` pagination, `composite` aggregations & Hybrid BM25 + k-NN Vector Search |
+| [OpenSearch Schema & Operations Guide](/technical-knowledge/system-design/opensearch-indexing-schema-operations-guide) | Schema design (`nested` vs `flat_object`), zero-downtime Alias + `_reindex`, `_bulk` tuning, `UUIDv7` IDs, `_routing` & SRE runbooks |
 | [60 Days of System Design](/technical-knowledge/system-design/60-days-of-system-design) | Structured 60-day syllabus categorized into 7 modules + 12 high-impact scenario breakdowns |
 | [Common Interview Questions](/technical-knowledge/system-design/common-interview-questions) | Full question bank with discussion points |
 

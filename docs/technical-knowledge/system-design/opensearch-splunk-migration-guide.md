@@ -460,6 +460,8 @@ In the first 60 seconds, frame OpenSearch around **Four Physical & Economic Laws
 
 ## See Also
 
+- **[OpenSearch Query, Search & Aggregation Guideline: How to Query Properly & Effectively](./opensearch-query-search-best-practices.md)** — Query vs. Filter Context (`IndicesQueryCache` Roaring Bitmaps), `Point-in-Time + search_after` pagination, high-cardinality aggregations, and Hybrid BM25 + k-NN Vector Search.
+- **[OpenSearch Indexing, Schema Design & Day-2 Operations Guideline](./opensearch-indexing-schema-operations-guide.md)** — Schema mapping rules (`nested` vs `flat_object`), zero-downtime Alias + `_reindex` migrations, `_bulk` throughput optimization, `UUIDv7` IDs, multi-tenant `_routing`, and Day-2 runbooks.
 - **[Log Aggregation (ELK / EFK / Loki Patterns)](./log-aggregation.md)** — Structured JSON logging, `MdcRequestContextFilter`, and Spring Boot `LogstashEncoder` configuration.
 - **[Search Systems & Inverted Indexes](./search-systems.md)** — Full-text search, BM25 relevance scoring, autocomplete edge N-grams, and CDC indexing.
 - **[SLF4J, Log Levels & Error Stacktrace Printout Internals](../java/java-logging-slf4j-stacktrace.md)** — How JVM stack traces and `ShortenedThrowableConverter` (`rootCauseFirst`) feed into log aggregation pipelines.

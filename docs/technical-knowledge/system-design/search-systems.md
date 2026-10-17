@@ -404,4 +404,4 @@ From the freeCodeCamp *Design Software Systems Like a Senior Engineer* course.
 - Feed the index from `inventory.changed` events (outbox or CDC). A lag of a few seconds is acceptable.
 - **Search is a hint, booking is the truth.** The booking path re-checks the OLTP database at hold time, so staleness costs a rare "just sold out" message, never a double booking.
 
-See also: [OpenSearch Architecture Deep Dive & Splunk-to-OpenSearch Migration Guide](./opensearch-splunk-migration-guide.md), [Senior Engineer Design Course](./senior-engineer-design-course.md), [Inventory Reservation System](./inventory-reservation-system.md).
+See also: [OpenSearch Architecture Deep Dive & Splunk-to-OpenSearch Migration Guide](./opensearch-splunk-migration-guide.md), [OpenSearch Query, Search & Aggregation Guideline](./opensearch-query-search-best-practices.md), [OpenSearch Indexing, Schema Design & Day-2 Operations Guideline](./opensearch-indexing-schema-operations-guide.md), [Senior Engineer Design Course](./senior-engineer-design-course.md), [Inventory Reservation System](./inventory-reservation-system.md).
