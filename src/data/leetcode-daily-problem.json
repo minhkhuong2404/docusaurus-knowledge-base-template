@@ -1,8 +1,8 @@
 {
-  "id": "1",
-  "title": "Two Sum",
-  "url": "https://leetcode.com/problems/two-sum/",
-  "difficulty": "easy",
-  "topic": "Array, Hash Table",
-  "keyIdea": "Find two numbers in an array that add up to a specific target."
+  "id": "3551",
+  "title": "Minimum Swaps to Sort by Digit Sum",
+  "url": "https://leetcode.com/problems/minimum-swaps-to-sort-by-digit-sum/",
+  "difficulty": "medium",
+  "topic": "Array, Hash Table, Sorting",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-10-17."
 }

@@ -18,6 +18,29 @@ import {
   evaluateMockAnswer,
   EvaluationResult
 } from '../../utils/mockInterviewEvaluator';
+import {
+  ANSWER_FRAMEWORK_TEMPLATES,
+  LIVE_BUG_SCENARIOS,
+  SAMPLE_JD_PRESETS,
+  analyzeJobDescription,
+  generateInterviewerProbes
+} from '../../data/mockInterviewScenariosData';
+import {
+  BEHAVIORAL_QUESTIONS,
+  evaluateStarAnswer,
+  StarEvaluation,
+  pickRapidFireRound,
+  RapidFireStatement,
+  PracticeHistoryEntry,
+  PRACTICE_HISTORY_STORAGE_KEY,
+  appendPracticeHistory,
+  summarizePracticeHistory
+} from '../../data/mockInterviewPracticeData';
+
+const RAPID_FIRE_ROUND_SIZE = 10;
+const RAPID_FIRE_SECONDS_PER_QUESTION = 12;
+
+type SetupTab = 'interview' | 'jd-analyzer' | 'live-debug' | 'behavioral' | 'rapid-fire' | 'bank';
 
 type InterviewPhase = 'SETUP' | 'ICEBREAKER' | 'INTERVIEWING' | 'EVALUATED' | 'CANDIDATE_QA' | 'SUMMARY';
 
@@ -41,9 +64,40 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
   const [selectedCompanyId, setSelectedCompanyId] = useState<string>('company-g');
   const [selectedTopic, setSelectedTopic] = useState<string>('ALL');
   const [questionCount, setQuestionCount] = useState<number>(5);
-  const [activeSetupTab, setActiveSetupTab] = useState<'interview' | 'bank'>('interview');
+  const [activeSetupTab, setActiveSetupTab] = useState<SetupTab>('interview');
   const [bankSearchKeyword, setBankSearchKeyword] = useState<string>('');
   const [expandedBankQuestionId, setExpandedBankQuestionId] = useState<string | null>(null);
+
+  // Behavioral (STAR) Round State
+  const [activeBehavioralIndex, setActiveBehavioralIndex] = useState<number>(0);
+  const [behavioralAnswer, setBehavioralAnswer] = useState<string>('');
+  const [behavioralEval, setBehavioralEval] = useState<StarEvaluation | null>(null);
+  const [showSampleStar, setShowSampleStar] = useState<boolean>(false);
+
+  // Rapid-Fire Lightning Round State
+  const [rfStatus, setRfStatus] = useState<'idle' | 'playing' | 'done'>('idle');
+  const [rfRound, setRfRound] = useState<RapidFireStatement[]>([]);
+  const [rfIndex, setRfIndex] = useState<number>(0);
+  const [rfScore, setRfScore] = useState<number>(0);
+  const [rfAnswer, setRfAnswer] = useState<boolean | 'timeout' | null>(null);
+  const [rfTimeLeft, setRfTimeLeft] = useState<number>(RAPID_FIRE_SECONDS_PER_QUESTION);
+  const [rfMistakes, setRfMistakes] = useState<RapidFireStatement[]>([]);
+
+  // Persisted Practice History
+  const [practiceHistory, setPracticeHistory] = useState<PracticeHistoryEntry[]>([]);
+  const historySavedRef = useRef<boolean>(false);
+
+  // AI JD Analyzer State
+  const [jdInputText, setJdInputText] = useState<string>(SAMPLE_JD_PRESETS[1].jdContent);
+
+  // Live Code Review / Bug Hunting State
+  const [activeBugIndex, setActiveBugIndex] = useState<number>(0);
+  const [selectedBugOptionId, setSelectedBugOptionId] = useState<string | null>(null);
+  const [solvedBugIds, setSolvedBugIds] = useState<string[]>([]);
+
+  // Follow-up Probe Practice State in EVALUATED Phase
+  const [probeReplyText, setProbeReplyText] = useState<string>('');
+  const [probeReplySubmitted, setProbeReplySubmitted] = useState<boolean>(false);
 
   // Active Session State
   const [phase, setPhase] = useState<InterviewPhase>('SETUP');
@@ -68,6 +122,11 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
   const [currentEvaluation, setCurrentEvaluation] = useState<EvaluationResult | null>(null);
   const [answersHistory, setAnswersHistory] = useState<AnswerRecord[]>([]);
   const [expandedHistoryIndex, setExpandedHistoryIndex] = useState<number | null>(null);
+
+  // Derived JD Analysis Result
+  const jdAnalysisResult = useMemo(() => {
+    return analyzeJobDescription(jdInputText);
+  }, [jdInputText]);
 
   // Derived current company, interviewer and level profile
   const currentCompany: MaskedCompany = useMemo(() => {
@@ -185,7 +244,53 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
     setTimerSeconds(0);
     setAnswersHistory([]);
     setCurrentEvaluation(null);
+    setProbeReplyText('');
+    setProbeReplySubmitted(false);
     setPhase('INTERVIEWING');
+    if (typeof window !== 'undefined') {
+      containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Start Tailored Session from AI JD Analyzer
+  const handleLaunchFromJD = () => {
+    const targetLevel = jdAnalysisResult.recommendedLevel;
+    const detectedTopics = jdAnalysisResult.detectedTopics;
+    setSelectedLevel(targetLevel);
+
+    let pool = MOCK_INTERVIEW_QUESTIONS.filter((q) => {
+      const levelMatch = q.level === targetLevel;
+      const topicMatch = detectedTopics.length === 0 || detectedTopics.includes(q.topic as any);
+      return levelMatch && topicMatch;
+    });
+
+    if (pool.length < 4) {
+      pool = MOCK_INTERVIEW_QUESTIONS.filter((q) => detectedTopics.includes(q.topic as any));
+    }
+    if (pool.length === 0) {
+      pool = [...MOCK_INTERVIEW_QUESTIONS];
+    }
+
+    const shuffled = [...pool].sort(() => 0.5 - Math.random());
+    const count = ENTRY_LEVEL_PROFILES[targetLevel].defaultQuestionCount;
+    const selected = shuffled.slice(0, Math.min(count, shuffled.length));
+
+    setSessionQuestions(selected);
+    setCurrentIndex(0);
+    setCurrentUserAnswer('');
+    setShowHint(false);
+    setShowFullOutlineInEval(false);
+    setTimerSeconds(0);
+    setAnswersHistory([]);
+    setCurrentEvaluation(null);
+    setProbeReplyText('');
+    setProbeReplySubmitted(false);
+    setIcebreakerAcknowledged(false);
+    setAskedQuestionsHistory([]);
+    setCandidateIntroText(
+      `Chào anh/chị, em là ${candidateName.trim() || 'Ứng viên'}. Em ứng tuyển vị trí ${targetLevel} theo bản mô tả công việc (JD) với trọng tâm là ${detectedTopics.join(', ')}.`
+    );
+    setPhase('ICEBREAKER');
     if (typeof window !== 'undefined') {
       containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -219,6 +324,8 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
       try {
         const evaluation = evaluateMockAnswer(currentUserAnswer, currentQuestion);
         setCurrentEvaluation(evaluation);
+        setProbeReplyText('');
+        setProbeReplySubmitted(false);
 
         const record: AnswerRecord = {
           question: currentQuestion,
@@ -250,6 +357,8 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
       setShowFullOutlineInEval(false);
       setTimerSeconds(0);
       setCurrentEvaluation(null);
+      setProbeReplyText('');
+      setProbeReplySubmitted(false);
       setPhase('INTERVIEWING');
     } else {
       // Finished all technical questions -> Move to Candidate Q&A stage
@@ -368,6 +477,115 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
     };
   }, [answersHistory, currentLevelProfile]);
 
+  // Load persisted practice history once on mount
+  useEffect(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? window.localStorage.getItem(PRACTICE_HISTORY_STORAGE_KEY) : null;
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) setPracticeHistory(parsed);
+      }
+    } catch (e) {
+      console.warn('Failed to load mock interview history:', e);
+    }
+  }, []);
+
+  // Persist a finished session exactly once when reaching SUMMARY
+  useEffect(() => {
+    if (phase === 'SETUP') {
+      historySavedRef.current = false;
+      return;
+    }
+    if (phase !== 'SUMMARY' || historySavedRef.current || answersHistory.length === 0) return;
+    historySavedRef.current = true;
+    const entry: PracticeHistoryEntry = {
+      timestamp: Date.now(),
+      companyMaskedName: currentCompany.maskedName,
+      level: selectedLevel,
+      avgScore: summaryStats.avgScore,
+      decision: summaryStats.hiringDecision,
+      questionCount: answersHistory.length
+    };
+    setPracticeHistory((prev) => {
+      const next = appendPracticeHistory(prev, entry);
+      try {
+        window.localStorage.setItem(PRACTICE_HISTORY_STORAGE_KEY, JSON.stringify(next));
+      } catch (e) {
+        console.warn('Failed to save mock interview history:', e);
+      }
+      return next;
+    });
+  }, [phase, answersHistory.length, currentCompany.maskedName, selectedLevel, summaryStats.avgScore, summaryStats.hiringDecision]);
+
+  const historySummary = useMemo(() => summarizePracticeHistory(practiceHistory), [practiceHistory]);
+
+  const handleClearHistory = () => {
+    setPracticeHistory([]);
+    try {
+      window.localStorage.removeItem(PRACTICE_HISTORY_STORAGE_KEY);
+    } catch (e) {
+      console.warn('Failed to clear mock interview history:', e);
+    }
+  };
+
+  // Behavioral (STAR) handlers
+  const handleSelectBehavioral = (idx: number) => {
+    setActiveBehavioralIndex(idx);
+    setBehavioralAnswer('');
+    setBehavioralEval(null);
+    setShowSampleStar(false);
+  };
+
+  const handleEvaluateBehavioral = () => {
+    if (!behavioralAnswer.trim()) return;
+    setBehavioralEval(evaluateStarAnswer(behavioralAnswer));
+  };
+
+  // Rapid-Fire handlers
+  const handleStartRapidFire = () => {
+    setRfRound(pickRapidFireRound(RAPID_FIRE_ROUND_SIZE));
+    setRfIndex(0);
+    setRfScore(0);
+    setRfAnswer(null);
+    setRfMistakes([]);
+    setRfTimeLeft(RAPID_FIRE_SECONDS_PER_QUESTION);
+    setRfStatus('playing');
+  };
+
+  const handleRapidFireAnswer = (choice: boolean | 'timeout') => {
+    if (rfAnswer !== null) return;
+    const current = rfRound[rfIndex];
+    if (!current) return;
+    setRfAnswer(choice);
+    if (choice === current.isTrue) {
+      setRfScore((s) => s + 1);
+    } else {
+      setRfMistakes((m) => [...m, current]);
+    }
+  };
+
+  const handleRapidFireNext = () => {
+    if (rfIndex + 1 >= rfRound.length) {
+      setRfStatus('done');
+      return;
+    }
+    setRfIndex((i) => i + 1);
+    setRfAnswer(null);
+    setRfTimeLeft(RAPID_FIRE_SECONDS_PER_QUESTION);
+  };
+
+  // Rapid-Fire countdown: ticks only while a question is unanswered
+  useEffect(() => {
+    if (rfStatus !== 'playing' || rfAnswer !== null) return undefined;
+    if (rfTimeLeft <= 0) {
+      handleRapidFireAnswer('timeout');
+      return undefined;
+    }
+    const t = setTimeout(() => setRfTimeLeft((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rfStatus, rfAnswer, rfTimeLeft]);
+
   // Filtered Question Bank
   const filteredBankQuestions = useMemo(() => {
     return MOCK_INTERVIEW_QUESTIONS.filter((q) => {
@@ -414,18 +632,18 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
             </div>
 
             {/* Mode Switch Tabs */}
-            <div style={{ display: 'inline-flex', background: 'var(--ifm-color-emphasis-100, #f1f5f9)', padding: '4px', borderRadius: '10px', gap: '4px' }}>
+            <div style={{ display: 'inline-flex', flexWrap: 'wrap', background: 'var(--ifm-color-emphasis-100, #f1f5f9)', padding: '4px', borderRadius: '10px', gap: '4px' }}>
               <button
                 type="button"
                 onClick={() => setActiveSetupTab('interview')}
                 style={{
-                  padding: '7px 16px',
+                  padding: '7px 14px',
                   borderRadius: '8px',
                   border: 'none',
                   background: activeSetupTab === 'interview' ? '#0ea5e9' : 'transparent',
                   color: activeSetupTab === 'interview' ? '#ffffff' : 'var(--ifm-color-content-secondary, #64748b)',
                   fontWeight: 700,
-                  fontSize: '13px',
+                  fontSize: '12.5px',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
@@ -434,20 +652,88 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
               </button>
               <button
                 type="button"
+                onClick={() => setActiveSetupTab('jd-analyzer')}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: activeSetupTab === 'jd-analyzer' ? '#8b5cf6' : 'transparent',
+                  color: activeSetupTab === 'jd-analyzer' ? '#ffffff' : 'var(--ifm-color-content-secondary, #64748b)',
+                  fontWeight: 700,
+                  fontSize: '12.5px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                📄 AI Phân Tích JD
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveSetupTab('live-debug')}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: activeSetupTab === 'live-debug' ? '#10b981' : 'transparent',
+                  color: activeSetupTab === 'live-debug' ? '#ffffff' : 'var(--ifm-color-content-secondary, #64748b)',
+                  fontWeight: 700,
+                  fontSize: '12.5px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                🐛 Bắt Bug Thực Chiến ({LIVE_BUG_SCENARIOS.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveSetupTab('behavioral')}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: activeSetupTab === 'behavioral' ? '#f97316' : 'transparent',
+                  color: activeSetupTab === 'behavioral' ? '#ffffff' : 'var(--ifm-color-content-secondary, #64748b)',
+                  fontWeight: 700,
+                  fontSize: '12.5px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                🗣️ Vòng Behavioral (STAR)
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveSetupTab('rapid-fire')}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: activeSetupTab === 'rapid-fire' ? '#e11d48' : 'transparent',
+                  color: activeSetupTab === 'rapid-fire' ? '#ffffff' : 'var(--ifm-color-content-secondary, #64748b)',
+                  fontWeight: 700,
+                  fontSize: '12.5px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                ⚡ Rapid-Fire Hỏi Nhanh
+              </button>
+              <button
+                type="button"
                 onClick={() => setActiveSetupTab('bank')}
                 style={{
-                  padding: '7px 16px',
+                  padding: '7px 14px',
                   borderRadius: '8px',
                   border: 'none',
                   background: activeSetupTab === 'bank' ? '#0ea5e9' : 'transparent',
                   color: activeSetupTab === 'bank' ? '#ffffff' : 'var(--ifm-color-content-secondary, #64748b)',
                   fontWeight: 700,
-                  fontSize: '13px',
+                  fontSize: '12.5px',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
               >
-                📚 Ngân Hàng Câu Hỏi ({MOCK_INTERVIEW_QUESTIONS.length} Câu)
+                📚 Ngân Hàng Câu Hỏi ({MOCK_INTERVIEW_QUESTIONS.length})
               </button>
             </div>
           </div>
@@ -747,9 +1033,725 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
                   <span>Vào Phòng Phỏng Vấn Với {currentCompany.maskedName} ({currentInterviewer.name}) ➔</span>
                 </button>
               </div>
+
+              {/* PERSISTED PRACTICE HISTORY & PROGRESS TRACKER */}
+              {practiceHistory.length > 0 && (
+                <div style={{
+                  marginTop: '24px',
+                  padding: '18px 20px',
+                  borderRadius: '12px',
+                  background: 'var(--ifm-background-color, #f8fafc)',
+                  border: '1px solid var(--ifm-color-emphasis-300, #cbd5e1)'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '12px' }}>
+                    <div style={{ fontWeight: 850, fontSize: '14px', color: 'var(--ifm-color-content, #0f172a)' }}>
+                      📈 Lịch Sử Luyện Phỏng Vấn Của Bạn ({historySummary.totalSessions} buổi)
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12.5px' }}>
+                      <span style={{ fontWeight: 750, color: '#166534', background: '#dcfce7', padding: '2px 8px', borderRadius: '6px' }}>
+                        🏆 Cao nhất: {historySummary.bestScore}/100
+                      </span>
+                      <span style={{ fontWeight: 750, color: '#0369a1', background: '#e0f2fe', padding: '2px 8px', borderRadius: '6px' }}>
+                        📊 Trung bình: {historySummary.averageScore}/100
+                      </span>
+                      {historySummary.totalSessions >= 2 && (
+                        <span style={{
+                          fontWeight: 750,
+                          color: historySummary.trend >= 0 ? '#166534' : '#991b1b',
+                          background: historySummary.trend >= 0 ? '#dcfce7' : '#fee2e2',
+                          padding: '2px 8px',
+                          borderRadius: '6px'
+                        }}>
+                          {historySummary.trend >= 0 ? `▲ +${historySummary.trend}` : `▼ ${historySummary.trend}`} điểm so với buổi trước
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={handleClearHistory}
+                        style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '12px', cursor: 'pointer', textDecoration: 'underline' }}
+                      >
+                        Xóa lịch sử
+                      </button>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {practiceHistory.slice(-5).reverse().map((item, idx) => (
+                      <div
+                        key={item.timestamp || idx}
+                        style={{
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          background: 'var(--ifm-card-background-color, #ffffff)',
+                          border: '1px solid var(--ifm-color-emphasis-300, #e2e8f0)',
+                          fontSize: '12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}
+                      >
+                        <strong style={{ color: '#0284c7' }}>{item.companyMaskedName}</strong>
+                        <span style={{ color: 'var(--ifm-color-content-secondary, #64748b)' }}>({item.level})</span>
+                        <span style={{ fontWeight: 800, color: item.avgScore >= 75 ? '#166534' : '#0369a1' }}>{item.avgScore}đ</span>
+                        <span style={{
+                          fontSize: '11px',
+                          fontWeight: 800,
+                          padding: '1px 6px',
+                          borderRadius: '4px',
+                          background: item.decision === 'STRONG_HIRE' || item.decision === 'HIRE' ? '#dcfce7' : '#fef3c7',
+                          color: item.decision === 'STRONG_HIRE' || item.decision === 'HIRE' ? '#166534' : '#92400e'
+                        }}>
+                          {item.decision}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : activeSetupTab === 'jd-analyzer' ? (
+            /* TAB 2: AI JOB DESCRIPTION (JD) ANALYZER & CUSTOM INTERVIEW GENERATOR */
+            <div style={{ marginTop: '14px' }}>
+              <div style={{
+                padding: '16px 20px',
+                borderRadius: '12px',
+                background: 'rgba(139, 92, 246, 0.08)',
+                border: '1.5px solid rgba(139, 92, 246, 0.35)',
+                marginBottom: '18px'
+              }}>
+                <div style={{ fontWeight: 850, fontSize: '15px', color: '#7c3aed', marginBottom: '4px' }}>
+                  📄 AI Phân Tích JD (Job Description) & Tạo Đề Phỏng Vấn May Đo
+                </div>
+                <div style={{ fontSize: '13.5px', color: 'var(--ifm-color-content-secondary, #475569)', lineHeight: 1.5 }}>
+                  Dán nội dung tin tuyển dụng (JD) bạn đang nhắm tới vào ô bên dưới (hoặc chọn mẫu JD Big Tech có sẵn). Hệ thống sẽ bóc tách từ khóa công nghệ, gợi ý trình độ và tạo ngay phòng phỏng vấn sát nhất với JD đó!
+                </div>
+              </div>
+
+              {/* Sample JD Presets */}
+              <div style={{ marginBottom: '14px' }}>
+                <div style={{ fontSize: '12.5px', fontWeight: 750, color: 'var(--ifm-color-content-secondary, #64748b)', marginBottom: '8px' }}>
+                  ⚡ Chọn nhanh mẫu JD thực tế để thử nghiệm:
+                </div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {SAMPLE_JD_PRESETS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() => setJdInputText(preset.jdContent)}
+                      style={{
+                        padding: '7px 14px',
+                        borderRadius: '8px',
+                        border: jdInputText === preset.jdContent ? '2px solid #8b5cf6' : '1px solid var(--ifm-color-emphasis-300, #cbd5e1)',
+                        background: jdInputText === preset.jdContent ? 'rgba(139, 92, 246, 0.12)' : 'var(--ifm-background-color, #f8fafc)',
+                        color: jdInputText === preset.jdContent ? '#6d28d9' : 'var(--ifm-color-content, #334155)',
+                        fontSize: '12.5px',
+                        fontWeight: 750,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {preset.title} ({preset.companyHint})
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* JD Textarea Input */}
+              <div style={{ marginBottom: '20px' }}>
+                <textarea
+                  rows={6}
+                  value={jdInputText}
+                  onChange={(e) => setJdInputText(e.target.value)}
+                  placeholder="Dán nội dung Job Description (JD) tiếng Việt hoặc tiếng Anh vào đây (ví dụ: Yêu cầu Java, Spring Boot, SQL, RESTful API, Microservices...)"
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    borderRadius: '10px',
+                    border: '1.5px solid var(--ifm-color-emphasis-300, #98A2B3)',
+                    background: 'var(--ifm-background-color, #f8fafc)',
+                    color: 'var(--ifm-color-content, #0f172a)',
+                    fontSize: '13.5px',
+                    lineHeight: 1.6,
+                    outline: 'none',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+
+              {/* Instant AI JD Analysis Report */}
+              <div style={{
+                padding: '20px',
+                borderRadius: '12px',
+                background: 'var(--ifm-background-color, #f8fafc)',
+                border: '1px solid var(--ifm-color-emphasis-300, #cbd5e1)',
+                marginBottom: '22px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '14px' }}>
+                  <div style={{ fontWeight: 850, fontSize: '14.5px', color: 'var(--ifm-color-content, #0f172a)' }}>
+                    🔍 Kết Quả Bóc Tách Kỹ Năng Từ JD:
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '12.5px', color: 'var(--ifm-color-content-secondary, #64748b)' }}>
+                      Level nhận diện:
+                    </span>
+                    <span style={{
+                      padding: '3px 10px',
+                      borderRadius: '6px',
+                      background: '#f3e8ff',
+                      border: '1px solid #d8b4fe',
+                      color: '#6b21a8',
+                      fontWeight: 800,
+                      fontSize: '12.5px'
+                    }}>
+                      🎯 {jdAnalysisResult.recommendedLevel}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Detected Tech Stacks */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+                  {jdAnalysisResult.matchedKeywords.map((kw, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: '10px',
+                        background: 'var(--ifm-card-background-color, #ffffff)',
+                        border: '1px solid var(--ifm-color-emphasis-300, #e2e8f0)'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                        <span style={{ fontWeight: 800, fontSize: '13px', color: '#0284c7' }}>
+                          {kw.term}
+                        </span>
+                        <span style={{
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          padding: '1px 6px',
+                          borderRadius: '4px',
+                          background: '#dcfce7',
+                          color: '#166534'
+                        }}>
+                          {kw.category}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '12.5px', color: 'var(--ifm-color-content-secondary, #475569)', lineHeight: 1.5 }}>
+                        📌 <strong>Trọng tâm hỏi:</strong> {kw.recommendedFocus}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ textAlign: 'center', marginTop: '18px' }}>
+                  <button
+                    type="button"
+                    onClick={handleLaunchFromJD}
+                    style={{
+                      padding: '13px 34px',
+                      borderRadius: '10px',
+                      background: 'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)',
+                      color: '#ffffff',
+                      border: 'none',
+                      fontWeight: 850,
+                      fontSize: '15px',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(147, 51, 234, 0.35)'
+                    }}
+                  >
+                    🚀 Bắt Đầu Phỏng Vấn Theo Đúng JD Này ({jdAnalysisResult.recommendedLevel} • {jdAnalysisResult.detectedTopics.join(' + ')}) ➔
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : activeSetupTab === 'live-debug' ? (
+            /* TAB 3: LIVE CODE REVIEW & PRODUCTION BUG HUNTING */
+            <div style={{ marginTop: '14px' }}>
+              {(() => {
+                const currentBug = LIVE_BUG_SCENARIOS[activeBugIndex] || LIVE_BUG_SCENARIOS[0];
+                const selectedOpt = currentBug.options.find((o) => o.id === selectedBugOptionId);
+                return (
+                  <div>
+                    {/* Header & Bug Selector Pills */}
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: '12px',
+                      marginBottom: '16px'
+                    }}>
+                      <div>
+                        <div style={{ fontWeight: 850, fontSize: '15px', color: 'var(--ifm-color-content, #0f172a)' }}>
+                          🐛 Vòng Bắt Bug Thực Chiến (Live Code Review & Troubleshooting)
+                        </div>
+                        <div style={{ fontSize: '13px', color: 'var(--ifm-color-content-secondary, #64748b)' }}>
+                          Trong các vòng phỏng vấn thực tế, Interviewer rất thích đưa một đoạn code lỗi trên Production và yêu cầu bạn chỉ ra nguyên nhân gốc rễ.
+                        </div>
+                      </div>
+                      <div style={{
+                        padding: '6px 12px',
+                        borderRadius: '8px',
+                        background: '#dcfce7',
+                        border: '1px solid #86efac',
+                        color: '#166534',
+                        fontWeight: 800,
+                        fontSize: '12.5px'
+                      }}>
+                        🏆 Đã phá giải: {solvedBugIds.length} / {LIVE_BUG_SCENARIOS.length} Bug
+                      </div>
+                    </div>
+
+                    {/* Bug Navigation Pills */}
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '18px' }}>
+                      {LIVE_BUG_SCENARIOS.map((bug, idx) => {
+                        const isCurrent = idx === activeBugIndex;
+                        const isSolved = solvedBugIds.includes(bug.id);
+                        return (
+                          <button
+                            key={bug.id}
+                            type="button"
+                            onClick={() => {
+                              setActiveBugIndex(idx);
+                              setSelectedBugOptionId(null);
+                            }}
+                            style={{
+                              padding: '7px 14px',
+                              borderRadius: '8px',
+                              border: isCurrent ? '2px solid #10b981' : '1px solid var(--ifm-color-emphasis-300, #cbd5e1)',
+                              background: isCurrent ? 'rgba(16, 185, 129, 0.14)' : 'var(--ifm-background-color, #f8fafc)',
+                              color: isCurrent ? '#047857' : 'var(--ifm-color-content, #334155)',
+                              fontWeight: 750,
+                              fontSize: '12.5px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {isSolved ? '✅ ' : '🐞 '}Case #{idx + 1}: {bug.topic} ({bug.level})
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Active Bug Scenario Card */}
+                    <div style={{
+                      padding: '20px',
+                      borderRadius: '12px',
+                      background: 'var(--ifm-background-color, #f8fafc)',
+                      border: '1px solid var(--ifm-color-emphasis-300, #cbd5e1)'
+                    }}>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 800, padding: '2px 8px', borderRadius: '4px', background: '#fee2e2', color: '#991b1b', border: '1px solid #fca5a5' }}>
+                          🚨 SỰ CỐ PRODUCTION
+                        </span>
+                        <span style={{ fontSize: '12px', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: '#e0f2fe', color: '#0369a1' }}>
+                          {currentBug.topic}
+                        </span>
+                        <span style={{ fontSize: '12px', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: '#fef3c7', color: '#92400e' }}>
+                          Level: {currentBug.level}
+                        </span>
+                      </div>
+
+                      <h3 style={{ fontSize: '1.2rem', fontWeight: 850, color: 'var(--ifm-color-content, #0f172a)', margin: '0 0 8px 0' }}>
+                        {currentBug.title}
+                      </h3>
+
+                      <div style={{ fontSize: '13.5px', color: 'var(--ifm-color-content-secondary, #334155)', marginBottom: '14px', lineHeight: 1.55 }}>
+                        <strong>🔥 Triệu chứng thực tế:</strong> {currentBug.symptom}
+                      </div>
+
+                      {/* Dark Code Snippet Box */}
+                      <pre style={{
+                        background: '#0f172a',
+                        color: '#f8fafc',
+                        padding: '16px 18px',
+                        borderRadius: '10px',
+                        fontSize: '13px',
+                        lineHeight: 1.6,
+                        overflowX: 'auto',
+                        border: '1px solid #334155',
+                        marginBottom: '16px',
+                        fontFamily: 'monospace'
+                      }}>
+                        <code>{currentBug.codeSnippet}</code>
+                      </pre>
+
+                      <div style={{ fontWeight: 800, fontSize: '14px', color: 'var(--ifm-color-content, #0f172a)', marginBottom: '10px' }}>
+                        ❓ Câu hỏi từ Interviewer: {currentBug.question}
+                      </div>
+
+                      {/* Diagnostic Options */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
+                        {currentBug.options.map((opt) => {
+                          const isChosen = selectedBugOptionId === opt.id;
+                          let borderColor = 'var(--ifm-color-emphasis-300, #cbd5e1)';
+                          let bgColor = 'var(--ifm-card-background-color, #ffffff)';
+                          if (isChosen) {
+                            borderColor = opt.isCorrect ? '#10b981' : '#ef4444';
+                            bgColor = opt.isCorrect ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.08)';
+                          }
+                          return (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              onClick={() => {
+                                setSelectedBugOptionId(opt.id);
+                                if (opt.isCorrect && !solvedBugIds.includes(currentBug.id)) {
+                                  setSolvedBugIds((prev) => [...prev, currentBug.id]);
+                                }
+                              }}
+                              style={{
+                                textAlign: 'left',
+                                padding: '12px 16px',
+                                borderRadius: '10px',
+                                border: `2px solid ${borderColor}`,
+                                background: bgColor,
+                                color: 'var(--ifm-color-content, #0f172a)',
+                                fontSize: '13.5px',
+                                fontWeight: 650,
+                                cursor: 'pointer',
+                                lineHeight: 1.5,
+                                transition: 'all 0.2s ease'
+                              }}
+                            >
+                              {opt.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Instant Explanation & Senior Takeaway */}
+                      {selectedOpt && (
+                        <div style={{
+                          padding: '16px 18px',
+                          borderRadius: '10px',
+                          background: selectedOpt.isCorrect ? '#f0fdf4' : '#fef2f2',
+                          border: `1.5px solid ${selectedOpt.isCorrect ? '#86efac' : '#fca5a5'}`,
+                          color: selectedOpt.isCorrect ? '#166534' : '#991b1b'
+                        }}>
+                          <div style={{ fontWeight: 850, fontSize: '14px', marginBottom: '6px' }}>
+                            {selectedOpt.isCorrect ? '🎉 CHẨN ĐOÁN CHÍNH XÁC!' : '⚠️ CHƯA CHÍNH XÁC — HÃY THỬ LẠI!'}
+                          </div>
+                          <div style={{ fontSize: '13.5px', lineHeight: 1.55, marginBottom: '10px' }}>
+                            {selectedOpt.explanation}
+                          </div>
+                          <div style={{
+                            padding: '10px 14px',
+                            borderRadius: '8px',
+                            background: 'rgba(255, 255, 255, 0.75)',
+                            border: '1px dashed currentColor',
+                            fontSize: '13px',
+                            fontWeight: 700
+                          }}>
+                            💡 <strong>Bài học thực chiến (Senior Takeaway):</strong> {currentBug.seniorTakeaway}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          ) : activeSetupTab === 'behavioral' ? (
+            /* TAB: BEHAVIORAL ROUND WITH STAR COACH */
+            <div style={{ marginTop: '14px' }}>
+              {(() => {
+                const bq = BEHAVIORAL_QUESTIONS[activeBehavioralIndex] || BEHAVIORAL_QUESTIONS[0];
+                const starParts: Array<{ key: 'situation' | 'task' | 'action' | 'result'; label: string }> = [
+                  { key: 'situation', label: 'S — Situation (Bối cảnh)' },
+                  { key: 'task', label: 'T — Task (Nhiệm vụ)' },
+                  { key: 'action', label: 'A — Action (Hành động)' },
+                  { key: 'result', label: 'R — Result (Kết quả)' }
+                ];
+                return (
+                  <div>
+                    <div style={{ padding: '16px 20px', borderRadius: '12px', background: 'rgba(249, 115, 22, 0.08)', border: '1.5px solid rgba(249, 115, 22, 0.35)', marginBottom: '16px' }}>
+                      <div style={{ fontWeight: 850, fontSize: '15px', color: '#c2410c', marginBottom: '4px' }}>
+                        🗣️ Vòng Behavioral / Culture Fit — Huấn Luyện Kể Chuyện Theo Mô Hình STAR
+                      </div>
+                      <div style={{ fontSize: '13.5px', color: 'var(--ifm-color-content-secondary, #475569)', lineHeight: 1.5 }}>
+                        Rất nhiều ứng viên giỏi kỹ thuật vẫn trượt ở vòng này. Hãy kể một câu chuyện thật của bạn theo cấu trúc <strong>Situation ➔ Task ➔ Action ➔ Result</strong>, hệ thống sẽ kiểm tra từng thành phần và mức độ định lượng.
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                      {BEHAVIORAL_QUESTIONS.map((q, idx) => (
+                        <button
+                          key={q.id}
+                          type="button"
+                          onClick={() => handleSelectBehavioral(idx)}
+                          style={{
+                            padding: '7px 12px',
+                            borderRadius: '8px',
+                            border: idx === activeBehavioralIndex ? '2px solid #f97316' : '1px solid var(--ifm-color-emphasis-300, #cbd5e1)',
+                            background: idx === activeBehavioralIndex ? 'rgba(249, 115, 22, 0.12)' : 'var(--ifm-background-color, #f8fafc)',
+                            color: idx === activeBehavioralIndex ? '#9a3412' : 'var(--ifm-color-content, #334155)',
+                            fontWeight: 750,
+                            fontSize: '12.5px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {q.competency}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div style={{ padding: '18px 20px', borderRadius: '12px', background: 'var(--ifm-background-color, #f8fafc)', border: '1px solid var(--ifm-color-emphasis-300, #cbd5e1)', marginBottom: '14px' }}>
+                      <div style={{ fontSize: '12px', fontWeight: 800, color: '#9a3412', marginBottom: '6px' }}>
+                        🏢 Phong cách: {bq.companyHint}
+                      </div>
+                      <h3 style={{ fontSize: '1.15rem', fontWeight: 850, color: 'var(--ifm-color-content, #0f172a)', margin: '0 0 8px 0', lineHeight: 1.45 }}>
+                        “{bq.question}”
+                      </h3>
+                      <div style={{ fontSize: '13px', color: 'var(--ifm-color-content-secondary, #475569)', fontStyle: 'italic' }}>
+                        🎯 Interviewer muốn thấy: {bq.whatInterviewerSeeks}
+                      </div>
+                    </div>
+
+                    <textarea
+                      rows={7}
+                      value={behavioralAnswer}
+                      onChange={(e) => setBehavioralAnswer(e.target.value)}
+                      placeholder="Ví dụ: Khi làm đồ án tốt nghiệp... Nhiệm vụ của em là... Em đã... Kết quả là giảm thời gian phản hồi từ 3 giây xuống 200ms..."
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        borderRadius: '10px',
+                        border: '1.5px solid var(--ifm-color-emphasis-300, #98A2B3)',
+                        background: 'var(--ifm-background-color, #f8fafc)',
+                        color: 'var(--ifm-color-content, #0f172a)',
+                        fontSize: '14px',
+                        lineHeight: 1.6,
+                        outline: 'none',
+                        resize: 'vertical',
+                        marginBottom: '12px'
+                      }}
+                    />
+
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                      <button
+                        type="button"
+                        onClick={handleEvaluateBehavioral}
+                        disabled={!behavioralAnswer.trim()}
+                        style={{
+                          padding: '11px 24px',
+                          borderRadius: '10px',
+                          background: behavioralAnswer.trim() ? 'linear-gradient(135deg, #f59e0b 0%, #fb923c 100%)' : '#94a3b8',
+                          color: '#ffffff',
+                          border: 'none',
+                          fontWeight: 800,
+                          fontSize: '14px',
+                          cursor: behavioralAnswer.trim() ? 'pointer' : 'not-allowed'
+                        }}
+                      >
+                        🧪 Chấm Điểm Câu Chuyện STAR
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowSampleStar(!showSampleStar)}
+                        style={{
+                          padding: '11px 18px',
+                          borderRadius: '10px',
+                          background: 'transparent',
+                          border: '1.5px solid #f97316',
+                          color: '#c2410c',
+                          fontWeight: 750,
+                          fontSize: '13.5px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {showSampleStar ? '🔼 Ẩn câu trả lời mẫu' : '📖 Xem câu trả lời mẫu STAR'}
+                      </button>
+                    </div>
+
+                    {behavioralEval && (
+                      <div style={{ padding: '18px 20px', borderRadius: '12px', background: 'var(--ifm-background-color, #f8fafc)', border: '1px solid var(--ifm-color-emphasis-300, #cbd5e1)', marginBottom: '14px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '12px' }}>
+                          <div style={{ fontWeight: 850, fontSize: '14.5px', color: 'var(--ifm-color-content, #0f172a)' }}>
+                            📋 Kết quả phân tích STAR ({behavioralEval.wordCount} từ)
+                          </div>
+                          <span style={{
+                            padding: '4px 12px',
+                            borderRadius: '8px',
+                            fontWeight: 900,
+                            fontSize: '14px',
+                            background: behavioralEval.score >= 80 ? '#dcfce7' : behavioralEval.score >= 50 ? '#fef3c7' : '#fee2e2',
+                            color: behavioralEval.score >= 80 ? '#166534' : behavioralEval.score >= 50 ? '#92400e' : '#991b1b'
+                          }}>
+                            {behavioralEval.score} / 100
+                          </span>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px', marginBottom: '12px' }}>
+                          {starParts.map((part) => (
+                            <div key={part.key} style={{
+                              padding: '8px 12px',
+                              borderRadius: '8px',
+                              fontSize: '12.5px',
+                              fontWeight: 750,
+                              background: behavioralEval.detected[part.key] ? '#dcfce7' : '#fee2e2',
+                              color: behavioralEval.detected[part.key] ? '#166534' : '#991b1b',
+                              border: `1px solid ${behavioralEval.detected[part.key] ? '#86efac' : '#fca5a5'}`
+                            }}>
+                              {behavioralEval.detected[part.key] ? '✅' : '❌'} {part.label}
+                            </div>
+                          ))}
+                          <div style={{
+                            padding: '8px 12px',
+                            borderRadius: '8px',
+                            fontSize: '12.5px',
+                            fontWeight: 750,
+                            background: behavioralEval.hasMetrics ? '#dcfce7' : '#fef3c7',
+                            color: behavioralEval.hasMetrics ? '#166534' : '#92400e',
+                            border: `1px solid ${behavioralEval.hasMetrics ? '#86efac' : '#fcd34d'}`
+                          }}>
+                            {behavioralEval.hasMetrics ? '📈 Có số liệu định lượng' : '📉 Thiếu số liệu định lượng'}
+                          </div>
+                        </div>
+                        <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '13px', lineHeight: 1.6, color: 'var(--ifm-color-content, #1e293b)' }}>
+                          {behavioralEval.feedback.map((f, i) => (
+                            <li key={i}>{f}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {showSampleStar && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '10px' }}>
+                        {starParts.map((part) => (
+                          <div key={part.key} style={{ padding: '12px 14px', borderRadius: '10px', background: 'var(--ifm-card-background-color, #ffffff)', border: '1px solid var(--ifm-color-emphasis-300, #e2e8f0)' }}>
+                            <div style={{ fontWeight: 850, fontSize: '12.5px', color: '#c2410c', marginBottom: '4px' }}>{part.label}</div>
+                            <div style={{ fontSize: '13px', lineHeight: 1.55, color: 'var(--ifm-color-content, #1e293b)' }}>{bq.sampleStarAnswer[part.key]}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          ) : activeSetupTab === 'rapid-fire' ? (
+            /* TAB: RAPID-FIRE LIGHTNING ROUND (TRUE / FALSE) */
+            <div style={{ marginTop: '14px' }}>
+              <div style={{ padding: '16px 20px', borderRadius: '12px', background: 'rgba(225, 29, 72, 0.07)', border: '1.5px solid rgba(225, 29, 72, 0.3)', marginBottom: '16px' }}>
+                <div style={{ fontWeight: 850, fontSize: '15px', color: '#be123c', marginBottom: '4px' }}>
+                  ⚡ Rapid-Fire Round — Phản Xạ Đúng / Sai Dưới Áp Lực Thời Gian
+                </div>
+                <div style={{ fontSize: '13.5px', color: 'var(--ifm-color-content-secondary, #475569)', lineHeight: 1.5 }}>
+                  {RAPID_FIRE_ROUND_SIZE} nhận định kỹ thuật, mỗi câu {RAPID_FIRE_SECONDS_PER_QUESTION} giây. Mô phỏng phần "hỏi nhanh đáp gọn" mà interviewer hay dùng để kiểm tra nền tảng trong vài phút đầu.
+                </div>
+              </div>
+
+              {rfStatus === 'idle' && (
+                <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                  <button
+                    type="button"
+                    onClick={handleStartRapidFire}
+                    style={{
+                      padding: '14px 40px',
+                      borderRadius: '12px',
+                      background: 'linear-gradient(135deg, #f59e0b 0%, #fb923c 100%)',
+                      color: '#ffffff',
+                      border: 'none',
+                      fontWeight: 850,
+                      fontSize: '16px',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4)'
+                    }}
+                  >
+                    ⚡ Bắt Đầu Vòng Hỏi Nhanh
+                  </button>
+                </div>
+              )}
+
+              {rfStatus === 'playing' && rfRound[rfIndex] && (() => {
+                const st = rfRound[rfIndex];
+                const answered = rfAnswer !== null;
+                const correct = answered && rfAnswer === st.isTrue;
+                return (
+                  <div style={{ padding: '20px', borderRadius: '12px', background: 'var(--ifm-background-color, #f8fafc)', border: '1px solid var(--ifm-color-emphasis-300, #cbd5e1)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--ifm-color-content-secondary, #64748b)' }}>
+                        Câu {rfIndex + 1}/{rfRound.length} • {st.topic} • Điểm: {rfScore}
+                      </span>
+                      <span style={{ fontFamily: 'monospace', fontSize: '15px', fontWeight: 900, color: rfTimeLeft <= 3 ? '#dc2626' : '#0284c7' }}>
+                        ⏱️ {rfTimeLeft}s
+                      </span>
+                    </div>
+                    <div style={{ width: '100%', height: '6px', borderRadius: '999px', background: 'var(--ifm-color-emphasis-200, #e2e8f0)', overflow: 'hidden', marginBottom: '16px' }}>
+                      <div style={{
+                        width: `${(rfTimeLeft / RAPID_FIRE_SECONDS_PER_QUESTION) * 100}%`,
+                        height: '100%',
+                        background: rfTimeLeft <= 3 ? '#ef4444' : '#38bdf8',
+                        transition: 'width 1s linear'
+                      }} />
+                    </div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 850, color: 'var(--ifm-color-content, #0f172a)', marginBottom: '16px', lineHeight: 1.45 }}>
+                      “{st.statement}”
+                    </div>
+                    {!answered ? (
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <button type="button" onClick={() => handleRapidFireAnswer(true)} style={{ padding: '14px', borderRadius: '10px', border: '2px solid #10b981', background: '#dcfce7', color: '#166534', fontWeight: 850, fontSize: '15px', cursor: 'pointer' }}>
+                          ✅ ĐÚNG
+                        </button>
+                        <button type="button" onClick={() => handleRapidFireAnswer(false)} style={{ padding: '14px', borderRadius: '10px', border: '2px solid #ef4444', background: '#fee2e2', color: '#991b1b', fontWeight: 850, fontSize: '15px', cursor: 'pointer' }}>
+                          ❌ SAI
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <div style={{
+                          padding: '12px 16px',
+                          borderRadius: '10px',
+                          background: correct ? '#f0fdf4' : '#fef2f2',
+                          border: `1.5px solid ${correct ? '#86efac' : '#fca5a5'}`,
+                          color: correct ? '#166534' : '#991b1b',
+                          fontSize: '13.5px',
+                          lineHeight: 1.55,
+                          marginBottom: '12px'
+                        }}>
+                          <strong>{rfAnswer === 'timeout' ? '⏰ Hết giờ! ' : correct ? '🎉 Chính xác! ' : '⚠️ Chưa đúng! '}</strong>
+                          {st.explanation}
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <button type="button" onClick={handleRapidFireNext} style={{ padding: '10px 22px', borderRadius: '10px', background: '#0ea5e9', color: '#ffffff', border: 'none', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}>
+                            {rfIndex + 1 >= rfRound.length ? 'Xem Kết Quả ➔' : 'Câu Tiếp Theo ➔'}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {rfStatus === 'done' && (
+                <div style={{ padding: '20px', borderRadius: '12px', background: 'var(--ifm-background-color, #f8fafc)', border: '1px solid var(--ifm-color-emphasis-300, #cbd5e1)' }}>
+                  <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+                    <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--ifm-color-content-secondary, #64748b)' }}>KẾT QUẢ VÒNG HỎI NHANH</div>
+                    <div style={{ fontSize: '2.6rem', fontWeight: 900, color: rfScore >= 8 ? '#10b981' : rfScore >= 5 ? '#0ea5e9' : '#ef4444' }}>
+                      {rfScore}/{rfRound.length}
+                    </div>
+                    <div style={{ fontSize: '13.5px', color: 'var(--ifm-color-content, #1e293b)' }}>
+                      {rfScore >= 8 ? '🔥 Phản xạ nền tảng rất vững — sẵn sàng cho vòng kỹ thuật sâu!' : rfScore >= 5 ? '👍 Khá ổn, hãy ôn lại các câu sai bên dưới.' : '📚 Cần củng cố nền tảng trước khi phỏng vấn thật.'}
+                    </div>
+                  </div>
+                  {rfMistakes.length > 0 && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <div style={{ fontWeight: 850, fontSize: '13.5px', color: '#991b1b', marginBottom: '8px' }}>📌 Các nhận định cần ôn lại:</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {rfMistakes.map((m) => (
+                          <div key={m.id} style={{ padding: '10px 14px', borderRadius: '8px', background: 'var(--ifm-card-background-color, #ffffff)', border: '1px solid var(--ifm-color-emphasis-300, #e2e8f0)', fontSize: '13px', lineHeight: 1.5, color: 'var(--ifm-color-content, #1e293b)' }}>
+                            <strong>“{m.statement}”</strong> → <span style={{ color: m.isTrue ? '#166534' : '#991b1b', fontWeight: 800 }}>{m.isTrue ? 'ĐÚNG' : 'SAI'}</span>. {m.explanation}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div style={{ textAlign: 'center' }}>
+                    <button type="button" onClick={handleStartRapidFire} style={{ padding: '12px 30px', borderRadius: '10px', background: 'linear-gradient(135deg, #f59e0b 0%, #fb923c 100%)', color: '#ffffff', border: 'none', fontWeight: 850, fontSize: '15px', cursor: 'pointer' }}>
+                      🔄 Chơi Lại Vòng Mới
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
-            /* TAB 2: QUESTION BANK & FULL OUTLINES EXPLORER */
+            /* TAB 4: QUESTION BANK & FULL OUTLINES EXPLORER */
             <div style={{ marginTop: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
                 <div style={{ fontWeight: 800, fontSize: '15px', color: 'var(--ifm-color-content, #0f172a)' }}>
@@ -1222,13 +2224,80 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
 
           {/* Candidate Answer Box */}
           <div style={{ marginBottom: '22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            {/* 1-Click Answer Structure Framework Builder */}
+            <div style={{
+              padding: '12px 14px',
+              borderRadius: '10px',
+              background: 'var(--ifm-color-emphasis-100, #f8fafc)',
+              border: '1px dashed var(--ifm-color-emphasis-300, #cbd5e1)',
+              marginBottom: '12px'
+            }}>
+              <div style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--ifm-color-content, #0f172a)', marginBottom: '6px' }}>
+                🧩 Gợi ý Khung Trả Lời Chuẩn Senior (Bấm để chèn sườn bài tránh bí ý):
+              </div>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {ANSWER_FRAMEWORK_TEMPLATES.map((tpl) => (
+                  <button
+                    key={tpl.id}
+                    type="button"
+                    title={tpl.description}
+                    onClick={() => {
+                      setCurrentUserAnswer((prev) =>
+                        prev.trim() ? `${prev.trim()}\n\n${tpl.templateText}` : tpl.templateText
+                      );
+                    }}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      border: '1px solid #0284c7',
+                      background: 'var(--ifm-card-background-color, #ffffff)',
+                      color: '#0284c7',
+                      fontSize: '12px',
+                      fontWeight: 750,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    + {tpl.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
               <label style={{ fontWeight: 800, fontSize: '14px', color: 'var(--ifm-color-content, #0f172a)' }}>
                 Câu trả lời của bạn:
               </label>
-              <span style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary, #64748b)' }}>
-                {currentUserAnswer.trim() ? `${currentUserAnswer.trim().split(/\s+/).length} từ` : '0 từ'} • {currentUserAnswer.length} ký tự
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                {(() => {
+                  const words = currentUserAnswer.trim() ? currentUserAnswer.trim().split(/\s+/).length : 0;
+                  const hasStructure = /(\n|1\.|2\.|- |\• )/.test(currentUserAnswer);
+                  return (
+                    <>
+                      <span style={{
+                        fontSize: '11.5px',
+                        fontWeight: 750,
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        background: hasStructure ? '#dcfce7' : '#f1f5f9',
+                        color: hasStructure ? '#166534' : '#64748b'
+                      }}>
+                        {hasStructure ? '✓ Bố cục rõ ràng' : '○ Chưa tách ý'}
+                      </span>
+                      <span style={{
+                        fontSize: '11.5px',
+                        fontWeight: 750,
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        background: words >= 45 ? '#dcfce7' : words >= 20 ? '#fef3c7' : '#f1f5f9',
+                        color: words >= 45 ? '#166534' : words >= 20 ? '#92400e' : '#64748b'
+                      }}>
+                        {words >= 45 ? '🔥 Độ sâu tốt' : words >= 20 ? '⚡ Đang triển khai' : '✏️ Hãy viết chi tiết'} ({words} từ)
+                      </span>
+                    </>
+                  );
+                })()}
+              </div>
             </div>
 
             <textarea
@@ -1573,6 +2642,105 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
               </p>
             </div>
           </div>
+
+          {/* AI INTERVIEWER SOCRATIC FOLLOW-UP PROBES */}
+          {(() => {
+            const followUpProbes = generateInterviewerProbes(
+              currentQuestion.topic,
+              currentEvaluation.missingPoints.map((m) => m.point.pointText),
+              currentQuestion.trapWarning,
+              currentEvaluation.score
+            );
+            return (
+              <div style={{
+                padding: '18px 20px',
+                borderRadius: '12px',
+                background: 'var(--ifm-color-emphasis-100, #f8fafc)',
+                border: '1.5px dashed #8b5cf6',
+                marginTop: '16px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '20px' }}>{currentInterviewer.avatarIcon}</span>
+                  <span style={{ fontWeight: 850, fontSize: '14px', color: '#6d28d9' }}>
+                    🔥 Câu Hỏi Đào Sâu Bổ Sung (Follow-up Probes) Từ {currentInterviewer.name}:
+                  </span>
+                </div>
+                <div style={{ fontSize: '13px', color: 'var(--ifm-color-content-secondary, #475569)', marginBottom: '10px' }}>
+                  Trong phỏng vấn thực tế, sau khi bạn trả lời xong ý chính, Interviewer sẽ lập tức hỏi xoáy thêm các câu dưới đây để kiểm tra độ hiểu sâu:
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+                  {followUpProbes.map((probe, pIdx) => (
+                    <div
+                      key={pIdx}
+                      style={{
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        background: 'var(--ifm-card-background-color, #ffffff)',
+                        border: '1px solid var(--ifm-color-emphasis-300, #e2e8f0)',
+                        fontSize: '13.5px',
+                        color: 'var(--ifm-color-content, #1e293b)',
+                        lineHeight: 1.55
+                      }}
+                    >
+                      {probe}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Quick Practice Reply for Follow-up Probe */}
+                {!probeReplySubmitted ? (
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <input
+                      type="text"
+                      value={probeReplyText}
+                      onChange={(e) => setProbeReplyText(e.target.value)}
+                      placeholder="Thử gõ nhanh hướng trả lời của bạn cho câu hỏi đào sâu trên..."
+                      style={{
+                        flex: '1 1 260px',
+                        padding: '9px 14px',
+                        borderRadius: '8px',
+                        border: '1px solid var(--ifm-color-emphasis-300, #98A2B3)',
+                        background: 'var(--ifm-background-color, #ffffff)',
+                        color: 'var(--ifm-color-content, #0f172a)',
+                        fontSize: '13px',
+                        outline: 'none'
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (probeReplyText.trim()) setProbeReplySubmitted(true);
+                      }}
+                      style={{
+                        padding: '9px 16px',
+                        borderRadius: '8px',
+                        background: '#8b5cf6',
+                        color: '#ffffff',
+                        border: 'none',
+                        fontWeight: 750,
+                        fontSize: '13px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Phản hồi Follow-up ➔
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    background: '#dcfce7',
+                    border: '1px solid #86efac',
+                    color: '#166534',
+                    fontSize: '13px',
+                    fontWeight: 700
+                  }}>
+                    👏 {currentInterviewer.name}: "Rất tốt! Phản xạ xử lý câu hỏi phụ (Follow-up) nhanh nhạy như vậy sẽ giúp bạn ghi điểm cộng lớn ở vòng Bar Raiser!"
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
 
@@ -1904,7 +3072,7 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
           <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', color: 'var(--ifm-color-content, #0f172a)' }}>
             📊 Phân Tích Điểm Theo Chủ Đề:
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', marginBottom: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', marginBottom: '28px' }}>
             {Object.entries(summaryStats.byTopic).map(([topic, score]) => (
               <div key={topic} style={{
                 padding: '16px',
@@ -1921,6 +3089,47 @@ export default function MockInterviewStudio({ onSwitchTab }: MockInterviewStudio
               </div>
             ))}
           </div>
+
+          {/* 4-Axis Competency Radar & Personalized Study Roadmap */}
+          {(() => {
+            const base = summaryStats.avgScore;
+            const structuredCount = answersHistory.filter((a) => /(\n|1\.|2\.|- )/.test(a.userAnswer)).length;
+            const structureScore = answersHistory.length > 0 ? Math.min(100, Math.round((structuredCount / answersHistory.length) * 40 + base * 0.65)) : 0;
+            const depthScore = Math.min(100, Math.max(15, Math.round(base * 0.95)));
+            const practicalScore = Math.min(100, Math.max(20, Math.round(base * 0.9 + (askedQuestionsHistory.length > 0 ? 12 : 0))));
+            const axes = [
+              { label: 'Kiến thức Nền tảng (Core Concepts)', val: base, color: '#0ea5e9' },
+              { label: 'Hiểu sâu Cơ chế (Under-the-Hood)', val: depthScore, color: '#8b5cf6' },
+              { label: 'Tư duy Thực chiến & Edge-Case', val: practicalScore, color: '#10b981' },
+              { label: 'Trình bày Cấu trúc & Phản biện', val: structureScore, color: '#f59e0b' }
+            ];
+            return (
+              <div style={{
+                padding: '20px 24px',
+                borderRadius: '12px',
+                background: 'var(--ifm-background-color, #f8fafc)',
+                border: '1px solid var(--ifm-color-emphasis-300, #cbd5e1)',
+                marginBottom: '30px'
+              }}>
+                <div style={{ fontWeight: 850, fontSize: '15px', color: 'var(--ifm-color-content, #0f172a)', marginBottom: '14px' }}>
+                  🧭 Bản Đồ Năng Lực Kỹ Sư 4 Trục (Bar Raiser Competency Matrix):
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
+                  {axes.map((ax, i) => (
+                    <div key={i}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', fontWeight: 750, marginBottom: '5px', color: 'var(--ifm-color-content, #1e293b)' }}>
+                        <span>{ax.label}</span>
+                        <span style={{ color: ax.color, fontWeight: 850 }}>{ax.val}%</span>
+                      </div>
+                      <div style={{ width: '100%', height: '8px', borderRadius: '999px', background: 'var(--ifm-color-emphasis-200, #e2e8f0)', overflow: 'hidden' }}>
+                        <div style={{ width: `${ax.val}%`, height: '100%', background: ax.color, borderRadius: '999px' }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Question By Question Review with DÀN Ý */}
           <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', color: 'var(--ifm-color-content, #0f172a)' }}>

@@ -2438,6 +2438,309 @@ export const MOCK_INTERVIEW_QUESTIONS: MockInterviewQuestion[] = [
     idealAnswer: 'Mạng phân phối nội dung CDN (Content Delivery Network) là hạ tầng cốt lõi giúp các ứng dụng Web phục vụ hàng trăm triệu người dùng trên toàn cầu với tốc độ cao: 1. Nguyên lý vận hành và Anycast DNS: Thay vì để toàn bộ người dùng từ khắp nơi trên thế giới truy cập về một trung tâm dữ liệu gốc (Origin Server ở Hà Nội hay Singapore), nhà cung cấp CDN (như Cloudflare, AWS CloudFront, Fastly) xây dựng hàng trăm điểm hiện diện Edge Servers (Point of Presence - PoP) rải rác khắp các châu lục. Kỹ thuật Anycast DNS công bố cùng 1 dải địa chỉ IP duy nhất từ tất cả các PoP này; hệ thống định tuyến BGP của mạng Internet toàn cầu sẽ tự động dẫn đường gói tin của người dùng đến Edge Server gần nhất về mặt khoảng cách mạng, giúp giảm thời gian khứ hồi RTT từ hàng trăm mili-giây xuống chỉ còn 5-10ms; 2. Các chỉ thị điều khiển HTTP Cache: - `s-maxage` (Shared max-age): Cho phép phân biệt thời gian cache giữa trình duyệt và CDN. Ví dụ `Cache-Control: public, max-age=60, s-maxage=86400` nghĩa là trình duyệt của người dùng chỉ cache 1 phút, nhưng máy chủ Edge của CDN được phép cache bản ghi đó tới 24 giờ; - `stale-while-revalidate`: Chỉ thị tuyệt vời cho trải nghiệm người dùng: Nếu cache đã hết hạn, CDN vẫn lập tức trả về nội dung cũ (stale response) cho người dùng trong vòng 0ms, đồng thời âm thầm gửi một request ngầm về Origin Server để lấy bản mới nhất nạp lại vào cache; 3. Chiến lược làm mới bộ nhớ đệm (Cache Invalidation): - Phương pháp chủ động Purge: Gửi API Purge tới CDN để xóa các URL cụ thể hoặc dùng `Surrogate-Key` / `Cache-Tags` để xóa đồng loạt các tài nguyên liên quan khi có cập nhật dữ liệu; - Phương pháp tối ưu chuẩn hiện đại (Content Hash / Fingerprinting): Đối với static assets (JS, CSS, Ảnh), các công cụ build (Webpack/Vite) tự động gắn mã băm nội dung vào tên file (ví dụ: `app.4f9a1b.js`). Lúc này ta có thể tự tin cấu hình: `Cache-Control: public, max-age=31536000, immutable` (cache vĩnh viễn 1 năm). Khi có code mới, tên file tự động đổi thành `app.8c2e3d.js`, người dùng tải ngay file mới mà không bao giờ cần tốn công chạy lệnh purge cache!',
     trapWarning: 'Nếu vô tình cache nhầm một API có header `Set-Cookie` chứa Session ID lên CDN (do thiếu chỉ thị `private`), tất cả những người dùng tiếp theo truy cập qua CDN đó sẽ nhận được Session ID của người đầu tiên, dẫn đến thảm họa rò rỉ và chiếm quyền tài khoản hàng loạt!',
     scoringCriteria: 'Giải thích được cơ chế Edge PoP và Anycast DNS, phân biệt rõ tác dụng của s-maxage và stale-while-revalidate, và so sánh 2 chiến lược Invalidation (Purge API vs Content Hash).'
+  },
+  // ==========================================
+  // BỔ SUNG: CÂU HỎI MỚI (ĐỢT 3)
+  // ==========================================
+  {
+    id: 'java-final-finally-finalize',
+    topic: 'Java Backend',
+    level: 'Intern',
+    question: 'Phân biệt final, finally và finalize() trong Java. Vì sao finalize() bị deprecated và nên dùng gì thay thế?',
+    contextPrompt: 'Câu hỏi khởi động kinh điển cho Intern, kiểm tra nền tảng từ khóa Java và hiểu biết về quản lý tài nguyên.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'final: biến không thể gán lại, method không thể override, class không thể kế thừa. Lưu ý final reference vẫn cho phép thay đổi trạng thái bên trong object.',
+        keywords: ['final', 'không thể gán lại', 'override', 'kế thừa', 'immutable', 'hằng số'],
+        weight: 35
+      },
+      {
+        id: 'p2',
+        pointText: 'finally: khối luôn được thực thi sau try/catch (kể cả khi có return), dùng để giải phóng tài nguyên; chỉ không chạy khi System.exit() hoặc JVM crash.',
+        keywords: ['finally', 'luôn chạy', 'giải phóng tài nguyên', 'system.exit', 'try catch'],
+        weight: 35
+      },
+      {
+        id: 'p3',
+        pointText: 'finalize(): được GC gọi trước khi thu hồi object, không đảm bảo thời điểm hay việc có được gọi; deprecated từ Java 9. Thay bằng try-with-resources (AutoCloseable) hoặc java.lang.ref.Cleaner.',
+        keywords: ['finalize', 'deprecated', 'garbage collector', 'try-with-resources', 'autocloseable', 'cleaner'],
+        weight: 30
+      }
+    ],
+    idealAnswer: 'Ba khái niệm này chỉ giống nhau về tên: 1. final là từ khóa: biến final không thể gán lại (nhưng nếu là reference thì object bên trong vẫn có thể bị thay đổi, ví dụ final List vẫn add được phần tử), method final không thể override, class final không thể kế thừa (ví dụ String). 2. finally là khối lệnh đi kèm try/catch, luôn được thực thi kể cả khi try có return hoặc ném exception, dùng để đóng connection, file, lock. Nó chỉ không chạy khi gọi System.exit() hoặc JVM bị kill. Không nên return trong finally vì sẽ nuốt mất exception. 3. finalize() là method của Object được GC gọi trước khi thu hồi object. Nó không đảm bảo thời điểm chạy, thậm chí có thể không bao giờ chạy, làm chậm GC và có thể "hồi sinh" object. Vì vậy nó bị deprecated từ Java 9 (đánh dấu forRemoval từ Java 18). Cách thay thế chuẩn là try-with-resources với AutoCloseable để đóng tài nguyên một cách xác định, hoặc java.lang.ref.Cleaner cho các trường hợp đặc biệt.',
+    trapWarning: 'Nhiều bạn nói "final List thì không thêm phần tử được" — sai! final chỉ khóa reference, không khóa nội dung. Muốn bất biến thật sự phải dùng List.of() hoặc Collections.unmodifiableList().',
+    scoringCriteria: 'Phân biệt rõ 3 khái niệm, nêu được final reference vẫn mutable, finally luôn chạy (trừ System.exit), finalize deprecated và thay thế bằng try-with-resources/Cleaner.'
+  },
+  {
+    id: 'java-optional-orelse-vs-orelseget',
+    topic: 'Java Backend',
+    level: 'Fresher',
+    question: 'Sự khác nhau giữa Optional.orElse() và Optional.orElseGet() là gì? Những anti-pattern nào khi dùng Optional cần tránh?',
+    contextPrompt: 'Kiểm tra hiểu biết về eager vs lazy evaluation và cách dùng Optional đúng chuẩn trong code production.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'orElse(value) luôn đánh giá tham số ngay lập tức (eager) kể cả khi Optional có giá trị; orElseGet(supplier) chỉ gọi Supplier khi Optional rỗng (lazy).',
+        keywords: ['orelse', 'orelseget', 'eager', 'lazy', 'supplier', 'luôn thực thi'],
+        weight: 40
+      },
+      {
+        id: 'p2',
+        pointText: 'Hệ quả thực tế: orElse(createDefaultUser()) hoặc orElse(repo.save(...)) sẽ luôn gọi DB / tạo object thừa, gây lãng phí hoặc side-effect ngoài ý muốn.',
+        keywords: ['side effect', 'gọi database', 'lãng phí', 'tạo object thừa', 'hiệu năng'],
+        weight: 30
+      },
+      {
+        id: 'p3',
+        pointText: 'Anti-pattern: dùng Optional làm field hoặc tham số method, gọi get() không kiểm tra, dùng isPresent() + get() thay vì map/orElseThrow, trả về Optional cho Collection (nên trả về Collection rỗng).',
+        keywords: ['anti-pattern', 'field', 'tham số', 'get()', 'ispresent', 'orelsethrow', 'collection rỗng'],
+        weight: 30
+      }
+    ],
+    idealAnswer: 'Khác biệt cốt lõi nằm ở thời điểm đánh giá: orElse(T other) nhận một giá trị đã được tính sẵn, nên biểu thức truyền vào LUÔN được thực thi trước khi gọi method, kể cả khi Optional đã có giá trị. orElseGet(Supplier<T>) nhận một hàm và chỉ gọi nó khi Optional rỗng. Ví dụ userRepo.findById(id).orElse(userRepo.save(new User())) sẽ luôn insert thêm một user mới vào DB dù tìm thấy user cũ — đây là bug side-effect thực tế. Quy tắc: dùng orElse cho hằng số hoặc giá trị rẻ (orElse("N/A")), dùng orElseGet cho tính toán tốn kém hoặc có side-effect, dùng orElseThrow để ném exception nghiệp vụ. Các anti-pattern cần tránh: (1) dùng Optional làm field của Entity/DTO hoặc tham số method — Optional được thiết kế cho kiểu trả về, không Serializable; (2) gọi get() mà không kiểm tra, hoặc isPresent() rồi get() — nên dùng map/flatMap/ifPresent/orElseThrow; (3) trả về Optional<List<T>> — nên trả List rỗng; (4) dùng Optional.of(null) gây NPE — dùng Optional.ofNullable.',
+    trapWarning: 'Câu "orElse và orElseGet giống nhau, chỉ khác cú pháp" là câu trả lời mất điểm ngay lập tức. Interviewer thường đưa ví dụ orElse(repo.save(...)) để bẫy bạn.',
+    scoringCriteria: 'Giải thích eager vs lazy, nêu ví dụ side-effect thực tế, liệt kê ít nhất 2 anti-pattern của Optional.'
+  },
+  {
+    id: 'java-stream-lazy-evaluation',
+    topic: 'Java Backend',
+    level: 'Fresher',
+    question: 'Java Stream hoạt động theo cơ chế Lazy Evaluation như thế nào? Phân biệt Intermediate và Terminal operation, và khi nào không nên dùng parallelStream()?',
+    contextPrompt: 'Kiểm tra hiểu biết về Stream pipeline, short-circuit và rủi ro hiệu năng khi dùng song song.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'Intermediate operation (filter, map, sorted) trả về Stream mới và không chạy cho tới khi có Terminal operation (collect, forEach, count, findFirst) kích hoạt pipeline.',
+        keywords: ['intermediate', 'terminal', 'lazy', 'filter', 'map', 'collect', 'pipeline'],
+        weight: 35
+      },
+      {
+        id: 'p2',
+        pointText: 'Các phần tử được xử lý theo từng phần tử qua toàn bộ pipeline (vertical processing) và hỗ trợ short-circuit (findFirst, anyMatch, limit) nên không duyệt hết dữ liệu.',
+        keywords: ['short-circuit', 'findfirst', 'anymatch', 'limit', 'từng phần tử', 'không duyệt hết'],
+        weight: 30
+      },
+      {
+        id: 'p3',
+        pointText: 'parallelStream dùng chung ForkJoinPool.commonPool; không nên dùng cho tác vụ I/O blocking, dữ liệu nhỏ, LinkedList khó chia, hoặc khi có shared mutable state.',
+        keywords: ['parallelstream', 'forkjoinpool', 'commonpool', 'blocking i/o', 'shared mutable state', 'dữ liệu nhỏ'],
+        weight: 35
+      }
+    ],
+    idealAnswer: 'Stream là một pipeline gồm nguồn dữ liệu, các Intermediate operation và đúng một Terminal operation. Intermediate operation như filter, map, sorted chỉ khai báo phép biến đổi và trả về Stream mới, không thực thi gì cả. Chỉ khi gọi Terminal operation như collect, forEach, count, reduce, findFirst thì pipeline mới chạy. Khi chạy, mỗi phần tử đi lần lượt qua toàn bộ chuỗi thao tác (vertical) chứ không phải filter hết rồi mới map hết. Nhờ vậy các thao tác short-circuit như findFirst, anyMatch, limit có thể dừng sớm mà không cần duyệt toàn bộ dữ liệu — ví dụ stream().filter(...).findFirst() trên 1 triệu phần tử có thể chỉ kiểm tra vài phần tử. Lưu ý sorted() là stateful, phải đọc hết dữ liệu. Stream chỉ dùng được một lần. Về parallelStream: nó chia dữ liệu và chạy trên ForkJoinPool.commonPool dùng chung cho toàn JVM (số luồng = số core - 1). Không nên dùng khi: tác vụ có I/O blocking (gọi DB/HTTP) vì sẽ chiếm hết luồng của commonPool ảnh hưởng toàn ứng dụng; dữ liệu nhỏ (chi phí chia và gộp lớn hơn lợi ích); nguồn khó chia như LinkedList; hoặc lambda thay đổi biến dùng chung gây race condition.',
+    trapWarning: 'Viết stream().peek(System.out::println).filter(...) mà không có terminal operation rồi thắc mắc "sao không in gì" — đó chính là lazy evaluation. Và đừng bao giờ gọi API HTTP trong parallelStream trên server!',
+    scoringCriteria: 'Phân biệt intermediate/terminal, giải thích lazy + short-circuit, nêu được ít nhất 2 trường hợp không nên dùng parallelStream kèm lý do commonPool.'
+  },
+  {
+    id: 'spring-filter-vs-interceptor',
+    topic: 'Spring Boot',
+    level: 'Fresher',
+    question: 'Phân biệt Servlet Filter, Spring HandlerInterceptor và Spring AOP. Khi nào dùng cái nào?',
+    contextPrompt: 'Kiểm tra hiểu biết về vòng đời request trong Spring MVC và việc chọn đúng tầng để xử lý cross-cutting concerns.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'Filter thuộc Servlet container, chạy trước DispatcherServlet, thao tác được request/response thô; phù hợp cho CORS, logging, authentication (Spring Security là chuỗi Filter).',
+        keywords: ['filter', 'servlet container', 'dispatcherservlet', 'cors', 'spring security', 'request thô'],
+        weight: 35
+      },
+      {
+        id: 'p2',
+        pointText: 'HandlerInterceptor thuộc Spring MVC, chạy sau DispatcherServlet và biết handler (Controller) nào sẽ xử lý; có preHandle, postHandle, afterCompletion.',
+        keywords: ['interceptor', 'handlerinterceptor', 'prehandle', 'posthandle', 'aftercompletion', 'controller'],
+        weight: 35
+      },
+      {
+        id: 'p3',
+        pointText: 'Spring AOP hoạt động ở mức method của Bean thông qua Proxy, không phụ thuộc HTTP; phù hợp cho transaction, caching, đo thời gian thực thi service, audit log.',
+        keywords: ['aop', 'proxy', 'method', 'bean', 'transaction', 'không phụ thuộc http', 'audit'],
+        weight: 30
+      }
+    ],
+    idealAnswer: 'Ba cơ chế này nằm ở ba tầng khác nhau của luồng xử lý: Request → Filter Chain → DispatcherServlet → Interceptor → Controller → (AOP Proxy) → Service. 1. Servlet Filter thuộc đặc tả Servlet, do container (Tomcat) quản lý, chạy trước cả DispatcherServlet nên áp dụng cho mọi request kể cả static resource. Filter có thể bọc/thay thế HttpServletRequest (ví dụ đọc body nhiều lần bằng ContentCachingRequestWrapper). Phù hợp cho CORS, nén GZIP, gắn traceId vào MDC, xác thực — Spring Security chính là một chuỗi Filter. 2. HandlerInterceptor thuộc Spring MVC, chạy sau DispatcherServlet, nên biết chính xác HandlerMethod (Controller, annotation trên method). preHandle chạy trước Controller (trả false để chặn), postHandle sau Controller nhưng trước khi render view, afterCompletion sau khi hoàn tất kể cả khi có exception. Phù hợp cho kiểm tra quyền dựa trên annotation tùy chỉnh, rate limit theo endpoint, ghi nhận metrics. 3. Spring AOP không liên quan HTTP, hoạt động ở cấp method của bất kỳ Spring Bean nào qua JDK Dynamic Proxy/CGLIB. Phù hợp cho @Transactional, @Cacheable, @Retryable, đo thời gian thực thi của service, audit log nghiệp vụ. Quy tắc chọn: liên quan giao thức HTTP thô → Filter; cần biết Controller/endpoint → Interceptor; logic nghiệp vụ cấp method → AOP.',
+    trapWarning: 'Exception ném ra trong Filter KHÔNG được @RestControllerAdvice bắt, vì Filter chạy ngoài DispatcherServlet. Phải tự xử lý và ghi response lỗi ngay trong Filter.',
+    scoringCriteria: 'Vẽ được thứ tự Filter → DispatcherServlet → Interceptor → Controller, nêu đúng phạm vi và use-case của từng cơ chế, đề cập ControllerAdvice không bắt lỗi trong Filter.'
+  },
+  {
+    id: 'spring-transaction-propagation',
+    topic: 'Spring Boot',
+    level: 'Junior',
+    question: 'Giải thích các loại Transaction Propagation trong Spring (REQUIRED, REQUIRES_NEW, NESTED...). Tình huống thực tế nào cần dùng REQUIRES_NEW?',
+    contextPrompt: 'Kiểm tra hiểu biết sâu về quản lý transaction khi các service gọi lồng nhau trong hệ thống thực tế.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'REQUIRED (mặc định): tham gia transaction hiện có, nếu chưa có thì tạo mới. Nếu method con ném RuntimeException, toàn bộ transaction bị đánh dấu rollback-only.',
+        keywords: ['required', 'mặc định', 'tham gia transaction', 'rollback-only', 'unexpectedrollbackexception'],
+        weight: 35
+      },
+      {
+        id: 'p2',
+        pointText: 'REQUIRES_NEW: tạm treo transaction hiện tại và mở transaction mới độc lập (connection mới); commit/rollback không ảnh hưởng transaction cha. Dùng cho audit log, ghi lịch sử thanh toán thất bại.',
+        keywords: ['requires_new', 'tạm treo', 'transaction độc lập', 'connection mới', 'audit log', 'lịch sử'],
+        weight: 40
+      },
+      {
+        id: 'p3',
+        pointText: 'NESTED dùng Savepoint trong cùng transaction vật lý (rollback một phần); các loại khác: SUPPORTS, NOT_SUPPORTED, MANDATORY, NEVER. Lưu ý REQUIRES_NEW tốn thêm connection, dễ cạn pool.',
+        keywords: ['nested', 'savepoint', 'supports', 'mandatory', 'not_supported', 'cạn connection pool'],
+        weight: 25
+      }
+    ],
+    idealAnswer: 'Propagation quyết định hành vi khi một method @Transactional được gọi trong lúc đã có transaction. 1. REQUIRED (mặc định): dùng chung transaction đang có, nếu chưa có thì tạo mới. Bẫy hay gặp: service con ném RuntimeException, service cha bắt exception đó và tiếp tục chạy — nhưng transaction đã bị đánh dấu rollback-only, nên khi commit sẽ ném UnexpectedRollbackException. 2. REQUIRES_NEW: Spring tạm treo transaction hiện tại và mở transaction hoàn toàn mới trên một connection khác. Transaction con commit hay rollback độc lập với cha. Tình huống thực tế: khi thanh toán thất bại, transaction đơn hàng phải rollback nhưng bản ghi audit "thanh toán thất bại lúc X, lý do Y" vẫn phải được lưu lại — đặt method ghi audit với REQUIRES_NEW. Lưu ý: mỗi tầng REQUIRES_NEW giữ thêm một connection trong khi connection của cha vẫn bị chiếm, dưới tải cao có thể gây cạn HikariCP pool và deadlock ở tầng pool. Và nhớ rằng gọi nội bộ qua this sẽ bỏ qua proxy nên propagation không có tác dụng. 3. NESTED: dùng JDBC Savepoint trong cùng transaction vật lý — rollback con chỉ quay về savepoint, nhưng rollback cha sẽ rollback cả con (không hỗ trợ với JPA HibernateTransactionManager mặc định). Các loại khác: SUPPORTS (có thì dùng, không có thì chạy không transaction), MANDATORY (bắt buộc đã có, không thì ném lỗi), NOT_SUPPORTED (tạm treo transaction và chạy không transaction), NEVER (có transaction thì ném lỗi).',
+    trapWarning: 'Đặt REQUIRES_NEW trên method gọi nội bộ trong cùng class (this.saveAudit()) sẽ KHÔNG mở transaction mới vì bỏ qua AOP Proxy — audit log vẫn bị rollback theo cha!',
+    scoringCriteria: 'Giải thích đúng REQUIRED và bẫy rollback-only, nêu use-case thực tế của REQUIRES_NEW kèm rủi ro cạn connection pool, phân biệt NESTED (savepoint).'
+  },
+  {
+    id: 'db-sql-join-types',
+    topic: 'Database',
+    level: 'Intern',
+    question: 'Phân biệt INNER JOIN, LEFT JOIN, RIGHT JOIN và FULL OUTER JOIN. Viết câu truy vấn tìm các khách hàng chưa từng đặt đơn hàng nào.',
+    contextPrompt: 'Câu hỏi SQL nền tảng gần như chắc chắn xuất hiện trong vòng phỏng vấn Intern/Fresher.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'INNER JOIN chỉ trả về các dòng khớp ở cả hai bảng; LEFT JOIN trả về toàn bộ bảng trái, cột bảng phải là NULL nếu không khớp; RIGHT JOIN ngược lại.',
+        keywords: ['inner join', 'left join', 'right join', 'khớp cả hai bảng', 'null', 'toàn bộ bảng trái'],
+        weight: 35
+      },
+      {
+        id: 'p2',
+        pointText: 'FULL OUTER JOIN trả về tất cả dòng của cả hai bảng (MySQL không hỗ trợ, phải dùng LEFT JOIN UNION RIGHT JOIN).',
+        keywords: ['full outer join', 'union', 'mysql không hỗ trợ', 'tất cả dòng'],
+        weight: 25
+      },
+      {
+        id: 'p3',
+        pointText: 'Tìm khách hàng chưa có đơn: LEFT JOIN orders ON ... WHERE o.id IS NULL, hoặc NOT EXISTS (an toàn hơn NOT IN khi cột có NULL).',
+        keywords: ['is null', 'not exists', 'not in', 'anti join', 'left join where'],
+        weight: 40
+      }
+    ],
+    idealAnswer: 'Giả sử có bảng customers và orders (orders.customer_id tham chiếu customers.id). 1. INNER JOIN: chỉ trả về những khách hàng có ít nhất một đơn hàng, mỗi cặp khớp là một dòng. 2. LEFT JOIN: trả về tất cả khách hàng; với khách chưa có đơn, các cột của orders là NULL. RIGHT JOIN là ngược lại (giữ toàn bộ bảng phải), thực tế ít dùng vì có thể đổi thứ tự bảng và dùng LEFT JOIN cho dễ đọc. 3. FULL OUTER JOIN: giữ toàn bộ dòng của cả hai bảng; PostgreSQL hỗ trợ, MySQL thì không nên phải mô phỏng bằng LEFT JOIN UNION RIGHT JOIN. 4. Tìm khách hàng chưa từng đặt đơn (anti-join): SELECT c.* FROM customers c LEFT JOIN orders o ON o.customer_id = c.id WHERE o.id IS NULL; hoặc SELECT c.* FROM customers c WHERE NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id). Tránh dùng WHERE c.id NOT IN (SELECT customer_id FROM orders) vì nếu subquery có giá trị NULL thì NOT IN trả về rỗng hoàn toàn. Nên có index trên orders.customer_id để anti-join chạy nhanh.',
+    trapWarning: 'Đặt điều kiện lọc bảng phải vào WHERE (WHERE o.status = \'PAID\') sau LEFT JOIN sẽ vô tình biến nó thành INNER JOIN! Điều kiện đó phải đặt trong mệnh đề ON.',
+    scoringCriteria: 'Phân biệt đúng 4 loại JOIN, viết được câu anti-join bằng LEFT JOIN IS NULL hoặc NOT EXISTS, biết bẫy NOT IN với NULL hoặc bẫy điều kiện WHERE sau LEFT JOIN.'
+  },
+  {
+    id: 'db-index-not-used-traps',
+    topic: 'Database',
+    level: 'Fresher',
+    question: 'Những trường hợp nào khiến Database không sử dụng Index dù cột đã được đánh index?',
+    contextPrompt: 'Kiểm tra kinh nghiệm tối ưu truy vấn thực tế: viết SQL sao cho optimizer tận dụng được B-Tree index.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'Bọc hàm hoặc phép tính quanh cột (YEAR(created_at), LOWER(email), price * 2) và ép kiểu ngầm định (so sánh cột VARCHAR với số) làm mất khả năng dùng index.',
+        keywords: ['bọc hàm', 'function', 'year(', 'lower(', 'ép kiểu ngầm', 'implicit conversion'],
+        weight: 35
+      },
+      {
+        id: 'p2',
+        pointText: 'LIKE bắt đầu bằng wildcard (\'%abc\'), dùng OR giữa các cột khác index, vi phạm leftmost prefix của composite index.',
+        keywords: ['like %', 'wildcard', 'or', 'leftmost prefix', 'composite index'],
+        weight: 35
+      },
+      {
+        id: 'p3',
+        pointText: 'Optimizer chủ động bỏ qua index khi độ chọn lọc thấp (cột giới tính, status) hoặc bảng quá nhỏ, vì Full Table Scan rẻ hơn random I/O; kiểm chứng bằng EXPLAIN.',
+        keywords: ['độ chọn lọc', 'selectivity', 'cardinality', 'full table scan', 'explain', 'bảng nhỏ'],
+        weight: 30
+      }
+    ],
+    idealAnswer: 'Index B-Tree lưu giá trị cột theo thứ tự đã sắp xếp, nên bất cứ điều gì làm optimizer không thể "đi theo thứ tự" đó sẽ khiến index vô dụng: 1. Bọc hàm/phép tính quanh cột: WHERE YEAR(created_at) = 2024 hay WHERE LOWER(email) = ? — index lưu giá trị gốc chứ không lưu kết quả hàm. Sửa: viết lại thành khoảng created_at >= \'2024-01-01\' AND created_at < \'2025-01-01\', hoặc tạo functional/expression index. 2. Ép kiểu ngầm định: cột phone VARCHAR nhưng truy vấn WHERE phone = 0912345678 (số) khiến MySQL phải convert từng dòng. 3. LIKE \'%abc\' bắt đầu bằng wildcard không thể tra theo tiền tố; LIKE \'abc%\' thì dùng được. Tìm kiếm chứa chuỗi nên dùng Full-Text Search hoặc Elasticsearch. 4. Vi phạm leftmost prefix: index (a, b, c) không giúp WHERE b = ? hoặc WHERE c = ?. 5. OR giữa cột có index và cột không có index thường dẫn tới full scan (cân nhắc UNION). 6. Độ chọn lọc thấp: cột gender hay is_deleted chỉ vài giá trị, optimizer ước lượng phải đọc phần lớn bảng nên chọn full scan vì đọc tuần tự rẻ hơn hàng nghìn lần random I/O quay về bảng chính. Luôn kiểm chứng bằng EXPLAIN (type = ALL là full scan, xem cột key và rows).',
+    trapWarning: 'Đừng nói "cứ đánh index là truy vấn nhanh". Interviewer muốn nghe bạn nói về EXPLAIN và việc optimizer dựa vào thống kê (statistics) để quyết định có dùng index hay không.',
+    scoringCriteria: 'Nêu được ít nhất 4 trường hợp (hàm trên cột, ép kiểu, LIKE %, leftmost prefix, độ chọn lọc thấp), kèm cách sửa và nhắc tới EXPLAIN.'
+  },
+  {
+    id: 'db-cache-aside-stampede',
+    topic: 'Database',
+    level: 'Junior',
+    question: 'Mô tả pattern Cache-Aside với Redis. Giải thích các sự cố Cache Penetration, Cache Breakdown (Stampede) và Cache Avalanche cùng cách phòng tránh.',
+    contextPrompt: 'Kiểm tra kinh nghiệm thiết kế caching cho hệ thống tải cao và xử lý các sự cố kinh điển khi cache thất bại.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'Cache-Aside: đọc cache trước, miss thì đọc DB rồi ghi vào cache với TTL; khi cập nhật thì ghi DB rồi XÓA cache (không update cache) để tránh dữ liệu không nhất quán do race condition.',
+        keywords: ['cache-aside', 'cache miss', 'ttl', 'xóa cache', 'ghi db trước', 'không nhất quán'],
+        weight: 35
+      },
+      {
+        id: 'p2',
+        pointText: 'Cache Penetration: truy vấn key không tồn tại liên tục xuyên thẳng xuống DB → cache giá trị rỗng với TTL ngắn hoặc dùng Bloom Filter. Cache Breakdown: một hot key hết hạn, hàng nghìn request cùng đập DB → mutex/lock khi rebuild hoặc logical expiration.',
+        keywords: ['cache penetration', 'bloom filter', 'cache giá trị rỗng', 'cache breakdown', 'stampede', 'hot key', 'mutex', 'setnx'],
+        weight: 40
+      },
+      {
+        id: 'p3',
+        pointText: 'Cache Avalanche: lượng lớn key hết hạn cùng lúc hoặc Redis sập → thêm jitter ngẫu nhiên vào TTL, Redis Sentinel/Cluster, circuit breaker và rate limit bảo vệ DB.',
+        keywords: ['cache avalanche', 'jitter', 'ttl ngẫu nhiên', 'redis cluster', 'sentinel', 'circuit breaker'],
+        weight: 25
+      }
+    ],
+    idealAnswer: 'Cache-Aside (Lazy Loading) là pattern phổ biến nhất: khi đọc, ứng dụng kiểm tra Redis trước; nếu hit thì trả về, nếu miss thì đọc DB rồi SET vào Redis kèm TTL. Khi ghi, cập nhật DB trước rồi XÓA key trong cache (không SET giá trị mới), vì hai request ghi đồng thời có thể SET cache theo thứ tự ngược với thứ tự commit DB, để lại dữ liệu cũ vĩnh viễn. Vẫn còn cửa sổ nhỏ không nhất quán nên luôn đặt TTL, có thể dùng delayed double delete hoặc CDC (Debezium) để xóa cache. Ba sự cố kinh điển: 1. Cache Penetration (xuyên thủng): kẻ xấu gửi liên tục id không tồn tại (id = -1), cache luôn miss và mọi request đổ xuống DB. Cách xử lý: cache cả kết quả rỗng với TTL ngắn (30-60 giây), validate input, hoặc dùng Bloom Filter chứa toàn bộ id hợp lệ để chặn từ đầu. 2. Cache Breakdown/Stampede (sụp một key nóng): key của sản phẩm flash sale hết hạn đúng lúc 10.000 request/giây, tất cả cùng miss và cùng truy vấn DB. Cách xử lý: chỉ cho một request rebuild cache bằng distributed lock (SET key NX PX), các request khác chờ ngắn rồi đọc lại; hoặc logical expiration — không đặt TTL thật, lưu thời gian hết hạn trong value và refresh bất đồng bộ; hoặc refresh-ahead trước khi hết hạn. 3. Cache Avalanche (tuyết lở): hàng loạt key được nạp cùng lúc với cùng TTL sẽ hết hạn đồng loạt, hoặc Redis sập hoàn toàn. Cách xử lý: thêm jitter ngẫu nhiên vào TTL (3600 + random(0..300) giây), chạy Redis Sentinel/Cluster để HA, kết hợp cache cục bộ (Caffeine) nhiều tầng, và circuit breaker/rate limiter để bảo vệ DB khi cache không khả dụng.',
+    trapWarning: 'Trả lời "khi cập nhật thì update luôn giá trị mới vào cache" là sai lầm kinh điển gây dữ liệu cũ do race condition giữa hai luồng ghi. Chuẩn là ghi DB rồi xóa cache.',
+    scoringCriteria: 'Mô tả đúng luồng Cache-Aside (xóa thay vì cập nhật cache), phân biệt rõ 3 sự cố và đưa ra ít nhất một giải pháp cụ thể cho mỗi sự cố.'
+  },
+  {
+    id: 'net-cookie-session-vs-token',
+    topic: 'Network',
+    level: 'Intern',
+    question: 'Phân biệt xác thực bằng Session-Cookie và Token (JWT). Các thuộc tính bảo mật HttpOnly, Secure, SameSite của Cookie có tác dụng gì?',
+    contextPrompt: 'Kiểm tra hiểu biết nền tảng về cách web "nhớ" người dùng đã đăng nhập và các lỗ hổng XSS/CSRF.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'HTTP là stateless. Session: server lưu trạng thái đăng nhập (bộ nhớ/Redis), client chỉ giữ Session ID trong Cookie. Token (JWT): trạng thái nằm trong token đã ký, server không cần lưu (stateless).',
+        keywords: ['stateless', 'session id', 'cookie', 'server lưu trạng thái', 'redis', 'jwt', 'token'],
+        weight: 35
+      },
+      {
+        id: 'p2',
+        pointText: 'Trade-off: Session dễ thu hồi (xóa session) nhưng cần shared store khi scale nhiều server; JWT dễ scale nhưng khó thu hồi trước hạn, cần TTL ngắn + refresh token.',
+        keywords: ['thu hồi', 'scale', 'shared store', 'sticky session', 'refresh token', 'ttl ngắn'],
+        weight: 30
+      },
+      {
+        id: 'p3',
+        pointText: 'HttpOnly: JavaScript không đọc được cookie (chống đánh cắp qua XSS). Secure: chỉ gửi qua HTTPS. SameSite (Lax/Strict): hạn chế gửi cookie trong request cross-site (chống CSRF).',
+        keywords: ['httponly', 'xss', 'secure', 'https', 'samesite', 'csrf', 'lax', 'strict'],
+        weight: 35
+      }
+    ],
+    idealAnswer: 'Vì HTTP là giao thức stateless, server cần một cơ chế để nhận ra request tiếp theo đến từ người dùng đã đăng nhập. 1. Session-Cookie: sau khi đăng nhập, server tạo một session (lưu userId, quyền...) trong bộ nhớ hoặc Redis và gửi về Session ID ngẫu nhiên qua header Set-Cookie. Trình duyệt tự động gửi cookie này kèm mọi request. Ưu điểm: thu hồi tức thì (xóa session khi logout/đổi mật khẩu), token nhỏ. Nhược điểm: khi chạy nhiều server phải dùng shared store như Redis (Spring Session) hoặc sticky session. 2. Token (JWT): server ký một token chứa thông tin người dùng và thời hạn, client gửi lại qua header Authorization: Bearer. Server chỉ cần kiểm tra chữ ký, không cần tra cứu nên dễ scale và hợp với mobile/microservices. Nhược điểm: không thể thu hồi trước hạn nếu không có blacklist, nên dùng access token ngắn (5-15 phút) + refresh token. 3. Thuộc tính bảo mật của Cookie: HttpOnly ngăn JavaScript đọc cookie qua document.cookie, nên nếu trang bị XSS thì kẻ tấn công cũng không lấy được session; Secure chỉ cho phép gửi cookie qua HTTPS, chống nghe lén; SameSite=Lax/Strict khiến trình duyệt không gửi cookie trong các request do trang web khác khởi tạo (form POST từ site lạ), giúp chống CSRF. Lưu JWT trong localStorage tiện nhưng dễ bị đánh cắp qua XSS; nhiều hệ thống lưu refresh token trong cookie HttpOnly + Secure + SameSite.',
+    trapWarning: 'Nói "JWT an toàn hơn Session" là chưa chính xác — mỗi cách có trade-off riêng. Và đừng quên: cookie tự động được gửi kèm nên dễ bị CSRF, còn token trong localStorage thì dễ bị XSS.',
+    scoringCriteria: 'Giải thích HTTP stateless, phân biệt nơi lưu trạng thái của Session vs JWT kèm trade-off thu hồi/scale, nêu đúng tác dụng của HttpOnly, Secure, SameSite.'
+  },
+  {
+    id: 'net-rate-limiting-algorithms',
+    topic: 'Network',
+    level: 'Junior',
+    question: 'Trình bày các thuật toán Rate Limiting phổ biến (Fixed Window, Sliding Window, Token Bucket, Leaky Bucket). Làm thế nào để triển khai Rate Limiter phân tán cho nhiều instance?',
+    contextPrompt: 'Kiểm tra khả năng bảo vệ API khỏi lạm dụng/DDoS và tư duy hệ thống phân tán.',
+    coreKeyPoints: [
+      {
+        id: 'p1',
+        pointText: 'Fixed Window đếm request theo khung cố định, đơn giản nhưng bị burst gấp đôi ở ranh giới cửa sổ; Sliding Window (log hoặc counter) làm mượt bằng cách tính theo cửa sổ trượt.',
+        keywords: ['fixed window', 'sliding window', 'ranh giới', 'burst', 'cửa sổ trượt'],
+        weight: 30
+      },
+      {
+        id: 'p2',
+        pointText: 'Token Bucket: token được nạp đều theo tốc độ cố định, mỗi request tiêu 1 token, cho phép burst tối đa bằng dung lượng bucket. Leaky Bucket: xử lý request ra với tốc độ cố định, làm phẳng lưu lượng.',
+        keywords: ['token bucket', 'leaky bucket', 'nạp token', 'burst', 'tốc độ cố định', 'làm phẳng'],
+        weight: 35
+      },
+      {
+        id: 'p3',
+        pointText: 'Phân tán: lưu bộ đếm tập trung trong Redis và cập nhật nguyên tử bằng Lua script (INCR + EXPIRE), trả HTTP 429 kèm header Retry-After / X-RateLimit-Remaining.',
+        keywords: ['redis', 'lua script', 'nguyên tử', 'atomic', 'incr', '429', 'retry-after', 'x-ratelimit'],
+        weight: 35
+      }
+    ],
+    idealAnswer: 'Rate Limiting giới hạn số request mỗi client (theo userId, API key hoặc IP) trong một khoảng thời gian để bảo vệ hệ thống. 1. Fixed Window Counter: chia thời gian thành các khung 1 phút, đếm request trong khung; vượt ngưỡng thì từ chối. Đơn giản, tốn ít bộ nhớ, nhưng có lỗ hổng ranh giới: 100 request lúc 00:59 và 100 request lúc 01:00 tạo burst 200 request trong 2 giây. 2. Sliding Window: Sliding Log lưu timestamp từng request (chính xác nhưng tốn bộ nhớ, dùng Redis Sorted Set); Sliding Window Counter ước lượng bằng trọng số giữa khung hiện tại và khung trước, cân bằng tốt giữa độ chính xác và chi phí. 3. Token Bucket: bucket chứa tối đa N token, được nạp lại với tốc độ r token/giây; mỗi request lấy 1 token, hết token thì từ chối. Cho phép burst ngắn hạn bằng dung lượng bucket nhưng giữ tốc độ trung bình — được AWS API Gateway, Bucket4j, Guava RateLimiter sử dụng. 4. Leaky Bucket: request vào một hàng đợi và được xử lý ra với tốc độ cố định, hàng đợi đầy thì từ chối — làm phẳng lưu lượng, phù hợp khi downstream chỉ chịu được tốc độ ổn định. Triển khai phân tán: nếu mỗi instance tự đếm trong bộ nhớ, 5 instance sẽ cho phép gấp 5 lần giới hạn. Giải pháp là lưu bộ đếm tập trung trong Redis và thực hiện kiểm tra + tăng đếm nguyên tử bằng Lua script để tránh race condition giữa GET và INCR. Có thể đặt rate limiter ở API Gateway (Spring Cloud Gateway RequestRateLimiter, Nginx limit_req, Kong). Khi vượt giới hạn trả HTTP 429 Too Many Requests kèm Retry-After và các header X-RateLimit-Limit/Remaining để client tự điều chỉnh. Cần quyết định chiến lược fail-open hay fail-closed khi Redis không khả dụng.',
+    trapWarning: 'Dùng GET rồi INCR thành hai lệnh riêng trong Redis sẽ bị race condition dưới tải cao — phải dùng Lua script hoặc INCR rồi kiểm tra kết quả trả về. Và giới hạn theo IP có thể chặn nhầm cả công ty dùng chung NAT.',
+    scoringCriteria: 'So sánh được ít nhất 3 thuật toán kèm ưu/nhược điểm (lỗ hổng ranh giới của Fixed Window, burst của Token Bucket), đề xuất Redis + Lua cho phân tán và trả về HTTP 429.'
   }
 ];
 
