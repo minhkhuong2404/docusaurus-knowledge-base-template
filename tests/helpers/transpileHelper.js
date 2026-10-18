@@ -83,8 +83,18 @@ function loadTsModule(filePath) {
   const m = { exports: {} };
   const absPath = path.resolve(filePath);
   const dir = path.dirname(absPath);
+  const customRequire = (id) => {
+    if (id.startsWith('.')) {
+      const resolved = path.resolve(dir, id);
+      if (fs.existsSync(resolved + '.ts')) return loadTsModule(resolved + '.ts');
+      if (fs.existsSync(resolved + '.tsx')) return loadTsModule(resolved + '.tsx');
+      if (fs.existsSync(resolved + '.js')) return require(resolved + '.js');
+      if (fs.existsSync(resolved) && fs.statSync(resolved).isFile()) return loadTsModule(resolved);
+    }
+    return require(id);
+  };
   const fn = new Function('exports', 'module', 'require', '__dirname', '__filename', result.code);
-  fn(m.exports, m, require, dir, absPath);
+  fn(m.exports, m, customRequire, dir, absPath);
   return m.exports;
 }
 

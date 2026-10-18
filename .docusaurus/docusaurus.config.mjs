@@ -303,6 +303,11 @@ export default {
           "position": "left"
         },
         {
+          "to": "/tech-english",
+          "label": "Tech English",
+          "position": "left"
+        },
+        {
           "to": "/arcade",
           "label": "Arcade",
           "position": "left"

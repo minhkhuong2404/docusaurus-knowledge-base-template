@@ -5240,6 +5240,123 @@ textarea {
   background-color: var(--arcade-page-bg, #F2F4F7) !important;
 }
 
+[data-theme="light"] .arcade-hero-badge {
+  background: #e0f2fe !important;
+  border: 1.5px solid #0284c7 !important;
+  color: #0369a1 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .arcade-hero-title,
+[data-theme="light"] .arcade-hero-title-text {
+  background: linear-gradient(135deg, #7c3aed 0%, #db2777 50%, #0284c7 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+[data-theme="dark"] .arcade-hero-title,
+[data-theme="dark"] .arcade-hero-title-text {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #38bdf8 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+[data-theme="light"] .arcade-hero-subtitle {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .arcade-metric-card {
+  background: #F7FDF9 !important;
+  border: 1.5px solid #D9D9D9 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .arcade-metric-desc {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .arcade-section-heading {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .arcade-sound-btn {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .arcade-sound-btn:hover {
+  background: #f1f5f9 !important;
+}
+
+/* ── Mock Interview Studio (Light Mode) ── */
+[data-theme="light"] .mock-interview-page-wrapper {
+  background-color: var(--page-bg, #F2F4F7) !important;
+}
+
+[data-theme="light"] .mock-hero-badge {
+  background: #e0f2fe !important;
+  border: 1.5px solid #0284c7 !important;
+  color: #0369a1 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .mock-hero-title {
+  background: linear-gradient(135deg, #0284c7 0%, #059669 50%, #7c3aed 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+[data-theme="dark"] .mock-hero-title {
+  background: linear-gradient(135deg, #0ea5e9 0%, #34d399 50%, #a855f7 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+[data-theme="light"] .mock-hero-subtitle {
+  color: #334155 !important;
+}
+
+/* ── Leaderboard (Light Mode) ── */
+[data-theme="light"] .leaderboard-page-container {
+  background-color: var(--page-bg, #F2F4F7) !important;
+}
+
+[data-theme="light"] .lb-hero-badge {
+  background: #e0f2fe !important;
+  border: 1.5px solid #0284c7 !important;
+  color: #0369a1 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .lb-hero-title {
+  background: linear-gradient(135deg, #0284c7 0%, #059669 50%, #d97706 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+[data-theme="dark"] .lb-hero-title {
+  background: linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #fbbf24 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+[data-theme="light"] .lb-hero-subtitle {
+  color: #334155 !important;
+}
+
 [data-theme="light"] .arcade-oncall-banner {
   background: rgba(245, 158, 11, 0.12) !important;
   border-color: rgba(245, 158, 11, 0.4) !important;
@@ -5803,6 +5920,632 @@ textarea {
 }
 
 /* ============================================================
+   🗣️ TECH ENGLISH HUB (Light Mode Consistency)
+   ============================================================ */
+
+[data-theme="light"] .tech-english-page-container {
+  background: var(--page-bg, #F2F4F7) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-hero-badge {
+  background: #e0f2fe !important;
+  border: 1.5px solid #0284c7 !important;
+  color: #0369a1 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="dark"] .teh-hero-title,
+[data-theme="dark"] .tech-english-page-container h1.teh-hero-title {
+  display: block !important;
+  width: fit-content !important;
+  margin: 0 auto 14px auto !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #a855f7 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+[data-theme="light"] .teh-hero-title,
+[data-theme="light"] .tech-english-page-container h1.teh-hero-title {
+  display: block !important;
+  width: fit-content !important;
+  margin: 0 auto 14px auto !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, #0284c7 0%, #059669 50%, #d97706 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+[data-theme="light"] .tech-english-page-container h1:not(.teh-hero-title),
+[data-theme="light"] .tech-english-page-container h2,
+[data-theme="light"] .tech-english-page-container h3 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .tech-english-page-container p,
+[data-theme="light"] .tech-english-page-container .teh-hero-subtitle,
+[data-theme="light"] .tech-english-page-container .teh-tab-hint {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-kbd {
+  background: #cbd5e1 !important;
+  border: 1px solid #64748b !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+/* Quick Metric Cards — Matching Career Hub Light Style */
+[data-theme="light"] .tech-english-page-container .teh-metric-card {
+  background: #ffffff !important;
+  border: 1.5px solid #D9D9D9 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-metric-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-0 {
+  border-color: #7dd3fc !important;
+  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%) !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-0 .teh-metric-label {
+  color: #0284c7 !important;
+  font-weight: 800 !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-0 .teh-metric-desc {
+  color: #0369a1 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-1 {
+  border-color: #86efac !important;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%) !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-1 .teh-metric-label {
+  color: #16a34a !important;
+  font-weight: 800 !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-1 .teh-metric-desc {
+  color: #15803d !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-2 {
+  border-color: #fcd34d !important;
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%) !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-2 .teh-metric-label {
+  color: #d97706 !important;
+  font-weight: 800 !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-2 .teh-metric-desc {
+  color: #b45309 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-3 {
+  border-color: #c4b5fd !important;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 100%) !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-3 .teh-metric-label {
+  color: #7c3aed !important;
+  font-weight: 800 !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-3 .teh-metric-desc {
+  color: #6d28d9 !important;
+}
+
+/* Main Navigation Bar — Matching Career Hub Light Style */
+[data-theme="light"] .tech-english-page-container .teh-main-nav {
+  border-bottom: 1.5px solid #D9D9D9 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-nav-tab {
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-nav-tab:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* 1. Flashcards - Cyan */
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-flashcards {
+  background: #f0f9ff !important;
+  border: 1.5px solid #7dd3fc !important;
+  color: #0369a1 !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-flashcards:hover,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-flashcards.active {
+  background: #e0f2fe !important;
+  border-color: #0284c7 !important;
+  color: #0c4a6e !important;
+  box-shadow: 0 3px 12px rgba(2, 132, 199, 0.22) !important;
+}
+
+/* 2. Listening & Recall Quiz - Pink */
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-quiz {
+  background: #fdf2f8 !important;
+  border: 1.5px solid #f472b6 !important;
+  color: #be185d !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-quiz:hover,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-quiz.active {
+  background: #fce7f3 !important;
+  border-color: #db2777 !important;
+  color: #831843 !important;
+  box-shadow: 0 3px 12px rgba(219, 39, 119, 0.22) !important;
+}
+
+/* 3. Tra Cứu Toàn Diện - Emerald */
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-dictionary {
+  background: #f0fdf4 !important;
+  border: 1.5px solid #86efac !important;
+  color: #15803d !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-dictionary:hover,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-dictionary.active {
+  background: #dcfce7 !important;
+  border-color: #16a34a !important;
+  color: #14532d !important;
+  box-shadow: 0 3px 12px rgba(22, 163, 74, 0.22) !important;
+}
+
+/* 4. 10 Bẫy Phát Âm - Amber */
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-traps {
+  background: #fffbeb !important;
+  border: 1.5px solid #fcd34d !important;
+  color: #b45309 !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-traps:hover,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-traps.active {
+  background: #fef3c7 !important;
+  border-color: #d97706 !important;
+  color: #78350f !important;
+  box-shadow: 0 3px 12px rgba(217, 119, 6, 0.22) !important;
+}
+
+/* 5. Senior Interview Playbook - Purple */
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-playbook {
+  background: #f5f3ff !important;
+  border: 1.5px solid #c4b5fd !important;
+  color: #6d28d9 !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-playbook:hover,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-playbook.active {
+  background: #ede9fe !important;
+  border-color: #7c3aed !important;
+  color: #4c1d95 !important;
+  box-shadow: 0 3px 12px rgba(124, 58, 237, 0.22) !important;
+}
+
+/* Section Titles */
+[data-theme="light"] .tech-english-page-container .teh-section-title-amber {
+  color: #78350f !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-section-title-cyan {
+  color: #0c4a6e !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-section-title-purple {
+  color: #4c1d95 !important;
+}
+
+/* ============================================================
+   🗣️ TECH ENGLISH TABLES & CARDS (Career Hub Light Theme Style)
+   ============================================================ */
+[data-theme="light"] .tech-english-page-container table,
+[data-theme="light"] .tech-english-page-container .teh-traps-table,
+[data-theme="light"] .tech-english-page-container .teh-playbook-table,
+[data-theme="light"] .tech-english-page-container .tgf-dict-table {
+  background: #ffffff !important;
+  border: 1px solid #D9D9D9 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+}
+
+[data-theme="light"] .tech-english-page-container thead tr,
+[data-theme="light"] .tech-english-page-container .tgf-dict-table th {
+  background: #f8fafc !important;
+  border-bottom: 2px solid #D9D9D9 !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container thead th {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  border-bottom: 2px solid #D9D9D9 !important;
+  padding: 14px 16px !important;
+  font-size: 0.85rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+[data-theme="light"] .tech-english-page-container thead th.teh-th-mid {
+  color: #991b1b !important;
+}
+
+[data-theme="light"] .tech-english-page-container thead th.teh-th-principal {
+  color: #166534 !important;
+}
+
+[data-theme="light"] .tech-english-page-container tbody tr {
+  background: #ffffff !important;
+  border-bottom: 1px solid #D9D9D9 !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="light"] .tech-english-page-container tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+[data-theme="light"] .tech-english-page-container tbody tr:hover,
+[data-theme="light"] .tech-english-page-container tbody tr:hover td {
+  background: #f1f5f9 !important;
+}
+
+/* Table Cells — High-Contrast Clean Typography (Career Hub Matching) */
+[data-theme="light"] .tech-english-page-container .teh-trap-term,
+[data-theme="light"] .tech-english-page-container .tgf-dict-term,
+[data-theme="light"] .tech-english-page-container .teh-col-topic {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-trap-ipa,
+[data-theme="light"] .tech-english-page-container .tgf-dict-ipa {
+  color: #0284c7 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-trap-correct,
+[data-theme="light"] .tech-english-page-container .tgf-dict-vn,
+[data-theme="light"] .tech-english-page-container .teh-col-principal {
+  color: #166534 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-trap-wrong,
+[data-theme="light"] .tech-english-page-container .teh-col-mid {
+  color: #991b1b !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-trap-explain,
+[data-theme="light"] .tech-english-page-container .tgf-dict-def {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-dict-analogy {
+  background: #fffbeb !important;
+  border: 1px solid #fde68a !important;
+  color: #78350f !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-dict-tip {
+  color: #1e3a8a !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-dict-collocation {
+  background: #F2F2F2 !important;
+  border: 1px solid #D9D9D9 !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-audio-btn,
+[data-theme="light"] .tech-english-page-container .tgf-audio-btn {
+  background: #f1f5f9 !important;
+  border: 1px solid #D9D9D9 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-audio-btn:hover,
+[data-theme="light"] .tech-english-page-container .tgf-audio-btn:hover {
+  background: #e2e8f0 !important;
+  border-color: #98A2B3 !important;
+}
+
+/* Confusion Pairs & Senior Playbook Cards — Clean White Surface Matching Career Hub */
+[data-theme="light"] .tech-english-page-container .teh-pair-card,
+[data-theme="light"] .tech-english-page-container .teh-playbook-card {
+  background: #ffffff !important;
+  border: 1px solid #D9D9D9 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-pair-term-a,
+[data-theme="light"] .tech-english-page-container .teh-pair-label-a,
+[data-theme="light"] .tech-english-page-container .teh-framing-title-1 {
+  color: #0284c7 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-pair-term-b,
+[data-theme="light"] .tech-english-page-container .teh-pair-label-b,
+[data-theme="light"] .tech-english-page-container .teh-framing-title-2 {
+  color: #166534 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-framing-title-3 {
+  color: #b45309 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-framing-title-4 {
+  color: #6d28d9 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-pair-badge {
+  background: #fffbeb !important;
+  border: 1px solid #fde68a !important;
+  color: #78350f !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-pair-box-a {
+  background: #f0f9ff !important;
+  border: 1px solid #bae6fd !important;
+  border-left: 4px solid #0284c7 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-pair-box-b {
+  background: #f0fdf4 !important;
+  border: 1px solid #bbf7d0 !important;
+  border-left: 4px solid #16a34a !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-pair-detail,
+[data-theme="light"] .tech-english-page-container .teh-framing-quote {
+  color: #0f172a !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-pair-code {
+  background: #F2F2F2 !important;
+  border: 1px solid #D9D9D9 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-framing-box {
+  background: #ffffff !important;
+  border: 1px solid #D9D9D9 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-framing-1 {
+  border-left: 4px solid #0284c7 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-framing-2 {
+  border-left: 4px solid #16a34a !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-framing-3 {
+  border-left: 4px solid #d97706 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-framing-4 {
+  border-left: 4px solid #7c3aed !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-cta-btn {
+  background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 800 !important;
+}
+
+/* Flashcards, Quiz & Dictionary Arena Container inside Tech English Page (Career Hub Light Mode) */
+[data-theme="light"] .tech-english-page-container .tgf-arena-container {
+  background: #ffffff !important;
+  border: 1px solid #D9D9D9 !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+  border-radius: 16px !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-header {
+  border-bottom: 1px solid #D9D9D9 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-title {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-subtitle,
+[data-theme="light"] .tech-english-page-container .tgf-stats-bar {
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-mode-tabs {
+  background: #F2F2F2 !important;
+  border: 1px solid #D9D9D9 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-mode-btn {
+  color: #475569 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-mode-btn.active {
+  background: #ffffff !important;
+  color: #0284c7 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-select,
+[data-theme="light"] .tech-english-page-container .tgf-input {
+  background: #ffffff !important;
+  border: 1px solid #D9D9D9 !important;
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-badge-category {
+  background: #e0f2fe !important;
+  border: 1px solid #bae6fd !important;
+  color: #0369a1 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-badge-pos {
+  background: #f3e8ff !important;
+  border: 1px solid #e9d5ff !important;
+  color: #6b21a8 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-card-face {
+  background: #ffffff !important;
+  border: 1px solid #D9D9D9 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-card-back {
+  background: #F7FDF9 !important;
+  border: 2px solid #0284c7 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-term-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-phonetic {
+  color: #0284c7 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-btn-speak {
+  background: #e0f2fe !important;
+  border: 1px solid #bae6fd !important;
+  color: #0284c7 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-btn-speak:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-back-meaning {
+  color: #166534 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-back-def {
+  color: #0f172a !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-back-analogy-box {
+  background: #fffbeb !important;
+  border: 1px solid #fde68a !important;
+  border-left: 4px solid #d97706 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-back-analogy-label {
+  color: #78350f !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-back-analogy-text {
+  color: #451a03 !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-back-code {
+  background: #F2F2F2 !important;
+  border: 1px solid #D9D9D9 !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-back-tip-box {
+  background: #f5f3ff !important;
+  border: 1px solid #e9d5ff !important;
+  border-left: 4px solid #7c3aed !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-back-tip-label {
+  color: #4c1d95 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-back-tip-text {
+  color: #1e1b4b !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-hint-flip {
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-nav-btn {
+  background: #ffffff !important;
+  border: 1px solid #D9D9D9 !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-nav-btn:hover {
+  background: #F2F2F2 !important;
+  border-color: #98A2B3 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-progress-track {
+  background: #D9D9D9 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-quiz-card {
+  background: #ffffff !important;
+  border: 1px solid #D9D9D9 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-quiz-btn {
+  background: #ffffff !important;
+  border: 1px solid #D9D9D9 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-quiz-btn:hover:not(:disabled) {
+  background: #f0f9ff !important;
+  border-color: #0284c7 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-quiz-opt-title {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .tgf-quiz-opt-desc {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================================
    🎓 CAREER ACCELERATOR HUB (Light Mode Consistency)
    ============================================================ */
 
@@ -5812,7 +6555,7 @@ textarea {
 }
 
 /* Headings & bold titles */
-[data-theme="light"] .hub-page-container h1,
+[data-theme="light"] .hub-page-container h1:not(.hub-hero-title),
 [data-theme="light"] .hub-page-container h2,
 [data-theme="light"] .hub-page-container h3,
 [data-theme="light"] .hub-page-container div[style*="color: #ffffff"],
@@ -6908,6 +7651,20 @@ input[type="checkbox"] {
   box-shadow: 0 0 20px rgba(45, 212, 191, 0.45) !important;
 }
 
+/* 2b. Bộ Công Cụ & Giả Lập Sự Nghiệp - Indigo / Sky-Violet */
+[data-theme="dark"] .hub-main-nav-tab.tab-career-tools {
+  background: rgba(99, 102, 241, 0.14) !important;
+  border: 1.5px solid rgba(129, 140, 248, 0.5) !important;
+  color: #a5b4fc !important;
+}
+[data-theme="dark"] .hub-main-nav-tab.tab-career-tools:hover,
+[data-theme="dark"] .hub-main-nav-tab.tab-career-tools.active {
+  background: rgba(99, 102, 241, 0.3) !important;
+  border-color: #818cf8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.45) !important;
+}
+
 /* 3. Phỏng Vấn Trúng Tủ - Emerald */
 [data-theme="dark"] .hub-main-nav-tab.tab-interview {
   background: rgba(52, 211, 153, 0.12) !important;
@@ -6978,6 +7735,19 @@ input[type="checkbox"] {
   box-shadow: 0 0 20px rgba(249, 115, 22, 0.45) !important;
 }
 
+[data-theme="dark"] .hub-hero-title,
+[data-theme="dark"] .hub-page-container h1.hub-hero-title {
+  display: block !important;
+  width: fit-content !important;
+  margin: 0 auto 14px auto !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #fbbf24 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
 /* --- LIGHT THEME ENHANCEMENTS --- */
 [data-theme="light"] .hub-hero-badge {
   background: #e0f2fe !important;
@@ -6986,10 +7756,17 @@ input[type="checkbox"] {
   font-weight: 800 !important;
 }
 
-[data-theme="light"] .hub-hero-title {
+[data-theme="light"] .hub-hero-title,
+[data-theme="light"] .hub-page-container h1.hub-hero-title {
+  display: block !important;
+  width: fit-content !important;
+  margin: 0 auto 14px auto !important;
+  text-align: center !important;
   background: linear-gradient(135deg, #0284c7 0%, #059669 50%, #d97706 100%) !important;
   -webkit-background-clip: text !important;
+  background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
 }
 
 /* Light Theme Metrics Cards */
@@ -7118,6 +7895,20 @@ input[type="checkbox"] {
   border-color: #0d9488 !important;
   color: #115e59 !important;
   box-shadow: 0 3px 12px rgba(13, 148, 136, 0.22) !important;
+}
+
+/* 2b. Bộ Công Cụ & Giả Lập Sự Nghiệp - Indigo */
+[data-theme="light"] .hub-main-nav-tab.tab-career-tools {
+  background: #eef2ff !important;
+  border: 1.5px solid #a5b4fc !important;
+  color: #3730a3 !important;
+}
+[data-theme="light"] .hub-main-nav-tab.tab-career-tools:hover,
+[data-theme="light"] .hub-main-nav-tab.tab-career-tools.active {
+  background: #e0e7ff !important;
+  border-color: #4f46e5 !important;
+  color: #312e81 !important;
+  box-shadow: 0 3px 12px rgba(79, 70, 229, 0.22) !important;
 }
 
 /* 3. Phỏng Vấn Trúng Tủ - Emerald */

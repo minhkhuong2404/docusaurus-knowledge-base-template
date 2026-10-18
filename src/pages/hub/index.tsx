@@ -5,6 +5,11 @@ import { FIFTY_PRACTICAL_TIPS, PracticalTip } from '../../data/hubFiftyTipsData'
 import { INTERVIEW_QUESTIONS, InterviewQuestion } from '../../data/hubInterviewQuestionsData';
 import { KNOWLEDGE_MODULES, KnowledgeModule, LessonTopic } from '../../data/hubKnowledgeModulesData';
 import MockInterviewStudio from '../../components/mock-interview/MockInterviewStudio';
+import {
+  CareerReadinessAndDailyBanner,
+  IncidentWarRoomSection,
+  CvDoctorAndSalarySection
+} from '../../components/career-hub/CareerHubInteractiveSuite';
 
 // ==========================================
 // 2. DATA: CV & JOB HUNTING STRATEGY
@@ -1152,7 +1157,7 @@ export default function CareerHubPage(): React.JSX.Element {
           {/* ======================================================== */}
           {/* HERO BANNER */}
           {/* ======================================================== */}
-          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
             <div className="hub-hero-badge" style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -1168,26 +1173,38 @@ export default function CareerHubPage(): React.JSX.Element {
               <span>🎓 DÀNH CHO INTERN • FRESHER • JUNIOR BACKEND</span>
             </div>
 
-            <h1 className="hub-hero-title" style={{
-              fontSize: '2.75rem',
-              fontWeight: 900,
-              letterSpacing: '-0.02em',
-              margin: '0 0 14px 0',
-              lineHeight: 1.25
-            }}>
-              <span>
-                Java Career Accelerator Hub
-              </span>
+            <h1
+              className="hub-hero-title"
+              style={{
+                fontSize: '2.75rem',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                margin: '0 auto 14px auto',
+                lineHeight: 1.25,
+                display: 'block',
+                width: 'fit-content',
+                textAlign: 'center',
+                background: 'linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #fbbf24 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              Java Career Accelerator Hub
             </h1>
 
-            <p style={{
-              fontSize: '1.18rem',
-              color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.82))',
-              maxWidth: '860px',
-              margin: '0 auto 24px auto',
-              lineHeight: 1.7
-            }}>
-              Toàn bộ kiến thức tinh hoa được cô đọng trực tiếp từ kho tài liệu kỹ thuật: <strong>Hiểu bản chất dưới nắp ca-pô</strong>, xóa bỏ thói quen code nghiệp dư ở trường và chuẩn bị hành trang vững chắc để xin việc & pass thử việc.
+            <p
+              className="hub-hero-subtitle"
+              style={{
+                fontSize: '1.18rem',
+                color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.82))',
+                maxWidth: '860px',
+                margin: '0 auto 24px auto',
+                lineHeight: 1.7,
+                textAlign: 'center',
+              }}
+            >
+              Toàn bộ kiến thức tinh hoa được cô đọng trực tiếp từ kho tài liệu kỹ thuật: <strong>Hiểu bản chất dưới nắp ca-pô</strong>, xóa bỏ thói quen code nghiệp dư ở trường và chuẩn bị hành trang vững chắc để xin việc &amp; pass thử việc.
             </p>
 
             {/* Quick Metrics */}
@@ -1218,49 +1235,15 @@ export default function CareerHubPage(): React.JSX.Element {
               ))}
             </div>
 
-            {/* Mock Interview Studio CTA Banner */}
-            <div className="hub-mock-banner" style={{
-              margin: '20px auto 0 auto',
-              maxWidth: '860px',
-              borderRadius: '14px',
-              padding: '16px 24px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '14px'
-            }}>
-              <div style={{ textAlign: 'left' }}>
-                <div className="hub-mock-banner-title" style={{ fontWeight: 800, fontSize: '15px' }}>
-                  🎙️ Phòng Luyện Phỏng Vấn Thử (Mock Interview Studio)
-                </div>
-                <div className="hub-mock-banner-desc" style={{ fontSize: '13px', marginTop: '2px' }}>
-                  Đề ngẫu nhiên 4 môn (Java, Spring Boot, Database, Network), tự động chấm điểm và đánh giá độ khớp đại ý 1-1.
-                </div>
-              </div>
-              <button
-                type="button"
-                className="hub-mock-banner-btn"
-                onClick={() => {
-                  setActiveMainTab('mock-interview');
-                  const navEl = document.getElementById('hub-main-nav');
-                  if (navEl) navEl.scrollIntoView({ behavior: 'smooth' });
-                }}
-                style={{
-                  padding: '9px 20px',
-                  borderRadius: '8px',
-                  fontWeight: 800,
-                  fontSize: '13.5px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                Vào Phòng Phỏng Vấn ➔
-              </button>
-            </div>
+            {/* Unified Career Readiness Meter + Daily 60s Micro-Challenge + Mock Interview CTA */}
+            <CareerReadinessAndDailyBanner
+              probationPercent={progressPercent}
+              onOpenMockInterview={() => {
+                setActiveMainTab('mock-interview');
+                const navEl = document.getElementById('hub-main-nav');
+                if (navEl) navEl.scrollIntoView({ behavior: 'smooth' });
+              }}
+            />
           </div>
 
           {/* ======================================================== */}
@@ -1281,10 +1264,10 @@ export default function CareerHubPage(): React.JSX.Element {
             {[
               { id: 'lessons', label: '📘 Kho Tri Thức Thực Chiến', color: '#38bdf8' },
               { id: 'mock-interview', label: '🎙️ Phỏng Vấn Thử (AI Evaluator)', color: '#0ea5e9' },
-              { id: 'interview', label: `🎯 Phỏng Vấn "Trúng Tủ" (${INTERVIEW_QUESTIONS.length} Câu)`, color: '#34d399' },
+              { id: 'interview', label: `🎯 Phỏng Vấn "Trúng Tủ" (${INTERVIEW_QUESTIONS.length})`, color: '#34d399' },
               { id: 'tips50', label: `⚡ ${FIFTY_PRACTICAL_TIPS.length} Bí Quyết Đi Làm`, color: '#ec4899' },
-              { id: 'battles', label: `⚔️ Trường Học vs Đi Làm (${CODE_BATTLES.length} Trận)`, color: '#fbbf24' },
-              { id: 'cv', label: `📄 Bí Kíp Viết CV (${CV_SECTIONS.length} Phần)`, color: '#a78bfa' },
+              { id: 'battles', label: `⚔️ So Kèo Code & Ca Trực 2h Sáng`, color: '#fbbf24' },
+              { id: 'cv', label: `📄 Bác Sĩ Sửa CV & Khung Lương`, color: '#a78bfa' },
               { id: 'probation', label: `📋 Checklist Thử Việc (${progressPercent}%)`, color: '#f97316' }
             ].map((tab) => {
               const isActive = activeMainTab === tab.id;
@@ -2708,14 +2691,22 @@ export default function CareerHubPage(): React.JSX.Element {
                   </div>
                 );
               })()}
+
+              {/* Production Incident War Room (2 AM On-Call Simulator) */}
+              <div style={{ marginTop: '24px' }}>
+                <IncidentWarRoomSection />
+              </div>
             </div>
           )}
 
           {/* ======================================================== */}
-          {/* TAB 4: BÍ KÍP VIẾT CV BACKEND */}
+          {/* TAB 4: BÁC SĨ SỬA CV & KHUNG LƯƠNG BACKEND */}
           {/* ======================================================== */}
           {activeMainTab === 'cv' && (
             <div>
+              {/* Interactive CV Doctor (Google XYZ) & Salary Explorer */}
+              <CvDoctorAndSalarySection />
+
               <div
                 className="hub-cv-container"
                 style={{

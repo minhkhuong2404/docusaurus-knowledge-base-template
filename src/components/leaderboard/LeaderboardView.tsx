@@ -187,15 +187,58 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
       `}</style>
 
       {/* Header & Subtitle */}
-      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '30px', backgroundColor: 'var(--lb-pill-bg)', color: 'var(--lb-sky)', fontSize: '0.85rem', fontWeight: 800, marginBottom: '0.75rem', border: '1px solid var(--lb-badge-border)' }}>
-          <span>🏆</span> GLOBAL ARCHITECT RANKINGS
+      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <div
+          className="lb-hero-badge"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '6px 16px',
+            borderRadius: '20px',
+            fontSize: '13px',
+            fontWeight: 800,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            marginBottom: '16px',
+            background: 'rgba(56, 189, 248, 0.15)',
+            color: '#38bdf8',
+            border: '1px solid rgba(56, 189, 248, 0.3)',
+          }}
+        >
+          <span>🏆 GLOBAL ARCHITECT RANKINGS • REAL-TIME LEADERBOARD</span>
         </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 900, marginBottom: '0.5rem', background: 'linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #fbbf24 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+        <h1
+          className="lb-hero-title"
+          style={{
+            fontSize: '2.75rem',
+            fontWeight: 900,
+            letterSpacing: '-0.02em',
+            margin: '0 auto 14px auto',
+            lineHeight: 1.25,
+            display: 'block',
+            width: 'fit-content',
+            textAlign: 'center',
+            background: 'linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #fbbf24 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
           Engineering Leaderboard
         </h1>
-        <p style={{ color: 'var(--lb-text-muted)', fontSize: '1rem', maxWidth: '600px', margin: '0 auto', fontWeight: 500 }}>
-          Rankings updated in real time based on Level progression, quiz masteries, DSA challenges, and learning consistency.
+        <p
+          className="lb-hero-subtitle"
+          style={{
+            fontSize: '1.15rem',
+            maxWidth: '840px',
+            margin: '0 auto 24px auto',
+            lineHeight: 1.6,
+            color: 'var(--ifm-color-content-secondary, #94a3b8)',
+            textAlign: 'center',
+          }}
+        >
+          Bảng xếp hạng kỹ sư toàn cầu cập nhật theo thời gian thực dựa trên tiến độ Cấp độ Kiến trúc sư, điểm giải đấu DSA, tỷ lệ hoàn thành câu hỏi và độ bền chuỗi học tập (Streak).
         </p>
       </div>
 

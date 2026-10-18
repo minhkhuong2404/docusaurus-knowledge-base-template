@@ -4,9 +4,12 @@ import { triggerFireworks } from '../../../utils/fireworks';
 import { arcadeAudio } from '../../../utils/arcadeAudio';
 import { SYSTEM_DESIGN_PUZZLES } from '../../../data/systemDesignPuzzlesData';
 import type { PuzzleScenario } from '../../../data/systemDesignPuzzlesData';
+import { pickRandomUnseenItem, readSeenIds, writeSeenIds } from '../../../utils/arcadeRandomizer';
 
 export type { PuzzleScenario };
 export { SYSTEM_DESIGN_PUZZLES };
+
+const SEEN_ARCH_PUZZLE_STORAGE_KEY = 'arcade_seen_arch_puzzle_ids_v1';
 
 interface ArchitectureMetrics {
   p99LatencyMs: number;
@@ -21,7 +24,13 @@ export default function ArchitecturePuzzleGame() {
   const { addExp, saveMiniGameScore, unlockAchievement } = useUserProgress();
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'big_tech' | 'real_time' | 'fintech' | 'distributed'>('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'Medium' | 'Hard' | 'Staff+'>('all');
-  const [activeScenarioId, setActiveScenarioId] = useState<string>(SYSTEM_DESIGN_PUZZLES[0].id);
+  const [seenPuzzleIds, setSeenPuzzleIds] = useState<string[]>(() => readSeenIds(SEEN_ARCH_PUZZLE_STORAGE_KEY));
+  const [activeScenarioId, setActiveScenarioId] = useState<string>(() => {
+    const initialSeen = readSeenIds(SEEN_ARCH_PUZZLE_STORAGE_KEY);
+    const { item, nextSeenIds } = pickRandomUnseenItem(SYSTEM_DESIGN_PUZZLES, initialSeen);
+    writeSeenIds(SEEN_ARCH_PUZZLE_STORAGE_KEY, nextSeenIds);
+    return item.id;
+  });
   const [selectedSequence, setSelectedSequence] = useState<string[]>([]);
   const [simulationState, setSimulationState] = useState<'idle' | 'simulating' | 'success' | 'failed'>('idle');
   const [feedbackMessage, setFeedbackMessage] = useState<string>('');
@@ -45,9 +54,11 @@ export default function ArchitecturePuzzleGame() {
 
   const handleNextScenario = () => {
     arcadeAudio.playFlip();
-    const currentIndex = filteredScenarios.findIndex((s) => s.id === activeScenario.id);
-    const nextScenario = filteredScenarios[(currentIndex + 1) % filteredScenarios.length];
-    handleSelectScenario(nextScenario.id);
+    const pool = filteredScenarios.length > 0 ? filteredScenarios : SYSTEM_DESIGN_PUZZLES;
+    const { item, nextSeenIds } = pickRandomUnseenItem(pool, seenPuzzleIds, activeScenario.id);
+    setSeenPuzzleIds(nextSeenIds);
+    writeSeenIds(SEEN_ARCH_PUZZLE_STORAGE_KEY, nextSeenIds);
+    handleSelectScenario(item.id);
   };
 
   const markScenarioSolved = (scenarioId: string) => {
@@ -582,6 +593,23 @@ export default function ArchitecturePuzzleGame() {
                 }}
               >
                 🗑️ Clear
+              </button>
+              <button
+                type="button"
+                onClick={handleNextScenario}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(56, 189, 248, 0.1)',
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                  color: '#38bdf8',
+                  fontSize: '0.75rem',
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                }}
+                title="Pick Random Unseen Scenario"
+              >
+                🎲 Random
               </button>
               <button
                 type="button"

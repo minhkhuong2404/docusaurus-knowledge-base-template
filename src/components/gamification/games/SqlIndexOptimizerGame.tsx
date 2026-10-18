@@ -5,11 +5,20 @@ import { arcadeAudio } from '../../../utils/arcadeAudio';
 import { SQL_OPTIMIZER_SCENARIOS, SqlOptimizerScenario, SqlTuningStrategy } from '../../../data/sqlOptimizerScenariosData';
 import { Highlight, Prism } from 'prism-react-renderer';
 import prismTheme from '../../../theme/prismTheme';
+import { pickRandomUnseenItem, readSeenIds, writeSeenIds, shuffleArray } from '../../../utils/arcadeRandomizer';
+
+const SEEN_SQL_OPTIMIZER_STORAGE_KEY = 'arcade_seen_sql_optimizer_ids_v1';
 
 export default function SqlIndexOptimizerGame(): React.JSX.Element {
   const { addExp, saveMiniGameScore, unlockAchievement } = useUserProgress();
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'Junior' | 'Mid' | 'Senior' | 'Staff'>('all');
-  const [selectedScenarioId, setSelectedScenarioId] = useState<string>(SQL_OPTIMIZER_SCENARIOS[0].id);
+  const [seenSqlIds, setSeenSqlIds] = useState<string[]>(() => readSeenIds(SEEN_SQL_OPTIMIZER_STORAGE_KEY));
+  const [selectedScenarioId, setSelectedScenarioId] = useState<string>(() => {
+    const initialSeen = readSeenIds(SEEN_SQL_OPTIMIZER_STORAGE_KEY);
+    const { item, nextSeenIds } = pickRandomUnseenItem(SQL_OPTIMIZER_SCENARIOS, initialSeen);
+    writeSeenIds(SEEN_SQL_OPTIMIZER_STORAGE_KEY, nextSeenIds);
+    return item.id;
+  });
   const [chosenStrategyId, setChosenStrategyId] = useState<string | null>(null);
   const [hoveredStrategyId, setHoveredStrategyId] = useState<string | null>(null);
   const [activePlanTab, setActivePlanTab] = useState<'explain' | 'btree'>('explain');
@@ -30,9 +39,11 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
 
   const handleNextScenario = () => {
     arcadeAudio.playFlip();
-    const currentIndex = filteredScenarios.findIndex((s) => s.id === currentScenario.id);
-    const nextScenario = filteredScenarios[(currentIndex + 1) % filteredScenarios.length];
-    handleSelectScenario(nextScenario.id);
+    const pool = filteredScenarios.length > 0 ? filteredScenarios : SQL_OPTIMIZER_SCENARIOS;
+    const { item, nextSeenIds } = pickRandomUnseenItem(pool, seenSqlIds, currentScenario.id);
+    setSeenSqlIds(nextSeenIds);
+    writeSeenIds(SEEN_SQL_OPTIMIZER_STORAGE_KEY, nextSeenIds);
+    handleSelectScenario(item.id);
   };
 
   const markScenarioSolved = (id: string) => {
@@ -56,6 +67,10 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
     filteredScenarios[0] ||
     SQL_OPTIMIZER_SCENARIOS[0];
 
+  const shuffledStrategies = useMemo(() => {
+    return shuffleArray(currentScenario.strategies);
+  }, [currentScenario]);
+
   const handleSelectScenario = (id: string) => {
     arcadeAudio.playFlip();
     setSelectedScenarioId(id);
@@ -67,9 +82,12 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
   const handleSelectDifficulty = (diff: 'all' | 'Junior' | 'Mid' | 'Senior' | 'Staff') => {
     arcadeAudio.playBlip();
     setSelectedDifficulty(diff);
-    const match = SQL_OPTIMIZER_SCENARIOS.find((s) => diff === 'all' || s.difficulty === diff);
-    if (match) {
-      setSelectedScenarioId(match.id);
+    const pool = diff === 'all' ? SQL_OPTIMIZER_SCENARIOS : SQL_OPTIMIZER_SCENARIOS.filter((s) => s.difficulty === diff);
+    if (pool.length > 0) {
+      const { item, nextSeenIds } = pickRandomUnseenItem(pool, seenSqlIds, currentScenario.id);
+      setSeenSqlIds(nextSeenIds);
+      writeSeenIds(SEEN_SQL_OPTIMIZER_STORAGE_KEY, nextSeenIds);
+      setSelectedScenarioId(item.id);
       setChosenStrategyId(null);
       setFeedbackState(null);
     }
@@ -367,6 +385,23 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <button
                 type="button"
+                onClick={handleNextScenario}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(16, 185, 129, 0.12)',
+                  border: '1px solid rgba(16, 185, 129, 0.35)',
+                  color: '#34d399',
+                  fontSize: '0.75rem',
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                }}
+                title="Pick Random Unseen Scenario"
+              >
+                🎲 Random
+              </button>
+              <button
+                type="button"
                 onClick={() => {
                   arcadeAudio.playBlip();
                   setGameState('intro');
@@ -466,7 +501,7 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
-          {currentScenario.strategies.map((strat) => {
+          {shuffledStrategies.map((strat) => {
             const isChosen = chosenStrategyId === strat.id;
             const isHovered = hoveredStrategyId === strat.id && !isChosen;
 

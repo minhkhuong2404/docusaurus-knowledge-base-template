@@ -21,7 +21,10 @@ try {
 }
 
 import { sanitizeBugCode } from '../../../utils/sanitizeBugCode';
+import { pickRandomUnseenItem, readSeenIds, writeSeenIds } from '../../../utils/arcadeRandomizer';
 export { sanitizeBugCode };
+
+const SEEN_SPOT_BUG_STORAGE_KEY = 'arcade_seen_spot_bug_ids_v1';
 
 function detectCodeLanguage(code: string, category: string): string {
   const trimmed = code.trim();
@@ -109,6 +112,8 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   const [eliminatedOptionIds, setEliminatedOptionIds] = useState<string[]>([]);
   const [breakpointHintUsed, setBreakpointHintUsed] = useState<boolean>(false);
   const [timeWarpUsed, setTimeWarpUsed] = useState<boolean>(false);
+
+  const [seenBugIds, setSeenBugIds] = useState<string[]>(() => readSeenIds(SEEN_SPOT_BUG_STORAGE_KEY));
 
   // Solved tracking
   const [solvedBugIds, setSolvedBugIds] = useState<string[]>(() => {
@@ -272,25 +277,36 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     setThreadStep(0);
   };
 
+  const pickRandomChallengeFromPool = (pool: BugSnippetsChallenge[], currentId?: string) => {
+    if (!pool || pool.length === 0) return;
+    const { index, nextSeenIds } = pickRandomUnseenItem(pool, seenBugIds, currentId);
+    setSeenBugIds(nextSeenIds);
+    writeSeenIds(SEEN_SPOT_BUG_STORAGE_KEY, nextSeenIds);
+    setCategoryIndexMap((prev) => ({
+      ...prev,
+      [selectedCategory]: index,
+    }));
+  };
+
   const handleStartGame = () => {
     arcadeAudio.playLaser();
+    pickRandomChallengeFromPool(filteredChallenges, currentChallenge?.id);
     setGameState('playing');
     resetRoundState();
   };
 
   const handleNextChallenge = () => {
     arcadeAudio.playFlip();
-    setCategoryIndexMap((prev) => ({
-      ...prev,
-      [selectedCategory]: (prev[selectedCategory] ?? 0) + 1,
-    }));
+    pickRandomChallengeFromPool(filteredChallenges, currentChallenge?.id);
     setGameState('playing');
     resetRoundState();
   };
 
   const handleSkipChallenge = () => {
     arcadeAudio.playBlip();
-    handleNextChallenge();
+    pickRandomChallengeFromPool(filteredChallenges, currentChallenge?.id);
+    setGameState('playing');
+    resetRoundState();
   };
 
   const handleSelectOption = (option: { id: string; isCorrect: boolean; text: string; explanation: string }) => {
@@ -659,9 +675,9 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                       fontWeight: 700,
                       cursor: 'pointer',
                     }}
-                    title="Skip Question"
+                    title="Pick Random Unseen Question"
                   >
-                    ⏭️ Skip
+                    🎲 Random
                   </button>
                 </>
               )}

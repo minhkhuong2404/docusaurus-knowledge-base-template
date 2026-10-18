@@ -385,9 +385,83 @@ describe('Mock Interview Studio & Evaluation Engine Suite', () => {
       );
     });
   });
+
+  describe('Career Hub Interactive Feature Groups (Daily 60s, CV Doctor, Level Map, 2AM War-Room & Cram Deck)', () => {
+    const careerInteractiveModule = loadTsModule('src/data/careerHubInteractiveData.ts');
+    const {
+      DAILY_MICRO_CHALLENGES,
+      CV_PROJECT_TEMPLATES,
+      CAREER_LEVEL_PROFILES,
+      INCIDENT_WAR_ROOM_SCENARIOS,
+      QUICK_CRAM_FLASHCARDS,
+      upgradeCustomCvBullet,
+      computeCareerReadiness
+    } = careerInteractiveModule;
+
+    it('DAILY_MICRO_CHALLENGES must have at least 5 daily 60-second puzzles with 1 correct option each', () => {
+      assert.ok(Array.isArray(DAILY_MICRO_CHALLENGES) && DAILY_MICRO_CHALLENGES.length >= 5);
+      DAILY_MICRO_CHALLENGES.forEach((ch) => {
+        assert.ok(ch.id && ch.title && ch.question && ch.takeaway);
+        const correct = ch.options.filter((o) => o.isCorrect);
+        assert.strictEqual(correct.length, 1, `Daily challenge ${ch.id} must have exactly 1 correct option`);
+      });
+    });
+
+    it('CV_PROJECT_TEMPLATES and upgradeCustomCvBullet must produce Google XYZ formatted bullets', () => {
+      assert.ok(Array.isArray(CV_PROJECT_TEMPLATES) && CV_PROJECT_TEMPLATES.length >= 4);
+      CV_PROJECT_TEMPLATES.forEach((tpl) => {
+        assert.ok(tpl.id && tpl.projectType && tpl.weakBullet);
+        assert.ok(Array.isArray(tpl.upgradedBullets) && tpl.upgradedBullets.length >= 3);
+      });
+
+      const upgraded = upgradeCustomCvBullet('Xây dựng chức năng giỏ hàng bằng Spring Boot', 'performance');
+      assert.ok(upgraded.includes('Redis Cache') || upgraded.includes('JOIN FETCH'));
+    });
+
+    it('CAREER_LEVEL_PROFILES must cover Intern, Fresher, Junior, and Middle across company types', () => {
+      assert.ok(Array.isArray(CAREER_LEVEL_PROFILES) && CAREER_LEVEL_PROFILES.length >= 8);
+      const levels = new Set(CAREER_LEVEL_PROFILES.map((p) => p.level));
+      ['Intern', 'Fresher', 'Junior', 'Middle'].forEach((lvl) => {
+        assert.ok(levels.has(lvl), `Missing level profile for ${lvl}`);
+      });
+    });
+
+    it('INCIDENT_WAR_ROOM_SCENARIOS and QUICK_CRAM_FLASHCARDS must be complete and valid', () => {
+      assert.ok(Array.isArray(INCIDENT_WAR_ROOM_SCENARIOS) && INCIDENT_WAR_ROOM_SCENARIOS.length >= 2);
+      INCIDENT_WAR_ROOM_SCENARIOS.forEach((sc) => {
+        assert.ok(sc.id && sc.title && Array.isArray(sc.stages) && sc.stages.length >= 3);
+      });
+
+      assert.ok(Array.isArray(QUICK_CRAM_FLASHCARDS) && QUICK_CRAM_FLASHCARDS.length >= 8);
+      QUICK_CRAM_FLASHCARDS.forEach((fc) => {
+        assert.strictEqual(fc.threeGoldenKeywords.length, 3);
+        assert.ok(fc.oneLinerPunchline.length > 15);
+      });
+    });
+
+    it('computeCareerReadiness must compute bounded 0-100 score and rank title', () => {
+      const high = computeCareerReadiness({
+        probationPercent: 95,
+        mockBestScore: 90,
+        solvedDailyCount: 5,
+        masteredFlashcardsCount: 8
+      });
+      assert.ok(high.readinessScore >= 85);
+      assert.ok(high.rankTitle.includes('Bar Raiser'));
+    });
+
+    it('CareerHubInteractiveSuite.tsx and hub/index.tsx must transpile cleanly with 0 undeclared identifiers and exclude Shareable Developer Career Card', () => {
+      const suitePath = path.resolve(__dirname, '../src/components/career-hub/CareerHubInteractiveSuite.tsx');
+      const hubPath = path.resolve(__dirname, '../src/pages/hub/index.tsx');
+
+      assert.doesNotThrow(() => transpileCode(suitePath));
+      assert.doesNotThrow(() => transpileCode(hubPath));
+
+      assert.deepStrictEqual(Array.from(getUndeclaredIdentifiers(suitePath)), []);
+      assert.deepStrictEqual(Array.from(getUndeclaredIdentifiers(hubPath)), []);
+
+      const suiteContent = fs.readFileSync(suitePath, 'utf-8');
+      assert.ok(!suiteContent.includes('career-badge'), 'Shareable Developer Career Card should be removed');
+    });
+  });
 });
-
-
-
-
-

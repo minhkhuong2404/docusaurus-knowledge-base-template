@@ -4,6 +4,9 @@ import { triggerFireworks } from '../../../utils/fireworks';
 import { arcadeAudio } from '../../../utils/arcadeAudio';
 import { fetchAllTabQuestions, QuizQuestion, QuizCategoryKey } from '../../../services/googleSheetQuizService';
 import { parseSnippetLines } from '../../../utils/codeSnippetHelper';
+import { pickRandomUnseenBatch, pickRandomUnseenItem, readSeenIds, writeSeenIds } from '../../../utils/arcadeRandomizer';
+
+const SEEN_BOSS_BATTLE_STORAGE_KEY = 'arcade_seen_boss_battle_ids_v1';
 
 interface BossOption {
   text: string;
@@ -285,6 +288,7 @@ export default function OutageBossBattleGame() {
 
   // Post Mortem
   const [incidentLog, setIncidentLog] = useState<IncidentDecision[]>([]);
+  const [seenBossIds, setSeenBossIds] = useState<string[]>(() => readSeenIds(SEEN_BOSS_BATTLE_STORAGE_KEY));
 
   const currentTheme = BOSS_THEMES[selectedThemeIdx];
   const severityConfig = SEVERITY_CONFIGS[selectedSeverity];
@@ -333,15 +337,10 @@ export default function OutageBossBattleGame() {
     }
   }, [isEnraged, gameState]);
 
-  const prepareBattleQuestions = useCallback(
-    (themeId: QuizCategoryKey, mistakeDmg: number, difficulty: BattleDifficulty): BattleQuestion[] => {
+  const getFilteredPool = useCallback(
+    (themeId: QuizCategoryKey, difficulty: BattleDifficulty): QuizQuestion[] => {
       let rawList = questionsPool[themeId] || questionsPool.all || [];
-
-      if (rawList.length === 0) {
-        const fallbacks = EMERGENCY_FALLBACK_QUESTIONS[themeId] || EMERGENCY_FALLBACK_QUESTIONS.all;
-        return shuffle(fallbacks).slice(0, 5);
-      }
-
+      if (rawList.length === 0) return [];
       if (difficulty === 'easy') {
         const match = rawList.filter((q) => q.difficulty === 'Junior');
         if (match.length > 0) rawList = match;
@@ -352,32 +351,76 @@ export default function OutageBossBattleGame() {
         const match = rawList.filter((q) => q.difficulty === 'Senior' || q.difficulty === 'Staff');
         if (match.length > 0) rawList = match;
       }
-
-      const sampled = shuffle(rawList).slice(0, 5);
-
-      return sampled.map((q) => {
-        const correctIdx = q.correctOptionIndex;
-        const opts: BossOption[] = q.options.map((optText, idx) => {
-          const isCorrect = idx === correctIdx;
-          return {
-            text: optText,
-            correct: isCorrect,
-            explanation: isCorrect ? q.explanation || 'Correct mitigation!' : q.explanation || 'Sub-optimal choice.',
-            dmg: 25,
-            selfDmg: isCorrect ? 0 : mistakeDmg,
-          };
-        });
-
-        return {
-          id: q.id,
-          question: q.questionText,
-          codeSnippet: q.codeSnippet,
-          options: shuffle(opts),
-        };
-      });
+      return rawList;
     },
     [questionsPool]
   );
+
+  const mapQuizToBattleQuestion = useCallback((q: QuizQuestion, mistakeDmg: number): BattleQuestion => {
+    const correctIdx = q.correctOptionIndex;
+    const opts: BossOption[] = q.options.map((optText, idx) => {
+      const isCorrect = idx === correctIdx;
+      return {
+        text: optText,
+        correct: isCorrect,
+        explanation: isCorrect ? q.explanation || 'Correct mitigation!' : q.explanation || 'Sub-optimal choice.',
+        dmg: 25,
+        selfDmg: isCorrect ? 0 : mistakeDmg,
+      };
+    });
+
+    return {
+      id: q.id,
+      question: q.questionText,
+      codeSnippet: q.codeSnippet,
+      options: shuffle(opts),
+    };
+  }, []);
+
+  const prepareBattleQuestions = useCallback(
+    (themeId: QuizCategoryKey, mistakeDmg: number, difficulty: BattleDifficulty): BattleQuestion[] => {
+      const rawList = getFilteredPool(themeId, difficulty);
+
+      if (rawList.length === 0) {
+        const fallbacks = EMERGENCY_FALLBACK_QUESTIONS[themeId] || EMERGENCY_FALLBACK_QUESTIONS.all;
+        const { batch, nextSeenIds } = pickRandomUnseenBatch(fallbacks, 5, seenBossIds);
+        setSeenBossIds(nextSeenIds);
+        writeSeenIds(SEEN_BOSS_BATTLE_STORAGE_KEY, nextSeenIds);
+        return batch;
+      }
+
+      const { batch, nextSeenIds } = pickRandomUnseenBatch(rawList, 5, seenBossIds);
+      setSeenBossIds(nextSeenIds);
+      writeSeenIds(SEEN_BOSS_BATTLE_STORAGE_KEY, nextSeenIds);
+
+      return batch.map((q) => mapQuizToBattleQuestion(q, mistakeDmg));
+    },
+    [getFilteredPool, mapQuizToBattleQuestion, seenBossIds]
+  );
+
+  const handleRandomSwapQuestion = () => {
+    if (selectedOption !== null) return;
+    arcadeAudio.playFlip();
+    const rawList = getFilteredPool(currentTheme.id, selectedDifficulty);
+    const activeIds = new Set(activeQuestions.map((q) => q.id));
+
+    if (rawList.length > 0) {
+      const available = rawList.filter((q) => !activeIds.has(q.id));
+      const poolToUse = available.length > 0 ? available : rawList;
+      const { item, nextSeenIds } = pickRandomUnseenItem(poolToUse, seenBossIds, activeQuestions[currentQIdx]?.id);
+      setSeenBossIds(nextSeenIds);
+      writeSeenIds(SEEN_BOSS_BATTLE_STORAGE_KEY, nextSeenIds);
+      const mapped = mapQuizToBattleQuestion(item, severityConfig.mistakeDmgPercent);
+      setActiveQuestions((prev) => prev.map((q, idx) => (idx === currentQIdx ? mapped : q)));
+    } else {
+      const fallbacks = EMERGENCY_FALLBACK_QUESTIONS[currentTheme.id] || EMERGENCY_FALLBACK_QUESTIONS.all;
+      const { item, nextSeenIds } = pickRandomUnseenItem(fallbacks, seenBossIds, activeQuestions[currentQIdx]?.id);
+      setSeenBossIds(nextSeenIds);
+      writeSeenIds(SEEN_BOSS_BATTLE_STORAGE_KEY, nextSeenIds);
+      setActiveQuestions((prev) => prev.map((q, idx) => (idx === currentQIdx ? item : q)));
+    }
+    setEliminatedOptions([]);
+  };
 
   const startGame = () => {
     arcadeAudio.playLaser();
@@ -749,6 +792,15 @@ export default function OutageBossBattleGame() {
                 title="Failover (+20s / +15% SLA)"
               >
                 ⚡
+              </button>
+              <button
+                type="button"
+                disabled={selectedOption !== null}
+                onClick={handleRandomSwapQuestion}
+                style={{ padding: '6px 8px', borderRadius: '6px', background: 'rgba(251, 191, 36, 0.08)', border: '1px solid #fbbf24', color: '#fbbf24', fontSize: '0.74rem', fontWeight: 700, cursor: selectedOption !== null ? 'not-allowed' : 'pointer' }}
+                title="Pick Random Unseen Question"
+              >
+                🎲 Random
               </button>
               <button
                 type="button"

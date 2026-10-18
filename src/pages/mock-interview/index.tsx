@@ -18,7 +18,67 @@ export default function MockInterviewPage(): React.JSX.Element {
           color: 'var(--ifm-color-content, #ffffff)',
         }}
       >
-        <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+          {/* ======================================================== */}
+          {/* HERO BANNER */}
+          {/* ======================================================== */}
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <div
+              className="mock-hero-badge"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '6px 16px',
+                borderRadius: '20px',
+                fontSize: '13px',
+                fontWeight: 800,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                marginBottom: '16px',
+                background: 'rgba(56, 189, 248, 0.15)',
+                color: '#38bdf8',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+              }}
+            >
+              <span>🎙️ AI EVALUATOR • MOCK INTERVIEW STUDIO</span>
+            </div>
+
+            <h1
+              className="mock-hero-title"
+              style={{
+                fontSize: '2.75rem',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                margin: '0 auto 14px auto',
+                lineHeight: 1.25,
+                display: 'block',
+                width: 'fit-content',
+                textAlign: 'center',
+                background: 'linear-gradient(135deg, #0ea5e9 0%, #34d399 50%, #a855f7 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              Mock Interview Studio
+            </h1>
+
+            <p
+              className="mock-hero-subtitle"
+              style={{
+                fontSize: '1.15rem',
+                maxWidth: '840px',
+                margin: '0 auto 24px auto',
+                lineHeight: 1.6,
+                color: 'var(--ifm-color-content-secondary, #94a3b8)',
+                textAlign: 'center',
+              }}
+            >
+              Phòng luyện tập phỏng vấn thử Java Backend chuyên sâu cùng AI Evaluator. Bốc đề câu hỏi ngẫu nhiên từ Java Core, Spring Boot, Cơ sở dữ liệu và Mạng máy tính với chấm điểm &amp; nhận xét thời gian thực.
+            </p>
+          </div>
+
           {/* Integration Banner */}
           <div
             style={{

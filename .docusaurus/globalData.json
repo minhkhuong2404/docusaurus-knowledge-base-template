@@ -6752,6 +6752,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/16-concurrency-concepts-master-guide",
+              "path": "/technical-knowledge/system-design/16-concurrency-concepts-master-guide",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/60-days-of-system-design",
               "path": "/technical-knowledge/system-design/60-days-of-system-design",
               "sidebar": "tutorialSidebar"
@@ -7589,15 +7594,6 @@
         }
       ],
       "breadcrumbs": true
-    }
-  },
-  "docusaurus-plugin-google-gtag": {
-    "default": {
-      "trackingID": [
-        "G-79SQQZQMCX"
-      ],
-      "anonymizeIP": true,
-      "id": "default"
     }
   }
 }
