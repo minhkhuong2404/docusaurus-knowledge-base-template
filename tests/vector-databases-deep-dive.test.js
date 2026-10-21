@@ -9,6 +9,7 @@ describe('Vector Databases & Comparative Deep Dive Test Suite', () => {
   const diagram1Path = 'src/components/VectorVsDatabasesDiagram.tsx';
   const diagram2Path = 'src/components/VectorHnswVsIvfDiagram.tsx';
   const diagram3Path = 'src/components/SweToAiEngineerEvolutionDiagram.tsx';
+  const diagram4Path = 'src/components/VectorSystemDesignDiagram.tsx';
 
   it('vector-databases-deep-dive.md must exist on disk and have senior principal depth', () => {
     assert.ok(fs.existsSync(docPath), `Doc file ${docPath} must exist`);
@@ -66,17 +67,38 @@ describe('Vector Databases & Comparative Deep Dive Test Suite', () => {
     assert.ok(fs.existsSync(diagram1Path), `Diagram file ${diagram1Path} must exist`);
     assert.ok(fs.existsSync(diagram2Path), `Diagram file ${diagram2Path} must exist`);
     assert.ok(fs.existsSync(diagram3Path), `Diagram file ${diagram3Path} must exist`);
+    assert.ok(fs.existsSync(diagram4Path), `Diagram file ${diagram4Path} must exist`);
     
     const content1 = fs.readFileSync(diagram1Path, 'utf8');
     const content2 = fs.readFileSync(diagram2Path, 'utf8');
     const content3 = fs.readFileSync(diagram3Path, 'utf8');
+    const content4 = fs.readFileSync(diagram4Path, 'utf8');
     
     assert.ok(content1.includes('VectorVsDatabasesDiagram'), 'Must export VectorVsDatabasesDiagram');
     assert.ok(content2.includes('VectorHnswVsIvfDiagram'), 'Must export VectorHnswVsIvfDiagram');
     assert.ok(content3.includes('SweToAiEngineerEvolutionDiagram'), 'Must export SweToAiEngineerEvolutionDiagram');
+    assert.ok(content4.includes('VectorSystemDesignDiagram'), 'Must export VectorSystemDesignDiagram');
     assert.ok(content1.includes('interactive-diagram-container'), 'Must use interactive-diagram-container');
     assert.ok(content2.includes('interactive-diagram-container'), 'Must use interactive-diagram-container');
     assert.ok(content3.includes('interactive-diagram-container'), 'Must use interactive-diagram-container');
+    assert.ok(content4.includes('interactive-diagram-container'), 'Must use interactive-diagram-container');
+  });
+
+  it('must contain Senior/Staff Interview Playbook, classic traps, and candidate cheat sheet', () => {
+    const content = fs.readFileSync(docPath, 'utf8');
+    assert.ok(
+      content.includes('## 🧠 Senior/Staff Interview Playbook: How to Ace Vector Database & ANN System Design Interviews'),
+      'Must contain the dedicated Senior/Staff Playbook header'
+    );
+    assert.ok(
+      content.includes('VectorSystemDesignDiagram'),
+      'Must embed VectorSystemDesignDiagram in document'
+    );
+    assert.ok(content.includes('The Senior Framing Strategy'), 'Must contain Senior Framing Strategy');
+    assert.ok(content.includes('Classic Interviewer Traps & Principal Rebuttals'), 'Must contain interviewer traps');
+    assert.ok(content.includes('Mid-Level vs. Principal Candidate Phrasing Cheat Sheet'), 'Must contain cheat sheet');
+    assert.ok(content.includes('Roaring Bitsets') || content.includes('Bitset-Masked Single-Stage Traversal'), 'Must detail bitset traversal');
+    assert.ok(content.includes('LSM-Tree Multi-Segment Architecture') || content.includes('MemTable'), 'Must detail LSM write path');
   });
 
   it('must compile MDX with 0 undeclared runtime identifiers (AST safety)', () => {

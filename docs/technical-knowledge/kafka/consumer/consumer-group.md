@@ -148,15 +148,19 @@ public class KafkaConsumerConfig {
 
 ```java
 @KafkaListener(
-    topics = "orders",
-    groupId = "order-service",
-    concurrency = "3"   // overrides factory concurrency
+    id = "orderConsumerContainer", // Spring-local container bean ID for KafkaListenerEndpointRegistry
+    groupId = "order-service",     // Kafka broker-wide consumer group ID
+    concurrency = "3"              // Overrides factory concurrency (3 threads per instance)
 )
 public void listen(ConsumerRecord<String, OrderEvent> record, Acknowledgment ack) {
     processOrder(record.value());
     ack.acknowledge();
 }
 ```
+
+:::tip[`id` vs `groupId` in `@KafkaListener`]
+Never omit `groupId` when setting an `id` unless you intentionally want `groupId` to equal `id`! In Spring Kafka, `idIsGroup` defaults to `true`. If you specify `@KafkaListener(id = "myListener")` without `groupId`, Spring silently overrides your global `spring.kafka.consumer.group-id`. For the full architectural deep dive and programmatic pause/resume patterns, see [Kafka Consumer Overview — id vs groupId Deep Dive](./consumer-overview#kafkalistener-id-vs-groupid-architecture--mechanics).
+:::
 
 ---
 

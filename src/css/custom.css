@@ -6058,18 +6058,38 @@ textarea {
   transform: translateY(-2px) !important;
 }
 
-/* 1. Flashcards - Cyan */
+/* 1. Flashcards & Arena - Cyan */
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-arena,
 [data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-flashcards {
   background: #f0f9ff !important;
   border: 1.5px solid #7dd3fc !important;
   color: #0369a1 !important;
 }
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-arena:hover,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-arena.active,
 [data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-flashcards:hover,
 [data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-flashcards.active {
   background: #e0f2fe !important;
   border-color: #0284c7 !important;
   color: #0c4a6e !important;
   box-shadow: 0 3px 12px rgba(2, 132, 199, 0.22) !important;
+}
+
+/* 2. Acronyms & Abbreviations - Emerald */
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-acronyms,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-dictionary {
+  background: #f0fdf4 !important;
+  border: 1.5px solid #86efac !important;
+  color: #15803d !important;
+}
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-acronyms:hover,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-acronyms.active,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-dictionary:hover,
+[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-dictionary.active {
+  background: #dcfce7 !important;
+  border-color: #16a34a !important;
+  color: #14532d !important;
+  box-shadow: 0 3px 12px rgba(22, 163, 74, 0.22) !important;
 }
 
 /* 2. Listening & Recall Quiz - Pink */
@@ -6084,20 +6104,6 @@ textarea {
   border-color: #db2777 !important;
   color: #831843 !important;
   box-shadow: 0 3px 12px rgba(219, 39, 119, 0.22) !important;
-}
-
-/* 3. Tra Cứu Toàn Diện - Emerald */
-[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-dictionary {
-  background: #f0fdf4 !important;
-  border: 1.5px solid #86efac !important;
-  color: #15803d !important;
-}
-[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-dictionary:hover,
-[data-theme="light"] .tech-english-page-container .teh-nav-tab.tab-dictionary.active {
-  background: #dcfce7 !important;
-  border-color: #16a34a !important;
-  color: #14532d !important;
-  box-shadow: 0 3px 12px rgba(22, 163, 74, 0.22) !important;
 }
 
 /* 4. 10 Bẫy Phát Âm - Amber */
@@ -6146,6 +6152,7 @@ textarea {
    ============================================================ */
 [data-theme="light"] .tech-english-page-container table,
 [data-theme="light"] .tech-english-page-container .teh-traps-table,
+[data-theme="light"] .tech-english-page-container .teh-acronyms-table,
 [data-theme="light"] .tech-english-page-container .teh-playbook-table,
 [data-theme="light"] .tech-english-page-container .tgf-dict-table {
   background: #ffffff !important;
@@ -6153,6 +6160,38 @@ textarea {
   border-radius: 12px !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
   overflow: hidden !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-acronym-badge {
+  background: #e0f2fe !important;
+  border-color: #7dd3fc !important;
+  color: #0284c7 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-acronym-full {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-acronym-pronun {
+  color: #b45309 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-acronym-meaning {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-acronym-tip {
+  color: #6b21a8 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .tech-english-page-container .teh-filter-input,
+[data-theme="light"] .tech-english-page-container .teh-filter-select {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
 }
 
 [data-theme="light"] .tech-english-page-container thead tr,

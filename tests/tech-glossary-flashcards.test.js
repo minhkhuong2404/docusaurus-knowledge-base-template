@@ -93,8 +93,8 @@ test('Tech English dedicated tab page exists, transpiles cleanly, and is registe
     'Must render hero title'
   );
   assert.ok(
-    pageContent.includes('🎴 Flashcard Arena') && pageContent.includes('🎯 Listening & Recall Quiz'),
-    'Must render main navigation tabs'
+    pageContent.includes('🎴 Luyện Từ Vựng & Quiz') && pageContent.includes('🔤 Từ Viết Tắt & Acronyms'),
+    'Must render streamlined main navigation tabs without redundant duplicate bars'
   );
   assert.ok(
     pageContent.includes('PRONUNCIATION_TRAPS') && pageContent.includes('CONFUSION_PAIRS'),
@@ -138,7 +138,7 @@ test('Tech English dedicated tab page exists, transpiles cleanly, and is registe
   );
 });
 
-test('techEnglishVocabularyData.ts has comprehensive dataset with 140+ terms across all 7 domains', () => {
+test('techEnglishVocabularyData.ts has comprehensive dataset with 500+ terms across all 7 domains', () => {
   const dataFilePath = path.join(ROOT, 'src/data/techEnglishVocabularyData.ts');
   assert.ok(fs.existsSync(dataFilePath), 'src/data/techEnglishVocabularyData.ts must exist');
 
@@ -151,7 +151,7 @@ test('techEnglishVocabularyData.ts has comprehensive dataset with 140+ terms acr
   const mod = loadTsModule(dataFilePath);
   const data = mod.TECH_VOCABULARY_DATA;
   assert.ok(Array.isArray(data), 'TECH_VOCABULARY_DATA must be an array');
-  assert.ok(data.length >= 140, `Expected at least 140 terms, found ${data.length}`);
+  assert.ok(data.length >= 500, `Expected at least 500 terms, found ${data.length}`);
 
   const requiredCategories = [
     'system-design',
@@ -188,4 +188,53 @@ test('techEnglishVocabularyData.ts has comprehensive dataset with 140+ terms acr
     assert.ok(categoriesFound.has(cat), `Category '${cat}' must be represented in the dataset`);
   });
 });
+
+test('techAcronymsData.ts has comprehensive dataset with 120+ technical acronyms', () => {
+  const acronymsFilePath = path.join(ROOT, 'src/data/techAcronymsData.ts');
+  assert.ok(fs.existsSync(acronymsFilePath), 'src/data/techAcronymsData.ts must exist');
+
+  assert.deepEqual(
+    getUndeclaredIdentifiers(acronymsFilePath),
+    [],
+    'src/data/techAcronymsData.ts must have 0 undeclared runtime identifiers'
+  );
+
+  const mod = loadTsModule(acronymsFilePath);
+  const data = mod.TECH_ACRONYMS_DATA;
+  assert.ok(Array.isArray(data), 'TECH_ACRONYMS_DATA must be an array');
+  assert.ok(data.length >= 120, `Expected at least 120 acronyms, found ${data.length}`);
+
+  const requiredCategories = [
+    'system-design',
+    'database',
+    'os-concurrency',
+    'networking',
+    'java-jvm',
+    'security',
+    'devops',
+  ];
+
+  const categoriesFound = new Set();
+  const ids = new Set();
+
+  data.forEach((item, idx) => {
+    assert.ok(item.id && typeof item.id === 'string', `Acronym at index ${idx} must have string id`);
+    assert.ok(!ids.has(item.id), `Duplicate acronym ID found: ${item.id}`);
+    ids.add(item.id);
+
+    assert.ok(item.acronym && typeof item.acronym === 'string', `Acronym ${item.id} must have acronym text`);
+    assert.ok(item.fullForm && typeof item.fullForm === 'string', `Acronym ${item.id} must have fullForm`);
+    assert.ok(item.pronunciation && typeof item.pronunciation === 'string', `Acronym ${item.id} must have pronunciation`);
+    assert.ok(requiredCategories.includes(item.category), `Acronym ${item.id} must have valid category`);
+    categoriesFound.add(item.category);
+
+    assert.ok(item.meaning && item.meaning.length > 15, `Acronym ${item.id} must have detailed Vietnamese meaning`);
+    assert.ok(item.productionTip && item.productionTip.length > 15, `Acronym ${item.id} must have production tip`);
+  });
+
+  requiredCategories.forEach((cat) => {
+    assert.ok(categoriesFound.has(cat), `Category '${cat}' must be represented in the acronyms dataset`);
+  });
+});
+
 

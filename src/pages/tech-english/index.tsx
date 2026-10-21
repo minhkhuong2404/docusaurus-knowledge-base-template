@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import Layout from '@theme/Layout';
 import TechGlossaryFlashcards, { TECH_TERMS } from '../../components/TechGlossaryFlashcards';
+import { TECH_ACRONYMS_DATA, TechAcronym } from '../../data/techAcronymsData';
 
-type EnglishTab = 'flashcards' | 'quiz' | 'dictionary' | 'traps' | 'playbook';
+type EnglishTab = 'arena' | 'acronyms' | 'traps';
 
 interface PronunciationTrap {
   term: string;
@@ -109,15 +110,15 @@ const CONFUSION_PAIRS: ConfusionPair[] = [
     diffSummary: 'Concurrency là cấu trúc chương trình (quản lý xen kẽ) vs Parallelism là thực thi vật lý đa nhân',
     detailA: 'Quản lý nhiều tác vụ bằng phân chia thời gian (Time-Slicing) trên 1 CPU core hoặc nhiều luồng logic. Tập trung vào cấu trúc (dealing with many things).',
     detailB: 'Thực thi nhiều phép tính tại cùng một chu kỳ xung nhịp clock trên nhiều CPU cores vật lý (doing many things at once). Bắt buộc cần phần cứng multi-core.',
-    codeExample: '// Concurrency: 1 chef stirring 5 pots on 1 stove (Interleaving)\n// Parallelism: 5 chefs on 5 stoves (Hardware execution)',
+    codeOrExample: '// Concurrency: 1 chef stirring 5 pots on 1 stove (Interleaving)\n// Parallelism: 5 chefs on 5 stoves (Hardware execution)',
   },
   {
     termA: 'Latency',
     termB: 'Throughput',
     diffSummary: 'Latency là độ trễ của 1 request (ms) vs Throughput là số request xong trong 1 giây (RPS)',
     detailA: 'Thời gian cần thiết để một tín hiệu hoặc gói tin truyền từ Client tới Server và phản hồi (Round-Trip Time). Đo bằng p95, p99 ms.',
-    detailB: 'Tổng khối lượng công việc hệ thống hoàn thành trong 1 đơn vị thời gian (Requests Per Second - RPS). Little\'s Law liên kết cả hai: L = λ × W.',
-    codeExample: '// Low Latency: API returns in 10ms\n// High Throughput: API handles 50,000 requests/second',
+    detailB: 'Tổng khối lượng công việc hệ thống hoàn thành trong 1 đơn vị thời gian (Requests Per Second - RPS). Định luật Little liên kết cả hai: L = λ × W.',
+    codeOrExample: '// Low Latency: API returns in 10ms\n// High Throughput: API handles 50,000 requests/second',
   },
   {
     termA: 'Synchronous',
@@ -125,7 +126,7 @@ const CONFUSION_PAIRS: ConfusionPair[] = [
     diffSummary: 'Sync là cơ chế nhận kết quả đồng nhịp vs Blocking là trạng thái Thread ngủ trên OS',
     detailA: 'Người gọi phát lệnh và không thể tiếp tục cho tới khi nhận được kết quả trực tiếp từ người nhận (Lockstep execution).',
     detailB: 'Hệ điều hành đưa Thread gọi lệnh vào trạng thái ngủ (BLOCKED/WAITING), gỡ khỏi CPU và lưu registers, chờ I/O hoàn tất.',
-    codeExample: '// You can be Asynchronous but Blocking if you call future.get()!\n// You can be Synchronous but Non-blocking via polling.',
+    codeOrExample: '// You can be Asynchronous but Blocking if you call future.get()!\n// You can be Synchronous but Non-blocking via polling.',
   },
   {
     termA: 'Scalability',
@@ -133,12 +134,16 @@ const CONFUSION_PAIRS: ConfusionPair[] = [
     diffSummary: 'Scalability là năng lực chịu tải khi nâng cấp phần cứng vs Elasticity là tự co giãn theo nhu cầu tức thời',
     detailA: 'Khả năng của hệ thống tăng trưởng năng suất tỷ lệ thuận khi bổ sung thêm tài nguyên phần cứng (Scale Up RAM/CPU hoặc Scale Out thêm node).',
     detailB: 'Khả năng của hệ thống tự động cấp phát hoặc thu hồi tài nguyên (Auto-scaling pods/VMs) tương ứng với lưu lượng tải tăng giảm theo thời gian thực.',
-    codeExample: '// Scalability: Adding 10 Kafka brokers doubles message capacity\n// Elasticity: Kubernetes HPA scales pods from 2 to 20 during flash-sale',
+    codeOrExample: '// Scalability: Adding 10 Kafka brokers doubles message capacity\n// Elasticity: Kubernetes HPA scales pods from 2 to 20 during flash-sale',
   },
 ];
 
 export default function TechEnglishHubPage(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<EnglishTab>('flashcards');
+  const [activeTab, setActiveTab] = useState<EnglishTab>('arena');
+
+  // Acronyms state
+  const [acronymSearch, setAcronymSearch] = useState<string>('');
+  const [acronymCategory, setAcronymCategory] = useState<string>('all');
 
   // Audio helper
   const speakWord = useCallback((text: string) => {
@@ -154,10 +159,28 @@ export default function TechEnglishHubPage(): React.JSX.Element {
     window.speechSynthesis.speak(utterance);
   }, []);
 
+  // Filtered acronyms
+  const filteredAcronyms = useMemo(() => {
+    return TECH_ACRONYMS_DATA.filter((item) => {
+      if (acronymCategory !== 'all' && item.category !== acronymCategory) {
+        return false;
+      }
+      if (acronymSearch.trim()) {
+        const q = acronymSearch.toLowerCase();
+        const matchesAcronym = item.acronym.toLowerCase().includes(q);
+        const matchesFull = item.fullForm.toLowerCase().includes(q);
+        const matchesMeaning = item.meaning.toLowerCase().includes(q);
+        const matchesPronun = item.pronunciation.toLowerCase().includes(q);
+        return matchesAcronym || matchesFull || matchesMeaning || matchesPronun;
+      }
+      return true;
+    });
+  }, [acronymCategory, acronymSearch]);
+
   return (
     <Layout
-      title="Tech English Hub — Master English Technical Vocabulary & Native Pronunciation"
-      description="Trung tâm luyện phát âm, học từ vựng chuyên ngành tiếng Anh và thẻ ghi nhớ 3D (Flashcards) dành cho kỹ sư phần mềm, lập trình viên Backend, Frontend và DevOps."
+      title="Tech English Hub — Master English Technical Vocabulary, Acronyms & Native Pronunciation"
+      description="Trung tâm luyện phát âm, học từ vựng và từ viết tắt (Acronyms) chuyên ngành tiếng Anh dành cho kỹ sư phần mềm, lập trình viên Backend, Frontend và DevOps."
     >
       <div
         className="tech-english-page-container"
@@ -191,7 +214,7 @@ export default function TechEnglishHubPage(): React.JSX.Element {
                 border: '1px solid rgba(56, 189, 248, 0.3)',
               }}
             >
-              <span>🗣️ ENGLISH FOR DEVELOPERS • PHÁT ÂM & TỪ VỰNG CHUYÊN NGÀNH</span>
+              <span>🗣️ ENGLISH FOR DEVELOPERS • PHÁT ÂM, TỪ VỰNG & TỪ VIẾT TẮT</span>
             </div>
 
             <h1
@@ -218,13 +241,13 @@ export default function TechEnglishHubPage(): React.JSX.Element {
               className="teh-hero-subtitle"
               style={{
                 fontSize: '1.15rem',
-                maxWidth: '820px',
+                maxWidth: '840px',
                 margin: '0 auto 24px auto',
                 lineHeight: 1.6,
                 color: '#94a3b8',
               }}
             >
-              Luyện đọc, nghe, phát âm chuẩn xác và làm chủ 100% thuật ngữ kỹ thuật chuyên ngành từ tiếng Anh sang tiếng Việt. Kết hợp thẻ ghi nhớ 3D, giọng phát âm bản xứ Web Speech API và cẩm nang phỏng vấn Senior/Staff.
+              Luyện đọc, nghe, phát âm chuẩn xác và làm chủ 100% thuật ngữ và từ viết tắt (Acronyms) kỹ thuật chuyên ngành từ tiếng Anh sang tiếng Việt. Tích hợp thẻ ghi nhớ 3D, giọng phát âm bản xứ Web Speech API và cẩm nang bẫy phát âm.
             </p>
 
             {/* Quick Metrics Bar */}
@@ -238,9 +261,9 @@ export default function TechEnglishHubPage(): React.JSX.Element {
             >
               {[
                 { label: `${TECH_TERMS.length}+ Thuật Ngữ Kỹ Thuật`, desc: 'System Design • DB • OS • Network • Java • Security • DevOps', color: '#38bdf8' },
-                { label: '3 Chế Độ Luyện Tập', desc: '3D Flashcards • Listening Quiz • Tra Cứu Từ Điển', color: '#34d399' },
-                { label: 'Web Speech Native Audio', desc: 'Phát âm giọng bản xứ trực tiếp với 3 mức tốc độ', color: '#fbbf24' },
-                { label: 'Senior Interview Playbook', desc: 'Mẫu câu phỏng vấn Staff/Principal & 5 bẫy kinh điển', color: '#a78bfa' },
+                { label: `${TECH_ACRONYMS_DATA.length}+ Từ Viết Tắt (Acronyms)`, desc: 'Giải nghĩa chuyên sâu & hướng dẫn đọc chuẩn quốc tế', color: '#34d399' },
+                { label: '3 Chế Độ Luyện Tập', desc: '3D Flashcards • Listening Quiz • Tra Cứu Từ Điển', color: '#fbbf24' },
+                { label: '10 Bẫy Phát Âm & 5 Cặp Dễ Nhầm', desc: 'Sửa lỗi phát âm sai và phân biệt khái niệm cốt lõi', color: '#a78bfa' },
               ].map((chip, i) => (
                 <div
                   key={i}
@@ -265,7 +288,7 @@ export default function TechEnglishHubPage(): React.JSX.Element {
           </div>
 
           {/* ======================================================== */}
-          {/* MAIN NAVIGATION BAR */}
+          {/* MAIN NAVIGATION BAR (Streamlined - No Duplicate Bars) */}
           {/* ======================================================== */}
           <div
             id="teh-main-nav"
@@ -273,7 +296,7 @@ export default function TechEnglishHubPage(): React.JSX.Element {
             style={{
               display: 'flex',
               justifyContent: 'center',
-              gap: '10px',
+              gap: '12px',
               flexWrap: 'wrap',
               marginBottom: '32px',
               paddingBottom: '16px',
@@ -281,11 +304,9 @@ export default function TechEnglishHubPage(): React.JSX.Element {
             }}
           >
             {[
-              { id: 'flashcards', label: '🎴 Flashcard Arena', color: '#38bdf8' },
-              { id: 'quiz', label: '🎯 Listening & Recall Quiz', color: '#34d399' },
-              { id: 'dictionary', label: `📖 Tra Cứu Toàn Diện (${TECH_TERMS.length})`, color: '#38bdf8' },
+              { id: 'arena', label: `🎴 Luyện Từ Vựng & Quiz (${TECH_TERMS.length})`, color: '#38bdf8' },
+              { id: 'acronyms', label: `🔤 Từ Viết Tắt & Acronyms (${TECH_ACRONYMS_DATA.length})`, color: '#34d399' },
               { id: 'traps', label: `⚠️ 10 Bẫy Phát Âm & Cặp Từ Dễ Nhầm`, color: '#fbbf24' },
-              { id: 'playbook', label: '🧠 Senior Interview Playbook', color: '#a78bfa' },
             ].map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -294,10 +315,10 @@ export default function TechEnglishHubPage(): React.JSX.Element {
                   className={`teh-nav-tab tab-${tab.id} ${isActive ? 'active' : ''}`}
                   onClick={() => setActiveTab(tab.id as EnglishTab)}
                   style={{
-                    padding: '11px 20px',
+                    padding: '12px 24px',
                     borderRadius: '10px',
                     fontWeight: isActive ? 800 : 600,
-                    fontSize: '14.5px',
+                    fontSize: '15px',
                     border: isActive ? `1.5px solid ${tab.color}` : '1px solid #334155',
                     background: isActive ? `${tab.color}22` : '#0f172a',
                     color: isActive ? tab.color : '#94a3b8',
@@ -316,40 +337,199 @@ export default function TechEnglishHubPage(): React.JSX.Element {
           {/* TAB PANELS */}
           {/* ======================================================== */}
 
-          {/* 1. FLASHCARDS */}
-          {activeTab === 'flashcards' && (
+          {/* 1. UNIFIED VOCABULARY ARENA (Flashcards + Quiz + Dictionary) */}
+          {activeTab === 'arena' && (
             <div>
               <div className="teh-tab-hint" style={{ marginBottom: '16px', textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>
-                💡 <em>Mẹo: Nhấn phím <kbd className="teh-kbd" style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#38bdf8' }}>Space</kbd> để lật thẻ, phím <kbd className="teh-kbd" style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#38bdf8' }}>➔</kbd> và <kbd className="teh-kbd" style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#38bdf8' }}>◀</kbd> để chuyển thẻ tiếp theo / trước đó.</em>
+                💡 <em>Chuyển đổi linh hoạt giữa <strong>3D Flashcards</strong>, <strong>Listening Quiz</strong> và <strong>Tra Cứu Từ Điển</strong> ngay trên thanh điều khiển của thẻ bên dưới.</em>
               </div>
               <TechGlossaryFlashcards initialMode="flashcards" />
             </div>
           )}
 
-          {/* 2. QUIZ */}
-          {activeTab === 'quiz' && (
+          {/* 2. COMPREHENSIVE ACRONYMS & ABBREVIATIONS EXPLORER */}
+          {activeTab === 'acronyms' && (
             <div>
-              <div className="teh-tab-hint" style={{ marginBottom: '16px', textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>
-                🎯 <em>Lắng nghe phát âm tiếng Anh và chọn định nghĩa tiếng Việt chuẩn xác nhất để củng cố phản xạ!</em>
+              <div style={{ marginBottom: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '24px' }}>🔤</span>
+                  <h2 className="teh-section-title-cyan" style={{ fontSize: '22px', fontWeight: 800, margin: 0, color: '#34d399' }}>
+                    Từ Điển Từ Viết Tắt & Acronyms Chuyên Ngành ({TECH_ACRONYMS_DATA.length})
+                  </h2>
+                </div>
+                <p style={{ color: '#94a3b8', fontSize: '14px', margin: 0 }}>
+                  Tra cứu nghĩa đầy đủ, cách phát âm chuẩn quốc tế và lưu ý kiến trúc thực tế của hơn 120 từ viết tắt công nghệ. Bấm vào nút loa 🔊 để nghe phát âm tiếng Anh bản xứ.
+                </p>
               </div>
-              <TechGlossaryFlashcards initialMode="quiz" />
+
+              {/* Filter & Search Bar */}
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '12px',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  marginBottom: '20px',
+                  background: '#0d111e',
+                  padding: '16px',
+                  borderRadius: '10px',
+                  border: '1px solid #1e293b',
+                }}
+              >
+                <div style={{ flex: '1', minWidth: '240px' }}>
+                  <input
+                    type="text"
+                    className="teh-filter-input"
+                    placeholder="🔍 Tìm theo từ viết tắt (ACID, CAP, K8s, JWT, CORS...)"
+                    value={acronymSearch}
+                    onChange={(e) => setAcronymSearch(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      background: '#090b14',
+                      border: '1px solid #334155',
+                      borderRadius: '8px',
+                      color: '#ffffff',
+                      fontSize: '14px',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <select
+                    className="teh-filter-select"
+                    value={acronymCategory}
+                    onChange={(e) => setAcronymCategory(e.target.value)}
+                    style={{
+                      padding: '10px 14px',
+                      background: '#090b14',
+                      border: '1px solid #334155',
+                      borderRadius: '8px',
+                      color: '#ffffff',
+                      fontSize: '14px',
+                      outline: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <option value="all">🌐 Tất Cả Danh Mục ({TECH_ACRONYMS_DATA.length})</option>
+                    <option value="system-design">🏗️ System Design & Distributed</option>
+                    <option value="database">💾 Databases & Storage</option>
+                    <option value="os-concurrency">⚡ OS & Concurrency</option>
+                    <option value="networking">🌐 Networking & Protocols</option>
+                    <option value="java-jvm">☕ Java & JVM</option>
+                    <option value="security">🛡️ Security & Auth</option>
+                    <option value="devops">🔄 DevOps & Cloud</option>
+                  </select>
+                </div>
+
+                <div style={{ color: '#94a3b8', fontSize: '13px', fontWeight: 600 }}>
+                  Hiển thị: <strong style={{ color: '#34d399' }}>{filteredAcronyms.length}</strong> / {TECH_ACRONYMS_DATA.length} từ
+                </div>
+              </div>
+
+              {/* Acronyms Table */}
+              <div style={{ overflowX: 'auto' }}>
+                <table
+                  className="teh-acronyms-table"
+                  style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    fontSize: '13.5px',
+                    background: '#0d111e',
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    border: '1px solid #1e293b',
+                  }}
+                >
+                  <thead>
+                    <tr style={{ background: '#0f172a', borderBottom: '2px solid #1e293b' }}>
+                      <th style={{ padding: '12px', textAlign: 'center', color: '#94a3b8', width: '56px' }}>Audio</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: '#94a3b8', width: '130px' }}>Viết Tắt (Acronym)</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: '#94a3b8', width: '240px' }}>Tên Tiếng Anh Đầy Đủ</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: '#94a3b8', width: '180px' }}>Cách Phát Âm Chuẩn</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: '#94a3b8' }}>Ý Nghĩa & Bản Chất Kỹ Thuật</th>
+                      <th style={{ padding: '12px', textAlign: 'left', color: '#94a3b8', width: '260px' }}>Lưu Ý Thực Tế</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredAcronyms.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: '#94a3b8' }}>
+                          Không tìm thấy từ viết tắt nào khớp với từ khóa "{acronymSearch}".
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredAcronyms.map((item: TechAcronym) => (
+                        <tr key={item.id} className="teh-acronym-row" style={{ borderBottom: '1px solid #1e293b' }}>
+                          <td style={{ padding: '12px', textAlign: 'center' }}>
+                            <button
+                              type="button"
+                              className="teh-audio-btn"
+                              onClick={() => speakWord(item.fullForm)}
+                              style={{
+                                background: 'rgba(52, 211, 153, 0.15)',
+                                border: '1px solid #34d399',
+                                color: '#34d399',
+                                borderRadius: '50%',
+                                width: '32px',
+                                height: '32px',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                              title={`Nghe phát âm: ${item.fullForm}`}
+                            >
+                              🔊
+                            </button>
+                          </td>
+                          <td style={{ padding: '12px' }}>
+                            <span
+                              className="teh-acronym-badge"
+                              style={{
+                                display: 'inline-block',
+                                padding: '4px 8px',
+                                borderRadius: '6px',
+                                background: 'rgba(56, 189, 248, 0.12)',
+                                border: '1px solid rgba(56, 189, 248, 0.35)',
+                                color: '#38bdf8',
+                                fontWeight: 800,
+                                fontFamily: 'monospace',
+                                fontSize: '14.5px',
+                              }}
+                            >
+                              {item.acronym}
+                            </span>
+                            <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>
+                              {item.categoryLabel}
+                            </div>
+                          </td>
+                          <td className="teh-acronym-full" style={{ padding: '12px', fontWeight: 700, color: '#f1f5f9' }}>
+                            {item.fullForm}
+                          </td>
+                          <td className="teh-acronym-pronun" style={{ padding: '12px', color: '#fbbf24', fontSize: '13px' }}>
+                            🗣️ {item.pronunciation}
+                          </td>
+                          <td className="teh-acronym-meaning" style={{ padding: '12px', color: '#cbd5e1', lineHeight: 1.5 }}>
+                            {item.meaning}
+                          </td>
+                          <td className="teh-acronym-tip" style={{ padding: '12px', color: '#a78bfa', fontSize: '12.5px', lineHeight: 1.5 }}>
+                            ⚡ {item.productionTip}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
-          {/* 3. DICTIONARY */}
-          {activeTab === 'dictionary' && (
-            <div>
-              <div className="teh-tab-hint" style={{ marginBottom: '16px', textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>
-                📖 <em>Tra cứu nhanh toàn bộ 70+ thuật ngữ theo 7 danh mục kỹ thuật, kèm phát âm âm thanh và ví dụ kiến trúc.</em>
-              </div>
-              <TechGlossaryFlashcards initialMode="dictionary" />
-            </div>
-          )}
-
-          {/* 4. PRONUNCIATION TRAPS & CONFUSION PAIRS */}
+          {/* 3. PRONUNCIATION TRAPS & CONFUSION PAIRS */}
           {activeTab === 'traps' && (
             <div>
-              {/* SECTION 4.1: 10 PRONUNCIATION TRAPS */}
+              {/* SECTION 3.1: 10 PRONUNCIATION TRAPS */}
               <div style={{ marginBottom: '40px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                   <span style={{ fontSize: '24px' }}>⚠️</span>
@@ -431,7 +611,7 @@ export default function TechEnglishHubPage(): React.JSX.Element {
                 </div>
               </div>
 
-              {/* SECTION 4.2: CONFUSION PAIRS */}
+              {/* SECTION 3.2: CONFUSION PAIRS */}
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                   <span style={{ fontSize: '24px' }}>⚖️</span>
@@ -440,7 +620,7 @@ export default function TechEnglishHubPage(): React.JSX.Element {
                   </h2>
                 </div>
                 <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '20px' }}>
-                  Dùng lẫn lộn các cặp khái niệm này sẽ khiến nhà tuyển dụng quốc tế đánh giá bạn chưa vững kiến trúc nền tảng:
+                  Dùng lẫn lộn các cặp khái niệm này sẽ khiến đồng nghiệp và nhà tuyển dụng quốc tế đánh giá bạn chưa nắm vững kiến trúc nền tảng:
                 </p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
@@ -486,133 +666,6 @@ export default function TechEnglishHubPage(): React.JSX.Element {
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 5. SENIOR PLAYBOOK */}
-          {activeTab === 'playbook' && (
-            <div>
-              <div className="teh-playbook-card" style={{ background: '#0d111e', border: '1px solid #1e293b', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '24px' }}>🧠</span>
-                  <h2 className="teh-section-title-purple" style={{ fontSize: '22px', fontWeight: 800, margin: 0, color: '#a78bfa' }}>
-                    The Senior Framing Strategy (First 60 Seconds in English)
-                  </h2>
-                </div>
-                <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: 1.6, marginBottom: '20px' }}>
-                  Khi phỏng vấn thiết kế hệ thống bằng tiếng Anh, hãy mở đầu câu trả lời bằng 4 công thức định hình kiến trúc sau đây để ghi điểm tuyệt đối:
-                </p>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div className="teh-framing-box teh-framing-1" style={{ background: '#090b14', padding: '16px', borderRadius: '8px', borderLeft: '3px solid #38bdf8' }}>
-                    <div className="teh-framing-title-1" style={{ color: '#38bdf8', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase' }}>1. Establish Boundaries & Invariants</div>
-                    <div className="teh-framing-quote" style={{ color: '#e2e8f0', fontSize: '13px', fontStyle: 'italic', marginTop: '6px' }}>
-                      "Before diving into the architecture, I'd like to clarify our physical invariants: Are we optimizing for low write latency or strict serializability?"
-                    </div>
-                  </div>
-
-                  <div className="teh-framing-box teh-framing-2" style={{ background: '#090b14', padding: '16px', borderRadius: '8px', borderLeft: '3px solid #34d399' }}>
-                    <div className="teh-framing-title-2" style={{ color: '#34d399', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase' }}>2. Back-of-the-envelope Capacity Math</div>
-                    <div className="teh-framing-quote" style={{ color: '#e2e8f0', fontSize: '13px', fontStyle: 'italic', marginTop: '6px' }}>
-                      "Based on Little's Law (L = λ × W), with an ingress rate of 5,000 req/s and downstream latency of 50ms, our required worker concurrency footprint is 250."
-                    </div>
-                  </div>
-
-                  <div className="teh-framing-box teh-framing-3" style={{ background: '#090b14', padding: '16px', borderRadius: '8px', borderLeft: '3px solid #fbbf24' }}>
-                    <div className="teh-framing-title-3" style={{ color: '#fbbf24', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase' }}>3. Articulate Honest Trade-offs</div>
-                    <div className="teh-framing-quote" style={{ color: '#e2e8f0', fontSize: '13px', fontStyle: 'italic', marginTop: '6px' }}>
-                      "While an asynchronous event-driven model maximizes throughput, the caveat is eventual consistency and complex operational reconciliation."
-                    </div>
-                  </div>
-
-                  <div className="teh-framing-box teh-framing-4" style={{ background: '#090b14', padding: '16px', borderRadius: '8px', borderLeft: '3px solid #a78bfa' }}>
-                    <div className="teh-framing-title-4" style={{ color: '#a78bfa', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase' }}>4. Proactive Failure Isolation</div>
-                    <div className="teh-framing-quote" style={{ color: '#e2e8f0', fontSize: '13px', fontStyle: 'italic', marginTop: '6px' }}>
-                      "To prevent cascading failures under downstream degradation, we should establish a bounded bulkhead and fail fast via circuit breakers."
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* PHRASING UPGRADES TABLE */}
-              <div className="teh-playbook-card" style={{ background: '#0d111e', border: '1px solid #1e293b', borderRadius: '12px', padding: '24px' }}>
-                <h3 className="teh-section-title-cyan" style={{ fontSize: '18px', fontWeight: 800, color: '#38bdf8', marginBottom: '16px' }}>
-                  Mid-Level vs. Principal Candidate English Phrasing Cheat Sheet
-                </h3>
-
-                <div style={{ overflowX: 'auto' }}>
-                  <table className="teh-playbook-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13.5px' }}>
-                    <thead>
-                      <tr style={{ background: '#0f172a', borderBottom: '2px solid #1e293b' }}>
-                        <th className="teh-th-topic" style={{ padding: '12px', textAlign: 'left', color: '#94a3b8', width: '22%' }}>Scenario / Topic</th>
-                        <th className="teh-th-mid" style={{ padding: '12px', textAlign: 'left', color: '#f87171', width: '38%' }}>Mid-Level Candidate Says</th>
-                        <th className="teh-th-principal" style={{ padding: '12px', textAlign: 'left', color: '#34d399', width: '40%' }}>Principal Candidate Demonstrates</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        {
-                          topic: 'Describing Performance',
-                          mid: '"This database is very fast and has good speed."',
-                          principal: '"This storage engine achieves sub-millisecond p99 read latency by eliminating disk seeks via memory-mapped sequential writes."',
-                        },
-                        {
-                          topic: 'Explaining Failures',
-                          mid: '"If the server goes down, we will restart it."',
-                          principal: '"We isolate failure domains using graceful degradation, circuit breakers, and bounded retries with exponential backoff and full jitter."',
-                        },
-                        {
-                          topic: 'Network Retries',
-                          mid: '"The client can just call the API again if it fails."',
-                          principal: '"Because network timeouts are ambiguous, the mutation endpoint must enforce idempotency via unique idempotency keys backed by database constraints."',
-                        },
-                        {
-                          topic: 'Data Synchronization',
-                          mid: '"The data will sync between servers soon."',
-                          principal: '"The cluster adopts an eventual consistency model; replicas converge monotonically within an acceptable replication lag window."',
-                        },
-                        {
-                          topic: 'Handling Overload',
-                          mid: '"We will increase thread pool size to handle more requests."',
-                          principal: '"Bumping thread pools without expanding downstream bulkheads causes thread exhaustion and connection starvation. We should enforce reactive backpressure."',
-                        },
-                      ].map((row, idx) => (
-                        <tr key={idx} className="teh-playbook-row" style={{ borderBottom: '1px solid #1e293b' }}>
-                          <td className="teh-col-topic" style={{ padding: '12px', fontWeight: 700, color: '#ffffff' }}>{row.topic}</td>
-                          <td className="teh-col-mid" style={{ padding: '12px', color: '#fca5a5', fontStyle: 'italic' }}>{row.mid}</td>
-                          <td className="teh-col-principal" style={{ padding: '12px', color: '#86efac', fontWeight: 600 }}>{row.principal}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                  <button
-                    type="button"
-                    className="teh-cta-btn"
-                    onClick={() => {
-                      setActiveTab('flashcards');
-                      const navEl = document.getElementById('teh-main-nav');
-                      if (navEl) navEl.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      padding: '10px 20px',
-                      borderRadius: '8px',
-                      background: 'rgba(56, 189, 248, 0.15)',
-                      border: '1px solid #38bdf8',
-                      color: '#38bdf8',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Luyện Tập Thẻ 3D Flashcards Ngay ➔
-                  </button>
                 </div>
               </div>
             </div>
