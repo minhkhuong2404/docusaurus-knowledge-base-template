@@ -10,8 +10,8 @@ dotenv.config();
 const config: Config = {
 	title: 'Engineering Knowledge Base',
 	tagline: 'Internal technical documentation',
-	url: 'https://luminhkhuong.dev',
-	baseUrl: '/',
+	url: 'https://luminhkhuong.github.io',
+	baseUrl: '/knowledge-base/',
 	customFields: {
 		firebaseApiKey: process.env.FIREBASE_API_KEY,
 		firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
