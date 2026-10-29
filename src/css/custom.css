@@ -5269,14 +5269,130 @@ textarea {
   color: #334155 !important;
 }
 
-[data-theme="light"] .arcade-metric-card {
-  background: #F7FDF9 !important;
-  border: 1.5px solid #D9D9D9 !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+/* ============================================================
+   🎮 ARCADE METRIC CARDS (Synchronized Solid Theme - No Gradient)
+   ============================================================ */
+[data-theme="dark"] .arcade-metric-card {
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-[data-theme="light"] .arcade-metric-desc {
-  color: #475569 !important;
+[data-theme="dark"] .arcade-metric-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Arcade 0: Pink (4 Đấu Trường Giáo Dục) */
+[data-theme="dark"] .arcade-metric-card.arcade-metric-0 {
+  background: #190d18 !important;
+  border: 1.5px solid rgba(236, 72, 153, 0.45) !important;
+}
+[data-theme="dark"] .arcade-metric-card.arcade-metric-0 .arcade-metric-label {
+  color: #f472b6 !important;
+  font-weight: 800 !important;
+}
+[data-theme="dark"] .arcade-metric-card.arcade-metric-0 .arcade-metric-desc {
+  color: #94a3b8 !important;
+}
+
+/* Arcade 1: Amber (Ca Trực On-Call) */
+[data-theme="dark"] .arcade-metric-card.arcade-metric-1 {
+  background: #1a1608 !important;
+  border: 1.5px solid rgba(251, 191, 36, 0.45) !important;
+}
+[data-theme="dark"] .arcade-metric-card.arcade-metric-1 .arcade-metric-label {
+  color: #fbbf24 !important;
+  font-weight: 800 !important;
+}
+[data-theme="dark"] .arcade-metric-card.arcade-metric-1 .arcade-metric-desc {
+  color: #94a3b8 !important;
+}
+
+/* Arcade 2: Cyan (Cấp Độ Kỹ Sư) */
+[data-theme="dark"] .arcade-metric-card.arcade-metric-2 {
+  background: #0c1526 !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
+}
+[data-theme="dark"] .arcade-metric-card.arcade-metric-2 .arcade-metric-label {
+  color: #38bdf8 !important;
+  font-weight: 800 !important;
+}
+[data-theme="dark"] .arcade-metric-card.arcade-metric-2 .arcade-metric-desc {
+  color: #94a3b8 !important;
+}
+
+/* Arcade 3: Green (Âm Thanh Retro) */
+[data-theme="dark"] .arcade-metric-card.arcade-metric-3 {
+  background: #091813 !important;
+  border: 1.5px solid rgba(52, 211, 153, 0.45) !important;
+}
+[data-theme="dark"] .arcade-metric-card.arcade-metric-3 .arcade-metric-label {
+  color: #34d399 !important;
+  font-weight: 800 !important;
+}
+[data-theme="dark"] .arcade-metric-card.arcade-metric-3 .arcade-metric-desc {
+  color: #94a3b8 !important;
+}
+
+/* Light Theme Arcade Metric Cards */
+[data-theme="light"] .arcade-metric-card {
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="light"] .arcade-metric-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .arcade-metric-card.arcade-metric-0 {
+  background: #fdf2f8 !important;
+  border: 1.5px solid #f472b6 !important;
+}
+[data-theme="light"] .arcade-metric-card.arcade-metric-0 .arcade-metric-label {
+  color: #db2777 !important;
+  font-weight: 800 !important;
+}
+[data-theme="light"] .arcade-metric-card.arcade-metric-0 .arcade-metric-desc {
+  color: #9d174d !important;
+}
+
+[data-theme="light"] .arcade-metric-card.arcade-metric-1 {
+  background: #fffbeb !important;
+  border: 1.5px solid #fcd34d !important;
+}
+[data-theme="light"] .arcade-metric-card.arcade-metric-1 .arcade-metric-label {
+  color: #d97706 !important;
+  font-weight: 800 !important;
+}
+[data-theme="light"] .arcade-metric-card.arcade-metric-1 .arcade-metric-desc {
+  color: #b45309 !important;
+}
+
+[data-theme="light"] .arcade-metric-card.arcade-metric-2 {
+  background: #f0f9ff !important;
+  border: 1.5px solid #7dd3fc !important;
+}
+[data-theme="light"] .arcade-metric-card.arcade-metric-2 .arcade-metric-label {
+  color: #0284c7 !important;
+  font-weight: 800 !important;
+}
+[data-theme="light"] .arcade-metric-card.arcade-metric-2 .arcade-metric-desc {
+  color: #0369a1 !important;
+}
+
+[data-theme="light"] .arcade-metric-card.arcade-metric-3 {
+  background: #f0fdf4 !important;
+  border: 1.5px solid #86efac !important;
+}
+[data-theme="light"] .arcade-metric-card.arcade-metric-3 .arcade-metric-label {
+  color: #16a34a !important;
+  font-weight: 800 !important;
+}
+[data-theme="light"] .arcade-metric-card.arcade-metric-3 .arcade-metric-desc {
+  color: #15803d !important;
 }
 
 [data-theme="light"] .arcade-section-heading {
@@ -5981,10 +6097,75 @@ textarea {
   font-weight: 700 !important;
 }
 
-/* Quick Metric Cards — Matching Career Hub Light Style */
+/* ============================================================
+   🗣️ TECH ENGLISH METRIC CARDS (Synchronized Solid Theme - No Gradient)
+   ============================================================ */
+[data-theme="dark"] .tech-english-page-container .teh-metric-card {
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="dark"] .tech-english-page-container .teh-metric-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Card 0: Cyan (515+ Thuật Ngữ) */
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-0 {
+  background: #0c1526 !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
+}
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-0 .teh-metric-label {
+  color: #38bdf8 !important;
+  font-weight: 800 !important;
+}
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-0 .teh-metric-desc {
+  color: #94a3b8 !important;
+}
+
+/* Card 1: Emerald (123+ Từ Viết Tắt) */
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-1 {
+  background: #091813 !important;
+  border: 1.5px solid rgba(52, 211, 153, 0.45) !important;
+}
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-1 .teh-metric-label {
+  color: #34d399 !important;
+  font-weight: 800 !important;
+}
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-1 .teh-metric-desc {
+  color: #94a3b8 !important;
+}
+
+/* Card 2: Amber (3 Chế Độ Luyện Tập) */
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-2 {
+  background: #1a1608 !important;
+  border: 1.5px solid rgba(251, 191, 36, 0.45) !important;
+}
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-2 .teh-metric-label {
+  color: #fbbf24 !important;
+  font-weight: 800 !important;
+}
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-2 .teh-metric-desc {
+  color: #94a3b8 !important;
+}
+
+/* Card 3: Purple (10 Bẫy Phát Âm) */
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-3 {
+  background: #140d24 !important;
+  border: 1.5px solid rgba(192, 132, 252, 0.45) !important;
+}
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-3 .teh-metric-label {
+  color: #c084fc !important;
+  font-weight: 800 !important;
+}
+[data-theme="dark"] .tech-english-page-container .teh-metric-card.teh-metric-3 .teh-metric-desc {
+  color: #94a3b8 !important;
+}
+
+/* Light Theme Tech English Metric Cards (Solid Pastel - No Gradient) */
 [data-theme="light"] .tech-english-page-container .teh-metric-card {
-  background: #ffffff !important;
-  border: 1.5px solid #D9D9D9 !important;
+  border-radius: 10px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
@@ -5995,8 +6176,8 @@ textarea {
 }
 
 [data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-0 {
-  border-color: #7dd3fc !important;
-  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%) !important;
+  background: #f0f9ff !important;
+  border: 1.5px solid #7dd3fc !important;
 }
 [data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-0 .teh-metric-label {
   color: #0284c7 !important;
@@ -6007,8 +6188,8 @@ textarea {
 }
 
 [data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-1 {
-  border-color: #86efac !important;
-  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%) !important;
+  background: #f0fdf4 !important;
+  border: 1.5px solid #86efac !important;
 }
 [data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-1 .teh-metric-label {
   color: #16a34a !important;
@@ -6019,8 +6200,8 @@ textarea {
 }
 
 [data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-2 {
-  border-color: #fcd34d !important;
-  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%) !important;
+  background: #fffbeb !important;
+  border: 1.5px solid #fcd34d !important;
 }
 [data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-2 .teh-metric-label {
   color: #d97706 !important;
@@ -6031,8 +6212,8 @@ textarea {
 }
 
 [data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-3 {
-  border-color: #c4b5fd !important;
-  background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 100%) !important;
+  background: #f5f3ff !important;
+  border: 1.5px solid #c4b5fd !important;
 }
 [data-theme="light"] .tech-english-page-container .teh-metric-card.teh-metric-3 .teh-metric-label {
   color: #7c3aed !important;
@@ -7592,11 +7773,11 @@ input[type="checkbox"] {
   box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
 }
 
-/* Dark Theme Metrics Cards */
+/* ============================================================
+   🚀 CAREER HUB METRIC CARDS (Synchronized Solid Theme - No Gradient)
+   ============================================================ */
 [data-theme="dark"] .hub-metric-card {
-  background: rgba(15, 23, 42, 0.75) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(8px) !important;
+  border-radius: 10px !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
@@ -7606,48 +7787,56 @@ input[type="checkbox"] {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
 }
 
+/* Hub 0: Cyan (14 Khối Kiến Thức) */
 [data-theme="dark"] .hub-metric-card.metric-0 {
-  border-color: rgba(56, 189, 248, 0.45) !important;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+  background: #0c1526 !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
 }
 [data-theme="dark"] .hub-metric-card.metric-0 .hub-metric-label {
   color: #38bdf8 !important;
+  font-weight: 800 !important;
 }
 [data-theme="dark"] .hub-metric-card.metric-0 .hub-metric-desc {
-  color: rgba(186, 230, 253, 0.8) !important;
+  color: #94a3b8 !important;
 }
 
+/* Hub 1: Pink (120 Bí Quyết) */
 [data-theme="dark"] .hub-metric-card.metric-1 {
-  border-color: rgba(236, 72, 153, 0.45) !important;
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+  background: #190d18 !important;
+  border: 1.5px solid rgba(236, 72, 153, 0.45) !important;
 }
 [data-theme="dark"] .hub-metric-card.metric-1 .hub-metric-label {
   color: #f472b6 !important;
+  font-weight: 800 !important;
 }
 [data-theme="dark"] .hub-metric-card.metric-1 .hub-metric-desc {
-  color: rgba(251, 207, 232, 0.8) !important;
+  color: #94a3b8 !important;
 }
 
+/* Hub 2: Amber (95 Câu Hỏi Trúng Tủ) */
 [data-theme="dark"] .hub-metric-card.metric-2 {
-  border-color: rgba(251, 191, 36, 0.45) !important;
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+  background: #1a1608 !important;
+  border: 1.5px solid rgba(251, 191, 36, 0.45) !important;
 }
 [data-theme="dark"] .hub-metric-card.metric-2 .hub-metric-label {
   color: #fbbf24 !important;
+  font-weight: 800 !important;
 }
 [data-theme="dark"] .hub-metric-card.metric-2 .hub-metric-desc {
-  color: rgba(253, 230, 138, 0.8) !important;
+  color: #94a3b8 !important;
 }
 
+/* Hub 3: Green (Checklist 60 Ngày) */
 [data-theme="dark"] .hub-metric-card.metric-3 {
-  border-color: rgba(52, 211, 153, 0.45) !important;
-  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+  background: #091813 !important;
+  border: 1.5px solid rgba(52, 211, 153, 0.45) !important;
 }
 [data-theme="dark"] .hub-metric-card.metric-3 .hub-metric-label {
   color: #34d399 !important;
+  font-weight: 800 !important;
 }
 [data-theme="dark"] .hub-metric-card.metric-3 .hub-metric-desc {
-  color: rgba(167, 243, 208, 0.8) !important;
+  color: #94a3b8 !important;
 }
 
 /* Dark Theme Main Navigation Tabs (Each Category Tab Has Distinct Vibrant Color) */
@@ -7808,10 +7997,9 @@ input[type="checkbox"] {
   color: transparent !important;
 }
 
-/* Light Theme Metrics Cards */
+/* Light Theme Career Hub Metrics Cards (Solid Pastel - No Gradient) */
 [data-theme="light"] .hub-metric-card {
-  background: #ffffff !important;
-  border: 1.5px solid #D9D9D9 !important;
+  border-radius: 10px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
@@ -7822,8 +8010,8 @@ input[type="checkbox"] {
 }
 
 [data-theme="light"] .hub-metric-card.metric-0 {
-  border-color: #7dd3fc !important;
-  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%) !important;
+  background: #f0f9ff !important;
+  border: 1.5px solid #7dd3fc !important;
 }
 [data-theme="light"] .hub-metric-card.metric-0 .hub-metric-label {
   color: #0284c7 !important;
@@ -7834,8 +8022,8 @@ input[type="checkbox"] {
 }
 
 [data-theme="light"] .hub-metric-card.metric-1 {
-  border-color: #f472b6 !important;
-  background: linear-gradient(135deg, #fdf2f8 0%, #ffffff 100%) !important;
+  background: #fdf2f8 !important;
+  border: 1.5px solid #f472b6 !important;
 }
 [data-theme="light"] .hub-metric-card.metric-1 .hub-metric-label {
   color: #db2777 !important;
@@ -7846,8 +8034,8 @@ input[type="checkbox"] {
 }
 
 [data-theme="light"] .hub-metric-card.metric-2 {
-  border-color: #fcd34d !important;
-  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%) !important;
+  background: #fffbeb !important;
+  border: 1.5px solid #fcd34d !important;
 }
 [data-theme="light"] .hub-metric-card.metric-2 .hub-metric-label {
   color: #d97706 !important;
@@ -7858,8 +8046,8 @@ input[type="checkbox"] {
 }
 
 [data-theme="light"] .hub-metric-card.metric-3 {
-  border-color: #86efac !important;
-  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%) !important;
+  background: #f0fdf4 !important;
+  border: 1.5px solid #86efac !important;
 }
 [data-theme="light"] .hub-metric-card.metric-3 .hub-metric-label {
   color: #16a34a !important;

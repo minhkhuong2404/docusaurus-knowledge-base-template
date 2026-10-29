@@ -141,8 +141,8 @@ export default function ArcadePage(): React.JSX.Element {
                     minWidth: '180px',
                   }}
                 >
-                  <span className="arcade-metric-label" style={{ fontWeight: 800, color: chip.color }}>{chip.label}</span>
-                  <span className="arcade-metric-desc" style={{ fontSize: '12.5px', marginTop: '3px', color: '#94a3b8' }}>{chip.desc}</span>
+                  <span className="arcade-metric-label" style={{ fontWeight: 800 }}>{chip.label}</span>
+                  <span className="arcade-metric-desc" style={{ fontSize: '12.5px', marginTop: '3px' }}>{chip.desc}</span>
                 </div>
               ))}
             </div>

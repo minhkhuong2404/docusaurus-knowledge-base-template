@@ -1,8 +1,8 @@
 {
-  "id": "3863",
-  "title": "Minimum Operations to Sort a String",
-  "url": "https://leetcode.com/problems/minimum-operations-to-sort-a-string/",
-  "difficulty": "medium",
-  "topic": "String",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-10-21."
+  "id": "3841",
+  "title": "Palindromic Path Queries in a Tree",
+  "url": "https://leetcode.com/problems/palindromic-path-queries-in-a-tree/",
+  "difficulty": "hard",
+  "topic": "Array, String, Divide and Conquer, Bit Manipulation, Tree, Depth-First Search, Binary Indexed Tree, Segment Tree",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-10-29."
 }

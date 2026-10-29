@@ -84,6 +84,21 @@ function loadTsModule(filePath) {
   const absPath = path.resolve(filePath);
   const dir = path.dirname(absPath);
   const customRequire = (id) => {
+    if (id === '@docusaurus/useDocusaurusContext') {
+      return { default: () => ({ siteConfig: { customFields: {} } }) };
+    }
+    if (id === '@generated/docusaurus.config') {
+      return { default: { customFields: {} } };
+    }
+    if (id.endsWith('context/UserProgressContext') || id.endsWith('context/UserProgressContext.tsx')) {
+      return {
+        useUserProgress: () => ({
+          addExp: () => {},
+          saveMiniGameScore: () => {},
+          unlockAchievement: () => {},
+        }),
+      };
+    }
     if (id.startsWith('.')) {
       const resolved = path.resolve(dir, id);
       if (fs.existsSync(resolved + '.ts')) return loadTsModule(resolved + '.ts');

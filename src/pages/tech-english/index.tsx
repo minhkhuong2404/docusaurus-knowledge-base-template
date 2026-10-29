@@ -269,19 +269,17 @@ export default function TechEnglishHubPage(): React.JSX.Element {
                   key={i}
                   className={`teh-metric-card teh-metric-${i}`}
                   style={{
-                    padding: '12px 18px',
+                    padding: '10px 16px',
                     borderRadius: '10px',
                     fontSize: '14px',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    minWidth: '200px',
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    minWidth: '180px',
                   }}
                 >
-                  <span className="teh-metric-label" style={{ fontWeight: 800, color: chip.color }}>{chip.label}</span>
-                  <span className="teh-metric-desc" style={{ fontSize: '12px', color: '#94a3b8', marginTop: '3px' }}>{chip.desc}</span>
+                  <span className="teh-metric-label" style={{ fontWeight: 800 }}>{chip.label}</span>
+                  <span className="teh-metric-desc" style={{ fontSize: '12.5px', marginTop: '3px' }}>{chip.desc}</span>
                 </div>
               ))}
             </div>
