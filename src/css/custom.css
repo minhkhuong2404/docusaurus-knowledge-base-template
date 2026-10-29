@@ -7907,6 +7907,20 @@ input[type="checkbox"] {
   box-shadow: 0 0 20px rgba(52, 211, 153, 0.45) !important;
 }
 
+/* 3b. 5,120 Câu Hỏi Thực Chiến - Violet / Purple */
+[data-theme="dark"] .hub-main-nav-tab.tab-interview5120 {
+  background: rgba(139, 92, 246, 0.12) !important;
+  border: 1.5px solid rgba(139, 92, 246, 0.45) !important;
+  color: #c084fc !important;
+}
+[data-theme="dark"] .hub-main-nav-tab.tab-interview5120:hover,
+[data-theme="dark"] .hub-main-nav-tab.tab-interview5120.active {
+  background: rgba(139, 92, 246, 0.28) !important;
+  border-color: #a855f7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.45) !important;
+}
+
 /* 4. Bí Quyết Đi Làm - Pink / Fuchsia */
 [data-theme="dark"] .hub-main-nav-tab.tab-tips50 {
   background: rgba(236, 72, 153, 0.12) !important;
@@ -8150,6 +8164,20 @@ input[type="checkbox"] {
   border-color: #16a34a !important;
   color: #14532d !important;
   box-shadow: 0 3px 12px rgba(22, 163, 74, 0.22) !important;
+}
+
+/* 3b. 5,120 Câu Hỏi Thực Chiến - Violet / Purple */
+[data-theme="light"] .hub-main-nav-tab.tab-interview5120 {
+  background: #fdf4ff !important;
+  border: 1.5px solid #d8b4fe !important;
+  color: #7e22ce !important;
+}
+[data-theme="light"] .hub-main-nav-tab.tab-interview5120:hover,
+[data-theme="light"] .hub-main-nav-tab.tab-interview5120.active {
+  background: #f3e8ff !important;
+  border-color: #9333ea !important;
+  color: #581c87 !important;
+  box-shadow: 0 3px 12px rgba(147, 51, 234, 0.22) !important;
 }
 
 /* 4. Bí Quyết Đi Làm - Pink / Fuchsia */

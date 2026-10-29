@@ -89,11 +89,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '83e'),
+    component: ComponentCreator('/', '614'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'd60'),
+        component: ComponentCreator('/', 'b65'),
         routes: [
           {
             path: '/tags',
@@ -9457,7 +9457,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '227'),
+            component: ComponentCreator('/', '91a'),
             routes: [
               {
                 path: '/aws',
@@ -17013,6 +17013,12 @@ export default [
               {
                 path: '/technical-knowledge/kafka/streams/interview-questions',
                 component: ComponentCreator('/technical-knowledge/kafka/streams/interview-questions', 'e15'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/streams/invalid-topology-updates',
+                component: ComponentCreator('/technical-knowledge/kafka/streams/invalid-topology-updates', 'cd4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

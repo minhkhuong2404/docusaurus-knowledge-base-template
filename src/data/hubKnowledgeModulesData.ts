@@ -236,7 +236,113 @@ return userRepo.findById(id)
 }`,
         interviewTip: 'Khi phỏng vấn hỏi: "Làm thế nào để điều tra lỗi OutOfMemoryError trên Production?", hãy trả lời: "1. Bật flag JVM: -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dumps để tự động chụp Heap Dump khi sập. 2. Dùng công cụ Eclipse Memory Analyzer (MAT) hoặc VisualVM mở file .hprof, kiểm tra Dominator Tree để tìm xem Class nào đang chiếm 80-90% RAM và xem đường dẫn tham chiếu (Incoming References) để fix tận gốc".'
       }
-    ]
+,
+      {
+        id: 'virtual-threads-carrier-pinning',
+        title: '6. Virtual Threads (Java 21) & Bí Mật Cơ Chế Pinning Đánh Sập 100,000 Luồng',
+        badge: 'Java 21 LTS Đỉnh Cao',
+        summary: 'Virtual Threads siêu nhẹ (vài KB), nhưng khối synchronized hoặc lệnh native JNI sẽ ghim cứng Virtual Thread vào Carrier Thread, gây tê liệt toàn bộ hệ thống.',
+        explanation: `Trong Java 21 LTS, **Virtual Threads (Project Loom)** là bước nhảy vọt cách mạng:
+- **Platform Thread (truyền thống):** Ánh xạ 1:1 với OS Thread. Mỗi thread ngốn 1MB bộ nhớ Stack và chi phí Context Switch của nhân Linux. Tối đa chỉ tạo được vài ngàn luồng trước khi máy chủ cạn kiệt RAM.
+- **Virtual Thread:** Do JVM quản lý trên Heap, chỉ tốn vài trăm byte đến vài KB. Có thể khởi tạo hàng triệu Virtual Threads đồng thời mà không nghẽn tài nguyên.
+
+Khi một Virtual Thread thực hiện blocking I/O (như gọi HTTP, Socket, hoặc Database query), JVM tự động **unmount** trạng thái thực thi (Continuation) của nó ra khỏi OS Thread (gọi là **Carrier Thread**) và đưa Carrier Thread đi phục vụ Virtual Thread khác!
+
+🚨 **Cạm bẫy Carrier Thread Pinning (Ghim luồng):**
+Nếu Virtual Thread thực hiện blocking I/O bên trong một khối:
+1. Khối \`synchronized (lock) { ... }\`
+2. Hoặc bên trong một phương thức gốc C/C++ (\`native method\` hoặc FFM API)
+JVM sẽ **KHÔNG THỂ unmount** Virtual Thread đó ra khỏi Carrier Thread!
+Hậu quả: Virtual Thread bị ghim chặt (pinned) vào Carrier Thread. Nếu có 100 requests đồng thời bị pin, toàn bộ ForkJoinPool Carrier Threads (mặc định chỉ bằng số CPU Cores) bị khóa cứng. Toàn bộ 100,000 Virtual Threads phía sau bị chết đứng hoàn toàn!`,
+        asciiDiagram: `[Normal Virtual Thread Unmount]
+Virtual Thread #1 (I/O Block) ──> [Unmount Continuation] ──> Carrier Thread #1 Rảnh (Phục vụ VT #2)
+
+[Carrier Thread Pinning Problem]
+Virtual Thread #1 (In synchronized) ──> [PINNED! Không thể Unmount] ──> Carrier Thread #1 Bị Block 10s!
+                                                                      (Toàn bộ CPU Cores cạn kiệt luồng!)`,
+        badCodeTitle: '❌ Dùng synchronized trong I/O gây Carrier Thread Pinning',
+        badCode: `public class PaymentService {
+    // Nguy hiểm chết người với Virtual Threads trong Java 21:
+    public synchronized PaymentResult processPayment(PaymentRequest req) {
+        // Lệnh gọi HTTP hoặc JDBC blocking nằm trong khối synchronized!
+        // Virtual Thread bị PINNED chặt vào OS Carrier Thread suốt 3 giây!
+        return paymentClient.charge(req.getAmount());
+    }
+}`,
+        goodCodeTitle: '✅ Thay thế bằng ReentrantLock để Virtual Thread unmount an toàn',
+        goodCode: `public class PaymentService {
+    // ReentrantLock hoàn toàn tương thích và an toàn với Virtual Threads:
+    private final ReentrantLock lock = new ReentrantLock();
+
+    public PaymentResult processPayment(PaymentRequest req) {
+        lock.lock();
+        try {
+            // Khi blocking I/O diễn ra ở đây, JVM unmount Virtual Thread mượt mà,
+            // nhả Carrier Thread để CPU tiếp tục phục vụ hàng ngàn requests khác!
+            return paymentClient.charge(req.getAmount());
+        } finally {
+            lock.unlock();
+        }
+    }
+}`,
+        interviewTip: 'Khi phỏng vấn Senior/Staff hỏi: "Làm thế nào để phát hiện và chẩn đoán Carrier Pinning khi nâng cấp lên Java 21?", hãy trả lời ngay: "Khởi động JVM với flag: -Djdk.tracePinnedThreads=full. JVM sẽ tự động in chi tiết Stack Trace của đúng dòng code và monitor lock nào đang ghim giữ Virtual Thread mỗi khi xảy ra hiện tượng Pinning để đội ngũ thay thế sang ReentrantLock".'
+      },
+      {
+        id: 'threadlocal-leak-threadpool',
+        title: '7. Vấn Nạn Memory Leak Với ThreadLocal Trong Thread Pool Của Tomcat/Netty',
+        badge: 'Hiệu Năng & Bộ Nhớ',
+        summary: 'ThreadLocalMap dùng WeakReference cho Key nhưng StrongReference cho Value. Trong worker thread pool tái sử dụng, quên remove() sẽ giam giữ Object vĩnh viễn gây OOM.',
+        explanation: `\`ThreadLocal\` là công cụ tuyệt vời để truyền tải ngữ cảnh xuyên suốt các tầng (UserContext, TenantId, TransactionToken) mà không cần truyền tham số qua từng hàm.
+
+Mỗi Thread sở hữu một bảng băm nội bộ mang tên \`ThreadLocalMap\`.
+- **Key:** Tham chiếu yếu (\`WeakReference<ThreadLocal<?>>\`). Khi không còn biến nào trỏ tới ThreadLocal object, Garbage Collector (GC) sẽ thu hồi Key và đặt Key thành \`null\`.
+- **Value:** Tham chiếu mạnh (\`Strong Reference\`) trỏ tới đối tượng giá trị thực tế (ví dụ: \`UserContext\` chứa thông tin người dùng, quyền hạn, dữ liệu profile 10MB).
+
+🚨 **Tại sao gây ra Memory Leak thảm họa trong môi trường Web (Tomcat/Netty)?**
+1. Trong Web Server, các Thread của ThreadPool (Tomcat worker threads \`http-nio-8080-exec-*\`) **KHÔNG BAO GIỜ CHẾT** sau khi phục vụ xong 1 request. Chúng được đưa về pool để tái sử dụng cho request tiếp theo!
+2. Khi request kết thúc, nếu lập trình viên không gọi \`userContext.remove()\`, Key có thể bị GC dọn thành \`null\`, nhưng Value vẫn được giữ chặt bởi con trỏ của Thread đang sống!
+3. Sau vài ngày chạy ở môi trường tải lớn với hàng triệu requests, \`ThreadLocalMap\` của các worker threads bị lấp đầy bởi hàng chục ngàn stale entries (\`null -> Huge UserContext\`). Bộ nhớ Heap cạn kiệt dần và cuối cùng nổ lỗi \`java.lang.OutOfMemoryError: Java heap space\`!
+4. **Nguy hiểm hơn (Data Leak giữa các User):** Khi Request của User B được phân bổ vào đúng Thread cũ của User A vừa dùng, User B có thể đọc trộm toàn bộ thông tin tài khoản của User A nếu hệ thống không dọn sạch ThreadLocal!`,
+        asciiDiagram: `[Worker Thread (Live in Pool)]
+   │
+   └──> ThreadLocalMap
+           │
+           ├── Key: [WeakReference -> null]  (Đã bị GC dọn)
+           │
+           └── Value: [StrongReference] ───> [UserContext Object (Leak in Heap!)]`,
+        badCodeTitle: '❌ Quên dọn dẹp ThreadLocal sau khi kết thúc request',
+        badCode: `public class SecurityFilter implements Filter {
+    private static final ThreadLocal<UserContext> context = new ThreadLocal<>();
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {
+        UserContext user = authenticate(req);
+        context.set(user);
+
+        chain.doFilter(req, res);
+        // TỘI ÁC: Không có khối finally để context.remove()!
+        // Khi xảy ra exception hoặc request return, UserContext bị kẹt vĩnh viễn trong worker thread!
+    }
+}`,
+        goodCodeTitle: '✅ Luôn dùng try-finally để remove() tuyệt đối',
+        goodCode: `public class SecurityFilter implements Filter {
+    private static final ThreadLocal<UserContext> context = new ThreadLocal<>();
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        try {
+            UserContext user = authenticate(req);
+            context.set(user);
+            chain.doFilter(req, res);
+        } finally {
+            // TIÊU CHUẨN VÀNG: Luôn giải phóng trong finally block!
+            // Đảm bảo dù code thành công hay ném Exception, ThreadLocalMap vẫn được dọn sạch 100%!
+            context.remove();
+        }
+    }
+}`,
+        interviewTip: 'Khi phỏng vấn hỏi: "Tại sao Java thiết kế Key của ThreadLocalMap là WeakReference mà không phải StrongReference?", hãy trả lời: "Nếu Key là StrongReference, khi ThreadLocal object ngoài ứng dụng bị gán null, ThreadLocalMap vẫn giữ chặt Key khiến Key không bao giờ được GC thu hồi. Việc dùng WeakReference giúp Key có thể bị GC dọn, cho phép hàm expungeStaleEntry() của ThreadLocalMap chủ động quét và giải phóng Value tương ứng".'
+      }    ]
   },
   {
     id: 'spring-boot',
@@ -453,7 +559,72 @@ public class UserNotificationListener {
 }`,
         interviewTip: 'Khi phỏng vấn về kiến trúc Microservices / High Concurrency, hãy giải thích: "Để tránh Distributed Monolith và Coupling, em luôn dùng Domain Events với @TransactionalEventListener(phase = AFTER_COMMIT). Nó đảm bảo tính nhất quán cuối cùng (Eventual Consistency) mà không làm rò rỉ dữ liệu khi transaction rollback".'
       }
-    ]
+,
+      {
+        id: 'transactional-unexpected-rollback',
+        title: '5. Cạm Bẫy @Transactional: Bắt Lỗi Try-Catch Nhưng Vẫn Bị UnexpectedRollbackException',
+        badge: 'Giao Dịch ACID',
+        summary: 'Method con gặp RuntimeException đánh dấu setRollbackOnly() trên Transaction hiện tại. Dù method cha có try-catch nuốt lỗi, Spring vẫn ép Rollback và ném lỗi 500!',
+        explanation: `Đây là một trong những câu hỏi phỏng vấn Senior Spring Boot hóc búa nhất và là nguồn cơn của vô số bug khó hiểu trên production.
+
+Giả sử bạn có 2 service methods:
+- \`OrderService.checkout()\` có annotation \`@Transactional\` (Mặc định \`Propagation.REQUIRED\`).
+- Method này gọi sang \`NotificationService.sendAlert()\` cũng có \`@Transactional\` (REQUIRED).
+- Vì Notification chỉ là tính năng phụ, lập trình viên bọc lệnh gọi trong khối \`try-catch\` để nếu gửi thông báo lỗi thì vẫn cho phép tạo đơn hàng thành công.
+
+🚨 **Thảm họa xảy ra:**
+1. Khi \`NotificationService.sendAlert()\` ném ra một \`RuntimeException\`, Spring Transaction Interceptor bắt được exception này và **đánh dấu cờ nội bộ:** \`TransactionStatus.setRollbackOnly()\`.
+2. Sau đó, exception văng ngược lên \`OrderService.checkout()\`. Khối \`catch (Exception e)\` nuốt trọn lỗi và tiếp tục thực hiện ghi đơn hàng.
+3. Khi \`OrderService.checkout()\` kết thúc thành công, Spring Transaction Manager chuẩn bị thực hiện lệnh \`COMMIT\` xuống cơ sở dữ liệu.
+4. Nhưng lúc này, Transaction Manager kiểm tra thấy cờ \`rollbackOnly == true\`!
+5. **Hậu quả kép:**
+   - Toàn bộ đơn hàng bị **ROLLBACK sạch sẽ**, không có dữ liệu nào được lưu!
+   - Spring ném ra lỗi kinh hoàng: \`org.springframework.transaction.UnexpectedRollbackException: Transaction silently rolled back because it has been marked as rollback-only\`!
+   - Khách hàng nhận lỗi HTTP 500 dù code nghiệp vụ của bạn tưởng rằng đã 'try-catch' an toàn!`,
+        asciiDiagram: `[OrderService.checkout() - @Transactional (REQUIRED)]
+   │
+   ├── Tạo Order Entity
+   │
+   ├── try {
+   │     NotificationService.sendAlert()  ──[Throws RuntimeException]──> [Proxy marks setRollbackOnly = true!]
+   │   } catch (Exception e) { /* nuốt lỗi */ }
+   │
+   └── Method Kết Thúc ──> [Spring kiểm tra Transaction] ──> Phát hiện cờ RollbackOnly!
+                                                         └── Ném UnexpectedRollbackException & Huỷ toàn bộ Order!`,
+        badCodeTitle: '❌ Try-catch method con cùng chung Propagation.REQUIRED',
+        badCode: `@Service
+public class OrderService {
+    @Autowired private NotificationService notificationService;
+
+    @Transactional // Transaction A bắt đầu
+    public void checkout(Order order) {
+        orderRepo.save(order);
+        try {
+            // NotificationService.sendEmail() cũng dùng @Transactional(REQUIRED)
+            // Khi ném RuntimeException, Transaction A bị đánh dấu setRollbackOnly()!
+            notificationService.sendEmail(order);
+        } catch (Exception e) {
+            log.warn("Gửi email thất bại nhưng vẫn muốn lưu order: {}", e.getMessage());
+        }
+        // Kết thúc hàm: Spring ném UnexpectedRollbackException và xóa sạch Order vừa lưu!
+    }
+}`,
+        goodCodeTitle: '✅ Dùng Propagation.REQUIRES_NEW để cô lập Transaction con',
+        goodCode: `@Service
+public class NotificationService {
+    // Tách thành một Transaction hoàn toàn độc lập với Transaction cha!
+    // Nếu gửi email lỗi, CHỈ CÓ Transaction này rollback, không làm ảnh hưởng tới Order!
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void sendEmail(Order order) {
+        emailClient.send(order.getUserEmail(), "Đơn hàng thành công");
+    }
+}
+
+// Hoặc giải pháp hiện đại hơn: Tách rời bằng Domain Events phi đồng bộ:
+// applicationEventPublisher.publishEvent(new OrderCreatedEvent(order));
+// Listener lắng nghe bằng @TransactionalEventListener(phase = AFTER_COMMIT)`,
+        interviewTip: 'Khi phỏng vấn, hãy phân tích bản chất cơ chế Transaction Proxy: "Với Propagation.REQUIRED, tất cả các method con đều tham gia vào CÙNG MỘT Physical Database Transaction duy nhất. Bất kỳ method con nào ném RuntimeException đều làm ô nhiễm cờ rollbackOnly của toàn bộ transaction. Để try-catch an toàn mà không bị UnexpectedRollbackException, bắt buộc phải dùng REQUIRES_NEW hoặc dùng TransactionTemplate programmatic".'
+      }    ]
   },
   {
     id: 'jpa-database',
@@ -666,7 +837,66 @@ if (updatedRows == 0) {
 }`,
         interviewTip: 'Khi phỏng vấn hỏi về Deadlock trong Pessimistic Lock: "Làm sao chống Deadlock khi 2 giao dịch khóa 2 tài nguyên chéo nhau (Tx1: A->B, Tx2: B->A)?". Trả lời ngay: "Áp dụng quy tắc Lock Ordering: Luôn khóa các tài nguyên theo một thứ tự toàn cục nhất quán (ví dụ sắp xếp theo ID tài khoản tăng dần rồi mới lock: Math.min(idA, idB) rồi đến Math.max(idA, idB))".'
       }
-    ]
+,
+      {
+        id: 'hibernate-dirty-checking-traps',
+        title: '5. Cơ Chế Hibernate Dirty Checking: Tại Sao Không Gọi save() Mà DB Vẫn Bị UPDATE?',
+        badge: 'Hibernate Internals',
+        summary: 'PersistenceContext tự động so sánh Entity với bản Snapshot ban đầu khi Flush. Sửa thuộc tính trong transaction sẽ tự sinh lệnh UPDATE. Tắt bằng readOnly = true để tăng 50% tốc độ đọc.',
+        explanation: `Rất nhiều lập trình viên ngạc nhiên khi thấy đoạn code Java chỉ đọc dữ liệu lên kiểm tra:
+\`User user = userRepo.findById(id).orElseThrow();\`
+\`user.calculateTempDiscount();\`
+Dù hoàn toàn **KHÔNG HỀ GỌI** \`userRepo.save(user)\`, cơ sở dữ liệu vẫn tự động sinh ra một câu lệnh \`UPDATE users SET ...\` làm thay đổi dữ liệu trên production!
+
+🔍 **Bản chất cơ chế Dirty Checking (Kiểm tra dữ liệu bẩn):**
+1. Khi một Entity được nạp vào \`PersistenceContext\` (Hibernate Session), Hibernate sẽ tạo ra **2 bản sao trong RAM**:
+   - Bản sao 1: Đối tượng Entity thực tế để bạn thao tác.
+   - Bản sao 2: Bản ghi chụp nhanh (**Loaded State Snapshot**) lưu trữ giá trị nguyên bản ban đầu từ DB.
+2. Trong suốt thời gian giao dịch (\`@Transactional\`), bất cứ khi nào bạn gọi \`setter\` (e.g. \`user.setName("Mới")\`), Entity bị đánh dấu là "Dirty".
+3. Khi transaction sắp kết thúc (trước khi commit), Hibernate tự động kích hoạt tiến trình **Flush**:
+   - Nó duyệt qua toàn bộ Entity trong PersistenceContext.
+   - So sánh từng trường của Entity với bản Snapshot tương ứng.
+   - Nếu có bất kỳ trường nào khác biệt, Hibernate tự động biên dịch và bắn câu lệnh \`UPDATE\` xuống SQL!
+
+🚨 **Những hiểm họa tiềm tàng:**
+- **Vô tình thay đổi dữ liệu:** Gọi hàm getter/logic nội bộ có tác dụng phụ (side-effect) vô tình thay đổi giá trị field.
+- **Lãng phí hiệu năng:** Duyệt và so sánh snapshot cho 10,000 entities trong bộ nhớ ngốn rất nhiều CPU và RAM.
+- **Giải pháp tối thượng cho các hàm chỉ đọc:** Luôn sử dụng \`@Transactional(readOnly = true)\`. Hibernate sẽ **hoàn toàn không tạo Snapshot**, vô hiệu hóa 100% Dirty Checking, giảm một nửa bộ nhớ RAM và tăng 30-50% tốc độ truy vấn!`,
+        asciiDiagram: `[Database] ──SELECT──> [Hibernate PersistenceContext]
+                                ├── Entity Object: { id: 1, name: "Khuong" }
+                                └── Loaded Snapshot: { id: 1, name: "Khuong" }
+                                         │
+                                [user.setName("Nam")] ──> Entity Object thành "Nam"
+                                         │
+[Tx Commit / Flush] ──> So sánh Entity ("Nam") != Snapshot ("Khuong") ──> Tự động bắn UPDATE SQL!`,
+        badCodeTitle: '❌ Transactional đọc dữ liệu nhưng để Dirty Checking chạy vô ích',
+        badCode: `@Service
+public class ReportService {
+    @Transactional // Thiếu readOnly = true!
+    public List<UserDto> exportUsers() {
+        List<User> users = userRepo.findAll(); // Nạp 20,000 users vào RAM
+        for (User u : users) {
+            // Giả sử hàm này vô tình format lại số điện thoại:
+            u.formatPhoneForDisplay(); 
+        }
+        // Hibernate tốn 2 giây so sánh 20,000 snapshots và bắn 20,000 câu UPDATE xuống DB!
+        return users.stream().map(UserDto::from).toList();
+    }
+}`,
+        goodCodeTitle: '✅ Dùng readOnly = true để vô hiệu hóa Dirty Checking',
+        goodCode: `@Service
+public class ReportService {
+    // VÔ CÙNG QUAN TRỌNG: Tắt Snapshot tracking, tối ưu hóa tốc độ đọc tối đa!
+    @Transactional(readOnly = true)
+    public List<UserDto> exportUsers() {
+        List<User> users = userRepo.findAll();
+        // Với readOnly = true, Hibernate không lưu snapshot, không chạy dirty checking,
+        // và JDBC driver có thể chuyển connection sang Read Replica an toàn!
+        return users.stream().map(UserDto::from).toList();
+    }
+}`,
+        interviewTip: 'Hãy chốt hạ với phỏng vấn viên: "@Transactional(readOnly = true) mang lại 3 lợi ích vượt trội: 1) Hibernate tắt cơ chế tạo Snapshot và Dirty Checking giúp giảm 50% RAM; 2) FlushMode chuyển thành MANUAL nên không bao giờ bắn UPDATE bậy bạ; 3) Giúp Spring RoutingDataSource định tuyến câu query sang Read Replica của MySQL/Postgres để giảm tải cho node Master".'
+      }    ]
   },
   {
     id: 'testing-qa',
@@ -1243,7 +1473,82 @@ public class TicketBookingService {
 }`,
         interviewTip: 'Khi phỏng vấn hỏi: "Thuật toán Redlock là gì?", hãy trả lời: "Redlock là thuật toán do tác giả Redis đề xuất để đảm bảo độ tin cậy của Distributed Lock trên cụm Redis đa node (Cluster/Sentinel), yêu cầu lấy được lock trên đa số máy (N/2 + 1 node) để tránh trường hợp Master bị crash khi dữ liệu chưa kịp replicate sang Slave".'
       }
-    ]
+,
+      {
+        id: 'redis-xfetch-cache-stampede',
+        title: '4. Chống Thảm Họa Cache Stampede Bằng Thuật Toán Xác Suất XFetch (Không Cần Lock)',
+        badge: 'Kiến Trúc Chịu Tải',
+        summary: 'Khi Hot-Key hết hạn, 100,000 request ập vào DB. Thay vì dùng Mutex Lock gây nghẽn CPU, thuật toán XFetch tự động tính toán lại dữ liệu ở luồng nền trước khi key chạm đáy hết hạn.',
+        explanation: `Khi một dữ liệu quan trọng có lưu lượng truy cập khổng lồ (Hot-Key như cấu hình hệ thống, bảng giá vàng, vé concert) hết hạn trong Redis, thảm họa **Cache Stampede (Cache Breakdown)** sẽ xảy ra:
+- Hàng ngàn requests đồng thời nhận kết quả \`cache miss\`.
+- Tất cả các requests này đồng loạt đập xuống Database để query và tính toán lại cùng một dữ liệu.
+- Cơ sở dữ liệu bị bão tải, CPU nhảy lên 100% và sập toàn bộ hệ thống!
+
+**Cách xử lý truyền thống (Mutex Lock / Distributed Lock):**
+Dùng Redis Lock (\`SETNX\`) để chỉ cho 1 request được phép xuống Database, các requests khác phải chờ đợi (busy spin hoặc retry).
+⚠️ *Nhược điểm:* Khi có 50,000 requests/giây, việc 49,999 threads bị block chờ lock sẽ làm cạn kiệt Tomcat thread pool và tăng độ trễ p99 lên hàng ngàn mili-giây!
+
+🔥 **Đỉnh cao kiến trúc: Thuật toán Xác Suất XFetch (Probabilistic Early Expiration):**
+Thuật toán do các kỹ sư đại học Stanford và Varnish Cache nghiên cứu, được áp dụng tại các hệ thống lớn (Wikipedia, Netflix):
+Công thức đánh giá:
+$$\text{currentTime} - (\beta \times \delta \times \ln(\text{rand}())) > \text{expiryTime}$$
+Trong đó:
+- \`delta\` ($\delta$): Thời gian tính toán lại dữ liệu (tính bằng mili-giây, ví dụ query DB mất 50ms).
+- \`beta\` ($\beta$): Hệ số xông xáo (thường đặt là 1.0).
+- \`rand()\`: Số thực ngẫu nhiên từ $(0, 1]$.
+- \`ln(rand())\`: Phân phối logarit tự nhiên.
+
+**Cơ chế hoạt động kỳ diệu:**
+Càng gần đến thời điểm hết hạn (TTL còn 5s, 3s, 1s), giá trị ngẫu nhiên sẽ khiến một request may mắn nào đó phát hiện điều kiện kích hoạt.
+Request đó sẽ âm thầm tính toán lại dữ liệu mới và cập nhật gia hạn Redis **TRƯỚC KHI KEY THỰC SỰ HẾT HẠN**!
+Hàng ngàn requests khác vẫn liên tục đọc dữ liệu cũ trong cache mà không hề bị gián đoạn hay phải chờ lock một mili-giây nào!`,
+        asciiDiagram: `[Timeline of Cache Key TTL = 60s]
+0s ────────────────────────────── 55s ──────── 58s ─────── 60s (Expire)
+                                   │            │
+                                   [XFetch Test] ──> Xác suất tính lại cache ngầm tăng vọt!
+                                   Request A may mắn kích hoạt ──> Async Query DB & Gia hạn TTL mới!
+                                   (Các requests B, C, D vẫn đọc cache mượt mà 0ms latency!)`,
+        badCodeTitle: '❌ Dùng Mutex Lock gây thắt cổ chai khi có tải cực lớn',
+        badCode: `public Product getProduct(Long id) {
+    Product p = redis.get("prod:" + id);
+    if (p == null) {
+        // 50,000 threads cùng tranh nhau lấy Lock này:
+        // Gây nghẽn CPU, thread pool cạn kiệt và latency nhảy vọt lên 5,000ms!
+        if (redis.setNx("lock:prod:" + id, "1", 5, TimeUnit.SECONDS)) {
+            try {
+                p = db.findById(id);
+                redis.set("prod:" + id, p, 60, TimeUnit.SECONDS);
+            } finally {
+                redis.del("lock:prod:" + id);
+            }
+        } else {
+            Thread.sleep(100); // Retry loop
+            return getProduct(id);
+        }
+    }
+    return p;
+}`,
+        goodCodeTitle: '✅ Triển khai thuật toán xác suất XFetch mượt mà không lock',
+        goodCode: `public Product getProductWithXFetch(Long id) {
+    CacheRecord<Product> record = redis.getRecord("prod:" + id);
+    if (record == null) {
+        return reloadAndSet(id); // Cold start
+    }
+
+    // Thuật toán XFetch: delta = computeDuration, beta = 1.0
+    double xfetchScore = System.currentTimeMillis() - 
+        (record.getComputeDurationMs() * 1.0 * Math.log(ThreadLocalRandom.current().nextDouble()));
+
+    // Nếu điều kiện thỏa mãn trước khi hết hạn, một worker sẽ tính lại ngầm:
+    if (xfetchScore > record.getExpiryTimestamp()) {
+        asyncExecutor.submit(() -> reloadAndSet(id)); // Làm mới ở luồng nền!
+    }
+
+    // Trả về dữ liệu ngay lập tức trong 0.2ms, không bao giờ bắt client phải chờ!
+    return record.getData();
+}`,
+        interviewTip: 'Khi phỏng vấn kiến trúc High Concurrency hỏi về Cache Breakdown: "Làm sao chống nghẽn khi Hot-Key hết hạn mà không dùng Lock?", hãy vẽ ngay công thức XFetch: "Bằng cách sử dụng thuật toán Probabilistic Early Expiration (XFetch), hệ thống biến việc làm mới cache thành một tiến trình ngẫu nhiên liên tục ở luồng nền. Cache không bao giờ thực sự chạm đáy hết hạn đối với client, triệt tiêu 100% chi phí locking".'
+      }    ]
   },
   {
     id: 'kafka-event-driven',
@@ -2410,7 +2715,139 @@ public class HybridNotificationService {
 }`,
         interviewTip: 'Khi phỏng vấn System Design hỏi: "Hệ thống thông báo đẩy (Push Notification) đến điện thoại qua FCM/APNS có gì khác với bảng tin?", trả lời: "Push Notification không thể gửi đồng loạt 10 triệu tin tức thì qua kết nối TCP. Ta phải phân chia danh sách thiết bị thành các chunk (ví dụ 1,000 tokens/chunk), đẩy vào hàng đợi phân tán Kafka với nhiều Consumer Pods chạy song song để gửi batch API lên Apple APNS và Google FCM, kết hợp Circuit Breaker để tránh bị Apple/Google rate-limit".'
       }
-    ]
+,
+      {
+        id: 'timing-attack-constant-time',
+        title: '9. Phòng Chống Tấn Công Timing Attack: Tại Sao String.equals() Bị Hacker Bẻ Khóa?',
+        badge: 'Bảo Mật Cốt Lõi',
+        summary: 'String.equals() trả về false ngay ở ký tự đầu tiên bị sai. Hacker đo thời gian mạng ở mức nano-giây để bẻ khóa từng ký tự token. Bắt buộc dùng MessageDigest.isEqual().',
+        explanation: `Một lỗi bảo mật tưởng chừng vô hại nhưng có thể phá hủy toàn bộ hệ thống xác thực API Key, Webhook Secret hoặc Chữ ký điện tử (Signature Verification): **Tấn công theo thời gian (Timing Attack)**.
+
+Khi bạn so sánh hai chuỗi ký tự bằng:
+\`userProvidedToken.equals(expectedSecretToken)\`
+Hãy nhìn vào cách thức cài đặt của \`String.equals()\` trong Java:
+\`\`\`java
+for (int i = 0; i < len; i++) {
+    if (value[i] != other[i]) {
+        return false; // DỪNG LẠI NGAY LẬP TỨC (Short-Circuit)!
+    }
+}
+\`\`\`
+
+🚨 **Cách hacker bẻ khóa từng ký tự bí mật:**
+1. Kẻ tấn công gửi chuỗi token bắt đầu bằng \`A...\`: Nếu ký tự đầu tiên sai, hàm \`equals()\` dừng lại và trả về \`false\` chỉ sau 1 phép so sánh.
+2. Chúng tiếp tục thử \`B...\`, \`C...\`: Khi ký tự đầu tiên đúng, hàm \`equals()\` phải tiếp tục so sánh đến ký tự thứ hai rồi mới trả về \`false\`.
+3. Nhờ sự hỗ trợ của các công cụ phân tích thống kê mạng, hacker đo lường thời gian phản hồi ở mức nano-giây. Thời gian phản hồi của ký tự đúng sẽ **dài hơn một cách nhất quán** so với ký tự sai!
+4. Hacker lặp lại quy trình này để lần lượt đoán ra ký tự thứ 1, thứ 2, thứ 3... và bẻ khóa toàn bộ Secret Token 64 ký tự trong vòng vài tiếng đồng hồ mà không cần brute-force toàn bộ không gian mẫu!
+
+🛡️ **Giải pháp phòng thủ: Constant-Time Comparison**
+Luôn luôn so sánh chuỗi trong thời gian cố định (Constant Time), duyệt qua TOÀN BỘ các ký tự bất kể ký tự đầu tiên có đúng hay sai.`,
+        asciiDiagram: `[String.equals() - Short Circuit]
+Target:   [S E C R E T]
+Input 1:  [A X X X X X] ──> Dừng ngay ở ký tự 0 ──> Tốn 5ns  (Hacker biết 'A' sai!)
+Input 2:  [S X X X X X] ──> So sánh tiếp ký tự 1 ──> Tốn 15ns (Hacker phát hiện 'S' đúng!)
+
+[Constant-Time - MessageDigest.isEqual()]
+Duyệt qua TOÀN BỘ độ dài mảng byte ──> Luôn luôn tốn đúng 50ns dù đúng hay sai! (Hacker mù thông tin!)`,
+        badCodeTitle: '❌ Dùng String.equals() để xác thực Secret / HMAC Signature',
+        badCode: `public boolean verifyWebhookSignature(String signatureHeader, String payload) {
+    String computedSignature = hmacSha256(payload, secretKey);
+    // LỖ HỔNG TIMING ATTACK NGHIÊM TRỌNG:
+    // So sánh dừng sớm (short-circuit) làm rò rỉ thời gian phản hồi cho kẻ tấn công!
+    return computedSignature.equals(signatureHeader);
+}`,
+        goodCodeTitle: '✅ Dùng MessageDigest.isEqual() so sánh thời gian cố định',
+        goodCode: `public boolean verifyWebhookSignature(String signatureHeader, String payload) {
+    byte[] computed = hmacSha256(payload, secretKey).getBytes(StandardCharsets.UTF_8);
+    byte[] clientSig = signatureHeader.getBytes(StandardCharsets.UTF_8);
+
+    // TIÊU CHUẨN BẢO MẬT TUYỆT ĐỐI:
+    // MessageDigest.isEqual() so sánh theo thuật toán Constant-Time:
+    // int result = 0;
+    // for (int i = 0; i < len; i++) result |= computed[i] ^ clientSig[i];
+    // return result == 0;
+    return MessageDigest.isEqual(computed, clientSig);
+}`,
+        interviewTip: 'Khi phỏng vấn về Security / API Authentication, hãy nhấn mạnh: "Mọi thao tác so sánh token, password hash, API key hoặc chữ ký HMAC bắt buộc phải sử dụng Constant-Time Comparison qua MessageDigest.isEqual(). Nó đảm bảo thời gian thực thi không phụ thuộc vào vị trí ký tự sai lệch, triệt tiêu 100% kỹ thuật tấn công Side-Channel Timing Attack".'
+      },
+      {
+        id: 'priority-queue-starvation',
+        title: '10. Hàng Đợi Ưu Tiên Phân Tán (VIP Queue) & Thuật Toán Chống Bỏ Đói (Starvation)',
+        badge: 'Thiết Kế Hệ Thống',
+        summary: 'Hệ thống hàng đợi ưu tiên cho khách VIP rất dễ làm khách thường bị chết đói vĩnh viễn khi có bão VIP. Giải pháp: Weighted Fair Queueing (WFQ) tỷ lệ 3:1 bằng Redis ZSET.',
+        explanation: `Trong các hệ thống thương mại điện tử hoặc ngân hàng số, khách hàng VIP (hoặc các đơn hàng thanh toán giá trị cao) luôn được ưu tiên xử lý trước khách hàng thông thường.
+
+Cách thiết kế ngây thơ:
+Dùng 2 queues: \`vip_queue\` và \`regular_queue\`.
+Consumer viết logic:
+\`\`\`java
+if (!vipQueue.isEmpty()) {
+    process(vipQueue.pop());
+} else {
+    process(regularQueue.pop());
+}
+\`\`\`
+
+🚨 **Vấn nạn Bỏ Đói (Starvation / Livelock):**
+Vào các đợt cao điểm flash-sale hoặc ngày lễ, lượng khách hàng VIP tăng đột biến khiến \`vip_queue\` liên tục đầy ắp thông điệp.
+Theo logic trên, \`regular_queue\` **hoàn toàn không có cơ hội được xử lý**! Hàng triệu đơn hàng của khách hàng thường bị ứ đọng nhiều giờ liền, gây trễ nợ (SLA breach) và khách hàng lũ lượt hủy đơn!
+
+🚀 **Giải pháp Kiến trúc Đỉnh cao: Weighted Fair Queueing (WFQ)**
+Phân bổ năng lực xử lý theo tỷ lệ trọng số (Weight Ratio), ví dụ **3 : 1** (Cứ tiêu thụ 3 messages của VIP thì BẮT BUỘC phải tiêu thụ ít nhất 1 message của Regular).
+Nếu hàng đợi VIP cạn kiệt, toàn bộ năng lực tự động dồn 100% cho hàng đợi Regular.
+Có thể triển khai thông qua:
+1. Hai Topic Kafka độc lập với Consumer gán quota tỷ lệ.
+2. Hoặc một Redis Sorted Set (ZSET) với điểm score kết hợp giữa độ ưu tiên và thời gian chờ:
+$$\text{Score} = (\text{Priority} \times 10^{12}) + \text{CreatedAtTimestamp}$$
+Nhờ đó, những thông điệp thông thường nếu chờ quá lâu (High Age) sẽ dần có điểm vượt lên và được xử lý công bằng!`,
+        asciiDiagram: `[Weighted Fair Queueing (WFQ 3:1)]
+VIP Queue:     [ V1 ] [ V2 ] [ V3 ] [ V4 ] [ V5 ] ──> Tiêu thụ 3 V
+                                                        │
+Regular Queue: [ R1 ] [ R2 ] [ R3 ] ───────────────> Tiêu thụ 1 R (Chống Starvation!)
+                                                        │
+Consumer Process Stream: [ V1 ] ➔ [ V2 ] ➔ [ V3 ] ➔ [ R1 ] ➔ [ V4 ] ➔ [ V5 ] ➔ [ V6 ] ➔ [ R2 ] ...`,
+        badCodeTitle: '❌ Ưu tiên tuyệt đối làm nghẽn chết hàng đợi thường',
+        badCode: `public void runWorker() {
+    while (true) {
+        Message msg = redis.lpop("queue:vip");
+        if (msg != null) {
+            process(msg);
+            continue; // Nếu có bão VIP, vòng lặp này chạy mãi mãi!
+        }
+        // Khách hàng thường KHÔNG BAO GIỜ được chạy tới đây khi VIP liên tục tới!
+        Message regMsg = redis.lpop("queue:regular");
+        if (regMsg != null) process(regMsg);
+    }
+}`,
+        goodCodeTitle: '✅ Triển khai Weighted Fair Queueing (3:1) chống Starvation',
+        goodCode: `public class FairQueueConsumer {
+    private int vipCounter = 0;
+    private static final int VIP_WEIGHT = 3; // Tỷ lệ 3 VIP : 1 Regular
+
+    public void processNextMessage() {
+        Message msg = null;
+
+        // Nếu chưa vượt quota VIP (3 lần) và queue VIP có tin:
+        if (vipCounter < VIP_WEIGHT) {
+            msg = redis.lpop("queue:vip");
+            if (msg != null) {
+                vipCounter++;
+            }
+        }
+
+        // Nếu đã đủ 3 VIP HOẶC queue VIP rỗng: Bắt buộc tiêu thụ 1 Regular!
+        if (msg == null) {
+            msg = redis.lpop("queue:regular");
+            vipCounter = 0; // Reset counter sau khi đã phục vụ regular!
+        }
+
+        if (msg != null) {
+            process(msg);
+        }
+    }
+}`,
+        interviewTip: 'Khi phỏng vấn System Design về Priority Processing, hãy phân tích sự đánh đổi: "Hệ thống ưu tiên tuyệt đối (Strict Priority) luôn tiềm ẩn rủi ro Starvation. Trong kiến trúc phân tán thực tế, chúng em luôn áp dụng Weighted Fair Queueing (WFQ) hoặc Deficit Round Robin (DRR) với tỷ lệ trọng số để đảm bảo tính công bằng (Fairness), hoặc tính toán điểm Score = Priority - AgingFactor để thông điệp chờ lâu tự động thăng hạng".'
+      }    ]
   },
   {
     id: 'redis-advanced-mastery',

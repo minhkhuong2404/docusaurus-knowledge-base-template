@@ -111,13 +111,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-83e": {
+  "/-614": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-d60": {
+  "/-b65": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -7609,7 +7609,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-227": {
+  "/-91a": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -12655,6 +12655,10 @@
   "/technical-knowledge/kafka/streams/interview-questions-e15": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-streams-interview-questions-7-d-0-0cf"
+  },
+  "/technical-knowledge/kafka/streams/invalid-topology-updates-cd4": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-kafka-streams-invalid-topology-updates-8-aa-d5c"
   },
   "/technical-knowledge/kafka/streams/overview-0c4": {
     "__comp": "__comp---theme-doc-item-178-a40",

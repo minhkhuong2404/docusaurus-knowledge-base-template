@@ -4,7 +4,9 @@ import Link from '@docusaurus/Link';
 import { FIFTY_PRACTICAL_TIPS, PracticalTip } from '../../data/hubFiftyTipsData';
 import { INTERVIEW_QUESTIONS, InterviewQuestion } from '../../data/hubInterviewQuestionsData';
 import { KNOWLEDGE_MODULES, KnowledgeModule, LessonTopic } from '../../data/hubKnowledgeModulesData';
+import { CODE_BATTLES, CodeBattle } from '../../data/hubCodeBattlesData';
 import MockInterviewStudio from '../../components/mock-interview/MockInterviewStudio';
+import SeniorInterview5120Suite from '../../components/career-hub/SeniorInterview5120Suite';
 import {
   CareerReadinessAndDailyBanner,
   IncidentWarRoomSection,
@@ -109,697 +111,6 @@ const CV_SECTIONS: CvSectionBreakdown[] = [
   }
 ];
 
-interface CodeBattle {
-  id: string;
-  title: string;
-  category: string;
-  impactBadge: string;
-  badTitle: string;
-  badCode: string;
-  badExplanation: string;
-  goodTitle: string;
-  goodCode: string;
-  goodExplanation: string;
-}
-
-const CODE_BATTLES: CodeBattle[] = [
-  {
-    id: 'bouncer-pattern',
-    title: '1. Bouncer Pattern (Guard Clauses)',
-    category: 'Clean Code',
-    impactBadge: 'Dễ đọc & Giảm 80% độ phức tạp',
-    badTitle: '❌ Thói quen ở trường (Pyramid of Doom - Tháp if-else lồng nhau)',
-    badCode: `public void processOrder(OrderRequest req) {
-    if (req != null) {
-        if (req.getItems() != null && !req.getItems().isEmpty()) {
-            User user = userRepo.findById(req.getUserId()).orElse(null);
-            if (user != null) {
-                if (user.isActive()) {
-                    if (inventoryService.checkStock(req.getItems())) {
-                        // Logic nghiệp vụ chính bị thụt lề 5-6 tầng!
-                        paymentService.charge(user, req.getTotal());
-                        orderRepo.save(new Order(user, req));
-                    }
-                }
-            }
-        }
-    }
-}`,
-    badExplanation: 'Anti-pattern Kim tự tháp: Logic cốt lõi bị giấu sâu trong nhiều lớp ngoặc nhọn. Khi cần thêm logic kiểm tra mới, code sẽ phình to sang bên phải, cực kỳ dễ sót bug và khó viết unit test.',
-    goodTitle: '✅ Chuẩn đi làm (Bouncer Pattern / Fail-Fast Guard Clauses)',
-    goodCode: `public void processOrder(OrderRequest req) {
-    // 1. Chặn ngay các trường hợp sai lệch ở cổng (Bouncers)
-    if (req == null || req.getItems() == null || req.getItems().isEmpty()) {
-        throw new InvalidRequestException("Đơn hàng rỗng hoặc không hợp lệ");
-    }
-    User user = userRepo.findById(req.getUserId())
-        .orElseThrow(() => new ResourceNotFoundException("User không tồn tại"));
-
-    if (!user.isActive()) {
-        throw new UserSuspendedException("Tài khoản đã bị tạm khóa");
-    }
-    if (!inventoryService.checkStock(req.getItems())) {
-        throw new OutOfStockException("Sản phẩm đã hết hàng trong kho");
-    }
-
-    // 2. Happy Path (luồng thành công) nằm phẳng 100% ở ngoài cùng!
-    paymentService.charge(user, req.getTotal());
-    orderRepo.save(new Order(user, req));
-}`,
-    goodExplanation: 'Bouncer Pattern kiểm tra điều kiện lỗi và return hoặc ném exception ngay ở đầu method. Toàn bộ logic chính nằm phẳng phiu ở ngoài cùng, trực quan và dễ đọc như một bản danh sách việc cần làm.'
-  },
-  {
-    id: 'constructor-vs-field',
-    title: '2. Constructor Injection vs Field Injection',
-    category: 'Spring Boot',
-    impactBadge: 'Bất biến & Dễ viết Unit Test',
-    badTitle: '❌ Thói quen ở trường (@Autowired trực tiếp lên Field)',
-    badCode: `@Service
-public class OrderService {
-    @Autowired
-    private OrderRepository orderRepo; // Field Injection
-
-    @Autowired
-    private PaymentService paymentService;
-
-    // Khi viết Unit Test: BẮT BUỘC phải bật Spring Context nặng nề
-    // hoặc dùng ReflectionTestUtils để gán giá trị!
-}`,
-    badExplanation: 'Field Injection phá vỡ tính đóng gói của OOP, không thể khai báo biến final (mất tính bất biến), và khiến việc viết Unit Test thuần túy bằng new OrderService(mockRepo) trở nên bất khả thi.',
-    goodTitle: '✅ Chuẩn đi làm (Constructor Injection + Lombok)',
-    goodCode: `@Service
-@RequiredArgsConstructor // Lombok tự sinh constructor cho tất cả các field final
-public class OrderService {
-    private final OrderRepository orderRepo;     // Bất biến, an toàn tuyệt đối
-    private final PaymentService paymentService;
-
-    // Khi viết Unit Test: Chỉ cần new thuần túy trong 1 mili-giây:
-    // OrderService service = new OrderService(mockRepo, mockPayment);
-}`,
-    goodExplanation: 'Constructor Injection đảm bảo dependency không thể bị null sau khi khởi tạo, cho phép đánh dấu final, và phát hiện lỗi phụ thuộc vòng (Circular Dependency) ngay khi ứng dụng khởi động (Fail-fast).'
-  },
-  {
-    id: 'n-plus-1-join-fetch',
-    title: '3. N+1 Query vs JOIN FETCH',
-    category: 'Database / JPA',
-    impactBadge: 'Tăng tốc API gấp 10-50 lần',
-    badTitle: '❌ Thói quen ở trường (1 Query lấy Cha + N Queries lấy Con)',
-    badCode: `// Sinh ra: 1 SELECT bảng User + 100 SELECT bảng Order riêng biệt!
-List<User> users = userRepository.findAll();
-for (User user : users) {
-    // Mỗi lần gọi getOrders() là 1 lần gửi query SQL mới xuống DB
-    System.out.println(user.getName() + ": " + user.getOrders().size());
-}`,
-    badExplanation: 'Với 1,000 user, hệ thống bắn 1,001 câu truy vấn xuống Database, chiếm dụng toàn bộ connection pool của HikariCP và khiến API mất hàng giây phản hồi.',
-    goodTitle: '✅ Chuẩn đi làm (JOIN FETCH gom trong 1 câu SQL)',
-    goodCode: `public interface UserRepository extends JpaRepository<User, Long> {
-    // Đúng 1 câu query SQL duy nhất với LEFT JOIN
-    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.orders")
-    List<User> findAllWithOrders();
-}
-
-// Service sử dụng mượt mà, không sinh thêm bất kỳ câu SQL nào:
-List<User> users = userRepository.findAllWithOrders();
-for (User user : users) {
-    System.out.println(user.getName() + ": " + user.getOrders().size());
-}`,
-    goodExplanation: 'JOIN FETCH chỉ thị cho Hibernate nạp sẵn toàn bộ danh sách con ngay trong câu query ban đầu. Số lượng round-trip mạng tới DB giảm từ N+1 xuống đúng 1 lần duy nhất.'
-  },
-  {
-    id: 'dto-vs-entity',
-    title: '4. DTO Response vs Lộ Hibernate Entity',
-    category: 'RESTful API',
-    impactBadge: 'Bảo mật dữ liệu & Tránh vòng lặp JSON',
-    badTitle: '❌ Thói quen ở trường (Trả trực tiếp Entity ra Controller)',
-    badCode: `@RestController
-@RequestMapping("/api/users")
-public class UserController {
-    @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
-        // Trả thẳng Entity ra JSON: Lộ password_hash, token, secret!
-        // Dễ bị lỗi lặp vô tận: JsonMappingException (Lazy Loading circular ref)
-        return userRepository.findById(id).orElseThrow();
-    }
-}`,
-    badExplanation: 'Lộ cấu trúc bảng cơ sở dữ liệu nội bộ ra ngoài thế giới. Khách hàng hoặc hacker có thể nhìn thấy các cột nhạy cảm như hashed password, salt, và lịch sử xóa mềm.',
-    goodTitle: '✅ Chuẩn đi làm (Tách biệt DTO Request / Response)',
-    goodCode: `// DTO bất biến, chỉ chứa dữ liệu cần hiển thị cho Client
-public record UserResponseDto(
-    Long id,
-    String fullName,
-    String email,
-    Instant createdAt
-) {
-    public static UserResponseDto from(User u) {
-        return new UserResponseDto(u.getId(), u.getFullName(), u.getEmail(), u.getCreatedAt());
-    }
-}
-
-@GetMapping("/{id}")
-public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
-    return ResponseEntity.ok(userService.getUserResponse(id));
-}`,
-    goodExplanation: 'Record DTO (Java 16+) giúp bảo vệ cấu trúc Database, ngăn chặn tấn công Over-Posting / Mass Assignment, và loại bỏ hoàn toàn lỗi tuần tự hóa JSON của Hibernate.'
-  },
-  {
-    id: 'slf4j-vs-sout',
-    title: '5. SLF4J Parameterized Logging vs System.out',
-    category: 'Logging & Ops',
-    impactBadge: 'Non-blocking I/O & Có Trace Context',
-    badTitle: '❌ Thói quen ở trường (System.out.println & printStackTrace)',
-    badCode: `try {
-    paymentService.charge(order);
-} catch (Exception e) {
-    System.out.println("Lỗi thanh toán: " + e.getMessage());
-    e.printStackTrace(); // Gây nghẽn luồng I/O console, mất log khi deploy Docker!
-}`,
-    badExplanation: 'System.out.println là hàm đồng bộ (Synchronous I/O) có khóa luồng (synchronized). Khi hệ thống có tải cao, các thread phải xếp hàng chờ ghi console, làm tê liệt hiệu năng.',
-    goodTitle: '✅ Chuẩn đi làm (SLF4J + Parameterized Placeholders)',
-    goodCode: `@Slf4j
-@Service
-public class OrderService {
-    public void processPayment(Order order) {
-        try {
-            paymentService.charge(order);
-            log.info("Thanh toán thành công | orderId={} | amount={}", order.getId(), order.getTotal());
-        } catch (PaymentException ex) {
-            log.error("Thanh toán thất bại | orderId={} | errorCode={}", order.getId(), ex.getErrorCode(), ex);
-            throw ex;
-        }
-    }
-}`,
-    goodExplanation: 'SLF4J dùng cú pháp {} giúp JVM không phải tốn bộ nhớ nối chuỗi String nếu log level chưa được bật. Log được ghi bất đồng bộ (Async Appender) sang file có phân cấp rolling và traceId.'
-  },
-  {
-    id: 'global-exception-vs-null',
-    title: '6. @RestControllerAdvice vs Nuốt lỗi / Trả null',
-    category: 'Clean Code',
-    impactBadge: 'Chuẩn hóa RFC 7807 & Xóa sổ NullPointer',
-    badTitle: '❌ Thói quen ở trường (Nuốt ngoại lệ hoặc return null/string linh tinh)',
-    badCode: `@GetMapping("/user/{id}")
-public Map<String, Object> getUser(@PathVariable Long id) {
-    Map<String, Object> res = new HashMap<>();
-    try {
-        User u = userService.findById(id);
-        res.put("data", u);
-    } catch (Exception e) {
-        // Nuốt lỗi hoặc trả HTTP 200 kèm cờ error!
-        res.put("error", "Đã có lỗi xảy ra");
-    }
-    return res;
-}`,
-    badExplanation: 'Nuốt ngoại lệ khiến hệ thống không biết chuyện gì thực sự xảy ra. Trả mã 200 OK cho trường hợp lỗi khiến API Gateway và Frontend không thể bắt sự kiện chuẩn xác.',
-    goodTitle: '✅ Chuẩn đi làm (Custom Exception + RFC 7807 Problem Detail)',
-    goodCode: `// 1. Ném Custom Business Exception khi có lỗi
-if (user == null) {
-    throw new ResourceNotFoundException("Không tìm thấy người dùng với ID: " + id);
-}
-
-// 2. Bắt tập trung tại Global Exception Handler:
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problem.setProperty("timestamp", Instant.now());
-        problem.setProperty("errorCode", "USER_NOT_FOUND");
-        return problem; // Trả đúng HTTP 404 chuẩn quốc tế
-    }
-}`,
-    goodExplanation: 'Sử dụng @RestControllerAdvice giúp tách rời 100% logic xử lý lỗi ra khỏi Service/Controller. Mã nguồn nghiệp vụ sạch bóng các khối try-catch rườm rà.'
-  },
-  {
-    id: 'batch-insert-vs-loop',
-    title: '7. Batch Insert (saveAll) vs Vòng lặp save() từng dòng',
-    category: 'Database / JPA',
-    impactBadge: 'Tiết kiệm 95% thời gian ghi Database',
-    badTitle: '❌ Thói quen ở trường (Gọi save() trong vòng lặp for)',
-    badCode: `// Có danh sách 5,000 sản phẩm mới:
-for (Product p : products) {
-    // MỖI VÒNG LẶP LÀ 1 LẦN MỞ TRANSACTION & 1 LẦN GỬI NETWORK!
-    productRepository.save(p);
-}`,
-    badExplanation: '5,000 lần gọi save() đồng nghĩa với 5,000 round-trip mạng tới Database server. Thao tác này có thể tốn từ 20 đến 40 giây và làm nghẽn toàn bộ kết nối DB.',
-    goodTitle: '✅ Chuẩn đi làm (Hibernate Batching + rewriteBatchedStatements)',
-    goodCode: `// 1. Cấu hình application.yml:
-// spring.jpa.properties.hibernate.jdbc.batch_size: 50
-// spring.datasource.url: jdbc:mysql://...?rewriteBatchedStatements=true
-
-// 2. Gửi nguyên danh sách một lần:
-productRepository.saveAll(products);
-
-// Database sẽ nhận các gói gom 50 dòng trong đúng 1 lệnh INSERT duy nhất:
-// INSERT INTO products (name, price) VALUES (...), (...), (...);`,
-    goodExplanation: 'Hibernate Batching kết hợp cấu hình JDBC rewrite gom hàng chục câu lệnh INSERT thành một gói tin mạng duy nhất, rút ngắn thời gian từ 30 giây xuống dưới 1 giây!'
-  },
-  {
-    id: 'optional-orelseget-trap',
-    title: '8. Optional.orElseGet() (Lazy) vs Optional.orElse() (Eager Trap)',
-    category: 'Core Java',
-    impactBadge: 'Tránh thực thi thừa thao tác nặng / tốn phí',
-    badTitle: '❌ Thói quen ở trường (Dùng orElse với phương thức tốn kém)',
-    badCode: `User user = userRepository.findByEmail(email)
-    .orElse(authServiceClient.createNewRemoteUser(email)); // BẪY NGUY HIỂM!
-    
-// Dù user ĐÃ TỒN TẠI trong Database, hàm createNewRemoteUser(email)
-// VẪN BỊ GỌI VÀ THỰC THI NGAY LẬP TỨC (Eager Evaluation)!`,
-    badExplanation: 'Trong Java, tham số truyền vào hàm orElse(...) luôn bị tính toán ngay khi dòng code chạy qua. Nếu bên trong là lệnh gọi API bên ngoài, gửi email hoặc ghi DB, nó sẽ kích hoạt ngoài ý muốn!',
-    goodTitle: '✅ Chuẩn đi làm (Dùng orElseGet với Lambda Supplier)',
-    goodCode: `User user = userRepository.findByEmail(email)
-    .orElseGet(() => authServiceClient.createNewRemoteUser(email));
-
-// orElseGet nhận một Supplier (Functional Interface).
-// Chỉ khi nào Optional rỗng (Empty) thì hàm Lambda mới được thực thi (Lazy)!`,
-    goodExplanation: 'orElseGet() áp dụng cơ chế Lazy Evaluation. Nếu giá trị đã có sẵn, Lambda tuyệt đối không được gọi, tiết kiệm tối đa CPU, RAM và tránh các tác dụng phụ (side effects) tai hại.'
-  },
-  {
-    id: 'cron-polling-vs-delayed-queue',
-    title: '9. Cron Polling Quét DB vs Delayed Queue (RabbitMQ DLX / Redis ZSET)',
-    category: 'System Design',
-    impactBadge: 'Giảm 99% tải Database & Zero Polling CPU',
-    badTitle: '❌ Thói quen ở trường (Dùng @Scheduled Cron Job SELECT full table)',
-    badCode: `@Scheduled(fixedRate = 60000)
-public void cancelExpiredOrders() {
-    // ❌ THẢM HỌA: Bảng orders có 5 triệu dòng, quét mỗi phút một lần!
-    // Gây Slow Query, khóa bảng và tranh chấp CPU nghiêm trọng với giao dịch của khách!
-    List<Order> expired = orderRepo.findAllPendingOlderThan(15);
-    expired.forEach(order -> {
-        order.setStatus("CANCELLED");
-        inventoryService.restore(order.getProductId(), order.getQty());
-    });
-}`,
-    badExplanation: 'Cron Job định kỳ quét toàn bảng gây Full Table Scan, tải I/O đột biến mỗi phút, độ trễ xử lý không theo thời gian thực và dễ bị chạy trùng lặp khi ứng dụng mở rộng nhiều Pod.',
-    goodTitle: '✅ Chuẩn đi làm (RabbitMQ DLX Message TTL hoặc Redis ZSET)',
-    goodCode: `// Khi tạo đơn: Bắn message có TTL 15 phút vào queue không có listener:
-rabbitTemplate.convertAndSend("order.delay.queue", orderId, m -> {
-    m.getMessageProperties().setExpiration("900000"); // Đúng 15 phút
-    return m;
-});
-
-// Message hết hạn tự động rơi sang Dead Letter Exchange (DLX) và chuyển tới Worker:
-@RabbitListener(queues = "order.cancel.process.queue")
-public void handleAutoCancel(Long orderId) {
-    // Xử lý tức thì với độ trễ 0 giây, hoàn toàn không cần quét DB!
-    orderService.cancelIfStillPending(orderId);
-}`,
-    goodExplanation: 'Mô hình Delayed Queue qua RabbitMQ DLX đạt Zero CPU Polling, chính xác từng giây, phân tán tải đều đặn và hoàn toàn độc lập với quy mô của bảng Database.'
-  },
-  {
-    id: 'adjacency-list-vs-mptt',
-    title: '10. Adjacency List (parent_id) vs MPTT Tree (left / right) Cây Bình Luận',
-    category: 'Thuật Toán & DB',
-    impactBadge: 'Từ N+1 câu query đệ quy về 1 câu SQL duy nhất',
-    badTitle: '❌ Thói quen ở trường (Dùng parent_id và đệ quy trong Java / CTE)',
-    badCode: `public CommentNode buildCommentTree(Long commentId) {
-    Comment root = commentRepo.findById(commentId).orElseThrow();
-    // ❌ N+1 QUERY: Mỗi node con lại phát sinh thêm một câu SELECT đệ quy!
-    List<Comment> children = commentRepo.findByParentId(commentId);
-    List<CommentNode> childNodes = children.stream()
-            .map(c -> buildCommentTree(c.getId())) // Đệ quy sâu làm nát DB!
-            .toList();
-    return new CommentNode(root, childNodes);
-}`,
-    badExplanation: 'Mô hình Adjacency List bắt buộc server phải gọi nhiều câu truy vấn đệ quy (N+1 Query) hoặc dùng Recursive CTE nặng nề, khiến việc nạp cây bình luận sâu làm sập Database.',
-    goodTitle: '✅ Chuẩn đi làm (Modified Preorder Tree Traversal - MPTT)',
-    goodCode: `// ✅ 1 CÂU SELECT DUY NHẤT LẤY SẠCH TOÀN BỘ CÂY CON BÌNH LUẬN:
-@Query("""
-    SELECT c FROM Comment c 
-    WHERE c.postId = :postId 
-      AND c.commentLeft > :parentLeft 
-      AND c.commentRight < :parentRight 
-    ORDER BY c.commentLeft ASC
-""")
-List<Comment> getEntireCommentSubtree(Long postId, int parentLeft, int parentRight);`,
-    goodExplanation: 'MPTT (Nested Sets Model) gán chỉ số left/right theo thứ tự duyệt cây, cho phép lấy toàn bộ cây con cháu ở mọi độ sâu chỉ bằng 1 câu SELECT duy nhất O(1) query.'
-  },
-  {
-    id: 'random-locking-vs-consistent-ordering',
-    title: '11. Khóa Tài Khoản Ngẫu Nhiên vs Consistent Lock Ordering Chuyển Tiền Banking',
-    category: 'Concurrency',
-    impactBadge: 'Triệt tiêu 100% nguy cơ Deadlock',
-    badTitle: '❌ Thói quen ở trường (Khóa ngẫu nhiên theo thứ tự From -> To)',
-    badCode: `@Transactional
-public void transferMoney(Long fromId, Long toId, BigDecimal amount) {
-    // ❌ NGUY CƠ DEADLOCK:
-    // Luồng 1: Chuyển 10 -> 20 (Lock 10, chờ Lock 20)
-    // Luồng 2: Chuyển 20 -> 10 (Lock 20, chờ Lock 10)
-    // Hai luồng chờ chéo nhau -> DEADLOCK!
-    Account from = accountRepo.findByIdForUpdate(fromId);
-    Account to = accountRepo.findByIdForUpdate(toId);
-    from.debit(amount);
-    to.credit(amount);
-}`,
-    badExplanation: 'Khóa tài nguyên theo thứ tự tham số đầu vào vi phạm nguyên tắc Coffman, tạo ra vòng lặp chờ Circular Wait giữa các giao dịch đối kháng.',
-    goodTitle: '✅ Chuẩn đi làm (Consistent Lock Ordering: Khóa min(from, to) trước)',
-    goodCode: `@Transactional
-public void transferMoneySafe(Long fromId, Long toId, BigDecimal amount) {
-    // ✅ BẺ GÃY HOÀN TOÀN CIRCULAR WAIT:
-    Long firstId = Math.min(fromId, toId);
-    Long secondId = Math.max(fromId, toId);
-
-    // Luôn khóa ID nhỏ trước, ID lớn sau trên toàn bộ hệ thống:
-    Account lock1 = accountRepo.findByIdForUpdate(firstId);
-    Account lock2 = accountRepo.findByIdForUpdate(secondId);
-
-    Account from = fromId.equals(firstId) ? lock1 : lock2;
-    Account to = toId.equals(firstId) ? lock1 : lock2;
-    from.debit(amount);
-    to.credit(amount);
-}`,
-    goodExplanation: 'Consistent Lock Ordering đảm bảo mọi giao dịch đều xin khóa tài nguyên theo cùng một thứ tự toàn cục (Global Strict Ordering), loại bỏ hoàn toàn khả năng xảy ra Deadlock.'
-  },
-  {
-    id: 'db-direct-update-vs-redis-lua-flashsale',
-    title: '12. Trực Tiếp UPDATE Kho Hàng DB vs Redis Lua Script Atomic Deduction Flash Sale',
-    category: 'High Concurrency',
-    impactBadge: 'Chịu tải 100,000 req/s không bao giờ bị âm kho',
-    badTitle: '❌ Thói quen ở trường (Đọc DB -> if -> UPDATE trực tiếp MySQL)',
-    badCode: `@Transactional
-public void buyFlashSaleItem(Long productId, int quantity) {
-    // ❌ SẬP DB KHI CHỊU 50,000 req/s:
-    // Hàng ngàn thread cùng tranh chấp Row Lock trên 1 dòng sản phẩm!
-    Product p = productRepo.findById(productId).orElseThrow();
-    if (p.getStock() >= quantity) {
-        p.setStock(p.getStock() - quantity);
-        productRepo.save(p);
-    }
-}`,
-    badExplanation: 'Hàng ngàn kết nối cùng tranh chấp khóa hàng (Row Exclusive Lock) trên MySQL gây nghẽn Connection Pool và crash Database trong vài giây.',
-    goodTitle: '✅ Chuẩn đi làm (Trừ kho nguyên tử trên RAM bằng Redis Lua Script)',
-    goodCode: `// Script Lua chạy nguyên tử trên Single-Thread RAM của Redis:
-String LUA_SCRIPT = """
-    local stock = tonumber(redis.call('get', KEYS[1]) or 0)
-    local qty = tonumber(ARGV[1])
-    if stock >= qty then
-        redis.call('decrby', KEYS[1], qty)
-        return 1 -- Trừ kho thành công
-    else
-        return 0 -- Hết hàng
-    end
-""";
-// Trừ kho cực nhanh 0.5ms không lock DB, sau đó đẩy event vào Kafka để lưu đơn async:
-Long result = redisTemplate.execute(script, List.of("stock:" + productId), String.valueOf(quantity));
-if (result == 1) kafkaTemplate.send("orders", new OrderEvent(userId, productId, quantity));`,
-    goodExplanation: 'Đưa việc khấu trừ tồn kho lên RAM với Redis Lua Script giúp xử lý hàng trăm ngàn request mỗi giây mà không chạm vào Database, kết hợp Kafka đệm tải bền vững.'
-  },
-  {
-    id: 'deferred-join-vs-limit-offset',
-    title: '13. LIMIT OFFSET Truyền Thống vs Deferred Join Phân Trang 10 Triệu Dòng',
-    category: 'Database Optimization',
-    impactBadge: 'Tăng tốc từ 7.5 giây xuống 0.25 giây (gấp 30 lần)',
-    badTitle: '❌ Thói quen ở trường (Dùng LIMIT 1000000, 20 trực tiếp)',
-    badCode: `// ❌ CỰC KỲ CHẬM (Mất 7 - 10 giây):
-// MySQL nạp toàn bộ 1,000,020 bản ghi từ đĩa vào RAM rồi vứt bỏ 1,000,000 bản ghi đầu:
-SELECT * FROM orders 
-WHERE status = 'PAID' 
-ORDER BY id ASC 
-LIMIT 1000000, 20;`,
-    badExplanation: 'LIMIT OFFSET lớn buộc database phải đọc tuần tự hàng triệu trang dữ liệu từ ổ đĩa (Random Disk I/O) rồi vứt đi, làm nghẽn toàn bộ Buffer Pool của InnoDB.',
-    goodTitle: '✅ Chuẩn đi làm (Kỹ thuật Deferred Join với Covering Index)',
-    goodCode: `// ✅ NHANH GẤP 30 LẦN (Chỉ mất 0.25 giây):
-// Subquery chỉ quét Index B-Tree siêu nhẹ, sau đó JOIN đọc đúng 20 dòng:
-SELECT o.* FROM orders o
-INNER JOIN (
-    SELECT id FROM orders 
-    WHERE status = 'PAID' 
-    ORDER BY id ASC 
-    LIMIT 1000000, 20
-) sub ON o.id = sub.id;`,
-    goodExplanation: 'Subquery tận dụng Covering Index trên RAM để lấy ra đúng 20 ID, sau đó phép JOIN chỉ thực hiện đúng 20 lần truy vấn điểm trên đĩa cứng.'
-  },
-  {
-    id: 'unlink-async-vs-del-sync-bigkey',
-    title: '14. Dùng DEL Xóa BigKey Đồng Bộ vs UNLINK Bất Đồng Bộ Trong Redis',
-    category: 'Redis Performance',
-    impactBadge: 'Loại bỏ thời gian treo đơ Single-Thread của Redis',
-    badTitle: '❌ Thói quen ở trường (Dùng lệnh DEL để xóa mọi loại Key)',
-    badCode: `// ❌ LÀM ĐƠ MÁY CHỦ REDIS 3 - 5 GIÂY:
-// Nếu "active_users_set" chứa 1,000,000 phần tử:
-// Lệnh DEL buộc luồng chính phải giải phóng 1 triệu ô nhớ RAM đồng bộ!
-// Hàng ngàn client khác bị timeout và ngắt kết nối!
-redisTemplate.delete("active_users_set");`,
-    badExplanation: 'Redis xử lý đơn luồng. Lệnh DEL xóa BigKey khiến luồng chính bị chiếm dụng hoàn toàn để thu hồi bộ nhớ, không thể phục vụ bất kỳ lệnh nào khác.',
-    goodTitle: '✅ Chuẩn đi làm (Dùng UNLINK để giải phóng bộ nhớ ngầm - Lazy Freeing)',
-    goodCode: `// ✅ ZERO BLOCKING (Chỉ tốn vài micro-giây O(1)):
-// UNLINK ngắt kết nối con trỏ Key khỏi Keyspace ngay lập tức,
-// sau đó chuyển việc giải phóng 1 triệu ô nhớ cho Background Thread dọn dẹp:
-redisTemplate.unlink("active_users_set");`,
-    goodExplanation: 'UNLINK tách biệt thao tác xóa logic (nhanh tức thì trên luồng chính) và thao tác giải phóng RAM vật lý (chạy ngầm bất đồng bộ trên luồng phụ).'
-  },
-  {
-    id: 'reentrantlock-vs-synchronized-virtual-threads',
-    title: '15. synchronized Block (Pinning Issue) vs ReentrantLock Trong Java 21',
-    category: 'Java Concurrency',
-    impactBadge: 'Chống đóng băng toàn bộ Carrier Threads của CPU',
-    badTitle: '❌ Thói quen ở trường (Dùng synchronized cho khối lệnh có I/O)',
-    badCode: `// ❌ THẢM HỌA PINNING TRÊN JAVA 21 VIRTUAL THREADS:
-public synchronized String fetchRemoteExchangeRate(String currency) {
-    // Gọi HTTP mất 1 - 2 giây bên trong synchronized block:
-    // Virtual Thread bị GHIM CHẶT (PINNED) vào CPU Carrier Thread!
-    // 8 threads bị ghim ➔ Cả 8 CPU Cores bị tê liệt, server sập!
-    return httpClient.getRate(currency);
-}`,
-    badExplanation: 'synchronized ghim cứng Virtual Thread vào Platform/Carrier Thread lúc I/O blocking, phá hủy hoàn toàn cơ chế unmount của Project Loom.',
-    goodTitle: '✅ Chuẩn đi làm (Dùng ReentrantLock tương thích 100% Virtual Threads)',
-    goodCode: `// ✅ REENTRANTLOCK AN TOÀN TUYỆT ĐỐI CHO VIRTUAL THREADS:
-private final ReentrantLock lock = new ReentrantLock();
-
-public String fetchRemoteExchangeRateSafe(String currency) {
-    lock.lock();
-    try {
-        // Virtual Thread tự động Unmount an toàn nhường Carrier Thread cho việc khác:
-        return httpClient.getRate(currency);
-    } finally {
-        lock.unlock();
-    }
-}`,
-    goodExplanation: 'ReentrantLock được thiết kế lại trong Java 21 để tích hợp sâu với bộ lập lịch Virtual Thread, cho phép luồng unmount nhả CPU ngay khi gặp blocking I/O.'
-  },
-  {
-    id: 'sticky-master-vs-random-slave-replication-lag',
-    title: '16. Đọc Ngẫu Nhiên Slave Sau Khi Ghi vs Sticky Master Routing Chống Trễ Đồng Bộ',
-    category: 'Architecture',
-    impactBadge: 'Triệt tiêu 100% lỗi F5 vừa đăng không thấy bài',
-    badTitle: '❌ Thói quen ở trường (Vừa ghi xong đọc lại ngay từ Read-Replica)',
-    badCode: `// ❌ LỖI REPLICATION LAG (TRỄ SAO CHÉP 500MS):
-@Transactional
-public void createComment(CommentReq req) {
-    commentRepo.save(new Comment(req)); // Ghi vào Master
-}
-
-@Transactional(readOnly = true)
-public List<Comment> getComments(Long postId) {
-    // Đọc từ Slave DB chưa kịp nhận binlog ➔ Không thấy comment vừa gửi!
-    return commentRepo.findByPostId(postId);
-}`,
-    badExplanation: 'Read-Replica có độ trễ sao chép bất đồng bộ, người dùng vừa đăng bài nhấn F5 sẽ nhận thông báo không tìm thấy bản ghi, gây trải nghiệm cực kỳ ức chế.',
-    goodTitle: '✅ Chuẩn đi làm (Sticky Master Routing với Redis Flag 5 giây)',
-    goodCode: `// ✅ GÁN CỜ USER ĐỌC MASTER TRONG 5 GIÂY:
-public void createCommentSafe(CommentReq req, Long userId) {
-    commentRepo.save(new Comment(req));
-    // Đánh dấu: Trong 5s tới, mọi request đọc của user này ưu tiên trỏ về Master:
-    redisTemplate.opsForValue().set("read_master:" + userId, "1", Duration.ofSeconds(5));
-}
-
-// Dynamic DataSource kiểm tra nếu có cờ read_master thì đọc Master, không thì đọc Slave:
-public DataSource determineCurrentLookupKey() {
-    return isRecentlyWrittenUser() ? DataSourceType.MASTER : DataSourceType.SLAVE;
-}`,
-    goodExplanation: 'Sticky Master Routing chỉ định tuyến người dùng vừa thực hiện hành vi ghi đọc từ Master trong vài giây ngắn ngủi, vừa bảo đảm tính nhất quán tức thì vừa không làm quá tải Master.'
-  },
-  {
-    id: 'integer-cache-equals',
-    title: '17. So Sánh Bằng "==" vs ".equals()" & Bẫy Integer Cache (-128 Đến 127)',
-    category: 'Core Java',
-    impactBadge: 'Triệt tiêu 100% bug so sánh ID ngầm trên Prod',
-    badTitle: '❌ Thói quen ở trường (Dùng toán tử == so sánh hai đối tượng Wrapper)',
-    badCode: `// ❌ CẠM BẪY CHẾT NGƯỜI VỚI KHÓA ID:
-public boolean canAccessResource(Order order, User currentUser) {
-    // Khi test ở local với userId = 1 và 2: Code chạy ĐÚNG vì Java cache [-128..127]!
-    // Nhưng lên Production khi userId chạm ngưỡng 128:
-    // order.getUserId() == currentUser.getId() TRẢ VỀ FALSE DÙ HAI ID BẰNG NHAU!
-    return order.getUserId() == currentUser.getId(); 
-}`,
-    badExplanation: 'Toán tử == so sánh địa chỉ ô nhớ trên Heap. Với kiểu Wrapper (Integer, Long), Java chỉ tái sử dụng object trong dải cache -128 đến 127. Ngoài dải này, hai số 128 được cấp phát tại hai địa chỉ hoàn toàn khác nhau khiến biểu thức == trả về false, dẫn đến bug nghiêm trọng chặn quyền truy cập của khách hàng.',
-    goodTitle: '✅ Chuẩn đi làm (Dùng Objects.equals() hoặc .equals() an toàn tuyệt đối)',
-    goodCode: `// ✅ SO SÁNH NỘI DUNG LOGIC & AN TOÀN TRƯỚC NULL:
-public boolean canAccessResource(Order order, User currentUser) {
-    if (order == null || currentUser == null) {
-        return false;
-    }
-    // Objects.equals kiểm tra: (a == b || (a != null && a.equals(b)))
-    // Chạy chính xác 100% với mọi giá trị ID từ 1 đến hàng tỷ tỷ:
-    return Objects.equals(order.getUserId(), currentUser.getId());
-}`,
-    goodExplanation: 'Objects.equals(a, b) so sánh giá trị logic nội dung bên trong đối tượng, đồng thời xử lý an toàn kịch bản 1 trong 2 biến bị null mà không bao giờ ném NullPointerException.'
-  },
-  {
-    id: 'swallowed-exception-vs-rfc7807',
-    title: '18. Nuốt Lỗi Âm Thầm catch(Exception e) {} vs Custom Exception + RFC 7807',
-    category: 'Clean Code',
-    impactBadge: 'Chuẩn truy vết lỗi & Không tạo bug ma',
-    badTitle: '❌ Thói quen ở trường (Catch chung chung, in e.printStackTrace() hoặc nuốt lỗi)',
-    badCode: `// ❌ LỖI "NUỐT LỖI" KHIẾN HỆ THỐNG MÙ MỜ HOÀN TOÀN:
-public UserResponse getUser(Long id) {
-    try {
-        User user = userRepository.findById(id).get();
-        return convertToDto(user);
-    } catch (Exception e) {
-        // Nuốt lỗi hoặc in ra console - server không lưu vết gì trên log phân tán:
-        e.printStackTrace();
-        return null; // Frontend nhận HTTP 200 với body rỗng và lăn đùng ra sập!
-    }
-}`,
-    badExplanation: 'Nuốt ngoại lệ biến bug thành bóng ma. Phía Frontend nhận HTTP 200 nhưng body rỗng hoặc null, còn phía Backend không có cảnh báo nào, khiến việc bảo trì sau này mất hàng tuần truy vết.',
-    goodTitle: '✅ Chuẩn đi làm (Custom Business Exception + @RestControllerAdvice RFC 7807)',
-    goodCode: `// ✅ KHAI BÁO RÕ RÀNG VÀ ĐỂ GLOBAL HANDLER ĐỊNH DẠNG:
-public UserResponse getUser(Long id) {
-    User user = userRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng có id: " + id));
-    return userMapper.toDto(user);
-}
-
-// Global Exception Handler chuyển hóa thành chuẩn RFC 7807 (Problem Details):
-@ExceptionHandler(ResourceNotFoundException.class)
-public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
-    ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-    problem.setProperty("timestamp", Instant.now());
-    problem.setProperty("errorCode", "USER_NOT_FOUND");
-    return problem;
-}`,
-    goodExplanation: 'Ném Custom Exception có ngữ cảnh rõ ràng và gom việc định dạng phản hồi lỗi về một nơi duy nhất bằng @RestControllerAdvice theo chuẩn RFC 7807 của Spring Boot 3.'
-  },
-  {
-    id: 'return-null-vs-empty-collection',
-    title: '19. Trả Về null vs Collections.emptyList() & Optional',
-    category: 'Clean Code',
-    impactBadge: 'Diệt tận gốc NullPointerException dây chuyền',
-    badTitle: '❌ Thói quen ở trường (Không có dữ liệu thì return null)',
-    badCode: `// ❌ GÂY RA DỊCH BỆNH NULLPOINTEREXCEPTION CHO TOÀN BỘ CALLER:
-public List<Order> getOrdersByUser(Long userId) {
-    List<Order> orders = orderRepository.findByUserId(userId);
-    if (orders.isEmpty()) {
-        return null; // ❌ Trả về null khi danh sách rỗng!
-    }
-    return orders;
-}
-
-// Bên gọi (Caller): Nếu quên kiểm tra == null sẽ bị sập ngay lập tức:
-// for (Order o : getOrdersByUser(id)) { ... } ➔ CRASH!`,
-    badExplanation: 'Trả về null cho kiểu Collection buộc mọi nơi gọi hàm đều phải nhớ viết if (list != null), chỉ cần 1 lập trình viên sơ suất là toàn bộ màn hình người dùng bị crash với NullPointerException.',
-    goodTitle: '✅ Chuẩn đi làm (Luôn trả về Collections.emptyList() hoặc Optional)',
-    goodCode: `// ✅ DANH SÁCH RỖNG LÀ MỘT DANH SÁCH CÓ 0 PHẦN TỬ, KHÔNG PHẢI NULL:
-public List<Order> getOrdersByUser(Long userId) {
-    List<Order> orders = orderRepository.findByUserId(userId);
-    if (orders == null || orders.isEmpty()) {
-        return Collections.emptyList(); // ✅ Tái sử dụng đối tượng rỗng bất biến, 0 byte RAM
-    }
-    return Collections.unmodifiableList(orders);
-}
-
-// Bên gọi lặp qua danh sách êm ru mà không cần bất kỳ câu if check null nào:
-for (Order o : getOrdersByUser(id)) { 
-    // Nếu rỗng: Vòng lặp đơn giản là không chạy, an toàn 100%!
-}`,
-    goodExplanation: 'Collections.emptyList() trả về một instance Singleton bất biến không cấp phát thêm bộ nhớ, cho phép phía gọi sử dụng an toàn trong foreach hoặc Stream mà không bao giờ gặp lỗi null.'
-  },
-  {
-    id: 'legacy-date-vs-java-time',
-    title: '20. java.util.Date & SimpleDateFormat vs java.time (Instant, OffsetDateTime UTC)',
-    category: 'Core Java',
-    impactBadge: 'Chuẩn múi giờ UTC & Thread-safe 100%',
-    badTitle: '❌ Thói quen ở trường (Dùng Date và SimpleDateFormat tĩnh dùng chung)',
-    badCode: `// ❌ LỖI RACE CONDITION KINH ĐIỂN VÌ SIMPLEDATEFORMAT KHÔNG THREAD-SAFE:
-public class DateUtils {
-    // SimpleDateFormat lưu trạng thái nội bộ trong Calendar:
-    // Khi 2 thread cùng gọi parse() hoặc format() sẽ gây sai lệch ngày tháng nghiêm trọng!
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
-
-    public static Date parseDate(String str) throws ParseException {
-        return SDF.parse(str); // ❌ Dính Race Condition trên môi trường đa luồng!
-    }
-}`,
-    badExplanation: 'SimpleDateFormat chứa biến trạng thái mutable bên trong. Khi nhiều request HTTP gọi chung một static SimpleDateFormat, các luồng ghi đè dữ liệu lên nhau làm xuất hiện ngày tháng sai lệch hoàn toàn (ví dụ năm 2026 biến thành năm 1970).',
-    goodTitle: '✅ Chuẩn đi làm (Dùng java.time từ Java 8+: Instant, OffsetDateTime, DateTimeFormatter)',
-    goodCode: `// ✅ BẤT BIẾN, THREAD-SAFE 100% VÀ CHUẨN HÓA MÚI GIỜ UTC:
-public class SafeDateTimeService {
-    // DateTimeFormatter trong java.time là IMMUTABLE và THREAD-SAFE:
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
-    // Lưu trữ dưới Database luôn là mốc thời gian tuyệt đối UTC:
-    public Instant getCurrentUtcTimestamp() {
-        return Instant.now();
-    }
-
-    // Định dạng chuỗi theo múi giờ mong muốn một cách an toàn:
-    public String formatTimestamp(Instant instant, ZoneId zoneId) {
-        return instant.atZone(zoneId).format(FORMATTER);
-    }
-}`,
-    goodExplanation: 'Bộ thư viện java.time (JSR-310) thiết kế toàn bộ đối tượng là Immutable và Thread-safe. Lưu trữ dữ liệu thời gian bằng Instant (UTC) giúp hệ thống không bao giờ bị lỗi sai lệch múi giờ khi chuyển đổi server giữa các quốc gia.'
-  },
-  {
-    id: 'hardcoded-credentials-vs-env-profiles',
-    title: '21. Hardcode Password Trong application.properties vs Biến Môi Trường & Profiles',
-    category: 'Architecture',
-    impactBadge: 'Bảo mật chuẩn ISO 27001 & Chống lộ secret',
-    badTitle: '❌ Thói quen ở trường (Ghi thẳng tài khoản DB vào file cấu hình rồi commit)',
-    badCode: `# ❌ COMMIT THẲNG TÀI KHOẢN MẬT KHẨU LÊN GITHUB CÔNG KHAI:
-spring.datasource.url=jdbc:mysql://production-db.company.com:3306/prod_db
-spring.datasource.username=root
-spring.datasource.password=CongTyMinhDepTrai2026!
-jwt.secret-key=cai-khoa-nay-ai-cung-nhin-thay-duoc-tren-github`,
-    badExplanation: 'Commit mật khẩu lên Git là nguyên nhân số 1 khiến các công ty bị hacker tống tiền hoặc cài mã độc đào tiền ảo. Các bot scanner trên Internet quét các commit mới trên GitHub 24/7 và phát hiện mật khẩu trong vòng 30 giây.',
-    goodTitle: '✅ Chuẩn đi làm (Externalized Configuration với Biến Môi Trường & Spring Profiles)',
-    goodCode: `# ✅ ĐỌC AN TOÀN TỪ BIẾN MÔI TRƯỜNG CỦA HỆ THỐNG / KUBERNETES SECRETS:
-spring.datasource.url=\${DB_URL:jdbc:mysql://localhost:3306/dev_db}
-spring.datasource.username=\${DB_USERNAME:root}
-spring.datasource.password=\${DB_PASSWORD:}
-jwt.secret-key=\${JWT_SECRET}
-
-# Tách riêng cấu hình dev và prod bằng profiles:
-# application-dev.yml: Chạy H2 hoặc Docker MySQL local
-# application-prod.yml: Chạy RDS Database thực thụ`,
-    goodExplanation: 'Externalized Configuration tách biệt mã nguồn với cấu hình bảo mật. Mật khẩu được bơm động từ Kubernetes Secrets hoặc biến môi trường lúc container khởi động, không bao giờ xuất hiện trên Git history.'
-  },
-  {
-    id: 'uuid-v4-vs-tsid-page-split',
-    title: '22. UUIDv4 Ngẫu Nhiên vs BIGINT / TSID Làm Clustered Primary Key InnoDB',
-    category: 'Database / JPA',
-    impactBadge: 'Tăng tốc độ Insert gấp 5 lần & Chống Page Split',
-    badTitle: '❌ Thói quen ở trường (Dùng UUID.randomUUID() làm Khóa Chính PK)',
-    badCode: `// ❌ UUIDv4 HOÀN TOÀN NGẪU NHIÊN PHÁ NÁT CÂY B+TREE CỦA INNODB:
-@Entity
-@Table(name = "transactions")
-public class Transaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id; // UUID ngẫu nhiên (UUIDv4)
-
-    private BigDecimal amount;
-    // Mỗi lần chèn 1 dòng mới, khóa ngẫu nhiên chen vào giữa các trang B+Tree đã đầy!
-    // Bắt buộc InnoDB phải tách trang (Page Split) và ghi lại toàn bộ trang đĩa!
-}`,
-    badExplanation: 'Trong MySQL InnoDB, Clustered Index sắp xếp dữ liệu vật lý theo Primary Key. UUIDv4 hoàn toàn ngẫu nhiên nên khi chèn bản ghi mới, nó không được thêm vào cuối mà chen ngang vào các trang đĩa ở giữa, gây bão phân tách trang (Page Split) và làm giảm 80% tốc độ Insert.',
-    goodTitle: '✅ Chuẩn đi làm (BIGINT AUTO_INCREMENT hoặc Time-Sorted TSID / UUIDv7)',
-    goodCode: `// ✅ KHÓA CHÍNH TĂNG DẦN THEO THỜI GIAN (MONOTONICALLY INCREASING):
-@Entity
-@Table(name = "transactions")
-public class Transaction {
-    // 1. Sử dụng BIGINT AUTO_INCREMENT làm PK vật lý để tối ưu 100% B+Tree:
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    // 2. Sử dụng TSID (Time-Sorted Unique Identifier) hoặc UUIDv7 làm mã công khai ra API:
-    @Column(name = "public_id", unique = true, updatable = false, length = 13)
-    private String publicId; // TSID: Vừa không lộ số lượng đơn hàng, vừa sắp xếp theo thời gian!
-
-    private BigDecimal amount;
-}`,
-    goodExplanation: 'Khóa chính tăng dần theo thời gian đảm bảo các bản ghi mới luôn được ghi tuần tự vào trang đĩa cuối cùng (Append-only style), loại bỏ 100% hiện tượng Page Split và tận dụng tối đa bộ nhớ đệm Buffer Pool.'
-  }
-];
 
 
 // ==========================================
@@ -1013,7 +324,7 @@ function FormattedDocContent({ text, accentColor }: { text: string; accentColor:
 // ==========================================
 
 export default function CareerHubPage(): React.JSX.Element {
-  const [activeMainTab, setActiveMainTab] = useState<'lessons' | 'mock-interview' | 'interview' | 'tips50' | 'battles' | 'cv' | 'probation'>('lessons');
+  const [activeMainTab, setActiveMainTab] = useState<'lessons' | 'mock-interview' | 'interview' | 'interview5120' | 'tips50' | 'battles' | 'cv' | 'probation'>('lessons');
 
   // Lessons state
   const [selectedModuleId, setSelectedModuleId] = useState<string>('core-java');
@@ -1031,7 +342,37 @@ export default function CareerHubPage(): React.JSX.Element {
   const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>('q-1');
 
   // Battles state
-  const [selectedBattleIndex, setSelectedBattleIndex] = useState<number>(0);
+  const [selectedBattleId, setSelectedBattleId] = useState<string>(CODE_BATTLES[0]?.id || '1-bouncer-pattern');
+  const [battleCategoryFilter, setBattleCategoryFilter] = useState<string>('All');
+  const [battleSearchQuery, setBattleSearchQuery] = useState<string>('');
+
+  const battleCategories = useMemo(() => {
+    const cats = Array.from(new Set(CODE_BATTLES.map(b => b.category)));
+    return ['All', ...cats];
+  }, []);
+
+  const filteredBattles = useMemo(() => {
+    return CODE_BATTLES.filter(b => {
+      const matchCat = battleCategoryFilter === 'All' || b.category === battleCategoryFilter;
+      const q = battleSearchQuery.trim().toLowerCase();
+      const matchSearch = !q ||
+        b.title.toLowerCase().includes(q) ||
+        b.badTitle.toLowerCase().includes(q) ||
+        b.goodTitle.toLowerCase().includes(q) ||
+        b.impactBadge.toLowerCase().includes(q) ||
+        b.category.toLowerCase().includes(q);
+      return matchCat && matchSearch;
+    });
+  }, [battleCategoryFilter, battleSearchQuery]);
+
+  const currentBattle = useMemo(() => {
+    return CODE_BATTLES.find(b => b.id === selectedBattleId) || filteredBattles[0] || CODE_BATTLES[0];
+  }, [selectedBattleId, filteredBattles]);
+
+  const currentBattleIndex = useMemo(() => {
+    const idx = CODE_BATTLES.findIndex(b => b.id === currentBattle.id);
+    return idx >= 0 ? idx : 0;
+  }, [currentBattle]);
 
   // Snippet Copy State
   const [copiedSnippetId, setCopiedSnippetId] = useState<string | null>(null);
@@ -1085,6 +426,8 @@ export default function CareerHubPage(): React.JSX.Element {
       const tabParam = params.get('tab');
       if (tabParam === 'mock-interview' || tabParam === 'mock') {
         setActiveMainTab('mock-interview');
+      } else if (tabParam === 'interview5120' || tabParam === '5120' || tabParam === '128' || tabParam === 'interview128') {
+        setActiveMainTab('interview5120');
       } else if (tabParam === 'lessons' || tabParam === 'interview' || tabParam === 'tips50' || tabParam === 'battles' || tabParam === 'cv' || tabParam === 'probation') {
         setActiveMainTab(tabParam as any);
       }
@@ -1216,6 +559,7 @@ export default function CareerHubPage(): React.JSX.Element {
             }}>
               {[
                 { label: `${KNOWLEDGE_MODULES.length} Khối Kiến Thức (${totalTopicsCount} Chuyên Đề)`, desc: 'Java • Spring • JPA • Test • Clean Code • Redis • Kafka • Security • Tải Cao • Entry-Level', color: '#38bdf8' },
+                { label: '5,120 Câu Hỏi Thực Chiến', desc: '8 trụ cột công nghệ x 640 câu hỏi chuyên sâu', color: '#8b5cf6' },
                 { label: `${FIFTY_PRACTICAL_TIPS.length} Bí Quyết Thực Chiến`, desc: 'Quy tắc vàng sống còn khi đi làm', color: '#ec4899' },
                 { label: `${INTERVIEW_QUESTIONS.length} Câu Hỏi "Trúng Tủ"`, desc: 'Bẫy phỏng vấn & Cách trả lời 10 điểm', color: '#fbbf24' },
                 { label: 'Checklist 60 Ngày Thử Việc', desc: `Tiến độ: ${progressPercent}% (${completedCount}/${PROBATION_TASKS.length})`, color: '#f97316' }
@@ -1264,9 +608,10 @@ export default function CareerHubPage(): React.JSX.Element {
             {[
               { id: 'lessons', label: '📘 Kho Tri Thức Thực Chiến', color: '#38bdf8' },
               { id: 'mock-interview', label: '🎙️ Phỏng Vấn Thử (AI Evaluator)', color: '#0ea5e9' },
+              { id: 'interview5120', label: '🧠 128 Câu Hỏi Thực Chiến', color: '#8b5cf6' },
               { id: 'interview', label: `🎯 Phỏng Vấn "Trúng Tủ" (${INTERVIEW_QUESTIONS.length})`, color: '#34d399' },
               { id: 'tips50', label: `⚡ ${FIFTY_PRACTICAL_TIPS.length} Bí Quyết Đi Làm`, color: '#ec4899' },
-              { id: 'battles', label: `⚔️ So Kèo Code & Ca Trực 2h Sáng`, color: '#fbbf24' },
+              { id: 'battles', label: `⚔️ So Kèo Code (${CODE_BATTLES.length} Trận)`, color: '#fbbf24' },
               { id: 'cv', label: `📄 Bác Sĩ Sửa CV & Khung Lương`, color: '#a78bfa' },
               { id: 'probation', label: `📋 Checklist Thử Việc (${progressPercent}%)`, color: '#f97316' }
             ].map((tab) => {
@@ -1986,6 +1331,15 @@ export default function CareerHubPage(): React.JSX.Element {
           )}
 
           {/* ======================================================== */}
+          {/* TAB: 5,120 CÂU HỎI PHỎNG VẤN THỰC CHIẾN */}
+          {/* ======================================================== */}
+          {activeMainTab === 'interview5120' && (
+            <div style={{ marginTop: '8px' }}>
+              <SeniorInterview5120Suite />
+            </div>
+          )}
+
+          {/* ======================================================== */}
           {/* TAB: 50 BÍ QUYẾT ĐI LÀM THỰC CHIẾN */}
           {/* ======================================================== */}
           {activeMainTab === 'tips50' && (
@@ -2546,10 +1900,10 @@ export default function CareerHubPage(): React.JSX.Element {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '18px' }}>
                   <div>
                     <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span>⚔️</span> Trường Học vs Đi Làm: 8 Trận So Kèo Code Thực Chiến
+                      <span>⚔️</span> Trường Học vs Đi Làm: {CODE_BATTLES.length} Trận So Kèo Code Thực Chiến
                     </h2>
                     <p style={{ margin: '6px 0 0 0', fontSize: '14px', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.75))' }}>
-                      So sánh trực quan giữa thói quen viết code sinh viên/lý thuyết và tiêu chuẩn Production của doanh nghiệp.
+                      So sánh trực quan giữa thói quen viết code sinh viên/lý thuyết và tiêu chuẩn Production của doanh nghiệp qua 10 chủ đề chuyên sâu.
                     </p>
                   </div>
                   <span style={{
@@ -2561,27 +1915,88 @@ export default function CareerHubPage(): React.JSX.Element {
                     fontSize: '13px',
                     fontWeight: 800
                   }}>
-                    Trận {selectedBattleIndex + 1} / {CODE_BATTLES.length}
+                    Trận {currentBattleIndex + 1} / {CODE_BATTLES.length}
                   </span>
                 </div>
 
+                {/* Filter and Search Bar */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', marginBottom: '16px' }}>
+                  {/* Search input */}
+                  <div style={{ flex: '1 1 260px', position: 'relative' }}>
+                    <input
+                      type="text"
+                      placeholder="🔍 Tìm kiếm trong 100 trận so kèo (tên, từ khóa, tác động)..."
+                      value={battleSearchQuery}
+                      onChange={(e) => setBattleSearchQuery(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '9px 14px',
+                        borderRadius: '8px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        color: 'var(--ifm-color-content, #ffffff)',
+                        fontSize: '13.5px',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Category Pills */}
+                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '10px', marginBottom: '14px' }}>
+                  {battleCategories.map((cat) => {
+                    const isActive = battleCategoryFilter === cat;
+                    const count = cat === 'All'
+                      ? CODE_BATTLES.length
+                      : CODE_BATTLES.filter(b => b.category === cat).length;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setBattleCategoryFilter(cat)}
+                        className={`hub-filter-btn ${isActive ? 'active' : ''}`}
+                        style={{
+                          padding: '6px 14px',
+                          borderRadius: '20px',
+                          background: isActive ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: `1px solid ${isActive ? '#fbbf24' : 'rgba(255, 255, 255, 0.1)'}`,
+                          color: isActive ? '#d97706' : 'var(--ifm-color-content-secondary, #334155)',
+                          fontWeight: isActive ? 800 : 500,
+                          fontSize: '12.5px',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {cat === 'All' ? '🌟 Tất Cả' : cat} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+
                 {/* Battle Switcher */}
-                <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '8px' }}>
-                  {CODE_BATTLES.map((battle, idx) => {
-                    const isActive = selectedBattleIndex === idx;
+                <div style={{
+                  display: 'flex',
+                  gap: '8px',
+                  overflowX: 'auto',
+                  paddingBottom: '8px',
+                  maxHeight: '130px',
+                  flexWrap: 'wrap'
+                }}>
+                  {filteredBattles.map((battle) => {
+                    const isActive = currentBattle.id === battle.id;
                     return (
                       <button
                         key={battle.id}
-                        onClick={() => setSelectedBattleIndex(idx)}
+                        onClick={() => setSelectedBattleId(battle.id)}
                         className={`hub-filter-btn ${isActive ? 'active' : ''}`}
                         style={{
-                          padding: '9px 16px',
+                          padding: '7px 14px',
                           borderRadius: '8px',
                           background: isActive ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255, 255, 255, 0.04)',
                           border: `1px solid ${isActive ? '#fbbf24' : 'rgba(255, 255, 255, 0.1)'}`,
                           color: isActive ? '#d97706' : 'var(--ifm-color-content-secondary, #334155)',
                           fontWeight: isActive ? 800 : 500,
-                          fontSize: '13.5px',
+                          fontSize: '13px',
                           cursor: 'pointer',
                           whiteSpace: 'nowrap',
                           transition: 'all 0.15s ease'
@@ -2591,106 +2006,138 @@ export default function CareerHubPage(): React.JSX.Element {
                       </button>
                     );
                   })}
+                  {filteredBattles.length === 0 && (
+                    <div style={{ padding: '12px', fontSize: '13.5px', color: 'var(--ifm-color-content-secondary, #94a3b8)' }}>
+                      Không tìm thấy trận so kèo nào phù hợp với từ khóa "{battleSearchQuery}".
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Current Battle Details Header */}
-              {(() => {
-                const currentBattle = CODE_BATTLES[selectedBattleIndex] || CODE_BATTLES[0];
-                return (
-                  <div>
-                    <div
-                      className="hub-battle-header"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        flexWrap: 'wrap',
-                        gap: '12px',
-                        marginBottom: '16px',
-                        padding: '12px 18px',
-                        borderRadius: '10px',
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        border: '1px solid rgba(255, 255, 255, 0.06)'
-                      }}
+              <div>
+                <div
+                  className="hub-battle-header"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '12px',
+                    marginBottom: '16px',
+                    padding: '12px 18px',
+                    borderRadius: '10px',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.06)'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{
+                      padding: '4px 10px',
+                      borderRadius: '4px',
+                      background: 'rgba(56, 189, 248, 0.15)',
+                      color: '#38bdf8',
+                      fontSize: '12.5px',
+                      fontWeight: 800
+                    }}>
+                      {currentBattle.category}
+                    </span>
+                    <span
+                      className="hub-battle-title"
+                      style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{
-                          padding: '4px 10px',
-                          borderRadius: '4px',
-                          background: 'rgba(56, 189, 248, 0.15)',
-                          color: '#38bdf8',
-                          fontSize: '12.5px',
-                          fontWeight: 800
-                        }}>
-                          {currentBattle.category}
-                        </span>
-                        <span
-                          className="hub-battle-title"
-                          style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}
-                        >
-                          {currentBattle.title}
-                        </span>
-                      </div>
+                      {currentBattle.title}
+                    </span>
+                  </div>
 
-                      <span style={{
-                        padding: '4px 12px',
-                        borderRadius: '20px',
-                        background: 'rgba(52, 211, 153, 0.15)',
-                        border: '1px solid rgba(52, 211, 153, 0.3)',
-                        color: '#34d399',
-                        fontSize: '13px',
-                        fontWeight: 800
-                      }}>
-                        ⚡ Tác động: {currentBattle.impactBadge}
+                  <span style={{
+                    padding: '4px 12px',
+                    borderRadius: '20px',
+                    background: 'rgba(52, 211, 153, 0.15)',
+                    border: '1px solid rgba(52, 211, 153, 0.3)',
+                    color: '#34d399',
+                    fontSize: '13px',
+                    fontWeight: 800
+                  }}>
+                    ⚡ Tác động: {currentBattle.impactBadge}
+                  </span>
+                </div>
+
+                {/* Battle Side-by-Side Showcase */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px', marginBottom: '18px' }}>
+                  {/* Left: Bad Code */}
+                  <div className="hub-code-bad-box" style={{
+                    background: 'rgba(248, 113, 113, 0.04)',
+                    border: '1px solid rgba(248, 113, 113, 0.3)',
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(248, 113, 113, 0.15)', padding: '11px 16px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 700, color: '#f87171' }}>
+                        {currentBattle.badTitle}
                       </span>
+                      <button
+                        onClick={() => handleCopyCode(currentBattle.badCode, `bad-${currentBattle.id}`)}
+                        style={{
+                          background: 'rgba(248, 113, 113, 0.2)',
+                          border: '1px solid rgba(248, 113, 113, 0.4)',
+                          color: '#f87171',
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          fontSize: '11px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {copiedSnippetId === `bad-${currentBattle.id}` ? '✓ Copied' : 'Copy'}
+                      </button>
                     </div>
-
-                    {/* Battle Side-by-Side Showcase */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px', marginBottom: '18px' }}>
-                      {/* Left: Bad Code */}
-                      <div className="hub-code-bad-box" style={{
-                        background: 'rgba(248, 113, 113, 0.04)',
-                        border: '1px solid rgba(248, 113, 113, 0.3)',
-                        borderRadius: '10px',
-                        overflow: 'hidden',
-                        display: 'flex',
-                        flexDirection: 'column'
-                      }}>
-                        <div style={{ background: 'rgba(248, 113, 113, 0.15)', padding: '11px 16px', fontSize: '14px', fontWeight: 700, color: '#f87171' }}>
-                          {currentBattle.badTitle}
-                        </div>
-                        <pre style={{ margin: 0, padding: '16px', fontSize: '13.5px', lineHeight: 1.6, background: 'transparent', color: '#fca5a5', overflowX: 'auto', flex: 1 }}>
-                          <code>{currentBattle.badCode}</code>
-                        </pre>
-                        <div style={{ padding: '12px 16px', background: 'rgba(0, 0, 0, 0.25)', borderTop: '1px solid rgba(248, 113, 113, 0.2)', fontSize: '13.5px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.82))', lineHeight: 1.6 }}>
-                          <strong style={{ color: '#f87171' }}>Hậu quả: </strong>{currentBattle.badExplanation}
-                        </div>
-                      </div>
-
-                      {/* Right: Good Code */}
-                      <div className="hub-code-good-box" style={{
-                        background: 'rgba(52, 211, 153, 0.04)',
-                        border: '1px solid rgba(52, 211, 153, 0.3)',
-                        borderRadius: '10px',
-                        overflow: 'hidden',
-                        display: 'flex',
-                        flexDirection: 'column'
-                      }}>
-                        <div style={{ background: 'rgba(52, 211, 153, 0.15)', padding: '11px 16px', fontSize: '14px', fontWeight: 700, color: '#34d399' }}>
-                          {currentBattle.goodTitle}
-                        </div>
-                        <pre style={{ margin: 0, padding: '16px', fontSize: '13.5px', lineHeight: 1.6, background: 'transparent', color: '#a7f3d0', overflowX: 'auto', flex: 1 }}>
-                          <code>{currentBattle.goodCode}</code>
-                        </pre>
-                        <div style={{ padding: '12px 16px', background: 'rgba(0, 0, 0, 0.25)', borderTop: '1px solid rgba(52, 211, 153, 0.2)', fontSize: '13.5px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.82))', lineHeight: 1.6 }}>
-                          <strong style={{ color: '#34d399' }}>Lợi ích Production: </strong>{currentBattle.goodExplanation}
-                        </div>
-                      </div>
+                    <pre style={{ margin: 0, padding: '16px', fontSize: '13.5px', lineHeight: 1.6, background: 'transparent', color: '#fca5a5', overflowX: 'auto', flex: 1 }}>
+                      <code>{currentBattle.badCode}</code>
+                    </pre>
+                    <div style={{ padding: '12px 16px', background: 'rgba(0, 0, 0, 0.25)', borderTop: '1px solid rgba(248, 113, 113, 0.2)', fontSize: '13.5px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.82))', lineHeight: 1.6 }}>
+                      <strong style={{ color: '#f87171' }}>Hậu quả: </strong>{currentBattle.badExplanation}
                     </div>
                   </div>
-                );
-              })()}
+
+                  {/* Right: Good Code */}
+                  <div className="hub-code-good-box" style={{
+                    background: 'rgba(52, 211, 153, 0.04)',
+                    border: '1px solid rgba(52, 211, 153, 0.3)',
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(52, 211, 153, 0.15)', padding: '11px 16px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 700, color: '#34d399' }}>
+                        {currentBattle.goodTitle}
+                      </span>
+                      <button
+                        onClick={() => handleCopyCode(currentBattle.goodCode, `good-${currentBattle.id}`)}
+                        style={{
+                          background: 'rgba(52, 211, 153, 0.2)',
+                          border: '1px solid rgba(52, 211, 153, 0.4)',
+                          color: '#34d399',
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          fontSize: '11px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {copiedSnippetId === `good-${currentBattle.id}` ? '✓ Copied' : 'Copy'}
+                      </button>
+                    </div>
+                    <pre style={{ margin: 0, padding: '16px', fontSize: '13.5px', lineHeight: 1.6, background: 'transparent', color: '#a7f3d0', overflowX: 'auto', flex: 1 }}>
+                      <code>{currentBattle.goodCode}</code>
+                    </pre>
+                    <div style={{ padding: '12px 16px', background: 'rgba(0, 0, 0, 0.25)', borderTop: '1px solid rgba(52, 211, 153, 0.2)', fontSize: '13.5px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.82))', lineHeight: 1.6 }}>
+                      <strong style={{ color: '#34d399' }}>Lợi ích Production: </strong>{currentBattle.goodExplanation}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               {/* Production Incident War Room (2 AM On-Call Simulator) */}
               <div style={{ marginTop: '24px' }}>

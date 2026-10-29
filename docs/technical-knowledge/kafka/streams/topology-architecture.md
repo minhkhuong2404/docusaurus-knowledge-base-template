@@ -259,6 +259,10 @@ If you reorder sub-topologies during a rolling update, Task `0_0`'s topic assign
 
 ### Safe Production Migration Runbook
 
+:::tip[Deep Dive: Invalid Topology & Zero-Downtime Evolution]
+For a comprehensive architectural breakdown of anonymous operator naming shifts, DAG loop detection, `TopologyException`, and CI/CD golden file validation, see the dedicated guide: [Invalid Topology & Update Order](./invalid-topology-updates.md).
+:::
+
 <KafkaStreamsTopologyMigrationRunbookDiagram initialStrategy="blue_green" />
 
 1. **Strategy 1: Blue-Green / Application ID Versioning (Gold Standard)**: Increment `application.id` (e.g. `order-service-v2`), deploy alongside v1, wait for changelogs to catch up, switch downstream consumers, decommission v1.

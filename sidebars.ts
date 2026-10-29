@@ -764,6 +764,7 @@ const sidebars: SidebarsConfig = {
 							items: [
 								'technical-knowledge/kafka/streams/overview',
 								'technical-knowledge/kafka/streams/topology-architecture',
+								'technical-knowledge/kafka/streams/invalid-topology-updates',
 								'technical-knowledge/kafka/streams/state-stores-rocksdb',
 								'technical-knowledge/kafka/streams/redis-external-state-offset-fencing',
 								'technical-knowledge/kafka/streams/windowing-joins',

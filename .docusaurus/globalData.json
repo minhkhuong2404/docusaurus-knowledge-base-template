@@ -6152,6 +6152,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/streams/invalid-topology-updates",
+              "path": "/technical-knowledge/kafka/streams/invalid-topology-updates",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/streams/overview",
               "path": "/technical-knowledge/kafka/streams/overview",
               "sidebar": "tutorialSidebar"
