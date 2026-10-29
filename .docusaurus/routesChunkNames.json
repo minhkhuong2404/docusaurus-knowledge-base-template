@@ -111,13 +111,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-51e": {
+  "/-83e": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-692": {
+  "/-d60": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -7609,7 +7609,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-880": {
+  "/-227": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -12667,6 +12667,10 @@
   "/technical-knowledge/kafka/streams/production-runbook-c66": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-streams-production-runbook-32-b-4e2"
+  },
+  "/technical-knowledge/kafka/streams/redis-external-state-offset-fencing-d0b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-kafka-streams-redis-external-state-offset-fencing-130-ce5"
   },
   "/technical-knowledge/kafka/streams/spring-boot-d39": {
     "__comp": "__comp---theme-doc-item-178-a40",

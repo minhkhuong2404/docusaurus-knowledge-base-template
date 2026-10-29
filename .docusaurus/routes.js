@@ -89,11 +89,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '51e'),
+    component: ComponentCreator('/', '83e'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '692'),
+        component: ComponentCreator('/', 'd60'),
         routes: [
           {
             path: '/tags',
@@ -9457,7 +9457,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '880'),
+            component: ComponentCreator('/', '227'),
             routes: [
               {
                 path: '/aws',
@@ -17031,6 +17031,12 @@ export default [
               {
                 path: '/technical-knowledge/kafka/streams/production-runbook',
                 component: ComponentCreator('/technical-knowledge/kafka/streams/production-runbook', 'c66'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/streams/redis-external-state-offset-fencing',
+                component: ComponentCreator('/technical-knowledge/kafka/streams/redis-external-state-offset-fencing', 'd0b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

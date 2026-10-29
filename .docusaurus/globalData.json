@@ -6167,6 +6167,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/streams/redis-external-state-offset-fencing",
+              "path": "/technical-knowledge/kafka/streams/redis-external-state-offset-fencing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/streams/spring-boot",
               "path": "/technical-knowledge/kafka/streams/spring-boot",
               "sidebar": "tutorialSidebar"
