@@ -1,6 +1,6 @@
 ---
 id: invalid-topology-updates
-title: Kafka Streams — Invalid Topology & Update Order: Causes, Mechanics & Zero-Downtime Prevention
+title: "Kafka Streams — Invalid Topology & Update Order: Causes, Mechanics & Zero-Downtime Prevention"
 sidebar_label: 3. Invalid Topology & Update Order
 sidebar_position: 3
 description: >

@@ -11,7 +11,7 @@ describe('Kafka Streams Invalid Topology & Update Order Documentation & Invarian
 
   it('must have valid frontmatter and be registered in sidebars.ts', () => {
     assert.ok(/\nid: invalid-topology-updates\n/.test(content), 'Missing id frontmatter');
-    assert.ok(/\ntitle: Kafka Streams — Invalid Topology/.test(content), 'Missing title frontmatter');
+    assert.ok(/\ntitle: "?Kafka Streams — Invalid Topology/.test(content), 'Missing title frontmatter');
     const sidebar = fs.readFileSync('sidebars.ts', 'utf-8');
     assert.ok(
       sidebar.includes("'technical-knowledge/kafka/streams/invalid-topology-updates'"),
