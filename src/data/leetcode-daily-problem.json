@@ -1,8 +1,8 @@
 {
-  "id": "3841",
-  "title": "Palindromic Path Queries in a Tree",
-  "url": "https://leetcode.com/problems/palindromic-path-queries-in-a-tree/",
+  "id": "3505",
+  "title": "Minimum Operations to Make Elements Within K Subarrays Equal",
+  "url": "https://leetcode.com/problems/minimum-operations-to-make-elements-within-k-subarrays-equal/",
   "difficulty": "hard",
-  "topic": "Array, String, Divide and Conquer, Bit Manipulation, Tree, Depth-First Search, Binary Indexed Tree, Segment Tree",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-10-29."
+  "topic": "Array, Hash Table, Math, Dynamic Programming, Sliding Window, Heap (Priority Queue)",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-11-04."
 }

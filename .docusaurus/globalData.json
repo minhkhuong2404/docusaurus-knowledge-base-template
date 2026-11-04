@@ -5965,7 +5965,8 @@
             },
             {
               "id": "technical-knowledge/kafka/advanced/kafka-log-compaction",
-              "path": "/technical-knowledge/kafka/advanced/kafka-log-compaction"
+              "path": "/technical-knowledge/kafka/advanced/kafka-log-compaction",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/advanced/kafka-mirrormaker2",
@@ -7604,15 +7605,6 @@
         }
       ],
       "breadcrumbs": true
-    }
-  },
-  "docusaurus-plugin-google-gtag": {
-    "default": {
-      "trackingID": [
-        "G-79SQQZQMCX"
-      ],
-      "anonymizeIP": true,
-      "id": "default"
     }
   }
 }
