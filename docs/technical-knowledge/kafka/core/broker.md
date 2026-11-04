@@ -147,13 +147,19 @@ When a consumer sends a `FetchRequest`, the broker executes Java's `FileChannel.
 ### Q3. How does Zero-Copy data transfer work in Kafka?
 > Zero-Copy leverages the Linux `sendfile()` system call (exposed via Java's `FileChannel.transferTo()`). Data stored in the OS Page Cache is transferred directly to the Network Interface Card (NIC) buffer via Direct Memory Access (DMA), bypassing the JVM heap and eliminating user-kernel context switches.
 
-### Q4. What is the difference between `log.retention.hours` (deletion) and `log.cleanup.policy=compact`?
-> Log deletion (`delete`) purges old log segments once they exceed time or size thresholds. Log compaction (`compact`) retains the single latest record payload for every message key indefinitely while deleting earlier historical updates for that key. Compaction is ideal for event-sourced state and lookup changelogs.
+### Q4. What is the difference between broker `log.cleanup.policy=delete` and `log.cleanup.policy=compact`?
+> Broker-level `log.cleanup.policy` sets the default retention strategy for all topics that do not specify an explicit `cleanup.policy`:
+> - **`delete` (Default)**: Purges closed log segments once their newest message timestamp exceeds `log.retention.hours` (default: 168h / 7 days) or partition size exceeds `log.retention.bytes`. Active segments receiving appends are strictly immune to deletion.
+> - **`compact`**: Enables the background `kafka.log.LogCleaner` thread pool (configured via `log.cleaner.threads` and `log.cleaner.dedupe.buffer.size`). Compaction scans closed segments, indexes keys into an off-heap `SkimpyOffsetMap` (24 bytes per entry), and deduplicates older historical records per key while preserving the latest offset. Tombstones (`value=null`) evict keys after `delete.retention.ms`.
+> - **`compact,delete`**: Brokers can also host hybrid topics that both deduplicate intermediate key mutations and purge closed segments after temporal expiration.
+>
+> For full physical storage engine mechanics, see the [Kafka Cleanup Policy & Log Compaction Deep Dive](../advanced/kafka-log-compaction.md).
 
 ---
 
 ## See Also
 
+- [Kafka Cleanup Policy & Log Compaction Deep Dive](../advanced/kafka-log-compaction.md)
 - [Kafka Zero-Copy & Linux OS Page Cache Architecture](./kafka-zero-copy-page-cache.md)
 - [KRaft vs ZooKeeper](./kraft-vs-zookeeper.md)
 - [Kafka Replication & ISR](./replication.md)

@@ -376,3 +376,57 @@ Mỗi khi xem xét một Pull Request liên quan đến Database Migration và c
 * **Đánh index không chỉ là nhìn vào mệnh đề `WHERE`**: Hiệu năng thực sự của database đến từ việc phối hợp giữa B-Tree Seek, Index Condition Pushdown (ICP) và triệt tiêu `Using filesort`.
 * **Covering không phải một loại index**, mà là mối quan hệ hoàn hảo giữa một câu query và một cấu trúc index khi mọi dữ liệu cần thiết đều nằm sẵn trong lá.
 * **Deferred Join** là giải pháp tối thượng cho các câu query phức tạp: phân tách việc "tìm dòng thỏa mãn" (chạy siêu nhẹ trong index) ra khỏi việc "lấy toàn bộ dữ liệu" (tra cứu khóa chính $O(1)$).
+
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace Composite Index, ESR & Deferred Join Interviews
+
+When an interviewer presents a slow SQL query with multiple `WHERE` predicates and an `ORDER BY` clause, a mid-level candidate says *"Add an index on all the columns in the `WHERE` clause."* A **Principal Engineer** immediately distinguishes **B-Tree Seek Range vs. Index Condition Pushdown (ICP) Filtering**, applies the **ESR Rule (Equality $\rightarrow$ Sort $\rightarrow$ Range)**, explains why **the first Range predicate breaks sorted order for subsequent index columns**, and uses **Deferred Join (Late Materialization)** to turn random clustered-index lookups into a Covering Index scan.
+
+### 1. The 60-Second Senior Framing Strategy
+
+1. **Separate B-Tree Seek from ICP Filter:** Explain that in a composite index `(a, b, c)`, not every column "using the index" is doing an $O(\log N)$ B-Tree Seek. Once a column uses a range (`>`, `<`, `BETWEEN`, `LIKE 'abc%'`), all columns to its right **cannot be seeked**—they are only filtered sequentially inside the storage engine via **Index Condition Pushdown (`Using index condition`)** before touching the table row.
+2. **State the ESR Rule (Equality $\rightarrow$ Sort $\rightarrow$ Range):**
+   - Put `=` columns first (they pin a single slice where the next column remains sorted).
+   - If the query needs `ORDER BY`, place the sort column next to eliminate `Using filesort`.
+   - If the query has a selective range filter, place the range column after `=`, recognizing that you must choose whether the index serves the **Range** or the **Sort** (or maintain two targeted indexes for different query shapes).
+3. **Exploit InnoDB Secondary Index Anatomy (`Leaf = Indexed Columns + Primary Key`):** Every InnoDB secondary index automatically includes the Primary Key (`id`) at its leaf nodes—meaning `SELECT id` is almost always a **Covering Index (`Using index`)** without needing to add `id` explicitly!
+4. **Use Deferred Join for Deep Pagination & Leading-Column Omission:** Decouple *finding which row IDs match* (100% inside the small secondary index) from *fetching full row payloads (`SELECT *`)* via `JOIN (SELECT id ... LIMIT 100) t ON t.id = c.id`.
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "We have index `(shop_id, created_at, status)` and run `WHERE shop_id = 10 AND created_at >= '2026-01-01' AND status = 'PAID'`. `EXPLAIN` says `key_len` only covers `shop_id` and `created_at` (or even if all 3 are in `key`, it's still slow). Why didn't MySQL seek straight to `status = 'PAID'`?"
+* **Junior/Mid Answer:** *"MySQL only uses the first two columns of a composite index; the third column is ignored."*
+* **Principal Rebuttal:** *"The third column isn't ignored—it's downgraded from a **B-Tree Seek** to an **Index Condition Pushdown (ICP) scan filter**! Within `shop_id = 10`, rows are sorted by `created_at`. Across the range `created_at >= '2026-01-01'`, the values of `status` (`PAID`, `PENDING`, `CANCELLED`) are interleaved and **not sorted globally**. Therefore, InnoDB must scan every index leaf entry in that date range and check `status = 'PAID'` via ICP (`Using index condition`). Simply reordering the index to **`(shop_id, status, created_at)`** pins both equalities (`shop_id = 10 AND status = 'PAID'`) so `created_at >= '2026-01-01'` becomes a pure, contiguous B-Tree range seek!"*
+
+#### Trap 2: "What happens if a query has `WHERE shop_id = 10 AND created_at >= '2026-01-01' ORDER BY total_amount DESC LIMIT 20`? Can a single index `(shop_id, created_at, total_amount)` both filter the date range and avoid `filesort`?"
+* **Junior/Mid Answer:** *"Yes, because all three columns `shop_id`, `created_at`, and `total_amount` are in the index in order."*
+* **Principal Rebuttal:** *"No! A single B-Tree index **cannot** simultaneously perform a range scan on `created_at` and deliver rows pre-sorted by `total_amount`. Once `created_at >= '2026-01-01'` spans multiple timestamps, `total_amount` is only sorted *within each identical millisecond of `created_at`*, not across the whole date range. You face an explicit architectural trade-off:
+  - **Index `(shop_id, created_at, total_amount)`:** Seeks the date range, then performs an in-memory **`Using filesort`** on all matching rows. (Best when the date range matches few rows).
+  - **Index `(shop_id, total_amount, created_at)`:** Scans `total_amount` in descending order with **zero `filesort`**, uses ICP to filter `created_at >= '2026-01-01'`, and stops immediately once **20 rows** are found (`LIMIT 20` early termination)!"*
+
+#### Trap 3: "In MySQL 8.0, we have Index Skip Scan. Does that mean we don't need to worry about the Leftmost Prefix Rule anymore?"
+* **Junior/Mid Answer:** *"Yes, MySQL 8.0 automatically skips the first column of an index if it's missing from the `WHERE` clause."*
+* **Principal Rebuttal:** *"Relying on Index Skip Scan in general OLTP queries is a trap because the optimizer enforces two strict preconditions:
+  1. **The query MUST be a Covering Index query (`Using index`):** The moment a developer writes `SELECT *` (referencing any column not in the index), MySQL immediately disables Skip Scan (`query_references_nonkey_column` in Optimizer Trace) and falls back to a full table scan!
+  2. **Low Prefix Cardinality:** Skip Scan works by stepping through each distinct value of the skipped leading column. If the leading column is `gender` (2 values) or `status` (4 values), it does 2–4 seeks. If the leading column is `user_id` (100,000 values), Skip Scan is abandoned.
+  However, you can unlock Skip Scan on `SELECT *` queries by wrapping the inner lookup in a **Deferred Join (`SELECT id FROM ... LIMIT 100`)**, because `SELECT id` is 100% covering!"*
+
+#### Trap 4: "Why did `WHERE phone = 0912345678` trigger a Full Table Scan even though `phone` has a B-Tree index?"
+* **Junior/Mid Answer:** *"Because phone numbers start with 0."*
+* **Principal Rebuttal:** *"Because `phone` is declared as `VARCHAR`, passing an unquoted integer literal `0912345678` forces MySQL to perform **Implicit Type Conversion**. In MySQL's type coercion hierarchy, comparing a string to a number converts **the string column to a floating-point number**—rewriting the query internally as `WHERE CAST(phone AS DOUBLE) = 912345678`! Why doesn't MySQL convert the number `912345678` to a string instead? Because multiple distinct strings (`'0912345678'`, `'912345678'`, `'912345678.0'`) all map to the same number `912345678`, so a single string seek would miss valid matches under SQL's loose numeric equality rules. Wrapping the column in `CAST()` destroys B-Tree seekability and forces a full scan."*
+
+---
+
+### 3. Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **`EXPLAIN` Diagnostics** | "Check if `key` is not null." | "Inspect `type`, **`key_len`** (how many bytes of the composite key actually participated in the seek), and `Extra` (`Using index` vs `Using index condition` vs `Using filesort`)." |
+| **Composite Index Column Order** | "Put the most selective column first." | "Follow **ESR (`Equality -> Sort -> Range`)**: equality columns must precede range columns so the range doesn't break B-Tree contiguity." |
+| **Two Range Predicates (`a > 1 AND b > 2`)** | "Put both `a` and `b` in the index so both are seeked." | "Only the **first** range column in the index is seeked; the second range column is only filtered via **ICP (`Using index condition`)**." |
+| **Slow `SELECT * ... LIMIT 100 OFFSET 50000`** | "Add more columns to the index to make it a Covering Index." | "Use **Deferred Join**: `SELECT c.* FROM tbl c JOIN (SELECT id FROM tbl WHERE ... LIMIT 100 OFFSET 50000) t ON c.id = t.id` so the 50,000-row scan stays 100% inside the compact secondary index." |
+| **Redundant Indexes** | "Add `(shop_id)` and `(shop_id, created_at)`." | "Drop `(shop_id)`—it is a leftmost prefix of `(shop_id, created_at)` and only wastes InnoDB write I/O and Buffer Pool RAM." |
+

@@ -79,20 +79,38 @@ public class KafkaTopicConfig {
 
 ---
 
-## Cleanup Policies: `delete` vs `compact`
+## Topic Retention & Cleanup Policies: `delete`, `compact` & Dual Retention
+
+Kafka manages topic storage at the partition segment level via the `cleanup.policy` topic configuration (defaulting to broker-level `log.cleanup.policy=delete`).
 
 ### 1. Delete Policy (`cleanup.policy=delete`)
-Default policy. Segments are deleted when their age exceeds `retention.ms` (default 7 days) or total topic size exceeds `retention.bytes`.
+* **Default policy**. Segments are deleted when their age exceeds `retention.ms` (default: 7 days) or partition disk usage exceeds `retention.bytes`.
+* The background **Log Retention Check Coordinator** scans closed segments every `log.retention.check.interval.ms` (default: 5 minutes) and unlinks expired segment files.
+* **Active Segment Immunity**: The active segment receiving writes is never deleted, regardless of message age.
 
 ### 2. Compact Policy (`cleanup.policy=compact`)
-Kafka retains the **latest value for every message key** indefinitely. Older records with matching keys are marked for background compaction.
-- **Tombstone Record**: A message published with a valid key and a `null` payload. Serves as an explicit deletion signal; consumers replaying the log process the tombstone and delete the key from local state.
+* Kafka retains the **latest value for every message key** indefinitely, deduplicating older versions in the background.
+* Ideal for Change Data Capture (CDC), materialized tables (KTables), and distributed configuration topics.
+* **Tombstone Record**: A record published with a non-null key and `value = null`. Informs downstream consumers to evict the key. The cleaner thread preserves the tombstone for `delete.retention.ms` (default 24h) before garbage collecting it.
+* **Null Key Hazard**: Records published without keys (`key = null`) cannot be hashed by the cleaner and are **never compacted**, causing permanent disk consumption.
+
+### 3. Dual Retention Policy (`cleanup.policy=compact,delete`)
+* Combines key deduplication with temporal expiration.
+* Compaction deduplicates intermediate updates within closed segments, while retention purges segments whose maximum record timestamp exceeds `retention.ms`.
+* Ideal for **GDPR compliance** (Right to be Forgotten) and bounded user session state.
 
 ```properties
-cleanup.policy=compact
-min.cleanable.dirty.ratio=0.5
-delete.retention.ms=86400000    # Retain tombstones for 24h to allow lagging consumers to process deletes
+# Topic configuration snippet for dual retention
+cleanup.policy=compact,delete
+retention.ms=2592000000       # 30 days time-to-live
+min.cleanable.dirty.ratio=0.5 # Trigger compaction when dirty log >= 50%
+delete.retention.ms=604800000 # Retain tombstones for 7 days to prevent resurrection
+segment.ms=86400000           # Force roll active segment daily for low-volume topics
 ```
+
+:::tip Deep Dive
+For detailed internal engine mechanics of the `SkimpyOffsetMap`, two-pass cleaner algorithms, and tombstone resurrection runbooks, see the [Kafka Cleanup Policy & Log Compaction Deep Dive](../advanced/kafka-log-compaction.md).
+:::
 
 ---
 

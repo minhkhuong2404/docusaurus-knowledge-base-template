@@ -835,6 +835,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/kafka/advanced/processing-and-ordering',
 								'technical-knowledge/kafka/advanced/kafka-exactly-once',
 								'technical-knowledge/kafka/advanced/rebalance-storms',
+								'technical-knowledge/kafka/advanced/kafka-log-compaction',
 								'technical-knowledge/kafka/advanced/kafka-throughput-optimization',
 								'technical-knowledge/kafka/advanced/monitoring-operations',
 							]

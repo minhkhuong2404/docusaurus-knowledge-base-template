@@ -47,6 +47,9 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'SpringBootConfigPropertiesDiagram.tsx',
     'CodingWithAiAgentsDiagram.tsx',
     'DistributedResiliencePaymentsTicketingDiagram.tsx',
+    'KubernetesCalicoBgpDiagram.tsx',
+    'JavaReadWriteLockConvoyDiagram.tsx',
+    'JmmHappensBeforeVisualizerDiagram.tsx',
   ];
 
   for (const filename of criticalDiagrams) {

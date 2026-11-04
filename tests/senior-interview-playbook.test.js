@@ -180,4 +180,105 @@ describe('Senior/Staff Interview Playbook Test Suite (Java & Spring)', () => {
     const agentsContent = fs.readFileSync(agentsPath, 'utf8');
     assert.ok(agentsContent.includes('MANDATORY: Always Apply senior-interview-playbook Skill for Every Knowledge Added'));
   });
+
+  it('ZemIT Substack deep-dive pages (Java Locks, JMM, Concurrency, Kafka, IDs, DB Indexing & Export) must contain Senior/Staff Playbooks and interactive diagrams', () => {
+    const pages = [
+      {
+        path: 'docs/technical-knowledge/java/java-locks.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace Java Locking Interviews',
+        mustInclude: [
+          'JavaReadWriteLockConvoyDiagram',
+          'apparentlyFirstQueuedIsExclusive()',
+          'IllegalMonitorStateException',
+          'tryOptimisticRead()',
+          'Deadlock Prevention: Global Lock Ordering & Single-Lock Callback Deadlocks',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/java/java-jmm-memory-model.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace JMM, Race Conditions & Happens-Before Interviews',
+        mustInclude: [
+          'JmmHappensBeforeVisualizerDiagram',
+          'TieredStopAtLevel=1',
+          'MESI',
+          'Store Buffer',
+          'Transitive Piggybacking',
+          'SimpleDateFormat',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/java/concurrency-vs-parallelism.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace Concurrency vs. Parallelism Interviews',
+        mustInclude: [
+          'ThreadPerTaskExecutor',
+          'nvcswch/s',
+          'cswch/s',
+          'JEP 491',
+          'HikariCP',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/kafka/consumer/consumer-overview.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace Kafka Consumer & Listener Interviews',
+        mustInclude: [
+          'What Actually Happens Inside a Single `consumer.poll()` Call?',
+          'Group Coordinator vs. Group Leader',
+          'librdkafka',
+          'maybeAutoCommitOffsetsAsync()',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/kafka/core/kafka-vs-rabbitmq.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace Kafka vs. Work Queue (SQS / RabbitMQ) Interviews',
+        mustInclude: [
+          'KIP-932',
+          'KafkaShareConsumer',
+          'ChangeMessageVisibility',
+          'Single Contiguous Offset Watermark',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/time-and-ordering-and-unique-ids.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace Distributed ID & Time Ordering Interviews',
+        mustInclude: [
+          'innodb_autoinc_lock_mode',
+          'BINARY(16)',
+          'UlidFactory.newMonotonicInstance()',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/database/exporting-large-datasets-streaming-internals.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace Large Dataset Export & Database Streaming Interviews',
+        mustInclude: [
+          'History List Length',
+          'CompleteMultipartUpload',
+          'Integer.MIN_VALUE',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/database/mysql-indexing-beyond-equality.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace Composite Index, ESR & Deferred Join Interviews',
+        mustInclude: [
+          'Index Condition Pushdown',
+          'Deferred Join',
+          'query_references_nonkey_column',
+        ],
+      },
+    ];
+
+    for (const page of pages) {
+      assert.ok(fs.existsSync(page.path), `${page.path} must exist`);
+      const content = fs.readFileSync(page.path, 'utf8');
+      assert.ok(
+        content.includes(page.playbook),
+        `${page.path} must include playbook header: ${page.playbook}`
+      );
+      for (const token of page.mustInclude) {
+        assert.ok(
+          content.includes(token),
+          `${page.path} must include technical invariant: ${token}`
+        );
+      }
+    }
+  });
 });
