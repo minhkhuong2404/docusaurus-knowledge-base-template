@@ -1296,6 +1296,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/become-senior-developer/real-world-engineering-playbook",
+              "path": "/technical-knowledge/become-senior-developer/real-world-engineering-playbook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/blockchain/consensus/consensus-mechanisms",
               "path": "/technical-knowledge/blockchain/consensus/consensus-mechanisms",
               "sidebar": "tutorialSidebar"
@@ -7605,6 +7610,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }

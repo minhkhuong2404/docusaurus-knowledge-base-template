@@ -74,15 +74,16 @@ You will live-code in front of an interviewer. The goal is to evaluate problem-s
 ### 2. System Design Round
 Evaluating your ability to design scalable, highly available distributed systems.
 
-* **RADIO Framework:**
-  * **R**equirements: Clarify functional features and non-functional metrics (QPS, storage, SLA).
-  * **A**PI Design: Define REST, gRPC, or GraphQL endpoints.
-  * **D**ata Model: Select SQL vs NoSQL, and define table schemas.
-  * **I**nitial Architecture: Draw high-level blocks (Load Balancer, API Gateway, Services, DBs).
-  * **O**ptimizations: Scale reads/writes, introduce caching, sharding, and message queues.
+* **The 6-Step System Design Delivery Framework (35-Min Active Clock):**
+  1. **Requirements (~5m):** Top 3 Functional Requirements + quantified, operation-specific Non-Functional Requirements (CAP, latency, scale).
+  2. **Core Entities (~2–3m):** List the 3–5 primary domain nouns before designing APIs.
+  3. **API / System Interface (~4–5m):** Map 1-to-1 from Functional Requirements (`REST`/`gRPC`/`WS`, `Idempotency-Key`, JWT auth, cursor pagination).
+  4. **Data Flow (Optional, ~2m):** Numbered pipeline trace for stream/crawler architectures.
+  5. **High-Level Design (~10–12m):** Simplest end-to-end working baseline satisfying 100% of Functional Requirements; perform **in-context Back-of-the-Envelope (BOE) math** here.
+  6. **Deep Dives (~10–15m):** Proactively resolve load-bearing bottlenecks, contention, and failure modes to satisfy 100% of Non-Functional Requirements.
 
 :::tip
-Never jump straight to the architecture drawing. Always establish requirements and QPS estimates first. Refer to the [System Design Interview Framework](/technical-knowledge/system-design/interview-framework) for detailed deep dives.
+Never jump straight to the architecture drawing or spend 10 minutes on isolated upfront math. Follow the [System Design Delivery Framework](/technical-knowledge/system-design/interview-framework) for the full 35-minute execution playbook and L4/L5/L6 rubric calibration.
 :::
 
 ### 3. Low-Level Design (LLD) / OOD Round

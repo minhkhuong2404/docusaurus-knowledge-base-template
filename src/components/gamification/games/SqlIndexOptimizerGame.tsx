@@ -489,6 +489,32 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
 
       {/* ── 4. Select Indexing / Tuning Strategy (Placed directly under Query!) ── */}
       <div style={{ marginBottom: '16px' }}>
+        {/* E-S-R Indexing Golden Rule Guide Strip */}
+        <div
+          style={{
+            marginBottom: '10px',
+            padding: '8px 12px',
+            borderRadius: '8px',
+            background: 'rgba(16, 185, 129, 0.08)',
+            border: '1px solid rgba(52, 211, 153, 0.28)',
+            fontSize: '0.73rem',
+            color: 'rgba(255, 255, 255, 0.85)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '8px',
+          }}
+        >
+          <div>
+            <strong style={{ color: '#34d399' }}>🧭 DBA Golden Rule (E-S-R Formula):</strong> Order composite B+Tree index columns as{' '}
+            <strong style={{ color: '#38bdf8' }}>1. Equality (=)</strong> ➔{' '}
+            <strong style={{ color: '#fbbf24' }}>2. Sort (ORDER BY)</strong> ➔{' '}
+            <strong style={{ color: '#c084fc' }}>3. Range (&gt;, &lt;, BETWEEN)</strong>, and use{' '}
+            <code style={{ color: '#34d399', background: 'rgba(0,0,0,0.35)', padding: '1px 4px', borderRadius: '4px' }}>INCLUDE (...)</code> for Index-Only Scans!
+          </div>
+        </div>
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
           <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.6)' }}>
             Choose Index or Query Strategy to Execute:

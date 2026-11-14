@@ -114,6 +114,23 @@ const EMERGENCY_FALLBACK_QUESTIONS: Record<QuizCategoryKey, BattleQuestion[]> = 
         { text: 'Disable ACK acknowledgments on the queue', correct: false, explanation: 'Risks unacknowledged message storms upon restart.', dmg: 0, selfDmg: 25 },
       ],
     },
+    {
+      id: 'sd-em3',
+      question: 'Checkout API p99 latency spikes to 12s when the Recommendation Service slows down. Inspect Line 5 below. Which resilience pattern prevents thread pool exhaustion?',
+      codeSnippet: `1: public CheckoutReceipt checkout(Cart cart) {
+2:   Order order = orderRepo.save(cart);
+3:   // Synchronous blocking HTTP call with no timeout or circuit breaker:
+4:   List<Item> upsells = restTemplate.getForObject(
+5:       "http://reco-svc/upsells?uid=" + cart.getUserId(), List.class); // LINE 5
+6:   return new CheckoutReceipt(order, upsells);
+7: }`,
+      options: [
+        { text: 'Wrap Line 5 in a Circuit Breaker + Bulkhead with a strict 150ms timeout and empty-list fallback', correct: true, explanation: 'Fails fast when non-critical recommendations degrade, preserving checkout threads and revenue.', dmg: 25, selfDmg: 0 },
+        { text: 'Increase Tomcat max-threads from 200 to 10,000', correct: false, explanation: 'Causes severe CPU context-switching thrashing and native memory exhaustion.', dmg: 0, selfDmg: 25 },
+        { text: 'Add a 3x synchronous retry loop around restTemplate.getForObject', correct: false, explanation: 'A retry storm multiplies load by 3x on an already dying downstream service.', dmg: 0, selfDmg: 35 },
+        { text: 'Move orderRepo.save(cart) after the HTTP call', correct: false, explanation: 'Still blocks the caller thread for 12s and risks losing the order completely.', dmg: 0, selfDmg: 25 },
+      ],
+    },
   ],
   java: [
     {
@@ -155,6 +172,24 @@ const EMERGENCY_FALLBACK_QUESTIONS: Record<QuizCategoryKey, BattleQuestion[]> = 
         { text: 'Line 4: Remove the outer null check', correct: false, explanation: 'Fixes race condition but introduces severe lock contention on every single read.', dmg: 0, selfDmg: 25 },
         { text: 'Line 5: Synchronize on helper instead of LazyInitService.class', correct: false, explanation: 'helper is null initially, throwing NullPointerException.', dmg: 0, selfDmg: 35 },
         { text: 'Line 7: Replace new Helper() with Helper.class.newInstance()', correct: false, explanation: 'Reflection does not establish memory visibility barriers.', dmg: 0, selfDmg: 25 },
+      ],
+    },
+    {
+      id: 'java-em3',
+      question: 'Java 21 Virtual Threads freeze under load and carrier threads are 100% pinned. Inspect Line 4 below. What causes carrier thread pinning?',
+      codeSnippet: `1: public class InventoryReservation {
+2:   private final Object monitor = new Object();
+3:   public void reserveStock(String sku) {
+4:     synchronized (monitor) { // LINE 4: Intrinsic monitor lock
+5:       jdbcTemplate.update("UPDATE stock SET qty = qty - 1 WHERE sku = ?", sku);
+6:     }
+7:   }
+8: }`,
+      options: [
+        { text: 'Line 4: Blocking JDBC I/O inside a synchronized block pins the OS carrier thread; replace with ReentrantLock', correct: true, explanation: 'In Java 21, synchronized holds frames on the native carrier stack during blocking I/O; ReentrantLock unmounts cleanly.', dmg: 25, selfDmg: 0 },
+        { text: 'Line 2: monitor must be a String literal instead of Object', correct: false, explanation: 'Locking on String literals is a worse anti-pattern due to String interning pool collisions.', dmg: 0, selfDmg: 25 },
+        { text: 'Line 5: Replace UPDATE with SELECT FOR UPDATE inside synchronized', correct: false, explanation: 'Still performs blocking socket I/O inside synchronized and pins the carrier thread.', dmg: 0, selfDmg: 25 },
+        { text: 'Disable garbage collection with -XX:+UseEpsilonGC', correct: false, explanation: 'EpsilonGC crashes the JVM once heap is full and does not affect virtual thread pinning.', dmg: 0, selfDmg: 35 },
       ],
     },
   ],
@@ -199,6 +234,23 @@ const EMERGENCY_FALLBACK_QUESTIONS: Record<QuizCategoryKey, BattleQuestion[]> = 
         { text: 'Line 7: maximumPoolSize cannot exceed 10 in HikariCP', correct: false, explanation: 'HikariCP supports arbitrary pool sizes, although pool sizing formula is pool = (core_count * 2) + disk_spindle.', dmg: 0, selfDmg: 25 },
         { text: 'Line 4: Return type must be HikariDataSource instead of DataSource', correct: false, explanation: 'Polymorphic DataSource return type is idiomatic Spring.', dmg: 0, selfDmg: 25 },
         { text: 'Line 9: HikariDataSource cannot be instantiated manually', correct: false, explanation: 'Programmatic HikariDataSource instantiation is completely valid.', dmg: 0, selfDmg: 25 },
+      ],
+    },
+    {
+      id: 'sb-em3',
+      question: 'GET /api/orders takes 9.4 seconds because Hibernate executes 501 SQL queries for 500 orders. Inspect Line 5 below. How do you eliminate the N+1 query storm?',
+      codeSnippet: `1: @Transactional(readOnly = true)
+2: public List<OrderDto> listRecentOrders() {
+3:   List<Order> orders = orderRepo.findTop500ByOrderByCreatedAtDesc();
+4:   return orders.stream()
+5:       .map(o -> new OrderDto(o.getId(), o.getCustomer().getName(), o.getItems().size())) // LINE 5
+6:       .toList();
+7: }`,
+      options: [
+        { text: 'Use @EntityGraph(attributePaths = {"customer", "items"}) or JOIN FETCH / DTO Projection in the query', correct: true, explanation: 'Fetches associated entities in a single SQL JOIN or projection instead of firing 1 lazy query per row.', dmg: 25, selfDmg: 0 },
+        { text: 'Change FetchType.LAZY to FetchType.EAGER globally on all JPA entities', correct: false, explanation: 'Global EAGER fetching still triggers N+1 on JPQL queries and pulls massive Cartesian graphs everywhere.', dmg: 0, selfDmg: 25 },
+        { text: 'Remove @Transactional(readOnly = true) from listRecentOrders()', correct: false, explanation: 'Throws LazyInitializationException or enables dirty-checking overhead without fixing N+1.', dmg: 0, selfDmg: 35 },
+        { text: 'Wrap orders.stream() in orders.parallelStream()', correct: false, explanation: 'Hibernate Session is not thread-safe; parallelStream corrupts PersistenceContext and exhausts DB connections.', dmg: 0, selfDmg: 35 },
       ],
     },
   ],
@@ -862,6 +914,19 @@ export default function OutageBossBattleGame() {
             </div>
             <div style={{ fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.4 }}>
               {currentQ.question}
+            </div>
+            <div
+              style={{
+                marginTop: '8px',
+                padding: '6px 10px',
+                borderRadius: '6px',
+                background: 'rgba(56, 189, 248, 0.08)',
+                border: '1px solid rgba(56, 189, 248, 0.25)',
+                fontSize: '0.72rem',
+                color: 'rgba(255, 255, 255, 0.82)',
+              }}
+            >
+              <strong style={{ color: '#38bdf8' }}>🧭 Incident Commander Rule:</strong> Look for bounded containment fixes (Circuit Breaker, Singleflight, DLQ, <code style={{ color: '#34d399', background: 'rgba(0,0,0,0.35)', padding: '1px 4px', borderRadius: '3px' }}>volatile</code> / <code style={{ color: '#34d399', background: 'rgba(0,0,0,0.35)', padding: '1px 4px', borderRadius: '3px' }}>ReentrantLock</code>, or <code style={{ color: '#34d399', background: 'rgba(0,0,0,0.35)', padding: '1px 4px', borderRadius: '3px' }}>JOIN FETCH</code>)—never blindly raise thread/connection limits or flush caches!
             </div>
           </div>
 

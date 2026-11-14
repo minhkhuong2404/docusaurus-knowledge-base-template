@@ -50,6 +50,8 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
     'KubernetesCalicoBgpDiagram.tsx',
     'JavaReadWriteLockConvoyDiagram.tsx',
     'JmmHappensBeforeVisualizerDiagram.tsx',
+    'KafkaWorkerScalingThreeLayerDefenseDiagram.tsx',
+    'RealWorldEngineeringSecretsDiagram.tsx',
   ];
 
   for (const filename of criticalDiagrams) {

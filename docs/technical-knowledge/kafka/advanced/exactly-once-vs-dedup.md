@@ -8,6 +8,7 @@ tags: [kafka, exactly-once, deduplication, idempotency, event-driven, kafka-stre
 
 import KafkaDedupComparisonDiagram from '@site/src/components/KafkaDedupComparisonDiagram';
 import KafkaStreamsExactlyOnceDiagram from '@site/src/components/KafkaStreamsExactlyOnceDiagram';
+import KafkaWorkerScalingThreeLayerDefenseDiagram from '@site/src/components/KafkaWorkerScalingThreeLayerDefenseDiagram';
 
 # Deduplication in Distributed Messaging
 
@@ -613,7 +614,235 @@ void replayAfterTtlExpiryShouldBeCaughtByDbConstraint() {
 
 ---
 
-## 12. Interview Decision Matrix
+## 12. Production Case Study: Scaling a Kafka Consumer from 1 Pod to 2+ Pods Without Duplicate Aggregates or Redis Locks
+
+A classic production incident occurs the very first time a team enables Kubernetes Horizontal Pod Autoscaling (HPA / KEDA) on a Kafka worker that aggregates records into a relational database: **running 1 pod works flawlessly, but scaling to 2 pods immediately creates duplicate parent rows and corrupted aggregate totals.**
+
+Best of all, the foundational fix lives **inside the database and partition routing**, without needing to introduce a Redis distributed lock.
+
+<KafkaWorkerScalingThreeLayerDefenseDiagram initialTab="three_layers" />
+
+---
+
+### 12.1 Problem Statement: The `Document` & `Transaction` Aggregation Pipeline
+
+- **Incoming Kafka Message:** Each message represents an issued ticket containing `TicketNumber`, `UserCode`, `DateOfIssue`, and `Amount`. The producer belongs to an external upstream team and cannot be modified directly.
+- **Database Schema:**
+  - **`Document` Table:** Strictly **one row per `(UserCode, DateOfIssue)`**. The column `TotalAmount` stores the daily sum of all tickets for that user on that date.
+  - **`Transaction` Table:** Strictly **one row per ticket (`TicketNumber`)**, referencing `DocumentId`.
+- **Legacy Worker Logic (EF Core / Hibernate ORM):**
+  1. Query `Document` by `(UserCode, DateOfIssue)`.
+  2. If not found, create a new `Document`; if found, add `Amount` to `Document.TotalAmount`.
+  3. Insert a new row into `Transaction` and `SaveChanges()`.
+- **The Production Incident:** With `replicas: 1`, data is 100% accurate. When Kubernetes autoscales to `replicas: 2`, two `Document` rows are created for the same user on the same day, and `Document.TotalAmount` no longer matches `SUM(Transaction.Amount)`!
+
+---
+
+### 12.2 Root Cause Analysis: Why 2 Pods Corrupt State
+
+#### 1. Check-Then-Act Race on `Document` Creation
+The *"find, or create if missing"* logic executes two separate SQL statements: a `SELECT` followed by an `INSERT`. When two tickets for `U01` on `2026-11-08` are processed concurrently by Pod 1 and Pod 2, both pods execute `SELECT`, both observe "no `Document` exists", and both execute `INSERT`.
+
+**Why wrapping `SELECT` + `INSERT` in a Database Transaction does NOT prevent this:**
+- **`READ COMMITTED` (Default Isolation in PostgreSQL, SQL Server, Oracle):** A `SELECT` statement cannot acquire a row lock on a row that **does not exist yet**. Both transactions see an empty result and both succeed in inserting a row.
+- **`SERIALIZABLE` (or `REPEATABLE READ` gap locking):** Both transactions acquire shared range/gap locks on the missing key gap and then attempt to upgrade to an exclusive insert-intention lock—causing an immediate **deadlock** on SQL Server / MySQL (or a `40001` serialization failure on PostgreSQL), forcing retries while imposing heavy lock overhead on every read.
+
+#### 2. The 4 Paths That Corrupt `TotalAmount`
+1. **Split `Document` Rows:** Tickets for `(U01, 2026-11-08)` land across two duplicate `Document` records, each holding only part of the daily total.
+2. **Read-Modify-Write Lost Update:** Pod A and Pod B both read `TotalAmount = 100` into ORM memory. Pod A adds `50` and writes `UPDATE Document SET TotalAmount = 150`. Pod B adds `70` and writes `UPDATE Document SET TotalAmount = 170`—silently overwriting Pod A's `+50` update (`170` instead of `220`).
+3. **At-Least-Once Consumer Redelivery:** Pod A commits the DB transaction, but before its Kafka offset is committed, the pod scales down, restarts, or loses its partition during a consumer group rebalance. Pod B picks up the partition from the last committed offset and processes the same tickets a second time—inserting duplicate `Transaction` rows and double-counting `TotalAmount`.
+4. **Upstream Producer Duplicate Messages (Same Ticket at 2 Different Offsets):** Because Kafka producers also operate at-least-once, the topic itself can contain two messages with the same `TicketNumber` at two different offsets. Even if the consumer commits offsets perfectly, it will read and process both offsets! Producer duplicates arise from three sources:
+   - *Lost Broker ACK Retry:* The broker wrote the message, the ACK dropped on the network, and the producer retried. While `enable.idempotence=true` prevents this in Java clients (default since Kafka 3.0), **`librdkafka`-based clients (.NET `Confluent.Kafka`, Go, Python) still default `enable.idempotence` to `false`!**
+   - *Producer Restart Across Sessions:* Kafka's idempotent producer (`PID`) only deduplicates retries within a single producer process lifetime. If the producer app restarts and resends unacknowledged records, the broker assigns a new `PID` and accepts the duplicate.
+   - *Application-Level Retry / Sync Job Rerun:* Upstream code catches a timeout and calls `produce()` again, or re-runs a batch sync job.
+
+#### 3. Step 0 Pre-Check: Verify `GroupId` Before Touching Code!
+When an engineer says *"Kafka sent messages to both workers"*, check which of two completely different topologies is happening:
+- **Both pods share the same fixed `group.id`:** Kafka divides partitions across the 2 pods; each offset goes to only 1 pod. Corruption happens when two different tickets for the same `(UserCode, DateOfIssue)` sit on different partitions (or during rebalance overlap).
+- **Each pod has a different `group.id`:** Commonly caused by concatenating `Environment.MachineName`, pod hostname, or `Guid.NewGuid()` into `GroupId` at startup. Every pod becomes an independent consumer group and reads **100% of the topic**, processing every ticket twice!
+  - *Smoking Gun:* If the topic has **only 1 partition** yet both pods are actively processing messages (or every single ticket has 2 `Transaction` rows), the pods have different `GroupId`s. Fix by setting a static `GroupId` in config.
+
+---
+
+### 12.3 The 3-Layer Defense Architecture (No Redis Lock Required)
+
+> **Core Design Principle:** Partitioning by `UserCode` (Layer 1) eliminates 99.9% of concurrent collisions during normal operation by routing each user to a single writer pod, while **the database is the ultimate source of truth**—using a unique constraint on `(UserCode, DateOfIssue)` (Layer 2) and ticket deduplication + `UNIQUE(TicketNumber)` (Layer 3) to catch rebalance overlaps and duplicate deliveries.
+
+#### Layer 1: Partition by `UserCode` (Single-Writer Lane) & Kubernetes Consumer Config
+When messages use `UserCode` as their Kafka message key (`murmur2(UserCode) % numPartitions`), every ticket for user `U01` lands in the exact same partition. Because a partition is assigned to at most **one** consumer within a group at any time, a single pod processes all of `U01`'s tickets sequentially.
+
+**What if you cannot modify the upstream producer?** Inspect the incoming message key first:
+1. **Key is already `UserCode` (or `UserCode + DateOfIssue`):** Layer 1 is already active!
+2. **Key is `null` or something else:**
+   - *Path A:* Ask the upstream producer team to set the message key to `UserCode` (payload stays untouched, provided no other consumer group depends on the old key).
+   - *Path B (Internal Re-Keying Topic):* Deploy a lightweight forwarder worker that reads the raw upstream topic and republishes to an internal topic keyed by `UserCode` (adds ~a few milliseconds of latency).
+3. **Neither Path A nor Path B is possible:** Skip Layer 1. Data remains 100% accurate thanks to Layer 2 (`UNIQUE(UserCode, DateOfIssue)`) and Layer 3 (`UNIQUE(TicketNumber)` + conditional optimistic `UPDATE`), though pods will collide more often and retry batches more frequently.
+
+**Why Layer 1 Cannot Stand Alone (Two Inevitable Gaps):**
+- **Rebalance / Restart Replay:** Uncommitted offsets are replayed after a pod restart or rebalance.
+- **Slow Batch Exceeding `max.poll.interval.ms` (Zombie Overlap):** If Pod 1 takes longer than `max.poll.interval.ms` (default 5 minutes) to process a batch, the broker revokes its partition and assigns it to Pod 2 **while Pod 1 is still mid-flight writing to the database**! For a brief window, two pods write the same partition concurrently.
+
+**Mandatory Kubernetes & `.NET Confluent.Kafka` Configurations:**
+- **Max Replicas $\le$ Partition Count:** Never autoscale pods beyond the topic's partition count (excess pods sit idle while triggering unnecessary rebalances).
+- **Scale on Consumer Lag (KEDA), Not CPU:** Use KEDA's Kafka lag scaler with stabilization cooldown windows so pods don't thrash in and out of the group.
+- **`.NET Confluent.Kafka` (`librdkafka`) Offset Store Trap:** By default, `Confluent.Kafka` runs a background auto-commit thread every 5 seconds **and sets `EnableAutoOffsetStore = true`, which marks a message's offset as ready-to-commit the instant `Consume()` hands it to your C# code—before your DB transaction even runs!** If the pod crashes 1 second later, the background thread or close handler commits the offset and the ticket is **permanently lost**.
+  - **Fix:** Set **`EnableAutoOffsetStore = false`** and call **`consumer.StoreOffset(consumeResult)`** strictly **after** the database transaction commits!
+
+---
+
+#### Layer 2: Unique Key on `(UserCode, DateOfIssue)` — Comparing 3 Options
+
+Where should the uniqueness lock live? Compare the three architectural options:
+
+| Option | How It Works | Pros | Cons & Operational Gotchas |
+| :--- | :--- | :--- | :--- |
+| **Option 1: Redis Distributed Lock** (`SET doc:{User}:{Date} NX PX`) | Acquire Redis lock before `SELECT`/`INSERT`, release after DB commit. | No immediate DB schema change required. | ❌ **4 Fatal Drawbacks:** (1) Extra infra SPOF; (2) **TTL Trap** (long TTL stalls failover after pod kill; short TTL expires during slow DB/GC pause, letting 2 pods write concurrently); (3) **Batch Deadlocks** (a 500-msg batch spans hundreds of `(User, Date)` keys—locking them out of order deadlocks two pods unless wrapped in an all-or-nothing Lua script); (4) **Does NOT stop replayed or duplicate tickets!** |
+| **Option 2: Unique Index on `Document(UserCode, DateOfIssue)`** *(Target End-State)* | DB enforces uniqueness natively. 2nd concurrent `INSERT` blocks until 1st commits, then fails with duplicate key $\rightarrow$ rolls back and retries into `UPDATE`. | ✅ Zero extra infra, works with batching, guarantees correctness across rebalances. | Requires cleaning existing duplicate `Document` rows first and running **Online DDL** (`WITH (ONLINE = ON)` in SQL Server, `CREATE UNIQUE INDEX CONCURRENTLY` in Postgres, `ALGORITHM=INPLACE, LOCK=NONE` in MySQL). |
+| **Option 3: Dedicated `DocumentKey` Side-Table** *(Stepping Stone)* | Create `DocumentKey(UserCode, DateOfIssue, DocumentId)` with `UNIQUE(UserCode, DateOfIssue)`. Worker inserts into `DocumentKey` first inside the same DB tx. | ✅ Stops new duplicates **today** without waiting to clean up dirty legacy rows in `Document`! | Must pre-populate `DocumentKey` from existing `Document` rows using `MIN(Id) GROUP BY UserCode, DateOfIssue` so workers update a single canonical `DocumentId` per pair, and every write path must go through `DocumentKey`. |
+
+> [!CAUTION]
+> **Critical Schema Rule for `DateOfIssue` & Filtered Unique Indexes:**
+> - **Use `DATE`, Never `DATETIME`:** The unique index on `(UserCode, DateOfIssue)` **must** use a calendar `DATE` column normalized to a single business timezone. If `DateOfIssue` is stored as `DATETIME` / `TIMESTAMP`, two tickets at `08:00` and `09:00` on the same day have different timestamps and the unique index will not block the duplicate `Document`!
+> - **Conditional / Filtered Unique Index Variant:** In SQL Server (`CREATE UNIQUE INDEX ... WHERE Id > @MaxLegacyId`) and PostgreSQL (partial unique index), you can enforce uniqueness immediately on all newly inserted rows without cleaning legacy duplicates first (not supported in MySQL).
+
+---
+
+#### Layer 3: In-App Ticket Deduplication + `UNIQUE(TicketNumber)` Safety Net
+
+A unique key on `Document(UserCode, DateOfIssue)` prevents duplicate `Document` headers, but what prevents a replayed or producer-duplicated ticket from adding `Amount` to `TotalAmount` twice?
+1. **Filter Duplicates in Application Code Before Computing `TotalAmount`:** Deduplicate identical `TicketNumber` entries within the polled memory batch, and run `SELECT TicketNumber FROM Transaction WHERE TicketNumber IN (...)` to strip out any tickets already persisted in the database. Compute the new `TotalAmount` strictly from the remaining net-new tickets.
+2. **`UNIQUE` Constraint on `Transaction(TicketNumber)` as the Ultimate Safety Net:** Because `TicketNumber` is a natural business idempotency key already present in the payload, add a unique index on `Transaction(TicketNumber)` (or `(TicketNumber, OperationType)` if a ticket can emit distinct lifecycle events like Issue, Refund, Cancel). If two pods overlap during a rebalance and race past the `SELECT` filter on the same ticket, the second pod's `INSERT INTO Transaction` throws a unique constraint violation, rolling back its entire transaction (including its `UPDATE Document`).
+3. **Why Direct `UPDATE TotalAmount = @newTotal` Is Safe—And When to Add Optimistic CAS:**
+   - **When Partitioned by `UserCode` (Layer 1 active):** Only one pod processes a given user's tickets, and any rebalance overlap processes a contiguous sequence of tickets sharing at least one `TicketNumber`—which `UNIQUE(TicketNumber)` catches immediately.
+   - **When NOT Partitioned by `UserCode` (Layer 1 inactive):** Two pods can concurrently process two completely disjoint sets of tickets for the same user on the same day (`UNIQUE(TicketNumber)` won't collide, causing a Lost Update!). In that case, add an **Optimistic Lock condition on the old total** directly to the `UPDATE` statement (Compare-And-Swap without needing a separate `Version` column):
+     ```sql
+     UPDATE Document
+     SET TotalAmount = @newTotal
+     WHERE Id = @docId
+       AND TotalAmount = @previousReadTotal;
+     -- If affected_rows == 0, another pod updated this Document concurrently:
+     -- Rollback and retry the batch from Step 2!
+     ```
+
+---
+
+### 12.4 The 4-Step Short-Transaction Batch Processing Flow
+
+To maximize throughput and minimize database lock hold time, perform all deduplication and aggregation **in memory before opening the database transaction**, opening the transaction only for the final write step:
+
+```csharp
+// Production Batch Flow (.NET / C# Conceptual Implementation)
+public async Task ProcessBatchAsync(IReadOnlyList<ConsumeResult<string, TicketMessage>> batch, CancellationToken ct)
+{
+    // STEP 1: In-app batch deduplication (handles producer duplicates within the same batch)
+    var uniqueTickets = batch
+        .Select(r => r.Message.Value)
+        .Where(IsValidBusinessTicket)
+        .DistinctBy(t => t.TicketNumber)
+        .ToList();
+
+    while (true) // Retry loop for rare rebalance unique-key / optimistic-lock collisions
+    {
+        // STEP 2: Strip tickets already persisted in Transaction (handles rebalance & restart replay)
+        var candidateNumbers = uniqueTickets.Select(t => t.TicketNumber).ToList();
+        var existingNumbers = await db.Transactions
+            .Where(t => candidateNumbers.Contains(t.TicketNumber))
+            .Select(t => t.TicketNumber)
+            .ToHashSetAsync(ct);
+
+        var netNewTickets = uniqueTickets
+            .Where(t => !existingNumbers.Contains(t.TicketNumber))
+            .ToList();
+
+        // If all tickets in this batch were already processed, store offsets and return!
+        if (netNewTickets.Count == 0)
+        {
+            StoreBatchOffsets(batch);
+            return;
+        }
+
+        // STEP 3: Group by (UserCode, DateOfIssue) and read current Document totals AFTER Step 2
+        var groups = netNewTickets.GroupBy(t => new { t.UserCode, Date = t.DateOfIssue.Date }).ToList();
+        var existingDocs = await LoadExistingDocumentsAsync(groups.Select(g => g.Key), ct);
+
+        // STEP 4: Open a SHORT DB transaction strictly for the writes
+        await using var tx = await db.Database.BeginTransactionAsync(ct);
+        try
+        {
+            foreach (var group in groups)
+            {
+                decimal batchDelta = group.Sum(t => t.Amount);
+                if (!existingDocs.TryGetValue(group.Key, out var docSnapshot))
+                {
+                    // New Document for (UserCode, Date) — guarded by UNIQUE(UserCode, DateOfIssue)
+                    var newDoc = new Document {
+                        UserCode = group.Key.UserCode,
+                        DateOfIssue = group.Key.Date,
+                        TotalAmount = batchDelta
+                    };
+                    db.Documents.Add(newDoc);
+                    await db.SaveChangesAsync(ct);
+                    InsertTransactionsForGroup(group, newDoc.Id);
+                }
+                else
+                {
+                    // Update existing Document — guarded by optimistic TotalAmount check if unpartitioned
+                    decimal newTotal = docSnapshot.TotalAmount + batchDelta;
+                    int updated = await db.Database.ExecuteSqlInterpolatedAsync($@"
+                        UPDATE Document
+                        SET TotalAmount = {newTotal}
+                        WHERE Id = {docSnapshot.Id}
+                          AND TotalAmount = {docSnapshot.TotalAmount}", ct);
+
+                    if (updated == 0)
+                        throw new DbUpdateConcurrencyException("Concurrent Document update detected.");
+
+                    InsertTransactionsForGroup(group, docSnapshot.Id);
+                }
+            }
+
+            await db.SaveChangesAsync(ct);
+            await tx.CommitAsync(ct);
+
+            // Commit succeeded -> Now safely mark offsets in librdkafka!
+            StoreBatchOffsets(batch);
+            return;
+        }
+        catch (Exception ex) when (IsUniqueConstraintOrConcurrencyError(ex))
+        {
+            await tx.RollbackAsync(ct);
+            // Another pod wrote overlapping records during rebalance; loop back to Step 2
+            // which automatically filters out the rows the other pod just committed!
+        }
+    }
+}
+```
+
+---
+
+### 12.5 Legacy Duplicate Cleanup Runbook & Chaos Verification
+
+Because duplicate `Document` and `Transaction` rows already exist in the database, financial reports are currently skewed and must be cleaned in **6 ordered steps**:
+
+1. **Deploy the New Worker Code First:** Temporarily scale to `1` pod (or enable Option 3 `DocumentKey` / filtered unique index) so zero new duplicates are generated during cleanup.
+2. **Deduplicate `Transaction` Rows in Batches:** Group by `TicketNumber`, keep `MIN(Id)`, and delete duplicate rows in small chunks (a few thousand keys per transaction—**never** run a single giant transaction across millions of rows, which locks the table and stalls live workers!).
+3. **Consolidate Duplicate `Document` Rows:** For each `(UserCode, DateOfIssue)` having `COUNT(*) > 1`, keep `MIN(Id)` as the canonical `DocumentId`, repoint `Transaction.DocumentId` from the duplicate documents to `MIN(Id)`, and delete the redundant `Document` rows (check with business/accounting first if external invoices reference those old `Document.Id` values!).
+4. **Recompute `Document.TotalAmount`:** Update `TotalAmount = (SELECT SUM(Amount) FROM Transaction WHERE DocumentId = Document.Id)`.
+5. **Create Online Unique Indexes:** Create `UNIQUE(UserCode, DateOfIssue)` on `Document` and `UNIQUE(TicketNumber)` on `Transaction`. Successful index creation mathematically proves zero duplicates remain.
+6. **Re-enable Kubernetes Autoscaling & Schedule Continuous Reconciliation:**
+   Run a periodic background audit query (must always return `0 rows`):
+   ```sql
+   SELECT d.Id, d.UserCode, d.DateOfIssue, d.TotalAmount, COALESCE(SUM(t.Amount), 0) AS TxSum
+   FROM Document d
+   LEFT JOIN Transaction t ON t.DocumentId = d.Id
+   GROUP BY d.Id, d.UserCode, d.DateOfIssue, d.TotalAmount
+   HAVING d.TotalAmount <> COALESCE(SUM(t.Amount), 0);
+   ```
+   **Chaos Verification Test (`kill -9`):** Before signing off, run 3+ worker pods against a test stream containing duplicate tickets and multiple tickets per user/day, forcefully `kill -9` one pod mid-stream (bypassing graceful shutdown), and verify that the reconciliation query above returns **0 rows** and every `(UserCode, DateOfIssue)` has exactly 1 `Document`.
+
+---
+
+## 13. Interview Decision Matrix
 
 | Scenario | Recommended Strategy | Key Reason |
 |:---|:---|:---|
@@ -639,7 +868,59 @@ void replayAfterTtlExpiryShouldBeCaughtByDbConstraint() {
 
 ---
 
-## 13. Further Reading
+## 🧠 Senior/Staff Interview Playbook: How to Ace Kafka Deduplication, Worker Scaling & Exactly-Once Interviews
+
+When an interviewer asks *"Our Kafka consumer works with 1 pod, but when Kubernetes scales to 2 pods we get duplicate records and wrong totals—should we add a Redis distributed lock?"*, a mid-level candidate immediately designs a Redis `SETNX` lock around the consumer. A **Principal Engineer** rejects the unnecessary Redis lock, diagnoses the **4 root causes (Check-Then-Act, Lost Update, Rebalance Replay, and Upstream Producer Duplicates)**, and designs the **3-Layer Defense (Partition by Entity Key + DB Unique Constraints + Idempotent Ticket Deduplication with Short DB Transactions)**.
+
+### 1. The 60-Second Senior Framing Strategy
+
+1. **Establish the Order of Defense (DB Constraints & Partitioning Before Distributed Locks):** When all mutated state lives inside a single relational database, **never** introduce an external Redis distributed lock as your primary guard. Use **Layer 1 (Partition by Entity Key)** to eliminate 99.9% of contention, **Layer 2 (`UNIQUE(UserCode, DateOfIssue)`)** to block duplicate parent headers during rebalances, and **Layer 3 (`UNIQUE(TicketNumber)` + pre-filter)** to guarantee idempotent aggregation.
+2. **Check the `GroupId` & Offset Commit Invariant First:** Verify that all pods share a single static `GroupId` (no `Environment.MachineName` suffix) and that offset marking happens **strictly after** DB transaction commit (`EnableAutoOffsetStore = false` in `.NET Confluent.Kafka`).
+3. **Separate Preparation from Transaction Execution:** Filter in-batch duplicates, query `WHERE TicketNumber IN (...)` to remove already-processed tickets, and compute new totals in memory **before** opening a short DB transaction solely for `INSERT`/`UPDATE`.
+4. **Proactively Handle Dirty Legacy Data & Day-2 Reconciliation:** Mention **Online DDL** (`CONCURRENTLY` / `ONLINE = ON` / `ALGORITHM=INPLACE`), the **Dedicated `DocumentKey` Side-Table** (or filtered unique index) when legacy duplicates cannot be merged immediately, and a continuous SQL reconciliation job (`HAVING d.TotalAmount <> SUM(t.Amount)`).
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "When scaling our Kafka worker from 1 pod to 2 pods creates duplicate `Document` rows, why doesn't wrapping `SELECT` + `INSERT` inside a database transaction fix the race condition?"
+* **Junior/Mid Answer:** *"A database transaction makes `SELECT` and `INSERT` atomic, so the second pod will wait until the first transaction finishes."*
+* **Principal Rebuttal:** *"Under the default **`READ COMMITTED`** isolation level in PostgreSQL, SQL Server, and Oracle, a `SELECT` statement **cannot lock a row that does not exist yet**. Both pods run `SELECT`, both observe zero rows, and both proceed to `INSERT` inside their respective transactions! And if you raise isolation to **`SERIALIZABLE`** (or `REPEATABLE READ` gap locking), both pods acquire shared range/gap locks on the non-existent key range and then deadlock when both try to upgrade to an exclusive insert-intention lock. The proper database primitive for 'create at most one row per key' is a **`UNIQUE` index on `(UserCode, DateOfIssue)`** (using a `DATE` column, never `DATETIME`!)."*
+
+#### Trap 2: "Why shouldn't we just acquire a Redis lock `SET lock:{UserCode}:{Date} NX PX 5000` before processing each Kafka message?"
+* **Junior/Mid Answer:** *"Redis lock is fast and prevents two pods from processing the same user at the same time."*
+* **Principal Rebuttal:** *"Adding a Redis lock for state that lives inside a single relational database introduces four production hazards without solving the problem:
+  1. **New Infrastructure SPOF:** If Redis blips or fails over, your entire Kafka pipeline halts.
+  2. **The TTL Dilemma:** If a pod is killed during deployment, the new pod stalls until TTL expires; if TTL is short and a pod hits a GC pause or slow DB query, the lock expires mid-transaction and two pods write concurrently anyway!
+  3. **Batch Lock-Ordering Deadlocks:** High-throughput consumers process in batches (e.g., 500 messages spanning 200 `(User, Date)` keys). Locking 200 keys across two pods during a rebalance causes distributed deadlocks unless you sort keys and acquire them all-or-nothing in a Redis Lua script.
+  4. **Zero Protection Against Redelivery:** Once Pod 1 commits and releases the Redis lock, if a rebalance replays the message (or the producer sent a duplicate at a later offset), Pod 2 acquires the free Redis lock and double-counts `TotalAmount` anyway!"*
+
+#### Trap 3: "If we partition the Kafka topic by `UserCode` so all messages for `U01` go to the same partition, do we still need `UNIQUE` indexes and optimistic locking in the database?"
+* **Junior/Mid Answer:** *"No, because a partition is only consumed by one pod in a consumer group, so two pods can never process `U01` at the same time."*
+* **Principal Rebuttal:** *"Partitioning by `UserCode` is a massive throughput optimization (eliminating 99.9% of cross-pod contention), **but it is not a correctness guarantee** because of two inevitable windows:
+  1. **Rebalance & Restart Replay:** If Pod 1 commits to the DB and crashes before committing its Kafka offset, Pod 2 re-reads those messages after rebalance.
+  2. **Slow Batch Zombie Overlap (`max.poll.interval.ms`):** If Pod 1 stalls on a slow batch beyond `max.poll.interval.ms`, the broker revokes its partition and hands it to Pod 2 **while Pod 1 is still executing its DB transaction**!
+  Therefore, partitioning by key optimizes the happy path, while **`UNIQUE(UserCode, DateOfIssue)` + `UNIQUE(TicketNumber)`** in the database guarantees correctness during the unhappy path."*
+
+#### Trap 4: "We enabled `enable.idempotence=true` on our Kafka producer, yet our consumer still receives two messages with the exact same `TicketNumber` at two different offsets. How is that possible?"
+* **Junior/Mid Answer:** *"Kafka's idempotent producer must be misconfigured; `enable.idempotence=true` prevents all producer duplicates."*
+* **Principal Rebuttal:** *"First, in `librdkafka`-based clients (.NET `Confluent.Kafka`, Go, Python), `enable.idempotence` defaults to `false` (unlike Java where it defaulted to `true` in Kafka 3.0). Second, even when enabled, Kafka's idempotent producer only deduplicates network retries **within a single Producer ID (`PID`) session** and the broker's 5-batch sequence window. If the producer pod restarts (getting a brand-new `PID`) and replays unacknowledged events from memory or an outbox, or if application code catches a timeout exception and calls `produce()` a second time, the broker treats it as a brand-new record and appends it at a new offset. Consumer-side deduplication on the business key (`TicketNumber`) is non-negotiable."*
+
+---
+
+### 3. Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **First Check When 2 Pods Duplicate Everything** | "Add a distributed lock in Redis." | "Check if `GroupId` is dynamic (`MachineName`/`Guid`) or if topic has 1 partition with 2 active pods; enforce a single static `GroupId`." |
+| **Preventing Duplicate Parent Rows (`Document`)** | "Wrap `SELECT` + `INSERT` in a DB transaction." | "`READ COMMITTED` cannot lock non-existent rows. Enforce **`UNIQUE(UserCode, DateOfIssue)`** (with `DATE` type) via Online DDL or a `DocumentKey` side-table." |
+| **Preventing Double-Counted Totals (`TotalAmount`)** | "Use `TotalAmount = TotalAmount + @amount` in SQL." | "`+ @amount` still double-counts on consumer replay or producer duplicates! Pre-filter existing `TicketNumber`s, enforce **`UNIQUE(TicketNumber)`**, and use `WHERE TotalAmount = @oldTotal` when unpartitioned." |
+| **`.NET Confluent.Kafka` Offset Safety** | "Use default auto-commit." | "Default `EnableAutoOffsetStore = true` marks offsets *before* DB commit (losing data on crash). Set **`EnableAutoOffsetStore = false`** and call `StoreOffset()` after `tx.Commit()`." |
+| **Cleaning Dirty Production Tables** | "Run `DELETE` and `ALTER TABLE ADD UNIQUE`." | "Deploy guarded code first, merge duplicates in **small batched transactions**, verify with Online DDL index creation, and schedule a continuous `TotalAmount <> SUM(Amount)` reconciliation query." |
+
+---
+
+## 14. Further Reading
 
 ### External Resources
 - [Kafka Documentation — Transactions](https://kafka.apache.org/documentation/#transactions) — Official explanation of the transactional producer, `isolation.level`, and EOS guarantees.

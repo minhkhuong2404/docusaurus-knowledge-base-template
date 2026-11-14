@@ -52,6 +52,7 @@ A structured path for software engineers targeting Senior Backend, Distributed S
 | 4 | **Multithreading & Concurrency**| AbstractQueuedSynchronizer (AQS), ReentrantLock, StampedLock, False Sharing `@Contended`, Memory Barriers | [→ Concurrency](/technical-knowledge/java/java-concurrency) |
 | 5 | **JVM Internals & GC** | Generational ZGC colored pointers, G1 GC regions, Tiered Compilation (C1/C2 JIT), Metaspace | [→ JVM Internals](/technical-knowledge/java/java-jvm) |
 | 6 | **Design Patterns & Architecture**| Creational, Structural (Decorator, Proxy), Behavioral (Saga, Strategy, Observer) patterns | [→ Design Patterns](/technical-knowledge/design-patterns/design-patterns-overview) |
+| 7 | **Real-World Production Playbook (Thực Chiến)** | Workplace secrets, 1-page RFCs, Stacked PRs, Sev-1 Incident War Room, zero-downtime DB migrations & crisis Q&A | [→ Real-World Playbook](/technical-knowledge/become-senior-developer/real-world-engineering-playbook) |
 
 ### Phase 2 — System Design & Distributed Systems
 

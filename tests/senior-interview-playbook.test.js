@@ -264,6 +264,59 @@ describe('Senior/Staff Interview Playbook Test Suite (Java & Spring)', () => {
           'query_references_nonkey_column',
         ],
       },
+      {
+        path: 'docs/technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace LLM Training, RLVR & Jev Decision Model Interviews',
+        mustInclude: [
+          'JevDecisionEngineDiagram',
+          'TypeSafeClient',
+          'systemone',
+          'Jevons Paradox',
+          'Prefill Phase',
+          'Decode Phase',
+          'Brier Score',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/kafka/advanced/exactly-once-vs-dedup.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace Kafka Deduplication, Worker Scaling & Exactly-Once Interviews',
+        mustInclude: [
+          'KafkaWorkerScalingThreeLayerDefenseDiagram',
+          'EnableAutoOffsetStore = false',
+          'StoreOffset',
+          'DocumentKey',
+          'TicketNumber',
+          'DateOfIssue',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/interview-framework.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace System Design Interviews (The Delivery Framework)',
+        mustInclude: [
+          'SystemDesignDeliveryFrameworkDiagram',
+          'FkLAEAcQXcc',
+          'The 6-Step System Design Delivery Framework',
+          'In-Context BOE Rule',
+          'FOR UPDATE SKIP LOCKED',
+          'SeatReservationService',
+          'Idempotency-Key',
+          'Level Calibration Matrix: Mid-Level (L4) vs. Senior (L5) vs. Staff+ (L6)',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/become-senior-developer/real-world-engineering-playbook.md',
+        playbook: 'Senior/Staff Interview Playbook: How to Ace Real-World Scenario & Behavioral-Technical Interviews',
+        mustInclude: [
+          'RealWorldEngineeringSecretsDiagram',
+          'TransactionTemplate',
+          'Expand & Contract',
+          'NOT VALID',
+          'Idempotency-Key',
+          'Exponential Backoff with Full Jitter',
+          'Transactional Outbox Pattern',
+          'ForkJoinPool.commonPool()',
+        ],
+      },
     ];
 
     for (const page of pages) {

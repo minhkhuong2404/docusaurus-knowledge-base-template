@@ -1,8 +1,8 @@
 {
-  "id": "3505",
-  "title": "Minimum Operations to Make Elements Within K Subarrays Equal",
-  "url": "https://leetcode.com/problems/minimum-operations-to-make-elements-within-k-subarrays-equal/",
-  "difficulty": "hard",
-  "topic": "Array, Hash Table, Math, Dynamic Programming, Sliding Window, Heap (Priority Queue)",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-11-04."
+  "id": "3364",
+  "title": "Minimum Positive Sum Subarray ",
+  "url": "https://leetcode.com/problems/minimum-positive-sum-subarray/",
+  "difficulty": "easy",
+  "topic": "Array, Sliding Window, Prefix Sum",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-11-14."
 }

@@ -19,7 +19,7 @@ tags: [system-design, overview, architecture, interview-prep]
 | [🎓 Full System Design Course](/technical-knowledge/system-design/full-system-design-course) | Master course: Single server to production infra (Databases, L4/L7 LB, TCP/UDP, APIs, Auth, Multi-tier Caching) |
 | [Architecture Fundamentals](/technical-knowledge/system-design/architecture-fundamentals) | CAP theorem, consistency models, trade-offs |
 | [Capacity Planning & Estimation](/technical-knowledge/system-design/capacity-planning) | Back-of-envelope math, traffic/storage estimation |
-| [Interview Framework](/technical-knowledge/system-design/interview-framework) | Structured approach to design interviews |
+| [Interview Delivery Framework](/technical-knowledge/system-design/interview-framework) | The 6-step Delivery Framework (Requirements, Core Entities, API, Data Flow, HLD, Deep Dives) & L4–L6 calibration |
 | [Scaling Reads](/technical-knowledge/system-design/scaling-reads) | Caching, read replicas, CDN, CQRS |
 | [Scaling Writes](/technical-knowledge/system-design/scaling-writes) | Sharding, partitioning, write-ahead log |
 | [Real-Time Updates](/technical-knowledge/system-design/real-time-updates) | WebSocket, SSE, polling strategies |

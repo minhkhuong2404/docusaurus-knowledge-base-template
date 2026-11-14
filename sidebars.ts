@@ -31,9 +31,10 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🏆 Become Senior Developer',
-					collapsed: true,
+					collapsed: false,
 					items: [
-						'technical-knowledge/become-senior-developer/7-coding-laws'
+						'technical-knowledge/become-senior-developer/7-coding-laws',
+						'technical-knowledge/become-senior-developer/real-world-engineering-playbook'
 					]
 				},
 				{

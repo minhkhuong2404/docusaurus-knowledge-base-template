@@ -749,6 +749,31 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
             <div style={{ fontSize: '0.84rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.4 }}>
               {currentChallenge?.scenario || ''}
             </div>
+            <div
+              style={{
+                marginTop: '8px',
+                padding: '6px 10px',
+                borderRadius: '6px',
+                background: 'rgba(245, 158, 11, 0.08)',
+                border: '1px solid rgba(245, 158, 11, 0.25)',
+                fontSize: '0.73rem',
+                color: '#fde68a',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '6px',
+              }}
+            >
+              <span>
+                🎯 <strong>2-Step Code Audit:</strong> (1) Click the suspect line inside the code editor for <strong>+50 Bonus pts</strong> ➔ (2) Select the Root Cause below!
+              </span>
+              {clickedLineNumber !== null && (
+                <span style={{ color: '#38bdf8', fontWeight: 800 }}>
+                  📍 Selected Line #{clickedLineNumber}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Inspector Mode Tabs */}
