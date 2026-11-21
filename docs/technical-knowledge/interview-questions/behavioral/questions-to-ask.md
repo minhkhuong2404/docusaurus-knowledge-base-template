@@ -14,8 +14,6 @@ import QuestionsToAskDiagram from '@site/src/components/QuestionsToAskDiagram';
 
 # Smart Questions to Ask Your Interviewer
 
-<QuestionsToAskDiagram />
-
 *"Do you have any questions for me?"* — This is not a formality. It's a critical part of the interview. Asking thoughtful questions signals intellectual curiosity, genuine interest in the role, and cultural fit. It's also your chance to evaluate if **you** want to work there.
 
 > ⚠️ **Never say "No, I think we covered everything."** This is a missed opportunity and sends the wrong signal.
@@ -23,6 +21,8 @@ import QuestionsToAskDiagram from '@site/src/components/QuestionsToAskDiagram';
 ---
 
 ## How to Choose Questions
+
+<QuestionsToAskDiagram />
 
 **Tailor by interviewer type:**
 
@@ -276,4 +276,52 @@ If you took notes during the interview (which you should), turn them into a pers
 - **Something they asked you** → Expand on a point if you felt rushed or could be clearer
 
 > 💡 **Advanced tip:** If you interviewed with 4 people, send 4 different emails — each referencing something unique to that conversation. This is memorable and rare.
+
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace Reverse-Interviewing & Final Questions
+
+### 1. The Senior Framing Strategy (First 60 Seconds of Final Q&A)
+
+When the interviewer says *"We have 5 minutes left—do you have any questions for me?"*, a Senior/Staff candidate uses those 5 minutes to **project architectural seniority and extract real Day-2 operational truth**:
+
+1. **Match the Question Altitude to the Interviewer's Seat**:
+   - Ask **IC Engineers** about *production pain, CI/CD velocity, on-call pager noise, and RFC decision autonomy*.
+   - Ask **Engineering Managers** about *30/60/90-day leveling expectations, tech-debt vs. feature budget allocation, and team attrition*.
+   - Ask **Directors / VPs** about *cross-org dependencies, 2-year architectural bets, and cloud unit economics*.
+2. **Use "Hypothesis-Driven" Questions Instead of Generic Prompts**:
+   - Instead of *"What is your tech stack?"*, ask: *"I saw on your engineering blog that you migrated your ingestion tier to Kafka Streams last year—what has been the hardest operational bottleneck around state-store recovery or rebalance latency since going live?"*
+3. **Audit On-Call & Operational Hygiene Before You Get an Offer**:
+   - Uncovering a toxic on-call rotation (`>15 pages/week`, no blameless post-mortems, manual 2 AM deployments) gives you critical data for your **5-Vector Company Choice Matrix** during offer negotiation.
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "We only have 3 minutes left—do you have any quick questions for me?"
+* **Junior/Mid Answer:** *"No, I think the recruiter already explained the process, so I'm all good, thank you!"* (Signals low engagement and wastes the final impression of the interview).
+* **Principal Rebuttal:**
+  > *"Yes, I have one quick question tailored to your role: looking ahead at the next two quarters for this platform team, what is the single highest-risk technical bottleneck or architectural migration on your roadmap that a new Senior/Staff engineer could immediately take off your plate?"*
+
+#### Trap 2: Asking a Senior Engineer Peer About HR / Perks / Work-Life Balance ("How many hours a week do you work and how easy is it to take vacation?")
+* **Junior/Mid Answer:** *"Do people here work weekends, and how strict is the return-to-office badge tracking?"* (Raises red flags with the interviewer that you are optimizing for coasting before receiving an offer).
+* **Principal Rebuttal:**
+  > *"To extract work-life balance truth without triggering coasting red flags, probe **operational engineering telemetry** instead: 'What does the on-call rotation look like for this service—specifically, how many actionable pages occur during an average week, and how much sprint capacity is reserved for eliminating recurring alert fatigue?' An engineer's answer to that question tells you 10x more about work-life balance than asking about hours."*
+
+#### Trap 3: Asking the Hiring Manager "How fast can I get promoted to the next level?"
+* **Junior/Mid Answer:** *"If I join at L4/L5, can I get promoted to the next level in 6 to 12 months?"* (Sounds transactional and focused on title rather than impact).
+* **Principal Rebuttal:**
+  > *"Frame career progression around **impact benchmarks and scope velocity**: 'When you think about the engineers on your team who have grown most rapidly into Staff or tech-lead scope over the past 18 months, what specific behaviors or architectural ownership distinguished them from peers who plateaued?'"*
+
+---
+
+### 3. Quick Reference — Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Target Interviewer | Mid-Level Candidate Asks | Principal Candidate Asks |
+|:---|:---|:---|
+| **Senior / Staff IC Peer** | *"What programming languages and tools do you use day to day?"* | *"How are cross-team architectural disagreements resolved here—is there a formal RFC process, and can you share a recent technical trade-off the team debated?"* |
+| **Engineering Manager** | *"What does a typical day look like on your team?"* | *"What does an 'Exceeds Expectations' first 90 days look like for this role, and what is the biggest technical risk on your Q1/Q2 roadmap?"* |
+| **Director / VP / CTO** | *"What is the company culture like?"* | *"As the platform scales 5x over the next two years, what architectural or organizational bottleneck keeps you up at night?"* |
+| **Startup Founder / Exec** | *"When do you think the company will IPO?"* | *"What is our current runway, what unit-economic milestones unlock the next round, and what percentage of revenue comes from our top 3 customers?"* |
+
 

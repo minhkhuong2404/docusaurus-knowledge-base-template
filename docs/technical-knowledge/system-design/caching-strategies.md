@@ -68,6 +68,7 @@ To understand why this matters, consider the hardware limits: accessing data fro
   - [The Two Memory Gates: Admission Policy vs. Eviction Policy](#the-two-memory-gates-admission-policy-vs-eviction-policy)
   - [The 3 Families of Eviction Policies & Engineering Trade-Offs](#the-3-families-of-eviction-policies--engineering-trade-offs)
   - [W-TinyLFU: State-of-the-Art Architecture (Caffeine Cache)](#w-tinylfu-state-of-the-art-architecture-caffeine-cache)
+  - [Deep Dive: LRU Cache Design & Modern Eviction Algorithms (2Q, LRU-K, ARC, CLOCK, W-TinyLFU, SIEVE)](#deep-dive-lru-cache-design--modern-eviction-algorithms-2q-lru-k-arc-clock-w-tinylfu-sieve)
 - [Cache Expiration & TTL Policies](#cache-expiration--ttl-policies)
   - [The Core Architectural Triad: Expiration vs. Eviction vs. Invalidation](#the-core-architectural-triad-expiration-vs-eviction-vs-invalidation)
   - [How Cache Engines Clean Up Expired Keys (Dual-Mechanism)](#how-cache-engines-clean-up-expired-keys-dual-mechanism)
@@ -133,6 +134,7 @@ To understand why this matters, consider the hardware limits: accessing data fro
   - [Cache Performance Optimization](#cache-performance-optimization)
 - [Additional Resources](#additional-resources)
 - [Best Practices](#best-practices)
+- [Senior/Staff Interview Playbook: How to Ace Caching & Eviction Interviews](#-seniorstaff-interview-playbook-how-to-ace-caching--eviction-interviews)
 
 ---
 
@@ -951,6 +953,239 @@ Cache<String, Product> productCache = Caffeine.newBuilder()
     .recordStats()                      // Observability metrics
     .build();
 ```
+
+---
+
+### 5. Deep Dive: LRU Cache Design & Modern Eviction Algorithms (2Q, LRU-K, ARC, CLOCK, W-TinyLFU, SIEVE)
+
+> **Reference**: [Sujeet Pro — LRU Cache Design: Eviction Strategies and Trade-offs](https://sujeet.pro/articles/lru-cache-design)
+
+While textbook coding interviews treat LRU as a solved problem (`HashMap` + Doubly Linked List), deploying eviction engines at multi-core, high-throughput scale exposes three severe physical bottlenecks in classic LRU: **memory pointer overhead**, **mutex lock contention on reads**, and **scan pollution**.
+
+#### 1. Anatomy of Classic LRU & Its Production Bottlenecks
+A standard LRU cache combines an open-addressed or chained **Hash Map** (mapping `Key -> Node*` for $O(1)$ lookup) with an intrusive **Doubly Linked List** (ordering nodes from Most Recently Used `[MRU]` at the head to Least Recently Used `[LRU]` at the tail for $O(1)$ splice and eviction).
+
+```java
+// Thread-Safe Classic LRU Cache (Illustrating the Read-Path Mutex Bottleneck)
+public final class ClassicSynchronizedLRUCache<K, V> {
+    private static final class Node<K, V> {
+        final K key;
+        V value;
+        Node<K, V> prev;
+        Node<K, V> next;
+        Node(K key, V value) { this.key = key; this.value = value; }
+    }
+
+    private final int capacity;
+    private final Map<K, Node<K, V>> index;
+    private final Node<K, V> head = new Node<>(null, null); // Sentinel MRU head
+    private final Node<K, V> tail = new Node<>(null, null); // Sentinel LRU tail
+    private final ReentrantLock lock = new ReentrantLock();
+
+    public ClassicSynchronizedLRUCache(int capacity) {
+        this.capacity = capacity;
+        this.index = new HashMap<>(capacity);
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    public V get(K key) {
+        // CRITICAL BOTTLENECK: Even a 100% read-only workload requires an EXCLUSIVE
+        // write lock because every cache hit mutates 4 pointers in the doubly linked list!
+        lock.lock();
+        try {
+            Node<K, V> node = index.get(key);
+            if (node == null) return null;
+            unlink(node);
+            insertAtHead(node);
+            return node.value;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void put(K key, V value) {
+        lock.lock();
+        try {
+            Node<K, V> existing = index.get(key);
+            if (existing != null) {
+                existing.value = value;
+                unlink(existing);
+                insertAtHead(existing);
+                return;
+            }
+            if (index.size() >= capacity) {
+                Node<K, V> lruVictim = tail.prev;
+                unlink(lruVictim);
+                index.remove(lruVictim.key);
+            }
+            Node<K, V> fresh = new Node<>(key, value);
+            insertAtHead(fresh);
+            index.put(key, fresh);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void unlink(Node<K, V> node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    private void insertAtHead(Node<K, V> node) {
+        node.next = head.next;
+        node.prev = head;
+        head.next.prev = node;
+        head.next = node;
+    }
+}
+```
+
+**Why Classic LRU Breaks Under High Concurrency & Scale:**
+1. **Global Mutex Contention on Reads (`get()` is a Write Operation!)**: Unlike a read-only hash table lookup that can use a shared `ReadLock` or lock-free read, every `get(key)` in LRU detaches the node (`node.prev.next = node.next; node.next.prev = node.prev;`) and splices it to `head`. Under 64 CPU cores hitting the cache simultaneously, the global mutex serializes all reads and bounces CPU L1/L2 cache lines (`MESI` invalidation storms on `head.next`).
+2. **Pointer Memory Overhead & Cache-Line Misses**: Every entry requires two 64-bit pointers (`prev`, `next` = 16 bytes) inside the list node, plus hash table entry pointers and object headers. For small cached values (e.g., 32-byte IDs or counters), metadata overhead exceeds the payload size (>100% memory tax), and traversing non-contiguous heap nodes triggers CPU TLB and L3 cache misses.
+3. **Scan Pollution (Zero Scan Resistance)**: A single sequential scan (e.g., an analytics batch job or pagination sweep over $N$ cold keys) inserts $N$ one-hit wonders at the `MRU` head, pushing the entire hot working set out the `LRU` tail.
+
+---
+
+#### 2. Evolution of Scan-Resistant & Low-Contention Eviction Algorithms
+
+To eliminate scan pollution and lock contention, storage engines and caching libraries evolved through six major algorithmic milestones:
+
+##### ① LRU-K & 2Q (Two-Queue)
+- **LRU-K (O'Neil et al., 1993)**: Tracks the timestamps of the last $K$ references to each page (most commonly **LRU-2**) and evicts the page whose $K$-th backward reference is furthest in the past. While scan-resistant, strict LRU-K requires $O(\log N)$ priority queue updates on every access.
+- **2Q (Johnson & Shasha, 1994)**: Achieves LRU-2 scan resistance in **$O(1)$ time** using two queues:
+  - **$A_{1\text{in}}$ (FIFO Probation Queue)**: Newly referenced keys enter $A_{1\text{in}}$ (sized at ~25% of cache). If never accessed again, they roll off the FIFO tail without ever touching the main cache.
+  - **$A_{1\text{out}}$ (Ghost FIFO Queue)**: When evicted from $A_{1\text{in}}$, only the **key** (no value payload) is recorded in $A_{1\text{out}}$.
+  - **$A_m$ (Main LRU Queue)**: If a key is accessed while its ghost resides in $A_{1\text{out}}$, it has proven long-term frequency and is promoted into the main $A_m$ LRU queue.
+  - *Limitation*: Requires manual tuning of queue size ratios (`Kin` and `Kout`).
+
+##### ② ARC (Adaptive Replacement Cache — Megiddo & Modha, IBM)
+ARC eliminates 2Q's manual parameter tuning by maintaining **two variable-sized lists** totaling capacity $c$, plus **two ghost lists** (total $2c$ tracked keys):
+- **$T_1$ (Recency — seen once recently)** + **$B_1$ (Ghost list of keys evicted from $T_1$)**.
+- **$T_2$ (Frequency — seen $\ge 2$ times)** + **$B_2$ (Ghost list of keys evicted from $T_2$)**.
+- **Self-Tuning Target Parameter ($p$)**: ARC maintains a dynamic split target $p \in [0, c]$ for the size of $T_1$:
+  - **Ghost Hit in $B_1$** (Recency cache was too small!): Increment $p$ by $\Delta_1 = \max(1, |B_2| / |B_1|)$, expanding $T_1$.
+  - **Ghost Hit in $B_2$** (Frequency cache was too small!): Decrement $p$ by $\Delta_2 = \max(1, |B_1| / |B_2|)$, expanding $T_2$.
+- **Used in**: ZFS ARC, enterprise SAN controllers.
+
+##### ③ CLOCK / Second-Chance (Circular Buffer Approximation)
+Instead of mutating doubly linked list pointers on every read hit, **CLOCK** arranges cache slots in a circular array with a sweeping `hand` pointer and an atomic **1-bit `reference` flag** (or small counter in Generalized CLOCK / PostgreSQL's `usage_count` up to 5):
+- **On Cache Hit**: Atomically set `ref_bit = 1` (zero lock acquisition, zero pointer mutation!).
+- **On Eviction**: The `hand` sweeps clockwise:
+  - If `ref_bit == 1`, clear `ref_bit = 0` (grant a "second chance") and advance `hand`.
+  - If `ref_bit == 0`, evict the slot immediately and insert the new entry.
+
+##### ④ W-TinyLFU + Ring-Buffer Replay (Caffeine's Concurrency Engine)
+Beyond its **1% Window LRU + 99% SLRU (80% Protected / 20% Probation)** and **4-bit Count-Min Sketch** admission filter (which resets/halves all counters every $W$ sample events to provide aging decay), Caffeine solves the multi-core lock contention problem using **Database-Inspired WAL Buffering**:
+- **Read Ring Buffers**: On a cache hit, threads do **not** acquire a lock to reorder the SLRU list. Instead, they append the accessed node reference into a thread-striped **Lock-Free Ring Buffer**. If the ring buffer is full, the read hit event is simply dropped (dropping a small fraction of recency updates has near-zero impact on hit ratio!).
+- **Write MPSC Queue**: Mutations (`put` / `remove`) are pushed to a bounded Multi-Producer Single-Consumer queue.
+- **Asynchronous Maintenance Drain**: A single background thread (on `ForkJoinPool`) drains the read ring buffers and write queue in batches, updating the Count-Min Sketch and SLRU pointers without multi-threaded lock contention.
+
+##### ⑤ SIEVE (NSDI '24 — Turn-Key, Simpler than LRU)
+Introduced at USENIX NSDI 2024 ( Zhang et al.), **SIEVE** is a breakthrough eviction algorithm designed specifically for skewed web workloads. It uses **only a single FIFO queue**, a single **`visited` bit** per entry, and a moving **`hand` pointer** that scans from tail toward head:
+- **Cache Hit**: Simply set `entry.visited = true` (atomic bit flip; **zero locking and zero list reordering**).
+- **Cache Miss (Insertion)**: New objects are always inserted at the **Head** of the FIFO queue with `visited = false`.
+- **Eviction (The Moving Hand)**: Unlike CLOCK (where evicted slots are overwritten in-place at the hand) or FIFO (where the hand is fixed at the tail), SIEVE's `hand` starts at the tail and moves toward the head:
+  - While `hand.visited == true`: set `hand.visited = false` and move `hand = hand.prev` (wrapping to `tail` if `hand` reaches `head`).
+  - When `hand.visited == false`: evict the node at `hand` and set `hand = hand.prev`.
+  - **Crucial Insight (Lazy Promotion + Quick Demotion)**: Retained items stay in their original relative order while the `hand` moves past them toward the head. Once the `hand` passes the old surviving objects, it rapidly inspects newly inserted objects near the head, achieving **Quick Demotion** of one-hit scan items before they can pollute the cache!
+
+```java
+// SIEVE Eviction Algorithm (Lock-Free Reads on Cache Hits)
+public final class SieveCache<K, V> {
+    private static final class Node<K, V> {
+        final K key;
+        volatile V value;
+        volatile boolean visited; // Flipped lock-free on cache hits!
+        Node<K, V> prev;
+        Node<K, V> next;
+        Node(K key, V value) { this.key = key; this.value = value; }
+    }
+
+    private final int capacity;
+    private final ConcurrentHashMap<K, Node<K, V>> map;
+    private Node<K, V> head;
+    private Node<K, V> tail;
+    private Node<K, V> hand;
+    private final ReentrantLock evictionLock = new ReentrantLock();
+
+    public SieveCache(int capacity) {
+        this.capacity = capacity;
+        this.map = new ConcurrentHashMap<>(capacity);
+    }
+
+    public V get(K key) {
+        Node<K, V> node = map.get(key);
+        if (node == null) return null;
+        // ZERO LOCK ON CACHE HIT: Only flip the volatile visited boolean!
+        if (!node.visited) {
+            node.visited = true;
+        }
+        return node.value;
+    }
+
+    public void put(K key, V value) {
+        Node<K, V> existing = map.get(key);
+        if (existing != null) {
+            existing.value = value;
+            existing.visited = true;
+            return;
+        }
+        evictionLock.lock();
+        try {
+            if (map.size() >= capacity) {
+                evictVictim();
+            }
+            Node<K, V> fresh = new Node<>(key, value);
+            fresh.visited = false;
+            insertAtHead(fresh);
+            map.put(key, fresh);
+        } finally {
+            evictionLock.unlock();
+        }
+    }
+
+    private void evictVictim() {
+        Node<K, V> obj = (hand != null) ? hand : tail;
+        while (obj != null && obj.visited) {
+            obj.visited = false;
+            obj = (obj.prev != null) ? obj.prev : tail;
+        }
+        if (obj != null) {
+            hand = obj.prev; // Hand stays at the predecessor of the evicted node
+            removeNode(obj);
+            map.remove(obj.key);
+        }
+    }
+
+    private void insertAtHead(Node<K, V> node) {
+        node.next = head;
+        node.prev = null;
+        if (head != null) head.prev = node;
+        head = node;
+        if (tail == null) tail = node;
+    }
+
+    private void removeNode(Node<K, V> node) {
+        if (node.prev != null) node.prev.next = node.next;
+        else head = node.next;
+        if (node.next != null) node.next.prev = node.prev;
+        else tail = node.prev;
+    }
+}
+```
+
+#### 3. Comprehensive Eviction Policy Trade-Off Matrix
+
+| Algorithm | Data Structure | Hit Path Concurrency | Scan Resistance | Metadata Overhead / Key | Best Production Fit |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Classic LRU** | `HashMap` + Doubly Linked List | **Poor** (Global lock to splice `MRU` on every `get`) | **None** (1 scan flushes working set) | ~16–24 bytes (`prev`/`next` pointers) | Single-threaded caches (Redis single-thread sampled LRU) |
+| **2Q** | `HashMap` + FIFO ($A_{1\text{in}}, A_{1\text{out}}$) + LRU ($A_m$) | **Moderate** (Lock required on $A_m$ promotion/hits) | **High** (One-hit wonders die in $A_{1\text{in}}$) | ~24 bytes + Ghost table | Database page buffer pools |
+| **ARC** | 4 Doubly Linked Lists ($T_1, T_2, B_1, B_2$) | **Poor** (Complex list moves under lock) | **Very High** (Self-tuning $p$) | ~32+ bytes (2x ghost directory) | Storage arrays, ZFS filesystem |
+| **CLOCK** | Circular Array + 1-bit `ref` flag + `hand` | **Excellent** (Lock-free atomic bit flip on hit) | **Low–Moderate** (GCLOCK improves via counters) | **1–8 bits** per slot | OS Virtual Memory, PostgreSQL `shared_buffers` |
+| **W-TinyLFU** | Window LRU + SLRU + 4-bit Count-Min Sketch | **Excellent** (Lock-free striped ring-buffer replay) | **Near-Optimal** (Sketch blocks scan items) | ~8 bits sketch + list pointers | In-process JVM caching (**Caffeine**) |
+| **SIEVE** | Single FIFO Queue + 1-bit `visited` + moving `hand` | **Excellent** (Zero lock on hits; atomic bit flip) | **High** (Quick demotion via moving hand) | **1 bit** + FIFO links | High-throughput multi-core web & CDN caches |
 
 ---
 
@@ -2979,6 +3214,72 @@ public class OptimizedCacheService {
 4. Use efficient data structures
 5. Minimize cache overhead
 
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace Caching & Eviction Interviews
+
+> **Reference**: [Sujeet Pro — LRU Cache Design: Eviction Strategies and Trade-offs](https://sujeet.pro/articles/lru-cache-design)
+
+### 1. The Senior Framing Strategy (First 60 Seconds)
+When asked to design an LRU cache or a caching layer in a Senior/Staff interview, frame the problem using physical invariants and production trade-offs before writing a single line of code:
+- **State Non-Negotiable Invariants Upfront**: Clarify whether the cache is an **in-process L1 heap cache** (~100 ns access, bounded by GC pressure and multi-core lock contention) or a **distributed L2 network cache** (~0.5–1 ms RTT, bounded by serialization and NIC bandwidth). Establish the **AMAT break-even invariant** ($H_{\text{break-even}} = \frac{R_{\text{read}} + R_{\text{write}}}{T_{\text{db}} + R_{\text{write}}}$) and confirm that the active **Working Set** follows a Zipfian power-law distribution ($\alpha \approx 1$).
+- **Back-of-the-Envelope Capacity & Memory Overhead Math**: Never calculate cache RAM by multiplying `Key Size + Value Size` alone. Account for structural metadata: in Java or C++, a classic `HashMap` + Doubly Linked List LRU incurs **24 to 64 bytes of pointer and object-header overhead per entry**. For 100M small keys (32B payload), metadata pointers alone consume **4–6 GB of RAM**.
+- **Proactive Failure-Mode Identification**: Call out the three silent killers of naive LRU caches before the interviewer probes:
+  1. **Read-Path Lock Contention**: In classic LRU, every `get(key)` is a **write operation** on the doubly linked list (`unlink` + `insertAtHead`), turning 100% read workloads into global mutex bottlenecks across CPU cores.
+  2. **Scan Pollution (One-Hit Wonders)**: A single background pagination scan or analytical job flushes the entire hot working set unless protected by an admission filter (**W-TinyLFU**, **2Q**, or **SIEVE**).
+  3. **Thundering Herd / Stampede**: Concurrent misses on an expired hot key will collapse the downstream database without **Single-Flight request coalescing** or **Probabilistic Early Expiration (XFetch)**.
+- **Day-2 Operational Realism**: Specify sliding-window hit ratio telemetry (never cumulative lifetime `INFO stats`), P99 tail latency tracking (Request Hit Ratio vs. Key Hit Ratio), and TTL jitter ($\text{TTL}_{\text{base}} \pm \text{Random}$) to prevent synchronized cache avalanches.
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "Since cache `get(key)` only reads data, we can use a `ReadWriteLock` (`ReentrantReadWriteLock.readLock()`) on our LRU cache so thousands of threads can read concurrently without blocking, right?"
+* **Junior/Mid Answer:** *"Yes! Reads don't change the key-value data, so using a shared `readLock()` for `get()` and an exclusive `writeLock()` for `put()` will allow massive read concurrency."*
+* **Principal Rebuttal:**
+  > *"That is a classic concurrency bug that will corrupt the doubly linked list and cause infinite loops or segmentation faults in production. In a strict LRU cache, **`get(key)` is NOT a read-only operation**—it mutates four pointers (`node.prev.next`, `node.next.prev`, `head.next.prev`, `head.next`) to promote the accessed node to the `MRU` head. If two threads execute `get()` under a shared `readLock()`, they will race on pointer mutations and corrupt the heap structure.*
+  >
+  > *To achieve lock-free read concurrency on multi-core hardware, we have two production architectures:*
+  > 1. ***Deferred Ring-Buffer Replay (Caffeine / W-TinyLFU)***: *Threads performing `get()` read from a `ConcurrentHashMap` and append the hit event to a striped, lock-free ring buffer without touching the linked list; a single background thread drains the buffer asynchronously to reorder the eviction queues.*
+  > 2. ***1-Bit Visited Flag with Moving Hand (SIEVE / CLOCK)***: *Instead of reordering nodes on a hit, `get()` only performs a lock-free atomic write `node.visited = true`, deferring all structural movement to the eviction path."*
+
+#### Trap 2: "Our cache hit ratio dropped from 95% to 15% every night at 2:00 AM after a reporting job ran, so we should double our Redis RAM capacity to fix it, right?"
+* **Junior/Mid Answer:** *"Yes, if the reporting job is evicting our keys, doubling the memory will give the cache enough room to hold both the user data and the reporting data."*
+* **Principal Rebuttal:**
+  > *"Doubling RAM is an expensive band-aid that fails as soon as the dataset grows larger than RAM. The root cause is **Scan Pollution** caused by a wide-open **Admission Policy** in classic LRU. When the 2:00 AM batch job scans 50 million historical rows once ('one-hit wonders'), standard LRU blindly admits every scanned row to the `MRU` head, evicting the active customer working set out the `LRU` tail.*
+  >
+  > *Instead of buying more RAM, we must enforce **Scan Resistance** at the admission gate:*
+  > - *In **In-Process Caching (Caffeine)**, **W-TinyLFU** confines new entries to a **1% Window LRU** and forces them to win a frequency duel via a **4-bit Count-Min Sketch** against the main SLRU victim before admission—one-hit scan items lose the duel and are discarded.*
+  > - *In **SIEVE**, new items enter at the queue head with `visited = false` while the eviction `hand` sweeps behind surviving hot items, rapidly demoting and evicting unvisited scan items (**Quick Demotion**).*
+  > - *For **Distributed Redis**, switch eviction from `allkeys-lru` to **`allkeys-lfu`** (Morris logarithmic counter with time decay) or bypass the cache (`Write-Around` / direct replica read) for batch reporting queries."*
+
+#### Trap 3: "Why does Redis use 'Approximate LRU' by sampling 5 random keys instead of implementing a real Doubly Linked List like we just coded?"
+* **Junior/Mid Answer:** *"Probably because implementing a doubly linked list in C was too complicated or slightly slower for the Redis authors."*
+* **Principal Rebuttal:**
+  > *"It has nothing to do with coding difficulty—it is pure **RAM density economics**. On a 64-bit architecture, a doubly linked list requires two 8-byte pointers (`prev` and `next` = **16 bytes**) per key. Across **100 million keys**, those two pointers alone consume **1.6 GB of pure RAM overhead** per shard, plus severe CPU cache-line chasing during pointer traversal.*
+  >
+  > *Instead, Redis packs a **24-bit LRU clock timestamp** (or 16-bit LDT + 8-bit logarithmic counter for LFU) directly inside the existing `robj` (`redisObject`) header with **zero extra bytes of allocation**. When memory reaches `maxmemory`, Redis samples `maxmemory-samples` (default 5, tunable to 10) random keys from the dict and evicts the one with the oldest 24-bit idle time across an eviction pool. At `samples=10`, Redis approximates true LRU hit ratios within 0.5% while saving gigabytes of pointer memory."*
+
+#### Trap 4: "Why would anyone use SIEVE (NSDI '24) over W-TinyLFU or ARC if ARC and W-TinyLFU already have great hit ratios?"
+* **Junior/Mid Answer:** *"SIEVE is newer so it always gives a much higher hit ratio than W-TinyLFU on every workload."*
+* **Principal Rebuttal:**
+  > *"W-TinyLFU remains the gold standard for general-purpose workloads (like database buffers and JVM caches), while SIEVE specifically targets **simplicity, zero-tuning, and multi-core throughput for skewed web/CDN workloads**. ARC and W-TinyLFU require maintaining multiple queues (4 lists in ARC; Window + Probation + Protected + Count-Min Sketch in W-TinyLFU) and mutating metadata on hits or background drains.*
+  >
+  > *SIEVE uses a **single FIFO queue** and a **1-bit `visited` flag**. Because cache hits never modify pointers or frequency sketches—only setting `visited = true`—SIEVE scales linearly across 16+ CPU cores with zero read lock contention, requires zero tuning parameters, and achieves Lazy Promotion and Quick Demotion in under 20 lines of eviction logic."*
+
+---
+
+### 3. Quick Reference — Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **LRU Data Structure & Overhead** | *"Use a `HashMap` and Doubly Linked List for $O(1)$ `get` and `put`."* | *"Quantifies the **16-byte pointer tax** (`prev`/`next`) per node + `robj` headers, and contrasts exact pointer-based LRU against Redis's 24-bit inline clock sampling (`maxmemory-samples`)."* |
+| **Multi-Threaded Read Scaling** | *"Wrap the LRU cache in a `synchronized` block or `ReadWriteLock`."* | *"Explains why `get()` is a pointer-mutating write in LRU, and designs lock-free hit paths using **Caffeine's striped Ring Buffers** or **SIEVE/CLOCK's atomic 1-bit `visited` flag**."* |
+| **Scan Pollution Defense** | *"Increase cache size or lower the TTL so scanned items expire faster."* | *"Decouples **Admission Policy** from **Eviction Policy**: uses **2Q**, **ARC**, **W-TinyLFU** (4-bit Count-Min Sketch admission duel), or **SIEVE** (moving-hand quick demotion) to filter one-hit wonders."* |
+| **Cache Capacity Sizing** | *"We have 10 TB of database rows, so we need a 2 TB cache (20% rule)."* | *"Sizes RAM strictly to the active **Zipfian Working Set** ($\alpha \approx 1$) rather than total dataset, proving via **AMAT** ($H_{\text{break-even}} = \frac{2}{T_{\text{db}}+1}$) where marginal hit-rate gains hit 0%."* |
+| **Observability & Telemetry** | *"Monitor Redis `INFO stats` `keyspace_hits` / `keyspace_misses`."* | *"Rejects lifetime cumulative counters; measures per-region sliding-window `rate(cache_gets[5m])` and separates **Request Hit Ratio** from **Key Hit Ratio** to protect P99 tail latency."* |
+
 ## See Also
 * **[Scaling Reads](./scaling-reads.md)**: Explore how caching strategies fit into a broader high-scale read architecture.
+
 

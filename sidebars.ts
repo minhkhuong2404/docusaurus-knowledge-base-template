@@ -24,6 +24,11 @@ const sidebars: SidebarsConfig = {
 			label: '💼 General Interview Framework'
 		},
 		{
+			type: 'doc',
+			id: 'technical-knowledge/interview-questions/resume-and-negotiation-guide',
+			label: '📄 Resume & Salary Negotiation'
+		},
+		{
 			type: 'category',
 			label: '🛠️Technical Knowledge',
 			collapsed: false,

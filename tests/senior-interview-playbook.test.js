@@ -334,4 +334,251 @@ describe('Senior/Staff Interview Playbook Test Suite (Java & Spring)', () => {
       }
     }
   });
+
+  it('Sujeet Pro 25 System Design & Distributed Systems articles must be integrated with Senior/Staff Playbooks', () => {
+    const sujeetPages = [
+      {
+        path: 'docs/technical-knowledge/system-design/load-balancing-reliability.md',
+        url: 'https://sujeet.pro/articles/load-balancers-architecture',
+        tokens: ['Maglev', 'Power of Two', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/scaling-reads.md',
+        url: 'https://sujeet.pro/articles/cdn-architecture-and-caching',
+        tokens: ['Origin Shield', 'stale-while-revalidate', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway.md',
+        url: 'https://sujeet.pro/articles/api-gateway-patterns',
+        tokens: ['JWKS', 'Phantom Token', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/service-discovery.md',
+        url: 'https://sujeet.pro/articles/service-discovery-and-registry',
+        tokens: ['xDS', 'healthy_panic_threshold', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/networking/dns-resolution.md',
+        url: 'https://sujeet.pro/articles/dns-deep-dive',
+        tokens: ['EDNS0', 'DNSSEC', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/message-queues.md',
+        url: 'https://sujeet.pro/articles/queues-and-pubsub',
+        tokens: ['ChangeMessageVisibility', 'Head-of-Line', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/event-driven-microservices.md',
+        url: 'https://sujeet.pro/articles/event-driven-architecture',
+        tokens: ['Event-Carried State Transfer', 'Schema Registry', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/api-design.md',
+        url: 'https://sujeet.pro/articles/rpc-and-api-design',
+        tokens: ['Varint', 'grpc-timeout', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/cap-theorem.md',
+        url: 'https://sujeet.pro/articles/consistency-and-cap-theorem',
+        tokens: ['Linearizability', 'Sloppy Quorum', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/distributed-systems.md',
+        url: 'https://sujeet.pro/articles/distributed-consensus',
+        tokens: ['ReadIndex', 'Pre-Vote', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/time-and-ordering-and-unique-ids.md',
+        url: 'https://sujeet.pro/articles/time-and-ordering',
+        tokens: ['https://sujeet.pro/articles/unique-id-generation', 'KSUID', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/what-breaks-at-scale.md',
+        url: 'https://sujeet.pro/articles/failure-modes-and-resilience',
+        tokens: ['Metastable', 'CoDel', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/rate-limiting-algorithms.md',
+        url: 'https://sujeet.pro/articles/rate-limiting-strategies',
+        tokens: ['Retry-After', 'X-RateLimit-Remaining', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/circuit-breaker-pattern.md',
+        url: 'https://sujeet.pro/articles/circuit-breaker-patterns',
+        tokens: ['Ring Bit Buffer', 'Gradient2', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/capacity-planning.md',
+        url: 'https://sujeet.pro/articles/capacity-planning-and-estimation',
+        tokens: ['Universal Scalability Law', 'M/M/1', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/caching-strategies.md',
+        url: 'https://sujeet.pro/articles/lru-cache-design',
+        tokens: ['SIEVE', 'W-TinyLFU', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/problem-breakdowns/distributed-cache.md',
+        url: 'https://sujeet.pro/articles/distributed-cache-design',
+        tokens: ['16,384', 'Lease', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/large-blobs.md',
+        url: 'https://sujeet.pro/articles/blob-storage-design',
+        tokens: ['Haystack', 'Local Reconstruction Codes', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/search-systems.md',
+        url: 'https://sujeet.pro/articles/distributed-search-engine',
+        tokens: ['BM25', 'Block-Max WAND', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/log-aggregation.md',
+        url: 'https://sujeet.pro/articles/distributed-logging-system',
+        tokens: ['Loki', 'ClickHouse', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/observability.md',
+        url: 'https://sujeet.pro/articles/distributed-monitoring',
+        tokens: ['Gorilla', 'DDSketch', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/problem-breakdowns/metrics-monitoring.md',
+        url: 'https://sujeet.pro/articles/distributed-monitoring',
+        tokens: ['DDSketch', '14.4x', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/long-running-tasks.md',
+        url: 'https://sujeet.pro/articles/task-scheduler-design',
+        tokens: ['Timing Wheel', 'fencing_token', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/problem-breakdowns/job-scheduler.md',
+        url: 'https://sujeet.pro/articles/task-scheduler-design',
+        tokens: ['SKIP LOCKED', 'fencing_token', 'Senior/Staff Interview Playbook'],
+      },
+      {
+        path: 'docs/technical-knowledge/system-design/sharded-counters-and-leaderboards.md',
+        url: 'https://sujeet.pro/articles/sharded-counters',
+        tokens: ['https://sujeet.pro/articles/leaderboard-design', 'zskiplistLevel', 'Senior/Staff Interview Playbook'],
+      },
+    ];
+
+    for (const item of sujeetPages) {
+      assert.ok(fs.existsSync(item.path), `${item.path} must exist`);
+      const content = fs.readFileSync(item.path, 'utf8');
+      assert.ok(content.includes(item.url), `${item.path} must cite ${item.url}`);
+      for (const tok of item.tokens) {
+        assert.ok(content.includes(tok), `${item.path} must include token: ${tok}`);
+      }
+    }
+  });
+
+  it('verifies Tech Interview Handbook guide updates, diagrams, and Senior/Staff Interview Playbooks', () => {
+    const handbookPages = [
+      {
+        path: 'docs/technical-knowledge/interview-questions/interview-framework.md',
+        tokens: [
+          'OfferNegotiationLifecycleDiagram',
+          'Google XYZ Bullet Formula',
+          'The 10 Rules of Software Engineering Salary Negotiation',
+          '## 🧠 Senior/Staff Interview Playbook:',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/interview-questions/resume-and-negotiation-guide.md',
+        tokens: [
+          'OfferNegotiationLifecycleDiagram',
+          'Writing Your Software Engineer Resume',
+          'Understanding Software Engineering Compensation',
+          'The 10 Rules of Negotiation',
+          'Choosing Between Companies',
+          '## 🧠 Senior/Staff Interview Playbook:',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/coding-interview-prep/intro.md',
+        tokens: [
+          'CodingInterviewRubricFlowDiagram',
+          'Picking a Programming Language',
+          'Study and Practice Plan',
+          'The BUD Optimization Heuristic',
+          'The Master Corner-Cases Cheatsheet',
+          '## 🧠 Senior/Staff Interview Playbook:',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/interview-questions/behavioral/overview.md',
+        tokens: [
+          'BehavioralOverviewDiagram',
+          'Preparing Your Self-Introduction',
+          'Behavioral Interview Rubrics',
+          'Preparing for Senior & Staff+ Candidates',
+          '## 🧠 Senior/Staff Interview Playbook:',
+        ],
+      },
+      {
+        path: 'docs/technical-knowledge/interview-questions/behavioral/questions-to-ask.md',
+        tokens: [
+          'QuestionsToAskDiagram',
+          '## 🧠 Senior/Staff Interview Playbook:',
+        ],
+      },
+    ];
+
+    for (const page of handbookPages) {
+      assert.ok(fs.existsSync(page.path), `${page.path} must exist`);
+      const content = fs.readFileSync(page.path, 'utf8');
+      for (const tok of page.tokens) {
+        assert.ok(content.includes(tok), `${page.path} must include ${tok}`);
+      }
+    }
+
+    const diagrams = [
+      'src/components/CodingInterviewRubricFlowDiagram.tsx',
+      'src/components/OfferNegotiationLifecycleDiagram.tsx',
+    ];
+    for (const diag of diagrams) {
+      assert.ok(fs.existsSync(diag), `${diag} must exist`);
+      const diagContent = fs.readFileSync(diag, 'utf8');
+      assert.ok(
+        diagContent.includes('interactive-diagram-flowing-path'),
+        `${diag} must use interactive-diagram-flowing-path`
+      );
+    }
+
+    const sidebars = fs.readFileSync('sidebars.ts', 'utf8');
+    assert.ok(
+      sidebars.includes('technical-knowledge/interview-questions/resume-and-negotiation-guide'),
+      'sidebars.ts must register resume-and-negotiation-guide'
+    );
+  });
+
+  it('verifies outbox-pattern.md DB retry, post-publish ACK recovery, diagram, and Senior/Staff Playbook', () => {
+    const outboxPath = 'docs/technical-knowledge/system-design/outbox-pattern.md';
+    const content = fs.readFileSync(outboxPath, 'utf8');
+    const requiredTokens = [
+      'OutboxFailureRecoveryDiagram',
+      'Database Failure Retries & Post-Publish ACK Failure Recovery',
+      '3-Phase Claim-Publish-Ack',
+      'fencing_token',
+      'lease_expires_at',
+      'Pending-ACK Reconciliation Buffer',
+      'Transactional Inbox',
+      'Worked Case Study: Async S3 File Upload & Processing',
+      'Monotonic State Machine',
+      '## 🧠 Senior/Staff Interview Playbook:',
+    ];
+    for (const token of requiredTokens) {
+      assert.ok(content.includes(token), `outbox-pattern.md must include: ${token}`);
+    }
+
+    const diagPath = 'src/components/OutboxFailureRecoveryDiagram.tsx';
+    assert.ok(fs.existsSync(diagPath), 'OutboxFailureRecoveryDiagram.tsx must exist');
+    const diagContent = fs.readFileSync(diagPath, 'utf8');
+    assert.ok(
+      diagContent.includes('interactive-diagram-flowing-path'),
+      'OutboxFailureRecoveryDiagram.tsx must use interactive-diagram-flowing-path'
+    );
+  });
 });

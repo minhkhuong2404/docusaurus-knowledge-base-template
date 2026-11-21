@@ -68,13 +68,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-522": {
+  "/-3a6": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-b10": {
+  "/-fa9": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -1354,10 +1354,6 @@
     "__comp": "df203c0f",
     "__props": "c5ef0b82"
   },
-  "/tags/code-assessment-679": {
-    "__comp": "df203c0f",
-    "__props": "d7e4c4e6"
-  },
   "/tags/code-review-403": {
     "__comp": "df203c0f",
     "__props": "0dbe4739"
@@ -1469,6 +1465,10 @@
   "/tags/compelling-evidence-c34": {
     "__comp": "df203c0f",
     "__props": "dfee29fa"
+  },
+  "/tags/compensation-5dd": {
+    "__comp": "df203c0f",
+    "__props": "cf9a3abc"
   },
   "/tags/compliance-1bf": {
     "__comp": "df203c0f",
@@ -2449,6 +2449,10 @@
   "/tags/equals-hashcode-d56": {
     "__comp": "df203c0f",
     "__props": "3bbb060e"
+  },
+  "/tags/equity-40a": {
+    "__comp": "df203c0f",
+    "__props": "d5b3bc36"
   },
   "/tags/equivalence-partitioning-0d3": {
     "__comp": "df203c0f",
@@ -5786,6 +5790,10 @@
     "__comp": "df203c0f",
     "__props": "e40c3230"
   },
+  "/tags/resume-e65": {
+    "__comp": "df203c0f",
+    "__props": "e1c11ebf"
+  },
   "/tags/retrieval-augmented-generation-428": {
     "__comp": "df203c0f",
     "__props": "8850b0a9"
@@ -5902,6 +5910,10 @@
     "__comp": "df203c0f",
     "__props": "a38b4d33"
   },
+  "/tags/rsu-c61": {
+    "__comp": "df203c0f",
+    "__props": "47d2499b"
+  },
   "/tags/rtgs-f08": {
     "__comp": "df203c0f",
     "__props": "9d888fc8"
@@ -5909,6 +5921,10 @@
   "/tags/rto-459": {
     "__comp": "df203c0f",
     "__props": "5006d98f"
+  },
+  "/tags/rubrics-b09": {
+    "__comp": "df203c0f",
+    "__props": "c9f4a95f"
   },
   "/tags/runbook-995": {
     "__comp": "df203c0f",
@@ -5941,6 +5957,10 @@
   "/tags/saga-363": {
     "__comp": "df203c0f",
     "__props": "6a2129ea"
+  },
+  "/tags/salary-negotiation-2a8": {
+    "__comp": "df203c0f",
+    "__props": "25885f4d"
   },
   "/tags/sam-596": {
     "__comp": "df203c0f",
@@ -6858,10 +6878,6 @@
     "__comp": "df203c0f",
     "__props": "71ae85be"
   },
-  "/tags/technical-interview-837": {
-    "__comp": "df203c0f",
-    "__props": "c1298564"
-  },
   "/tags/technical-knowledge-739": {
     "__comp": "df203c0f",
     "__props": "ad3cc94a"
@@ -7606,7 +7622,7 @@
     "__comp": "df203c0f",
     "__props": "e05b6b95"
   },
-  "/-f39": {
+  "/-d55": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -8161,7 +8177,7 @@
     "__comp": "17896441",
     "content": "3f8eb35f"
   },
-  "/docs-1ae": {
+  "/docs-ac9": {
     "__comp": "17896441",
     "content": "0e384e19"
   },
@@ -8269,7 +8285,7 @@
     "__comp": "17896441",
     "content": "8a8d0fdd"
   },
-  "/system-design-6e9": {
+  "/system-design-26f": {
     "__comp": "17896441",
     "content": "93124d3b"
   },
@@ -8293,7 +8309,7 @@
     "__comp": "17896441",
     "content": "23da8883"
   },
-  "/technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev-6e2": {
+  "/technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev-063": {
     "__comp": "17896441",
     "content": "a055b305"
   },
@@ -8761,11 +8777,11 @@
     "__comp": "17896441",
     "content": "36f4d598"
   },
-  "/technical-knowledge/become-senior-developer/7-coding-laws-9e9": {
+  "/technical-knowledge/become-senior-developer/7-coding-laws-bed": {
     "__comp": "17896441",
     "content": "2cfdd815"
   },
-  "/technical-knowledge/become-senior-developer/real-world-engineering-playbook-3c3": {
+  "/technical-knowledge/become-senior-developer/real-world-engineering-playbook-81f": {
     "__comp": "17896441",
     "content": "393b80e8"
   },
@@ -12241,7 +12257,7 @@
     "__comp": "17896441",
     "content": "8a8e4d60"
   },
-  "/technical-knowledge/interview-questions/interview-framework-615": {
+  "/technical-knowledge/interview-questions/interview-framework-c43": {
     "__comp": "17896441",
     "content": "45806eee"
   },
@@ -12340,6 +12356,10 @@
   "/technical-knowledge/interview-questions/java/tricky-java-interview-0c1": {
     "__comp": "17896441",
     "content": "be1ca738"
+  },
+  "/technical-knowledge/interview-questions/resume-and-negotiation-guide-d3e": {
+    "__comp": "17896441",
+    "content": "0d53548c"
   },
   "/technical-knowledge/java/concurrency-vs-parallelism-f0b": {
     "__comp": "17896441",
@@ -12481,7 +12501,7 @@
     "__comp": "17896441",
     "content": "89378099"
   },
-  "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-23c": {
+  "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-16b": {
     "__comp": "17896441",
     "content": "5a79051b"
   },
@@ -13297,7 +13317,7 @@
     "__comp": "17896441",
     "content": "89400898"
   },
-  "/technical-knowledge/system-design/interview-framework-7d4": {
+  "/technical-knowledge/system-design/interview-framework-746": {
     "__comp": "17896441",
     "content": "fb6e70f5"
   },

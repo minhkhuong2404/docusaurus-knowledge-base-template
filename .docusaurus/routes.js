@@ -54,11 +54,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '522'),
+    component: ComponentCreator('/', '3a6'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'b10'),
+        component: ComponentCreator('/', 'fa9'),
         routes: [
           {
             path: '/tags',
@@ -1656,11 +1656,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/code-assessment',
-            component: ComponentCreator('/tags/code-assessment', '679'),
-            exact: true
-          },
-          {
             path: '/tags/code-review',
             component: ComponentCreator('/tags/code-review', '403'),
             exact: true
@@ -1798,6 +1793,11 @@ export default [
           {
             path: '/tags/compelling-evidence',
             component: ComponentCreator('/tags/compelling-evidence', 'c34'),
+            exact: true
+          },
+          {
+            path: '/tags/compensation',
+            component: ComponentCreator('/tags/compensation', '5dd'),
             exact: true
           },
           {
@@ -3023,6 +3023,11 @@ export default [
           {
             path: '/tags/equals-hashcode',
             component: ComponentCreator('/tags/equals-hashcode', 'd56'),
+            exact: true
+          },
+          {
+            path: '/tags/equity',
+            component: ComponentCreator('/tags/equity', '40a'),
             exact: true
           },
           {
@@ -7196,6 +7201,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/resume',
+            component: ComponentCreator('/tags/resume', 'e65'),
+            exact: true
+          },
+          {
             path: '/tags/retrieval-augmented-generation',
             component: ComponentCreator('/tags/retrieval-augmented-generation', '428'),
             exact: true
@@ -7341,6 +7351,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/rsu',
+            component: ComponentCreator('/tags/rsu', 'c61'),
+            exact: true
+          },
+          {
             path: '/tags/rtgs',
             component: ComponentCreator('/tags/rtgs', 'f08'),
             exact: true
@@ -7348,6 +7363,11 @@ export default [
           {
             path: '/tags/rto',
             component: ComponentCreator('/tags/rto', '459'),
+            exact: true
+          },
+          {
+            path: '/tags/rubrics',
+            component: ComponentCreator('/tags/rubrics', 'b09'),
             exact: true
           },
           {
@@ -7388,6 +7408,11 @@ export default [
           {
             path: '/tags/saga',
             component: ComponentCreator('/tags/saga', '363'),
+            exact: true
+          },
+          {
+            path: '/tags/salary-negotiation',
+            component: ComponentCreator('/tags/salary-negotiation', '2a8'),
             exact: true
           },
           {
@@ -8536,11 +8561,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/technical-interview',
-            component: ComponentCreator('/tags/technical-interview', '837'),
-            exact: true
-          },
-          {
             path: '/tags/technical-knowledge',
             component: ComponentCreator('/tags/technical-knowledge', '739'),
             exact: true
@@ -9472,7 +9492,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'f39'),
+            component: ComponentCreator('/', 'd55'),
             routes: [
               {
                 path: '/aws',
@@ -10304,7 +10324,7 @@ export default [
               },
               {
                 path: '/docs',
-                component: ComponentCreator('/docs', '1ae'),
+                component: ComponentCreator('/docs', 'ac9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10466,7 +10486,7 @@ export default [
               },
               {
                 path: '/system-design',
-                component: ComponentCreator('/system-design', '6e9'),
+                component: ComponentCreator('/system-design', '26f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10502,7 +10522,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev',
-                component: ComponentCreator('/technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev', '6e2'),
+                component: ComponentCreator('/technical-knowledge/ai-agents/llm-training-rlhf-rlvr-jev', '063'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -11204,13 +11224,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/become-senior-developer/7-coding-laws',
-                component: ComponentCreator('/technical-knowledge/become-senior-developer/7-coding-laws', '9e9'),
+                component: ComponentCreator('/technical-knowledge/become-senior-developer/7-coding-laws', 'bed'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/become-senior-developer/real-world-engineering-playbook',
-                component: ComponentCreator('/technical-knowledge/become-senior-developer/real-world-engineering-playbook', '3c3'),
+                component: ComponentCreator('/technical-knowledge/become-senior-developer/real-world-engineering-playbook', '81f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16424,7 +16444,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/interview-questions/interview-framework',
-                component: ComponentCreator('/technical-knowledge/interview-questions/interview-framework', '615'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/interview-framework', 'c43'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16569,6 +16589,12 @@ export default [
               {
                 path: '/technical-knowledge/interview-questions/java/tricky-java-interview',
                 component: ComponentCreator('/technical-knowledge/interview-questions/java/tricky-java-interview', '0c1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/resume-and-negotiation-guide',
+                component: ComponentCreator('/technical-knowledge/interview-questions/resume-and-negotiation-guide', 'd3e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16784,7 +16810,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/exactly-once-vs-dedup',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/exactly-once-vs-dedup', '23c'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/exactly-once-vs-dedup', '16b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -18000,7 +18026,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/interview-framework',
-                component: ComponentCreator('/technical-knowledge/system-design/interview-framework', '7d4'),
+                component: ComponentCreator('/technical-knowledge/system-design/interview-framework', '746'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

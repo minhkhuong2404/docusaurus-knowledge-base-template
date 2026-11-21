@@ -5771,6 +5771,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/interview-questions/resume-and-negotiation-guide",
+              "path": "/technical-knowledge/interview-questions/resume-and-negotiation-guide",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/concurrency-vs-parallelism",
               "path": "/technical-knowledge/java/concurrency-vs-parallelism",
               "sidebar": "tutorialSidebar"

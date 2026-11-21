@@ -1,8 +1,8 @@
 {
-  "id": "3364",
-  "title": "Minimum Positive Sum Subarray ",
-  "url": "https://leetcode.com/problems/minimum-positive-sum-subarray/",
-  "difficulty": "easy",
-  "topic": "Array, Sliding Window, Prefix Sum",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-11-14."
+  "id": "3331",
+  "title": "Find Subtree Sizes After Changes",
+  "url": "https://leetcode.com/problems/find-subtree-sizes-after-changes/",
+  "difficulty": "medium",
+  "topic": "Array, Hash Table, String, Tree, Depth-First Search",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-11-21."
 }

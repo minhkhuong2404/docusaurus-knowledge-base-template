@@ -115,6 +115,17 @@ export default {
         "searchResultLimits": 8,
         "searchBarShortcut": false,
         "searchBarShortcutHint": false,
+        "fuzzyMatchingDistance": 0,
+        "ignoreCssSelectors": [
+          ".interactive-diagram-container",
+          "pre",
+          ".prism-code",
+          ".katex",
+          ".mermaid"
+        ],
+        "ignoreFiles": [
+          {}
+        ],
         "hashed": true
       }
     ],

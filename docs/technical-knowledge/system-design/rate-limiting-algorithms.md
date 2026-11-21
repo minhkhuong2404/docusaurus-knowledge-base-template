@@ -16,6 +16,8 @@ import SlidingWindowCounterDiagram from '@site/src/components/SlidingWindowCount
 
 # Rate Limiting Algorithms
 
+> **Reference**: [Sujeet Pro — Rate Limiting Strategies: Token Bucket, Leaky Bucket, and Sliding Window](https://sujeet.pro/articles/rate-limiting-strategies)
+
 In high-scale distributed systems, **rate limiting** is a critical defensive pattern. It restricts the volume of requests a client can make within a given timeframe. Rate limiting prevents resource starvation, mitigates Denial of Service (DoS) attacks, manages API monetization tiers, and protects downstream databases and microservices from traffic spikes.
 
 This guide provides a comprehensive breakdown of the core rate-limiting algorithms, explaining their internal mechanics, performance profiles, distributed trade-offs, and concrete use cases.
@@ -334,6 +336,131 @@ public class SlidingWindowCounter {
 
 ### When to Use
 * **High-Throughput Distributed APIs**: The standard for high-performance microservices (e.g., Cloudflare, Kong Gateway). It provides low, constant-space complexity ($O(1)$) with near-exact accuracy, eliminating both sliding log's memory leaks and fixed window's boundary spikes.
+
+---
+
+## 6. Distributed Rate Limiting in Redis: Atomicity, Lua Scripts & Hot-Key Sharding
+
+When running multiple stateless API Gateway pods behind a load balancer, in-memory rate limiters fail because a client's requests are round-robined across pods. Centralizing state in **Redis** solves global state sharing but introduces two critical distributed systems challenges: **Check-Then-Act Race Conditions** and **Hot-Key Bottlenecks**.
+
+### 1. The `GET` + `SET` Race Condition vs. Atomic Redis Lua Scripts
+If two gateway pods concurrently read a user's token count via `GET rate:user_123` (both seeing `1` token remaining), compute `1 - 1 = 0` in application memory, and write back `SET rate:user_123 0`, **both requests succeed**—violating the rate limit!
+
+Because Redis executes **Lua scripts (`EVAL` / `EVALSHA`)** atomically on its single-threaded event loop, all read-refill-decrement steps must run inside a single Lua script:
+
+```lua
+-- Atomic Token Bucket in Redis Lua (EVALSHA)
+-- KEYS[1] = bucket key (e.g. "rl:tb:{user_42}")
+-- ARGV[1] = capacity, ARGV[2] = refill_rate_per_ms, ARGV[3] = now_ms, ARGV[4] = requested_tokens
+local data = redis.call("HMGET", KEYS[1], "tokens", "last_refill")
+local tokens = tonumber(data[1])
+local last_refill = tonumber(data[2])
+local capacity = tonumber(ARGV[1])
+local rate = tonumber(ARGV[2])
+local now = tonumber(ARGV[3])
+local requested = tonumber(ARGV[4])
+
+if tokens == nil then
+  tokens = capacity
+  last_refill = now
+else
+  local elapsed = math.max(0, now - last_refill)
+  tokens = math.min(capacity, tokens + (elapsed * rate))
+  last_refill = now
+end
+
+if tokens >= requested then
+  tokens = tokens - requested
+  redis.call("HMSET", KEYS[1], "tokens", tokens, "last_refill", last_refill)
+  redis.call("PEXPIRE", KEYS[1], math.ceil(capacity / rate) * 2)
+  return {1, math.floor(tokens)} -- Allowed + remaining tokens
+else
+  redis.call("HMSET", KEYS[1], "tokens", tokens, "last_refill", last_refill)
+  local retry_after_ms = math.ceil((requested - tokens) / rate)
+  return {0, retry_after_ms} -- Rejected + ms until next token
+end
+```
+
+### 2. Solving Redis Hot-Key Bottlenecks: Local Batch Token Reservation & Key Sharding
+A single Redis shard maxes out at ~100,000–150,000 ops/sec. If a single viral tenant or flash-sale endpoint generates 500,000 RPS against a single Redis key (`rl:tenant_apple`), that single Redis shard CPU hits 100% while the rest of the Redis Cluster sits idle!
+- **Strategy A — Local Batch Token Reservation (Token Leasing)**: Instead of calling Redis on every HTTP request, each API Gateway pod leases a **batch of tokens** (e.g., 50 tokens at a time) from Redis and decrements an in-memory `AtomicLong` locally. Network calls to Redis drop by $50\times$, trading a tiny fraction of boundary accuracy for massive throughput.
+- **Strategy B — Randomized Key Sharding (`1..N` Buckets)**: Split a high-volume key into $K$ sub-keys across Redis Cluster hash slots (`rl:tenant_apple:1` .. `rl:tenant_apple:10`), where each sub-key gets $1/K$ of the quota and requests hash to a random shard.
+
+---
+
+## 7. Standard HTTP Rate Limiting Headers & Multi-Tier Defense
+
+### HTTP `429 Too Many Requests` & Response Headers
+Well-behaved API Gateways always return transparent rate-limit telemetry on every response (and mandatory backoff directives on `HTTP 429` rejections, standardized in IETF `RateLimit` header specs):
+
+```http
+HTTP/1.1 429 Too Many Requests
+Content-Type: application/json
+Retry-After: 12
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1715000060
+```
+
+| Header | Meaning & Client Behavior |
+| :--- | :--- |
+| **`X-RateLimit-Limit`** | Maximum requests permitted in the active window or bucket capacity. |
+| **`X-RateLimit-Remaining`** | Remaining tokens/quota before throttling begins. |
+| **`X-RateLimit-Reset`** | Unix epoch timestamp (seconds) when the current quota resets to full. |
+| **`Retry-After`** | Seconds (or HTTP date) the client **must wait** before issuing another retry (prevents immediate retry storms). |
+
+### Multi-Tier Rate Limiting Architecture (Defense in Depth)
+Production architectures enforce rate limiting across three distinct layers:
+1. **Tier 1 — Edge / CDN Layer (L3/L4/L7 — Cloudflare, AWS Shield/WAF)**: Absorbs volumetric SYN floods, UDP amplification, and IP-based scraping at the network edge using local per-POP Sliding Window Counters (`eBPF` / `XDP`) before packets ever enter your cloud VPC.
+2. **Tier 2 — API Gateway Layer (Kong, Envoy, AWS API Gateway)**: Enforces authenticated business quotas per `API Key`, `Tenant ID`, or `JWT sub` using **Token Bucket** backed by Redis Lua scripts.
+3. **Tier 3 — Service / Storage Layer (Resilience4j, Envoy Sidecar, Database Proxy)**: Enforces fine-grained per-endpoint **Leaky Bucket / Adaptive Concurrency Limits** to protect fragile downstream databases and GPU inference pools regardless of which caller originated the traffic.
+
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace Rate Limiter Design Interviews
+
+When an interviewer asks *"Design a distributed rate limiter handling 1 million RPS across 50 API Gateway nodes"*, a mid-level candidate says *"Store counters in Redis with `INCR` and `EXPIRE`."* A **Principal Engineer** immediately addresses **Fixed Window $2\times$ boundary bursts**, **`INCR` + `EXPIRE` non-atomic race conditions**, **Redis single-shard hot-key bottlenecks**, and **fail-open vs. fail-closed failure modes**.
+
+### 1. The Senior Framing Strategy (First 60 Seconds)
+
+1. **Select the Right Algorithm for the Workload**: Use **Token Bucket** when legitimate traffic is bursty (user APIs), **Sliding Window Counter** when memory must remain $O(1)$ without $2\times$ boundary spikes (Cloudflare scale), and **Leaky Bucket** when shaping outbound writes to a fragile downstream database.
+2. **Enforce Atomic Execution in Redis**: Never execute multi-step read-modify-write across the network (`GET` then `SET`) or unbundled `INCR` + `EXPIRE`; execute a single **Redis Lua script (`EVALSHA`)** so refill calculation, token deduction, and `PEXPIRE` run atomically.
+3. **Quantify Network Latency & Redis Hot Keys**: At 1,000,000 RPS, calling a single Redis key per tenant will saturate a single Redis thread (~100k RPS ceiling). Propose **Local Token Batch Leasing** or **Async Local Sync (Gossip / Periodic Flush)** to keep p99 gateway overhead under `< 0.5ms`.
+4. **Define Explicit Failure Modes (Fail-Open vs. Fail-Closed)**: Specify what happens when the Redis cluster is unreachable—**Fail-Open** (fallback to local in-memory Token Bucket per pod) for general APIs so Redis downtime doesn't cause a total platform outage, or **Fail-Closed** for high-risk login/OTP endpoints.
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "Why not just use Fixed Window with Redis `INCR key` followed by `EXPIRE key 60`? It's only two commands!"
+* **Junior/Mid Answer:** *"Yes, `INCR` and `EXPIRE` is the standard way to build a Redis rate limiter."*
+* **Principal Rebuttal:** *"That approach has two production-breaking flaws:
+  1. **The Zombie Key Leak (Atomicity Bug)**: If the gateway pod crashes or experiences a network timeout right after `INCR` succeeds but before `EXPIRE` is sent, that key remains in Redis **forever without a TTL**, permanently blocking the user once it hits the limit! You must wrap `INCR` + `PEXPIRE` in a **Lua script** or `MULTI/EXEC` transaction.
+  2. **The $2\times$ Boundary Burst**: If a user has a limit of 100 req/min and sends 100 requests at `00:59` and another 100 requests at `01:01`, Fixed Window permits **200 requests in 2 seconds** ($2\times$ the capacity of your downstream database). Upgrading to **Sliding Window Counter** requires only 2 integers per user ($C_{\text{prev}}$ and $C_{\text{curr}}$) and smooths out boundary spikes completely."*
+
+#### Trap 2: "Why not use Sliding Window Log (Redis `ZSET`) everywhere since it gives 100% exact accuracy?"
+* **Junior/Mid Answer:** *"Sliding Window Log is the best choice whenever we want exact rate limiting."*
+* **Principal Rebuttal:** *"Sliding Window Log (`ZADD` + `ZREMRANGEBYSCORE` + `ZCARD`) has **$O(R)$ memory complexity per user** and **$O(\log R)$ CPU complexity**. If an enterprise tenant has a quota of 50,000 requests per hour, storing 50,000 64-bit timestamps in a Redis `ZSET` (with skip-list/hashtable overhead of ~64 bytes per entry) consumes **> 3.2 MB of RAM for a single user**! Even worse, when an attacker launches a DDoS attack sending 100,000 rejected requests, a naive `ZADD`-before-check implementation still inserts and deletes all 100,000 timestamps, exhausting Redis memory and CPU. Reserve Sliding Window Log strictly for low-volume, high-security rules (e.g., max 5 password resets/hour)."*
+
+#### Trap 3: "One of our enterprise customers runs a flash sale at 300,000 RPS. Even with a 20-node Redis Cluster, our rate limiter starts timing out! Why?"
+* **Junior/Mid Answer:** *"We need to scale the Redis Cluster from 20 nodes to 50 nodes."*
+* **Principal Rebuttal:** *"Adding more nodes to a Redis Cluster **will not help at all** because Redis Cluster partitions keys by `CRC16(key) mod 16384`. All 300,000 RPS for `rl:tenant_enterprise_1` hash to the **exact same hash slot on a single Redis primary node**, pegging its single-threaded CPU at 100% while the other 19 nodes sit idle! To solve hot-key saturation, each API Gateway pod should either **lease tokens in batches of 100** from Redis and consume them in local RAM (`AtomicLong`), or shard the key across $N$ slots (`rl:tenant_enterprise_1:shard_[0..9]`)."*
+
+#### Trap 4: "What should our API Gateway do if the Redis Rate Limiter cluster goes down or experiences a network partition?"
+* **Junior/Mid Answer:** *"Throw an error and reject requests until Redis comes back online."*
+* **Principal Rebuttal:** *"Failing closed on an infrastructure cache outage turns a minor Redis blip into a **100% catastrophic global outage**! Instead, the API Gateway should wrap the Redis call in a tight timeout (`10ms`) and a **Circuit Breaker**. If Redis times out, the gateway immediately degrades to an **in-memory local Token Bucket** inside the gateway pod's JVM/Go memory (setting the pod's local limit to $\text{Global Limit} / N_{\text{pods}}$). Traffic continues flowing safely while ops restores Redis."*
+
+---
+
+### 3. Quick Reference — Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **Algorithm Selection** | "Use Fixed Window or Sliding Log." | "**Token Bucket** for burst-friendly APIs; **Sliding Window Counter** for $O(1)$ memory without $2\times$ boundary spikes; **Leaky Bucket** for steady egress." |
+| **Redis Concurrency** | "Read the count with `GET`, check in Java, then `SET`." | "Execute refill, check, decrement, and `PEXPIRE` atomically inside a single **Redis Lua script (`EVALSHA`)**." |
+| **High-Volume Tenant (300k RPS)** | "Add more shards to the Redis Cluster." | "A single key still hits 1 shard; use **Local Batch Token Reservation** in the gateway or **Key Sharding (`1..K`)**." |
+| **Client Backoff Contract** | "Return `429 Too Many Requests`." | "Return `429` with `Retry-After`, `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset` to prevent blind retry storms." |
+| **Redis Outage Handling** | "Block requests until Redis recovers." | "**Fail-Open to Local In-Memory Rate Limiting** ($\text{Quota} / N_{\text{pods}}$) guarded by a 10ms timeout so Redis never becomes a hard SPOF." |
 
 ---
 
