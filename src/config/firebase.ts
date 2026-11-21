@@ -11,13 +11,18 @@ import siteConfig from '@generated/docusaurus.config';
 
 const customFields = (siteConfig.customFields || {}) as Record<string, string | undefined>;
 
+export const isFirebaseConfigured = Boolean(
+  customFields.firebaseApiKey && customFields.firebaseApiKey.trim().length > 0
+);
+
+// Fallback to valid placeholder values during SSR / CI build environments without secrets
 export const firebaseConfig = {
-  apiKey: customFields.firebaseApiKey || '',
-  authDomain: customFields.firebaseAuthDomain || '',
-  projectId: customFields.firebaseProjectId || '',
-  storageBucket: customFields.firebaseStorageBucket || '',
-  messagingSenderId: customFields.firebaseMessagingSenderId || '',
-  appId: customFields.firebaseAppId || '',
+  apiKey: isFirebaseConfigured ? customFields.firebaseApiKey! : 'AIzaSyDummyBuildApiKeyPlaceholder000000',
+  authDomain: customFields.firebaseAuthDomain || 'placeholder.firebaseapp.com',
+  projectId: customFields.firebaseProjectId || 'placeholder-project',
+  storageBucket: customFields.firebaseStorageBucket || 'placeholder.appspot.com',
+  messagingSenderId: customFields.firebaseMessagingSenderId || '1234567890',
+  appId: customFields.firebaseAppId || '1:1234567890:web:abcdef123456',
 };
 
 // Initialize Firebase App
@@ -25,7 +30,7 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 export const auth = getAuth(app);
 
 // Enforce browser local persistence across sessions & deployments
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && isFirebaseConfigured) {
   setPersistence(auth, browserLocalPersistence).catch((err) => {
     console.error('Failed to set Firebase Auth browser local persistence:', err);
   });

@@ -68,13 +68,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-3a6": {
+  "/-8c5": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-fa9": {
+  "/-f3b": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -6626,6 +6626,10 @@
     "__comp": "df203c0f",
     "__props": "8bcd46ef"
   },
+  "/tags/stomp-61f": {
+    "__comp": "df203c0f",
+    "__props": "48116eef"
+  },
   "/tags/storage-113": {
     "__comp": "df203c0f",
     "__props": "1f3837b3"
@@ -7622,7 +7626,7 @@
     "__comp": "df203c0f",
     "__props": "e05b6b95"
   },
-  "/-d55": {
+  "/-1fd": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -8893,7 +8897,7 @@
     "__comp": "17896441",
     "content": "401e468a"
   },
-  "/technical-knowledge/coding-interview-prep/intro-39e": {
+  "/technical-knowledge/coding-interview-prep/intro-496": {
     "__comp": "17896441",
     "content": "6687ac23"
   },
@@ -12129,11 +12133,11 @@
     "__comp": "17896441",
     "content": "d0b437fb"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview-4bd": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview-a9f": {
     "__comp": "17896441",
     "content": "b2faf5e6"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask-4de": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask-9af": {
     "__comp": "17896441",
     "content": "30df29cd"
   },
@@ -12257,7 +12261,7 @@
     "__comp": "17896441",
     "content": "8a8e4d60"
   },
-  "/technical-knowledge/interview-questions/interview-framework-c43": {
+  "/technical-knowledge/interview-questions/interview-framework-04a": {
     "__comp": "17896441",
     "content": "45806eee"
   },
@@ -12357,7 +12361,7 @@
     "__comp": "17896441",
     "content": "be1ca738"
   },
-  "/technical-knowledge/interview-questions/resume-and-negotiation-guide-d3e": {
+  "/technical-knowledge/interview-questions/resume-and-negotiation-guide-862": {
     "__comp": "17896441",
     "content": "0d53548c"
   },
@@ -12793,7 +12797,7 @@
     "__comp": "17896441",
     "content": "6120f8a6"
   },
-  "/technical-knowledge/networking/dns-resolution-bc4": {
+  "/technical-knowledge/networking/dns-resolution-07b": {
     "__comp": "17896441",
     "content": "ee0ecb9e"
   },
@@ -13169,7 +13173,7 @@
     "__comp": "17896441",
     "content": "97b49958"
   },
-  "/technical-knowledge/system-design/api-design-808": {
+  "/technical-knowledge/system-design/api-design-204": {
     "__comp": "17896441",
     "content": "0237d5d1"
   },
@@ -13193,15 +13197,15 @@
     "__comp": "17896441",
     "content": "bc804bd9"
   },
-  "/technical-knowledge/system-design/caching-strategies-ccb": {
+  "/technical-knowledge/system-design/caching-strategies-4bd": {
     "__comp": "17896441",
     "content": "724987fe"
   },
-  "/technical-knowledge/system-design/cap-theorem-system-design-9cc": {
+  "/technical-knowledge/system-design/cap-theorem-system-design-f10": {
     "__comp": "17896441",
     "content": "75fc6f05"
   },
-  "/technical-knowledge/system-design/capacity-planning-1f1": {
+  "/technical-knowledge/system-design/capacity-planning-e3b": {
     "__comp": "17896441",
     "content": "57eb6c90"
   },
@@ -13221,7 +13225,7 @@
     "__comp": "17896441",
     "content": "8c140918"
   },
-  "/technical-knowledge/system-design/circuit-breaker-pattern-f33": {
+  "/technical-knowledge/system-design/circuit-breaker-pattern-f4a": {
     "__comp": "17896441",
     "content": "62899fb2"
   },
@@ -13277,7 +13281,7 @@
     "__comp": "17896441",
     "content": "eaab6fc7"
   },
-  "/technical-knowledge/system-design/distributed-systems-26c": {
+  "/technical-knowledge/system-design/distributed-systems-680": {
     "__comp": "17896441",
     "content": "b21b4701"
   },
@@ -13297,7 +13301,7 @@
     "__comp": "17896441",
     "content": "ec34228d"
   },
-  "/technical-knowledge/system-design/event-driven-microservices-a24": {
+  "/technical-knowledge/system-design/event-driven-microservices-89d": {
     "__comp": "17896441",
     "content": "9ebe4bab"
   },
@@ -13329,19 +13333,19 @@
     "__comp": "17896441",
     "content": "f7ca0986"
   },
-  "/technical-knowledge/system-design/large-blobs-c65": {
+  "/technical-knowledge/system-design/large-blobs-f37": {
     "__comp": "17896441",
     "content": "5c3590ca"
   },
-  "/technical-knowledge/system-design/load-balancing-reliability-77e": {
+  "/technical-knowledge/system-design/load-balancing-reliability-ea3": {
     "__comp": "17896441",
     "content": "b14a4730"
   },
-  "/technical-knowledge/system-design/log-aggregation-3d5": {
+  "/technical-knowledge/system-design/log-aggregation-b7a": {
     "__comp": "17896441",
     "content": "ee5a53d7"
   },
-  "/technical-knowledge/system-design/long-running-tasks-3e3": {
+  "/technical-knowledge/system-design/long-running-tasks-67d": {
     "__comp": "17896441",
     "content": "010e7447"
   },
@@ -13349,7 +13353,7 @@
     "__comp": "17896441",
     "content": "c7bf7178"
   },
-  "/technical-knowledge/system-design/message-queues-60f": {
+  "/technical-knowledge/system-design/message-queues-414": {
     "__comp": "17896441",
     "content": "3940c236"
   },
@@ -13369,7 +13373,7 @@
     "__comp": "17896441",
     "content": "22875a92"
   },
-  "/technical-knowledge/system-design/observability-fb6": {
+  "/technical-knowledge/system-design/observability-01b": {
     "__comp": "17896441",
     "content": "f58357ef"
   },
@@ -13389,7 +13393,7 @@
     "__comp": "17896441",
     "content": "96eddd1c"
   },
-  "/technical-knowledge/system-design/outbox-pattern-0b0": {
+  "/technical-knowledge/system-design/outbox-pattern-565": {
     "__comp": "17896441",
     "content": "5223f567"
   },
@@ -13429,7 +13433,7 @@
     "__comp": "17896441",
     "content": "204f6582"
   },
-  "/technical-knowledge/system-design/problem-breakdowns/distributed-cache-b63": {
+  "/technical-knowledge/system-design/problem-breakdowns/distributed-cache-01a": {
     "__comp": "17896441",
     "content": "86a30b5f"
   },
@@ -13497,7 +13501,7 @@
     "__comp": "17896441",
     "content": "45d42497"
   },
-  "/technical-knowledge/system-design/problem-breakdowns/job-scheduler-cef": {
+  "/technical-knowledge/system-design/problem-breakdowns/job-scheduler-cf2": {
     "__comp": "17896441",
     "content": "c4ed58e0"
   },
@@ -13509,7 +13513,7 @@
     "__comp": "17896441",
     "content": "43bba010"
   },
-  "/technical-knowledge/system-design/problem-breakdowns/metrics-monitoring-6a9": {
+  "/technical-knowledge/system-design/problem-breakdowns/metrics-monitoring-fd1": {
     "__comp": "17896441",
     "content": "5efd6462"
   },
@@ -13597,7 +13601,7 @@
     "__comp": "17896441",
     "content": "929b92a0"
   },
-  "/technical-knowledge/system-design/rate-limiting-algorithms-a99": {
+  "/technical-knowledge/system-design/rate-limiting-algorithms-17e": {
     "__comp": "17896441",
     "content": "cb6f5ebf"
   },
@@ -13613,7 +13617,7 @@
     "__comp": "17896441",
     "content": "59112a05"
   },
-  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-ef6": {
+  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-02f": {
     "__comp": "17896441",
     "content": "36929883"
   },
@@ -13621,7 +13625,7 @@
     "__comp": "17896441",
     "content": "bd0308dc"
   },
-  "/technical-knowledge/system-design/scaling-reads-3a6": {
+  "/technical-knowledge/system-design/scaling-reads-7c8": {
     "__comp": "17896441",
     "content": "382009e9"
   },
@@ -13629,7 +13633,7 @@
     "__comp": "17896441",
     "content": "91aa5927"
   },
-  "/technical-knowledge/system-design/search-systems-cae": {
+  "/technical-knowledge/system-design/search-systems-a1e": {
     "__comp": "17896441",
     "content": "d0e1a196"
   },
@@ -13645,7 +13649,7 @@
     "__comp": "17896441",
     "content": "c046f152"
   },
-  "/technical-knowledge/system-design/service-discovery-2cf": {
+  "/technical-knowledge/system-design/service-discovery-326": {
     "__comp": "17896441",
     "content": "c5e9f580"
   },
@@ -13653,7 +13657,7 @@
     "__comp": "17896441",
     "content": "820ce876"
   },
-  "/technical-knowledge/system-design/sharded-counters-and-leaderboards-939": {
+  "/technical-knowledge/system-design/sharded-counters-and-leaderboards-405": {
     "__comp": "17896441",
     "content": "b17ecb53"
   },
@@ -13673,7 +13677,7 @@
     "__comp": "17896441",
     "content": "609055e5"
   },
-  "/technical-knowledge/system-design/time-and-ordering-and-unique-ids-c5a": {
+  "/technical-knowledge/system-design/time-and-ordering-and-unique-ids-1a9": {
     "__comp": "17896441",
     "content": "b3d57e71"
   },
@@ -13685,7 +13689,7 @@
     "__comp": "17896441",
     "content": "a01d3cae"
   },
-  "/technical-knowledge/system-design/what-breaks-at-scale-c50": {
+  "/technical-knowledge/system-design/what-breaks-at-scale-d1b": {
     "__comp": "17896441",
     "content": "565132df"
   },

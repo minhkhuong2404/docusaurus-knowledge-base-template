@@ -581,4 +581,55 @@ describe('Senior/Staff Interview Playbook Test Suite (Java & Spring)', () => {
       'OutboxFailureRecoveryDiagram.tsx must use interactive-diagram-flowing-path'
     );
   });
+
+  it('verifies Kafka consumer-group.md Incremental Cooperative Rebalancing, Static Membership, simulator diagram, and Senior/Staff Playbook', () => {
+    const cgPath = 'docs/technical-knowledge/kafka/consumer/consumer-group.md';
+    const content = fs.readFileSync(cgPath, 'utf8');
+    const requiredTokens = [
+      'KafkaIncrementalCooperativeRebalanceDiagram',
+      'https://www.conduktor.io/kafka/consumer-incremental-rebalance-and-static-group-membership',
+      'https://www.confluent.io/blog/incremental-cooperative-rebalancing-in-kafka/',
+      'CooperativeStickyAssignor',
+      'group.instance.id',
+      'FencedInstanceIdException',
+      '## 🧠 Senior/Staff Interview Playbook:',
+    ];
+    for (const token of requiredTokens) {
+      assert.ok(content.includes(token), `consumer-group.md must include: ${token}`);
+    }
+
+    const diagPath = 'src/components/KafkaIncrementalCooperativeRebalanceDiagram.tsx';
+    assert.ok(fs.existsSync(diagPath), 'KafkaIncrementalCooperativeRebalanceDiagram.tsx must exist');
+    const diagContent = fs.readFileSync(diagPath, 'utf8');
+    assert.ok(
+      diagContent.includes('interactive-diagram-flowing-path'),
+      'KafkaIncrementalCooperativeRebalanceDiagram.tsx must use interactive-diagram-flowing-path'
+    );
+  });
+
+  it('verifies real-time-updates.md Google Docs, Chat, Notifications use cases, diagram, and Senior/Staff Playbook', () => {
+    const rtPath = 'docs/technical-knowledge/system-design/real-time-updates.md';
+    const content = fs.readFileSync(rtPath, 'utf8');
+    const requiredTokens = [
+      'RealTimeUseCasesArchitectureDiagram',
+      'Core Real-Time Use Cases: Google Docs, Chat Systems & Notifications',
+      'DocumentOtSequencer',
+      'Operational Transformation',
+      'CRDT',
+      'Real-Time Chat System',
+      'Real-Time Notification System',
+      '## 🧠 Senior/Staff Interview Playbook:',
+    ];
+    for (const token of requiredTokens) {
+      assert.ok(content.includes(token), `real-time-updates.md must include: ${token}`);
+    }
+
+    const diagPath = 'src/components/RealTimeUseCasesArchitectureDiagram.tsx';
+    assert.ok(fs.existsSync(diagPath), 'RealTimeUseCasesArchitectureDiagram.tsx must exist');
+    const diagContent = fs.readFileSync(diagPath, 'utf8');
+    assert.ok(
+      diagContent.includes('interactive-diagram-flowing-path'),
+      'RealTimeUseCasesArchitectureDiagram.tsx must use interactive-diagram-flowing-path'
+    );
+  });
 });

@@ -9,7 +9,7 @@ export default {
   "url": "https://luminhkhuong.dev",
   "baseUrl": "/",
   "customFields": {
-    "firebaseApiKey": "AIzaSyCfKNL2b9lwvZjOA916DoYDR5B5-Xz7NNE",
+    "firebaseApiKey": "",
     "firebaseAuthDomain": "khuong-tjfxef.firebaseapp.com",
     "firebaseProjectId": "khuong-tjfxef",
     "firebaseStorageBucket": "khuong-tjfxef.firebasestorage.app",
