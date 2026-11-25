@@ -418,3 +418,13 @@ Senior engineers know that **a Modular Monolith is not legacy code** — it is t
 ### Q4: When is it genuinely appropriate to adopt microservices?
 **Senior Answer:**
 > *"Only when driven by hard operational constraints: (1) Radically independent scaling requirements—e.g. a compute-heavy ML/transcoding worker that needs 50 GPUs while the REST API needs 2 CPU cores; (2) Team organizational bottlenecks under Conway's Law—when 10+ independent cross-functional teams need autonomous deployment cycles without git merge queue contention; and (3) Strict regulatory isolation—e.g. isolating PCI-DSS payment tokenization from general user analytics. Adopting microservices for any reason outside these three is Resume-Driven Development."*
+
+---
+
+## Next Step: Real-World Production Engineering Playbook
+
+Continue to the [**Real-World Production Engineering Playbook (Kinh Nghiệm Thực Chiến & Bí Quyết Đi Làm)**](./real-world-engineering-playbook) for:
+- **Workplace Survival & Senior Secrets:** 1-Page RFC alignment, the 30-Minute Escalation Rule, managing up with trade-off options, and maintaining an Engineering Impact Ledger.
+- **Stacked PRs & Zero-Downtime Delivery:** Expand & Contract database migrations, rolling Kubernetes deployment safety, and high-signal code reviews.
+- **Sev-1 Production Incident War Room:** Triage, immediate mitigation, capturing thread dumps/JFR forensics without losing evidence, and Blameless Post-Mortems (COE).
+- **10+ Production Crisis Interview Scenarios:** Idle-DB HikariCP exhaustion, Kubernetes 502 rolling deploy races, keyset pagination, Kafka duplicate charges, and container `OOMKilled` (Exit Code 137).

@@ -86,6 +86,17 @@ const config: Config = {
 				searchResultLimits: 8,
 				searchBarShortcut: false,
 				searchBarShortcutHint: false,
+				fuzzyMatchingDistance: 0,
+				ignoreCssSelectors: [
+					'.interactive-diagram-container',
+					'pre',
+					'.prism-code',
+					'.katex',
+					'.mermaid',
+				],
+				ignoreFiles: [
+					/technical-knowledge\/dsa\/leetcode-companywise\//,
+				],
 				hashed: true,
 			}),
 		],

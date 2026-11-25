@@ -377,6 +377,23 @@ import {
   type HelloInterviewSpec,
 } from '../../../data/helloInterviewSpecEngine';
 
+export const STARTER_SCENARIO_IDS = [
+  'bitly_url_shortener',
+  'youtube_video_streaming',
+  'twitter_newsfeed_fanout',
+  'uber_dispatch_geospatial',
+  'stripe_idempotent_payment',
+];
+
+export const SYSTEM_DESIGN_GOLDEN_LAYERS = [
+  { step: '1', layer: 'Traffic Source', icon: '📱', example: 'Client / Mobile / Web', hint: 'Every request starts from a user or external webhook.' },
+  { step: '2', layer: 'Edge / CDN', icon: '🌍', example: 'Cloudflare / Edge CDN', hint: 'Absorbs static reads & terminates TLS close to users.' },
+  { step: '3', layer: 'Ingress / Gateway', icon: '🛡️', example: 'API Gateway / Load Balancer', hint: 'Auth, rate limiting, and routing across stateless servers.' },
+  { step: '4', layer: 'Compute / Queue', icon: '⚙️', example: 'Core Service / Kafka Queue', hint: 'Executes core logic or buffers bursty writes asynchronously.' },
+  { step: '5', layer: 'In-Memory Cache', icon: '⚡', example: 'Redis / Memcached', hint: 'Serves 90%+ hot reads in <1ms before hitting disk.' },
+  { step: '6', layer: 'Durable Storage', icon: '🗄️', example: 'PostgreSQL / Cassandra / S3', hint: 'Final source of truth on disk (B+Tree / LSM / Object Store).' },
+];
+
 export default function ArchitecturePuzzleGame() {
   const { addExp, saveMiniGameScore, unlockAchievement } = useUserProgress();
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'big_tech' | 'real_time' | 'fintech' | 'distributed'>('all');
@@ -384,10 +401,17 @@ export default function ArchitecturePuzzleGame() {
   const [seenPuzzleIds, setSeenPuzzleIds] = useState<string[]>(() => readSeenIds(SEEN_ARCH_PUZZLE_STORAGE_KEY));
   const [activeScenarioId, setActiveScenarioId] = useState<string>(() => {
     const initialSeen = readSeenIds(SEEN_ARCH_PUZZLE_STORAGE_KEY);
+    // Start first-time learners on the classic #1 Bitly URL Shortener foundation scenario
+    const bitlyStarter = SYSTEM_DESIGN_PUZZLES.find((s) => s.id === 'bitly_url_shortener');
+    if (initialSeen.length === 0 && bitlyStarter) {
+      writeSeenIds(SEEN_ARCH_PUZZLE_STORAGE_KEY, [bitlyStarter.id]);
+      return bitlyStarter.id;
+    }
     const { item, nextSeenIds } = pickRandomUnseenItem(SYSTEM_DESIGN_PUZZLES, initialSeen);
     writeSeenIds(SEEN_ARCH_PUZZLE_STORAGE_KEY, nextSeenIds);
     return item.id;
   });
+  const [isGuidedMode, setIsGuidedMode] = useState<boolean>(true);
 
   // GonnaCrash 2D Whiteboard State: Placed Nodes + Directed Wires
   const [placedNodes, setPlacedNodes] = useState<PlacedNode[]>([]);
@@ -490,10 +514,97 @@ export default function ArchitecturePuzzleGame() {
     return resolveWiredSequence(placedNodes, wires, activeScenario.correctSequence[0]);
   }, [placedNodes, wires, activeScenario]);
 
+  // Live Step-by-Step Architect Coach diagnostics for Beginner Guided Mode
+  const coachDiagnostics = useMemo(() => {
+    const placedDistractor = placedNodes.map((n) => distractorMap.get(n.id)).find(Boolean) || null;
+    const correct = activeScenario.correctSequence;
+    let mismatchStageIndex = -1;
+    for (let i = 0; i < correct.length; i++) {
+      if (i >= selectedSequence.length || selectedSequence[i] !== correct[i]) {
+        mismatchStageIndex = i;
+        break;
+      }
+    }
+    const nextStageStep = mismatchStageIndex !== -1 ? stageFlowSteps[mismatchStageIndex] : null;
+    const wrongIdAtMismatch =
+      mismatchStageIndex !== -1 && mismatchStageIndex < selectedSequence.length
+        ? selectedSequence[mismatchStageIndex]
+        : null;
+    const wrongNodeAtMismatch = wrongIdAtMismatch ? nodeMap.get(wrongIdAtMismatch) || null : null;
+    const isPipelineReady =
+      !placedDistractor &&
+      disconnectedIds.length === 0 &&
+      mismatchStageIndex === -1 &&
+      selectedSequence.length === correct.length;
+
+    return {
+      placedDistractor,
+      mismatchStageIndex,
+      nextStageStep,
+      wrongNodeAtMismatch,
+      isPipelineReady,
+    };
+  }, [placedNodes, distractorMap, activeScenario, selectedSequence, stageFlowSteps, nodeMap, disconnectedIds]);
+
   const resetSimulationStatus = () => {
     setSimulationState('idle');
     setFeedbackMessage('');
     setActiveSimulationMetrics(null);
+  };
+
+  // One-click Coach helper: removes any placed distractor trap, fixes misordered/unwired nodes, or places the next stage
+  const handleFixOrAdvanceStep = () => {
+    if (coachDiagnostics.placedDistractor) {
+      handleRemoveNode(coachDiagnostics.placedDistractor.id);
+      setFeedbackMessage(
+        `🛡️ Removed anti-pattern trap "${coachDiagnostics.placedDistractor.name}". Now continue with Stage #${(coachDiagnostics.mismatchStageIndex >= 0 ? coachDiagnostics.mismatchStageIndex : 0) + 1}!`
+      );
+      return;
+    }
+
+    const correct = activeScenario.correctSequence;
+    const targetIdx = coachDiagnostics.mismatchStageIndex;
+    if (targetIdx === -1 && disconnectedIds.length === 0) {
+      arcadeAudio.playCorrect();
+      setFeedbackMessage('✨ All stages are wired in the exact optimal sequence! Click "🚀 Simulate Traffic & Load Test".');
+      return;
+    }
+
+    arcadeAudio.playBlip();
+    const uptoIdx = targetIdx === -1 ? correct.length - 1 : targetIdx;
+    const desiredPrefixIds = correct.slice(0, uptoIdx + 1);
+    const remainingPlacedIds = placedNodes
+      .map((n) => n.id)
+      .filter((id) => !desiredPrefixIds.includes(id) && !distractorMap.has(id));
+    const finalOrderedIds = [...desiredPrefixIds, ...remainingPlacedIds];
+
+    const existingReplicaMap = new Map(placedNodes.map((n) => [n.id, n.replicas]));
+    const nextPlaced: PlacedNode[] = finalOrderedIds.map((id, idx) => ({
+      id,
+      ...getGridPosition(idx),
+      replicas: existingReplicaMap.get(id) || 1,
+    }));
+
+    const nextWires: WireConnection[] = [];
+    for (let i = 0; i < nextPlaced.length - 1; i++) {
+      nextWires.push({
+        id: `${nextPlaced[i].id}->${nextPlaced[i + 1].id}`,
+        from: nextPlaced[i].id,
+        to: nextPlaced[i + 1].id,
+      });
+    }
+
+    setPlacedNodes(nextPlaced);
+    setWires(nextWires);
+    setWiringSourceId(null);
+    resetSimulationStatus();
+
+    const stepMeta = stageFlowSteps[uptoIdx];
+    if (stepMeta) {
+      setFeedbackMessage(
+        `🧭 Placed & wired Stage #${stepMeta.stageNumber} (${stepMeta.icon} ${stepMeta.name} — ${stepMeta.tierLabel}): ${stepMeta.whyThisPosition}`
+      );
+    }
   };
 
   const handleSelectScenario = (id: string) => {
@@ -1132,26 +1243,150 @@ export default function ArchitecturePuzzleGame() {
             </div>
           </div>
 
-          {/* Random Mission Reroll Bar */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+          {/* ── 6-Layer System Design Golden Rule (Beginner Mental Model) ── */}
+          <div
+            style={{
+              maxWidth: '720px',
+              margin: '0 auto 18px auto',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              background: 'rgba(15, 23, 42, 0.78)',
+              border: '1px solid rgba(52, 211, 153, 0.32)',
+              textAlign: 'left',
+            }}
+          >
+            <div style={{ fontSize: '0.76rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+              <span>🧭 How to Start System Design: The 6-Layer Request Flow Mental Model</span>
+              <span style={{ fontSize: '0.68rem', padding: '2px 7px', borderRadius: '4px', background: 'rgba(52, 211, 153, 0.16)', color: '#34d399' }}>
+                Follow Left ➔ Right
+              </span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(105px, 1fr))', gap: '6px' }}>
+              {SYSTEM_DESIGN_GOLDEN_LAYERS.map((g) => (
+                <div
+                  key={g.step}
+                  style={{
+                    padding: '6px 8px',
+                    borderRadius: '8px',
+                    background: 'rgba(0, 0, 0, 0.35)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    fontSize: '0.68rem',
+                    lineHeight: 1.3,
+                  }}
+                >
+                  <div style={{ fontWeight: 900, color: '#38bdf8', marginBottom: '2px' }}>
+                    {g.step}. {g.icon} {g.layer}
+                  </div>
+                  <div style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '0.65rem', marginBottom: '2px' }}>{g.example}</div>
+                  <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.63rem' }}>{g.hint}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Beginner Recommended Starter Track (5 Classic Problems) ── */}
+          <div style={{ maxWidth: '720px', margin: '0 auto 14px auto' }}>
+            <div style={{ fontSize: '0.73rem', fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', marginBottom: '6px' }}>
+              🌱 New to System Design? Start with these 5 Classic Foundation Problems:
+            </div>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {STARTER_SCENARIO_IDS.map((starterId, idx) => {
+                const sc = SYSTEM_DESIGN_PUZZLES.find((s) => s.id === starterId);
+                if (!sc) return null;
+                const isCurrent = activeScenario.id === sc.id;
+                const isSolved = solvedScenarios.includes(sc.id);
+                return (
+                  <button
+                    key={sc.id}
+                    type="button"
+                    onClick={() => handleSelectScenario(sc.id)}
+                    style={{
+                      padding: '6px 11px',
+                      borderRadius: '8px',
+                      background: isCurrent ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                      border: `1.5px solid ${isCurrent ? '#34d399' : 'rgba(255, 255, 255, 0.12)'}`,
+                      color: isCurrent ? '#34d399' : '#f8fafc',
+                      fontSize: '0.74rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                  >
+                    <span>#{idx + 1} {sc.badge}</span>
+                    <span>{sc.title.replace(/^Design\s+/i, '')}</span>
+                    {isSolved && <span style={{ color: '#34d399' }}>✓</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Direct Mission Selector Dropdown + Random Reroll Bar */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
+            <select
+              aria-label="Select System Design Mission"
+              value={activeScenario.id}
+              onChange={(e) => handleSelectScenario(e.target.value)}
+              style={{
+                padding: '8px 12px',
+                borderRadius: '10px',
+                background: '#0f172a',
+                border: '1.5px solid rgba(56, 189, 248, 0.45)',
+                color: '#f8fafc',
+                fontSize: '0.8rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                maxWidth: '340px',
+              }}
+            >
+              {(filteredScenarios.length > 0 ? filteredScenarios : SYSTEM_DESIGN_PUZZLES).map((sc, i) => (
+                <option key={sc.id} value={sc.id} style={{ background: '#0f172a', color: '#f8fafc' }}>
+                  {solvedScenarios.includes(sc.id) ? '✓ ' : STARTER_SCENARIO_IDS.includes(sc.id) ? '🌱 ' : ''}
+                  #{i + 1} {sc.badge} {sc.title} ({sc.difficulty})
+                </option>
+              ))}
+            </select>
+
             <button
               type="button"
               onClick={handleNextScenario}
               style={{
-                padding: '8px 20px',
+                padding: '8px 16px',
                 borderRadius: '10px',
                 background: 'rgba(56, 189, 248, 0.14)',
                 border: '1.5px solid rgba(56, 189, 248, 0.5)',
                 color: '#38bdf8',
-                fontSize: '0.86rem',
+                fontSize: '0.82rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px',
+                gap: '6px',
               }}
             >
-              <span>🎲 Reroll Random Architecture Mission ({filteredScenarios.length} in Pool)</span>
+              <span>🎲 Reroll Random ({filteredScenarios.length} in Pool)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                arcadeAudio.playBlip();
+                setIsGuidedMode(!isGuidedMode);
+              }}
+              style={{
+                padding: '8px 14px',
+                borderRadius: '10px',
+                background: isGuidedMode ? 'rgba(52, 211, 153, 0.18)' : 'rgba(168, 85, 247, 0.18)',
+                border: `1.5px solid ${isGuidedMode ? '#34d399' : '#c084fc'}`,
+                color: isGuidedMode ? '#34d399' : '#c084fc',
+                fontSize: '0.8rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+              }}
+            >
+              {isGuidedMode ? '🌱 Mode: Beginner Guided Coach (ON)' : '👑 Mode: Staff Blind Challenge'}
             </button>
           </div>
 
@@ -1398,19 +1633,29 @@ export default function ArchitecturePuzzleGame() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
-              <span
+              <select
+                aria-label="Select Active System Design Mission"
+                value={activeScenario.id}
+                onChange={(e) => handleSelectScenario(e.target.value)}
                 style={{
-                  padding: '6px 12px',
+                  padding: '6px 10px',
                   borderRadius: '8px',
                   background: '#0f172a',
-                  border: '1.5px solid rgba(56, 189, 248, 0.4)',
+                  border: '1.5px solid rgba(56, 189, 248, 0.45)',
                   color: '#38bdf8',
-                  fontSize: '0.82rem',
+                  fontSize: '0.8rem',
                   fontWeight: 800,
+                  cursor: 'pointer',
+                  maxWidth: '300px',
                 }}
               >
-                {solvedScenarios.includes(activeScenario.id) ? '✓ ' : ''}{activeScenario.badge} {activeScenario.title} ({activeScenario.difficulty})
-              </span>
+                {(filteredScenarios.length > 0 ? filteredScenarios : SYSTEM_DESIGN_PUZZLES).map((sc, idx) => (
+                  <option key={sc.id} value={sc.id} style={{ background: '#0f172a', color: '#f8fafc' }}>
+                    {solvedScenarios.includes(sc.id) ? '✓ ' : STARTER_SCENARIO_IDS.includes(sc.id) ? '🌱 ' : ''}
+                    #{idx + 1} {sc.badge} {sc.title} ({sc.difficulty})
+                  </option>
+                ))}
+              </select>
 
               {/* Difficulty Pills */}
               <div style={{ display: 'flex', gap: '4px' }}>
@@ -1455,6 +1700,26 @@ export default function ArchitecturePuzzleGame() {
 
             {/* Action Controls */}
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  arcadeAudio.playBlip();
+                  setIsGuidedMode(!isGuidedMode);
+                }}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  background: isGuidedMode ? 'rgba(52, 211, 153, 0.16)' : 'rgba(168, 85, 247, 0.14)',
+                  border: `1px solid ${isGuidedMode ? 'rgba(52, 211, 153, 0.45)' : 'rgba(168, 85, 247, 0.4)'}`,
+                  color: isGuidedMode ? '#34d399' : '#c084fc',
+                  fontSize: '0.74rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                }}
+                title="Toggle Step-by-Step Architect Coach & Component Role Badges"
+              >
+                {isGuidedMode ? '🌱 Guided Coach: ON' : '👑 Blind Challenge'}
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -2082,6 +2347,148 @@ export default function ArchitecturePuzzleGame() {
             )}
           </div>
 
+          {/* ── 2C. LIVE STEP-BY-STEP ARCHITECT COACH (BEGINNER GUIDED MODE) ── */}
+          {isGuidedMode && (
+            <div
+              style={{
+                marginBottom: '14px',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                background: coachDiagnostics.placedDistractor
+                  ? 'rgba(239, 68, 68, 0.12)'
+                  : coachDiagnostics.isPipelineReady
+                  ? 'rgba(52, 211, 153, 0.14)'
+                  : 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(56, 189, 248, 0.12) 100%)',
+                border: `1.5px solid ${
+                  coachDiagnostics.placedDistractor
+                    ? '#ef4444'
+                    : coachDiagnostics.isPipelineReady
+                    ? '#34d399'
+                    : 'rgba(52, 211, 153, 0.45)'
+                }`,
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap' }}>
+                <div style={{ flex: '1 1 420px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
+                    <span
+                      style={{
+                        fontSize: '0.68rem',
+                        fontWeight: 900,
+                        padding: '2px 8px',
+                        borderRadius: '5px',
+                        background: coachDiagnostics.placedDistractor
+                          ? 'rgba(239, 68, 68, 0.25)'
+                          : 'rgba(52, 211, 153, 0.22)',
+                        color: coachDiagnostics.placedDistractor ? '#fca5a5' : '#34d399',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {coachDiagnostics.placedDistractor
+                        ? '⚠️ Anti-Pattern Trap Detected'
+                        : coachDiagnostics.isPipelineReady
+                        ? '✅ All Stages Wired & Ready!'
+                        : `🌱 Step-by-Step Architect Coach • Stage #${(coachDiagnostics.mismatchStageIndex >= 0 ? coachDiagnostics.mismatchStageIndex : 0) + 1} of ${activeScenario.correctSequence.length}`}
+                    </span>
+
+                    {coachDiagnostics.nextStageStep && !coachDiagnostics.placedDistractor && (
+                      <span
+                        style={{
+                          fontSize: '0.68rem',
+                          fontWeight: 800,
+                          padding: '2px 8px',
+                          borderRadius: '5px',
+                          background: 'rgba(56, 189, 248, 0.2)',
+                          color: '#38bdf8',
+                        }}
+                      >
+                        Needed Layer: {coachDiagnostics.nextStageStep.tierLabel}
+                      </span>
+                    )}
+                  </div>
+
+                  {coachDiagnostics.placedDistractor ? (
+                    <div style={{ fontSize: '0.79rem', color: '#fecaca', lineHeight: 1.45 }}>
+                      <strong>Remove &ldquo;{coachDiagnostics.placedDistractor.name}&rdquo; first:</strong>{' '}
+                      {coachDiagnostics.placedDistractor.whyUnnecessary}
+                    </div>
+                  ) : coachDiagnostics.isPipelineReady ? (
+                    <div style={{ fontSize: '0.8rem', color: '#f8fafc', lineHeight: 1.45 }}>
+                      🎉 <strong>Your 6-layer request flow is 100% wired in the optimal order!</strong> Now click{' '}
+                      <strong style={{ color: '#38bdf8' }}>🚀 Simulate Traffic &amp; Load Test</strong> below to verify latency &amp; FinOps budget.
+                    </div>
+                  ) : coachDiagnostics.nextStageStep ? (
+                    <div style={{ fontSize: '0.79rem', color: '#f8fafc', lineHeight: 1.45 }}>
+                      {coachDiagnostics.wrongNodeAtMismatch ? (
+                        <div style={{ color: '#fbbf24', marginBottom: '3px', fontWeight: 700 }}>
+                          ⚠️ Stage #{coachDiagnostics.nextStageStep.stageNumber} currently has &ldquo;{coachDiagnostics.wrongNodeAtMismatch.name}&rdquo;, but needs{' '}
+                          <strong style={{ color: '#34d399' }}>
+                            {coachDiagnostics.nextStageStep.icon} {coachDiagnostics.nextStageStep.name}
+                          </strong>{' '}
+                          first!
+                        </div>
+                      ) : null}
+                      <div>
+                        <strong style={{ color: '#34d399' }}>
+                          Next Component ➔ {coachDiagnostics.nextStageStep.icon} {coachDiagnostics.nextStageStep.name} ({coachDiagnostics.nextStageStep.role}):
+                        </strong>{' '}
+                        <span style={{ color: 'rgba(255, 255, 255, 0.85)' }}>{coachDiagnostics.nextStageStep.whyThisPosition}</span>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+
+                {/* Coach 1-Click Action Buttons */}
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  {!coachDiagnostics.isPipelineReady && (
+                    <button
+                      type="button"
+                      onClick={handleFixOrAdvanceStep}
+                      style={{
+                        padding: '7px 13px',
+                        borderRadius: '8px',
+                        background: coachDiagnostics.placedDistractor
+                          ? 'rgba(239, 68, 68, 0.25)'
+                          : 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+                        border: coachDiagnostics.placedDistractor ? '1px solid #ef4444' : 'none',
+                        color: '#ffffff',
+                        fontSize: '0.75rem',
+                        fontWeight: 900,
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {coachDiagnostics.placedDistractor
+                        ? `🗑️ Remove Trap (${coachDiagnostics.placedDistractor.name})`
+                        : coachDiagnostics.wrongNodeAtMismatch
+                        ? `🔧 Fix Stage #${coachDiagnostics.nextStageStep?.stageNumber} (${coachDiagnostics.nextStageStep?.name})`
+                        : `✨ + Place Stage #${coachDiagnostics.nextStageStep?.stageNumber}: ${coachDiagnostics.nextStageStep?.name}`}
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={handleApplyOptimalSolution}
+                    style={{
+                      padding: '7px 11px',
+                      borderRadius: '8px',
+                      background: 'rgba(56, 189, 248, 0.14)',
+                      border: '1px solid rgba(56, 189, 248, 0.4)',
+                      color: '#38bdf8',
+                      fontSize: '0.73rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                    }}
+                    title="Auto-build the entire optimal pipeline and read why each layer sits in its position"
+                  >
+                    📖 Show Full Solution
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* ── 3. INFRASTRUCTURE COMPONENT PALETTE (RANDOMIZED ORDER — DRAG OR CLICK TO PLACE) ── */}
           <div style={{ marginBottom: '14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '7px', flexWrap: 'wrap', gap: '6px' }}>
@@ -2115,11 +2522,17 @@ export default function ArchitecturePuzzleGame() {
               </span>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(225px, 1fr))', gap: '8px' }}>
               {shuffledPaletteNodes.map((node) => {
                 const isAdded = placedNodes.some((n) => n.id === node.id);
                 const isHovered = hoveredBankNodeId === node.id && !isAdded;
-                const { unitCost } = getNodeUnitCost(node.id, node.name);
+                const { unitCost, tierLabel } = getNodeUnitCost(node.id, node.name);
+                const isDistractorNode = distractorMap.has(node.id);
+                const isNextGuidedNode =
+                  isGuidedMode &&
+                  !isAdded &&
+                  !coachDiagnostics.placedDistractor &&
+                  coachDiagnostics.nextStageStep?.id === node.id;
 
                 return (
                   <button
@@ -2136,36 +2549,121 @@ export default function ArchitecturePuzzleGame() {
                       handleAddNode(node.id);
                     }}
                     style={{
-                      padding: '7px 12px',
-                      borderRadius: '8px',
-                      background: isAdded ? 'rgba(255, 255, 255, 0.02)' : isHovered ? 'rgba(56, 189, 248, 0.16)' : 'rgba(255, 255, 255, 0.05)',
-                      border: isAdded ? '1px dashed rgba(255, 255, 255, 0.08)' : isHovered ? '1.5px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.15)',
-                      color: isAdded ? 'rgba(255, 255, 255, 0.3)' : '#ffffff',
-                      boxShadow: isHovered ? '0 4px 14px rgba(56, 189, 248, 0.3)' : 'none',
+                      padding: '8px 11px',
+                      borderRadius: '10px',
+                      background: isAdded
+                        ? 'rgba(255, 255, 255, 0.02)'
+                        : isNextGuidedNode
+                        ? 'rgba(52, 211, 153, 0.15)'
+                        : isHovered
+                        ? 'rgba(56, 189, 248, 0.16)'
+                        : isGuidedMode && isDistractorNode
+                        ? 'rgba(239, 68, 68, 0.06)'
+                        : 'rgba(255, 255, 255, 0.05)',
+                      border: isAdded
+                        ? '1px dashed rgba(255, 255, 255, 0.08)'
+                        : isNextGuidedNode
+                        ? '1.5px solid #34d399'
+                        : isHovered
+                        ? '1.5px solid #38bdf8'
+                        : isGuidedMode && isDistractorNode
+                        ? '1px dashed rgba(239, 68, 68, 0.35)'
+                        : '1px solid rgba(255, 255, 255, 0.15)',
+                      color: isAdded ? 'rgba(255, 255, 255, 0.35)' : '#ffffff',
+                      boxShadow: isNextGuidedNode
+                        ? '0 0 14px rgba(52, 211, 153, 0.28)'
+                        : isHovered
+                        ? '0 4px 14px rgba(56, 189, 248, 0.3)'
+                        : 'none',
                       transform: isHovered ? 'translateY(-2px)' : 'none',
-                      fontSize: '0.79rem',
+                      fontSize: '0.78rem',
                       fontWeight: 700,
                       cursor: isAdded ? 'default' : 'grab',
                       display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      gap: '4px',
+                      textAlign: 'left',
                       transition: 'all 0.15s ease',
                     }}
                   >
-                    <span>{node.icon}</span>
-                    <span>{node.name}</span>
-                    <span
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', overflow: 'hidden' }}>
+                        <span>{node.icon}</span>
+                        <span style={{ fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {node.name}
+                        </span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: '0.64rem',
+                          padding: '1px 5px',
+                          borderRadius: '4px',
+                          background: isAdded ? 'transparent' : 'rgba(56, 189, 248, 0.14)',
+                          color: isAdded ? 'rgba(52, 211, 153, 0.5)' : '#38bdf8',
+                          fontWeight: 800,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {isAdded ? '✓ Placed' : unitCost === 0 ? 'Free' : `$${unitCost}/mo`}
+                      </span>
+                    </div>
+
+                    {/* Tier Layer Badge + Guided Next Step / Trap Indicator + Role */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexWrap: 'wrap', width: '100%' }}>
+                      <span
+                        style={{
+                          fontSize: '0.62rem',
+                          padding: '1px 5px',
+                          borderRadius: '4px',
+                          background: 'rgba(168, 85, 247, 0.16)',
+                          color: isAdded ? 'rgba(192, 132, 252, 0.4)' : '#c084fc',
+                          fontWeight: 750,
+                        }}
+                      >
+                        {tierLabel}
+                      </span>
+                      {isNextGuidedNode && (
+                        <span
+                          style={{
+                            fontSize: '0.62rem',
+                            padding: '1px 6px',
+                            borderRadius: '4px',
+                            background: 'rgba(52, 211, 153, 0.25)',
+                            color: '#34d399',
+                            fontWeight: 900,
+                          }}
+                        >
+                          👉 Next: Stage #{coachDiagnostics.nextStageStep?.stageNumber}
+                        </span>
+                      )}
+                      {isGuidedMode && isDistractorNode && !isAdded && (
+                        <span
+                          style={{
+                            fontSize: '0.61rem',
+                            padding: '1px 5px',
+                            borderRadius: '4px',
+                            background: 'rgba(239, 68, 68, 0.2)',
+                            color: '#fca5a5',
+                            fontWeight: 800,
+                          }}
+                          title="This component is an anti-pattern trap for this problem"
+                        >
+                          ⚠️ Anti-Pattern Trap
+                        </span>
+                      )}
+                    </div>
+
+                    <div
                       style={{
                         fontSize: '0.67rem',
-                        padding: '1px 5px',
-                        borderRadius: '4px',
-                        background: isAdded ? 'transparent' : 'rgba(56, 189, 248, 0.14)',
-                        color: isAdded ? 'rgba(52, 211, 153, 0.5)' : '#38bdf8',
-                        fontWeight: 800,
+                        color: isAdded ? 'rgba(255, 255, 255, 0.28)' : 'rgba(255, 255, 255, 0.68)',
+                        fontWeight: 500,
+                        lineHeight: 1.3,
                       }}
                     >
-                      {isAdded ? '✓ On Board' : unitCost === 0 ? 'Free' : `$${unitCost}/mo`}
-                    </span>
+                      {node.role}
+                    </div>
                   </button>
                 );
               })}
@@ -2777,9 +3275,50 @@ export default function ArchitecturePuzzleGame() {
                 fontSize: '0.84rem',
                 lineHeight: 1.45,
                 marginBottom: '16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '10px',
               }}
             >
-              {feedbackMessage}
+              <div style={{ flex: '1 1 400px' }}>{feedbackMessage}</div>
+              {simulationState === 'failed' && (
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={handleFixOrAdvanceStep}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      background: 'rgba(52, 211, 153, 0.2)',
+                      border: '1px solid #34d399',
+                      color: '#34d399',
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    🔧 Auto-Fix Broken Stage
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleApplyOptimalSolution}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      background: 'rgba(56, 189, 248, 0.2)',
+                      border: '1px solid #38bdf8',
+                      color: '#38bdf8',
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ⚡ Auto-Build Optimal Flow
+                  </button>
+                </div>
+              )}
             </div>
           )}
 

@@ -1,8 +1,8 @@
 {
-  "id": "3505",
-  "title": "Minimum Operations to Make Elements Within K Subarrays Equal",
-  "url": "https://leetcode.com/problems/minimum-operations-to-make-elements-within-k-subarrays-equal/",
-  "difficulty": "hard",
-  "topic": "Array, Hash Table, Math, Dynamic Programming, Sliding Window, Heap (Priority Queue)",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-11-04."
+  "id": "3331",
+  "title": "Find Subtree Sizes After Changes",
+  "url": "https://leetcode.com/problems/find-subtree-sizes-after-changes/",
+  "difficulty": "medium",
+  "topic": "Array, Hash Table, String, Tree, Depth-First Search",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-11-21."
 }

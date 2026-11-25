@@ -9,7 +9,7 @@ export default {
   "url": "https://luminhkhuong.dev",
   "baseUrl": "/",
   "customFields": {
-    "firebaseApiKey": "AIzaSyCfKNL2b9lwvZjOA916DoYDR5B5-Xz7NNE",
+    "firebaseApiKey": "",
     "firebaseAuthDomain": "khuong-tjfxef.firebaseapp.com",
     "firebaseProjectId": "khuong-tjfxef",
     "firebaseStorageBucket": "khuong-tjfxef.firebasestorage.app",
@@ -115,6 +115,17 @@ export default {
         "searchResultLimits": 8,
         "searchBarShortcut": false,
         "searchBarShortcutHint": false,
+        "fuzzyMatchingDistance": 0,
+        "ignoreCssSelectors": [
+          ".interactive-diagram-container",
+          "pre",
+          ".prism-code",
+          ".katex",
+          ".mermaid"
+        ],
+        "ignoreFiles": [
+          {}
+        ],
         "hashed": true
       }
     ],

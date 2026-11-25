@@ -130,8 +130,9 @@ describe('Arcade Games Runtime Safety Suite', () => {
     assert.ok(content.includes('💥 CRASHED'), 'Must render 💥 CRASHED stamp on failing bottleneck nodes');
     assert.ok(content.includes('shuffledPaletteNodes.map'), 'Must render randomized component palette instead of sorted availableNodes list');
     assert.ok(!content.includes('activeScenario.availableNodes.map((node)'), 'Must not render unshuffled availableNodes directly in palette');
+    assert.ok(content.includes('isGuidedMode') && content.includes('handleFixOrAdvanceStep'), 'Must provide Beginner Guided Coach Mode and 1-click stage fix/advance helper');
 
-    const { getNodeUnitCost, resolveWiredSequence, shuffleScenarioNodes, buildStageFlowExplanations, buildScenarioRequirements, getScenarioDistractors, DISTRACTOR_COMPONENT_POOL, SYSTEM_DESIGN_PUZZLES } = loadTsModule(file);
+    const { getNodeUnitCost, resolveWiredSequence, shuffleScenarioNodes, buildStageFlowExplanations, buildScenarioRequirements, getScenarioDistractors, DISTRACTOR_COMPONENT_POOL, SYSTEM_DESIGN_PUZZLES, STARTER_SCENARIO_IDS, SYSTEM_DESIGN_GOLDEN_LAYERS } = loadTsModule(file);
     assert.strictEqual(typeof getNodeUnitCost, 'function');
     assert.strictEqual(typeof resolveWiredSequence, 'function');
     assert.strictEqual(typeof shuffleScenarioNodes, 'function');
@@ -139,6 +140,8 @@ describe('Arcade Games Runtime Safety Suite', () => {
     assert.strictEqual(typeof buildScenarioRequirements, 'function');
     assert.strictEqual(typeof getScenarioDistractors, 'function');
     assert.ok(Array.isArray(DISTRACTOR_COMPONENT_POOL) && DISTRACTOR_COMPONENT_POOL.length >= 10);
+    assert.ok(Array.isArray(STARTER_SCENARIO_IDS) && STARTER_SCENARIO_IDS.length === 5, 'Must define 5 classic starter System Design scenarios');
+    assert.ok(Array.isArray(SYSTEM_DESIGN_GOLDEN_LAYERS) && SYSTEM_DESIGN_GOLDEN_LAYERS.length === 6, 'Must define 6-Layer System Design Golden Rule mental model');
 
     // Verify every scenario produces complete stage-by-stage flow explanations, FR / NFR / What-To-Do-First specs, and 3 distractor components
     for (const scenario of SYSTEM_DESIGN_PUZZLES) {

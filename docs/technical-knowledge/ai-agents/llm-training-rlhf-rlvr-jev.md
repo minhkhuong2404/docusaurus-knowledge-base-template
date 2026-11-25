@@ -175,14 +175,105 @@ When traditional LLMs are forced to act as routers or classifiers via prompt eng
 
 ---
 
-### 6.2 How Jev Operates Under the Hood
+### 6.2 How Jev Operates Under the Hood: GPU Prefill vs. Decode Physics
 
-Unlike an autoregressive LLM, **Jev is a classification and decision model constrained by typed schemas**:
+Developed by **TypeSafe AI** (founded by former OpenAI researcher **Diogo Almeida**), **Jev** is a **System 1** classification and decision model constrained by typed schemas. To understand why Jev is **10×–20× faster and cheaper** than an LLM using "Structured Outputs / JSON Mode", you must distinguish the two physical phases of Transformer GPU inference:
 
-1. **Non-Autoregressive Single Forward Pass**: Jev processes the full context and decision questions in a single forward pass without sequential token generation, yielding **70ms–200ms latency**.
-2. **Schema-Constrained Embeddings**: The developer defines allowable Enum variants, boolean flags, or numerical bounds in advance. The model cannot output an invalid or unparseable type.
-3. **Calibrated Confidence**: Outputs an exact posterior probability distribution $P(C_k \mid X)$. Downstream microservices can enforce rigorous SLA gating (e.g. *"Only auto-refund if confidence > 0.95; otherwise escalate"*).
-4. **Zero Output Token Billing**: Users are billed strictly for input context, drastically slashing operational costs compared to generative models.
+| Transformer GPU Phase | Hardware Bottleneck | How Traditional LLMs Use It | How TypeSafe Jev Uses It |
+| :--- | :--- | :--- | :--- |
+| **1. Prefill Phase** (Reading Input State) | **Compute-Bound** (GPU Tensor Cores process all $N$ input tokens in parallel via matrix-matrix multiplication `GEMM`). | Runs once on the prompt to populate the KV-Cache (~50–90ms). | **Runs ONLY the Prefill Pass!** Evaluates the entire program state + all decision questions in **a single parallel forward pass (~70–120ms)** and stops immediately. |
+| **2. Decode Phase** (Generating Output Tokens) | **Memory-Bandwidth-Bound** (Every single generated token requires streaming 100% of model weights + KV-Cache from HBM3e to SRAM via matrix-vector `GEMV`). | Executes $K$ sequential forward passes (`{"category": "refund"}` = 15–200 passes $\rightarrow$ **800ms–2,500ms**). | **Eliminated Completely (0 Decode Passes, 0 Output Tokens)!** |
+
+> [!IMPORTANT]
+> **Why "JSON Mode / Constrained Decoding" in LLMs Does NOT Equal Jev:**
+> OpenAI's Structured Outputs or `outlines` FSM grammar masking only masks invalid vocabulary tokens at the softmax layer *during* sequential autoregressive decoding. The GPU still has to execute **dozens of sequential memory-bound decode steps** to emit the characters `{`, `"`, `i`, `n`, `t`, `e`, `n`, `t`, `"`, `:`, ... token by token! Jev bypasses autoregressive text generation altogether.
+
+---
+
+### 6.3 The Three Core Jev Question Primitives (`choice`, `score`, `noul`)
+
+Instead of passing a conversational prompt and hoping for valid JSON, engineers send **unstructured program state** (`state`) alongside a dictionary of **typed decision questions** (`questions`) to the `/v1/systemone` endpoint. Jev evaluates all questions simultaneously in one pass using three core primitives:
+
+1. **`choice` (Mutually Exclusive Categorical Enum):**
+   - Evaluates a closed set of named criteria (e.g., `billing | bug | feature_request`) and returns a calibrated posterior probability distribution $\sum_{k=1}^K P(C_k \mid \text{state}) = 1.0$.
+2. **`score` (Continuous Scalar Rating):**
+   - Outputs a calibrated continuous scalar value in $[0.0, 1.0]$ representing severity, relevance, risk, or expected value.
+3. **`noul` (Binary Yes/No Predicate Gate):**
+   - Returns a calibrated binary boolean probability ($P(\text{Yes} \mid \text{state})$ vs. $P(\text{No} \mid \text{state})$) purpose-built for deterministic `if / else` control flow and safety circuit breakers.
+
+#### Production SDK & API Example (`TypeSafe Jev`)
+
+```python
+from typesafe import TypeSafeClient
+
+# Initialize System 1 client (reads TYPESAFE_API_KEY)
+client = TypeSafeClient()
+
+# Evaluate multiple heterogeneous decisions in a SINGLE parallel forward pass (~80ms, 0 output tokens)
+response = client.systemone(
+    model="jev-latest",
+    state="""
+    Customer ID: usr_99281 (Enterprise Plan, ARR: $48,000)
+    Ticket: "We were billed twice on invoice #INV-2026-04 and our production API keys were throttled!"
+    Recent Logs: HTTP 429 rate_limit_exceeded on /v2/payments (142 occurrences in 5m)
+    """,
+    questions={
+        "department": {
+            "type": "choice",
+            "instructions": "Which engineering or ops queue owns the root cause?",
+            "criteria": {
+                "billing_ops": "Duplicate charge, invoice, or payment settlement issue",
+                "platform_sre": "API rate limiting, quota mismatch, or infrastructure outage",
+                "product_bug": "Application logic defect without billing/infra impact",
+            },
+        },
+        "churn_risk": {
+            "type": "score",
+            "instructions": "How severe is the enterprise churn risk from 0.0 (none) to 1.0 (immediate)?",
+        },
+        "auto_lift_throttle": {
+            "type": "noul",
+            "instructions": "Should we temporarily raise the tenant rate-limit ceiling while billing investigates?",
+        },
+    },
+)
+
+# Strongly-typed, calibrated probabilities ready for deterministic microservice logic:
+# response.decisions["department"] -> {"platform_sre": 0.64, "billing_ops": 0.35, "product_bug": 0.01}
+# response.decisions["churn_risk"] -> 0.89
+# response.decisions["auto_lift_throttle"] -> {"yes": 0.96, "no": 0.04}
+```
+
+---
+
+### 6.4 Bayes-Optimal Decision Theory: Why Probability Calibration Matters
+
+Why does **RLCD (Reinforcement Learning for Calibrated Decisions)** train Jev with Proper Scoring Rules (**Brier Score** and **Logarithmic Loss**) instead of standard RLHF?
+
+Because in production software engineering, **decisions have asymmetric business costs**. When a model's output probability $p = P(\text{Fraud} \mid X)$ is truly calibrated, you can compute the exact **Bayes-Optimal Decision Threshold ($p^*$)** without re-training the model:
+
+- Suppose approving a fraudulent transaction costs **$\text{Cost}_{\text{FN}} = \$200$** (chargeback + penalty).
+- Falsely blocking a legitimate customer costs **$\text{Cost}_{\text{FP}} = \$15$** (lost margin + support ticket).
+- By Expected Value minimization, you should block the transaction whenever:
+  $$p \cdot \text{Cost}_{\text{FN}} > (1 - p) \cdot \text{Cost}_{\text{FP}} \implies p^* = \frac{\text{Cost}_{\text{FP}}}{\text{Cost}_{\text{FP}} + \text{Cost}_{\text{FN}}} = \frac{15}{15 + 200} \approx \mathbf{0.0698 \text{ (6.98\%)}}$$
+
+If you try to apply this $6.98\%$ threshold to raw token log-probabilities (`logprobs`) from an RLHF/RLVR generative LLM, **it fails catastrophically**—because RLHF/PPO entropy collapse pushes generative softmax distributions toward extreme `0.0001` or `0.9999` values regardless of true epistemic uncertainty!
+
+---
+
+### 6.5 Why "Jev"? The Jevons Paradox in AI & LLM Economics
+
+**Jev** is named after 19th-century English economist **William Stanley Jevons**, who formulated the **Jevons Paradox** (1865):
+
+> **The Jevons Paradox:** When technological innovation makes a resource significantly more efficient and cheaper per unit (as James Watt's steam engine did for coal), total consumption of that resource does **not** decrease—it **explodes**, because lower unit cost unlocks vast new categories of demand that were previously economically impossible.
+
+In modern AI architecture, the Jevons Paradox operates across two reinforcing fronts:
+
+1. **System 2 Efficiency Shock (DeepSeek-V3 / R1, MoE, FP8 Quantization):**
+   - Slashing reasoning inference cost per million tokens by $90\%+$ did not reduce global GPU demand. Instead, it shifted the industry from *sporadic human-in-the-loop chat prompts* (~500 tokens/min) to **autonomous background agent loops and RLVR test-time compute** burning **millions of tokens per task**.
+2. **System 1 Ubiquity Shock (TypeSafe Jev):**
+   - When an AI decision costs $\$0.05$ and takes `2,000 ms` (an autoregressive LLM), architects only invoke AI when a human clicks a button.
+   - When a **Jev** System 1 decision takes **`75 ms`** and costs fractions of a cent with **zero output tokens**, Jevons Paradox kicks in: engineers embed calibrated AI decisions **inside every HTTP API gateway call, every Kafka event consumer, every log line classifier, and every database query router**—multiplying total AI decision volume by $1,000\times$!
 
 ---
 
@@ -233,3 +324,57 @@ Use the interactive **Paradigm Comparison Matrix** tab in the diagram above to i
 ### 3. Sycophancy & Length Bias in Conversational LLMs
 - **Hazard**: Generative models write pages of apologetic, repetitive text to maximize reward model preference scores.
 - **Mitigation**: Enforce brevity penalties in the RL reward formulation and replace conversational LLM routing logic with schema-constrained System 1 decision models.
+
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace LLM Training, RLVR & Jev Decision Model Interviews
+
+When an interviewer asks *"How should we design an AI-powered triage/routing/guardrail service for 50,000 requests per second?"* or *"What is the difference between RLHF, RLVR, and System 1 decision models like Jev?"*, a mid-level candidate proposes prompting GPT-4/Claude with `"Respond only in valid JSON"`. A **Principal Engineer** immediately separates **Compute-Bound Prefill vs. Memory-Bandwidth-Bound Decode**, contrasts **RLHF (subjective human preference) vs. RLVR/GRPO (verifiable rewards) vs. RLCD (Brier-calibrated probabilities)**, and designs a **Two-Tier System 1 (Jev) + System 2 (Reasoning LLM)** topology.
+
+### 1. The 60-Second Senior Framing Strategy
+
+1. **Separate Decision-Making (System 1) from Content Generation (System 2):** Point out that 80%+ of backend microservice AI calls (routing, intent classification, fraud scoring, prompt-injection guardrails) do **not** need generated prose—they need **strongly-typed decisions (`choice`, `score`, `noul`) with calibrated probabilities**.
+2. **Ground Latency in GPU Hardware Physics (Prefill vs. Decode):** Explain that autoregressive LLMs are bottlenecked by **HBM memory bandwidth during sequential token decoding** (reloading 100%+ of model weights per output token, taking 800–2,500ms), whereas **Jev** executes a **single parallel Compute-Bound Prefill pass** (~70–120ms, zero output tokens).
+3. **Distinguish the Three Post-Training RL Paradigms:**
+   - **RLHF (PPO/DPO):** Optimizes subjective human preference (Bradley-Terry reward model) $\rightarrow$ prone to sycophancy, verbosity, and uncalibrated confidence.
+   - **RLVR (GRPO):** Optimizes deterministic verifiers (compilers, unit tests, symbolic math) without a critic network $\rightarrow$ induces emergent System 2 Chain-of-Thought (`<think>`).
+   - **RLCD (Brier Score):** Optimizes Proper Scoring Rules $\rightarrow$ guarantees **epistemic calibration** so stated confidence matches empirical reality.
+4. **Apply Jevons Paradox & Expected-Cost Gating:** Show how Jev's 75ms latency and zero output-token cost trigger **Jevons Paradox** (enabling inline AI decisions on every request) and how calibrated probabilities unlock **Bayes-optimal cost thresholding** ($p^* = C_{\text{FP}} / (C_{\text{FP}} + C_{\text{FN}})$).
+
+---
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "Why do we need a non-generative decision model like Jev when OpenAI and Anthropic already support 'Structured Outputs' (JSON Schema constrained decoding)?"
+* **Junior/Mid Answer:** *"Structured Outputs already guarantees 100% valid JSON matching our schema, so Jev is just a smaller LLM."*
+* **Principal Rebuttal:** *"Constrained JSON decoding only solves **syntax validity**—it fails on **GPU latency, token cost, and probability calibration**:
+  1. **Memory-Bandwidth Bottleneck:** Constrained decoding works by applying a finite-state machine (FSM) mask over vocabulary logits *during sequential token-by-token generation*. To emit `{"verdict": "PROMPT_INJECTION"}`, the GPU still has to run 12+ sequential decode passes, reloading model weights from HBM on every token (~800ms–1,500ms) and billing you for output tokens. **Jev** has no autoregressive decode loop at all—it evaluates `choice`, `score`, and `noul` heads in **one parallel prefill pass (~75ms)** with **zero output tokens**.
+  2. **Uncalibrated Softmax:** Standard LLMs trained with RLHF suffer from **entropy collapse**—their token logprobs cluster near `0.999` even when guessing blindly. Jev is trained with **RLCD (Brier Score)** so a `0.85` probability mathematically guarantees 85% empirical accuracy."*
+
+#### Trap 2: "Can't we just ask a generative LLM 'How confident are you from 0 to 100%?' in the prompt and use that number to route requests?"
+* **Junior/Mid Answer:** *"Yes, or we can inspect the `logprobs` of the generated tokens to measure confidence."*
+* **Principal Rebuttal:** *"Both verbalized confidence and raw token `logprobs` in generative LLMs are notoriously uncalibrated:
+  1. **Verbalized Confidence Hallucination:** Because pre-training corpora rarely contain humans saying 'I am 63% sure', LLMs mimic confident human prose and almost always output `'90%'` or `'95%'` regardless of accuracy.
+  2. **Surface-Form Probability Competition:** In an autoregressive LLM, token `logprobs` measure the probability of a *specific surface word* (`'Refund'` vs `'Reimbursement'` vs `'Credit'`), splitting probability mass across synonyms rather than measuring the true semantic posterior $P(\text{Intent} \mid X)$.
+  By contrast, **RLCD / Jev** evaluates mutually exclusive semantic criteria (`choice`, `score`, `noul`) trained directly against **Proper Scoring Rules (Brier Score)** and monitored via **Expected Calibration Error (ECE)**."*
+
+#### Trap 3: "In DeepSeek-R1's RLVR pipeline, why did they replace PPO with GRPO (Group Relative Policy Optimization)?"
+* **Junior/Mid Answer:** *"Because GRPO converges faster than PPO on math problems."*
+* **Principal Rebuttal:** *"The primary driver is **the GPU HBM Memory Wall**. Standard **PPO** requires holding a separate **Value Network (Critic)** in GPU memory alongside the Policy (Actor), Reference model, and Reward model—nearly doubling static HBM memory consumption (16 bytes/param for training state). **GRPO** eliminates the Value/Critic network completely! Instead of predicting a baseline value with a neural network, GRPO samples a group of $G$ completions $\{y_1, \dots, y_G\}$ for the same prompt, scores them with a deterministic verifier (compiler/unit test), and computes each sample's advantage relative to the group's Z-score: $A_i = \frac{r_i - \mu_r}{\sigma_r}$. This slashes HBM usage by ~40–50% while stabilizing long Chain-of-Thought RL training."*
+
+#### Trap 4: "Since models like DeepSeek-R1 and Jev reduce per-decision AI inference costs by 90%+, shouldn't we reduce our GPU cluster capacity budget for next year?"
+* **Junior/Mid Answer:** *"Yes, if each request costs 90% less compute, our total GPU spend will drop by 90%."*
+* **Principal Rebuttal:** *"That linear extrapolation ignores the **Jevons Paradox** (after which Jev is named). In economics and systems architecture, when the unit cost and latency of a foundational resource drop by an order of magnitude, total consumption **explodes** because the resource crosses the threshold from 'scarce human-triggered tool' to 'ubiquitous background infrastructure'. When AI decisions cost $0.05 and take 2 seconds, we only run them on explicit user clicks. When Jev runs in **75ms** at a fraction of a cent, teams embed System 1 decisions into every API gateway request, every Kafka event stream, and multi-step autonomous agent loops—increasing total request volume by 50×–100×."*
+
+---
+
+### 3. Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **What Is Jev (TypeSafe AI)?** | "A smaller, faster LLM that outputs JSON." | "A **non-generative System 1 decision engine** trained with **RLCD** that evaluates `choice`, `score`, and `noul` primitives in a **single parallel prefill pass (~70–120ms, 0 output tokens)**." |
+| **Why LLMs Are Slow at Classification** | "LLMs have too many parameters." | "Autoregressive decoding is **HBM memory-bandwidth-bound** (`GEMV`), reloading 100% of weights for every generated JSON character; Jev runs only **compute-bound prefill (`GEMM`)**." |
+| **Confidence Thresholding** | "Prompt the LLM to output a confidence score 1–10." | "Use RLCD **Brier-calibrated probabilities** paired with **Bayes-optimal cost thresholding** $p^* = C_{\text{FP}} / (C_{\text{FP}} + C_{\text{FN}})$ and track **Expected Calibration Error (ECE)**." |
+| **RLHF vs. RLVR vs. RLCD** | "RLHF is how all modern LLMs are aligned." | "**RLHF** (Bradley-Terry human prefs, conversational), **RLVR** (GRPO + deterministic compilers/verifiers for System 2 reasoning), **RLCD** (Brier Score for calibrated System 1 decisions)." |
+| **AI Capacity Planning** | "Cheaper models mean we need fewer GPUs." | "Account for **Jevons Paradox**: 10× cheaper/faster inference shifts workloads from sporadic chat to continuous inline System 1 gates + multi-turn System 2 agent loops." |
+

@@ -24,6 +24,11 @@ const sidebars: SidebarsConfig = {
 			label: '💼 General Interview Framework'
 		},
 		{
+			type: 'doc',
+			id: 'technical-knowledge/interview-questions/resume-and-negotiation-guide',
+			label: '📄 Resume & Salary Negotiation'
+		},
+		{
 			type: 'category',
 			label: '🛠️Technical Knowledge',
 			collapsed: false,
@@ -31,9 +36,10 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🏆 Become Senior Developer',
-					collapsed: true,
+					collapsed: false,
 					items: [
-						'technical-knowledge/become-senior-developer/7-coding-laws'
+						'technical-knowledge/become-senior-developer/7-coding-laws',
+						'technical-knowledge/become-senior-developer/real-world-engineering-playbook'
 					]
 				},
 				{

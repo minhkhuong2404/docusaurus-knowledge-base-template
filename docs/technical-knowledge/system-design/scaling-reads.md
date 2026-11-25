@@ -633,3 +633,95 @@ With so many tools available, the practical question is: *which combination, for
 
 ## See Also
 * **[Rate Limiting Algorithms](./rate-limiting-algorithms.md)**: Detail conceptual designs, comparisons, and pseudocode implementations of all core rate-limiting algorithms.
+
+---
+
+## 🌍 Deep Dive: CDN Architecture & Edge Caching Mechanics
+
+> **Reference**: [Sujeet Pro — CDN Architecture and Caching](https://sujeet.pro/articles/cdn-architecture-and-caching)
+
+While application-level L1/L2 caches protect the database inside a single region, a **Content Delivery Network (CDN)** moves both connection termination and read caching to the physical edge of the internet—within 5–25ms of the end user.
+
+### 1. Multi-Tier CDN Topology: Edge PoPs & Origin Shield (Tiered Caching)
+
+A production CDN is structured as a hierarchical caching tree rather than a flat ring of edge servers:
+
+1. **Edge PoPs (Points of Presence)**: Hundreds of globally distributed data centers deployed inside or directly peered with ISP eyeballs (IXPs). Each PoP runs an L4 Anycast load balancer (e.g., Maglev/Katran) fronting a cluster of L7 caching proxies (Varnish, NGINX, ATS, or custom Rust/Pingora proxies). Inside a single PoP, **consistent hashing (CARP)** shards URLs across storage nodes so the same PoP does not store 20 duplicate copies of the same asset.
+2. **Regional Mid-Tier / Origin Shield (Tiered Caching)**: Without a middle tier, if 300 global Edge PoPs all experience a cache miss for a newly published asset or expired popular key, all 300 PoPs independently query the Origin server (**$300\times$ cache-miss amplification**). By routing all Edge PoP misses through a single designated regional **Origin Shield** PoP, the 300 edge misses collapse into **1 single origin fetch**, raising the effective origin offload ratio from $\sim 85\%$ to $>99\%$.
+
+### 2. Pull vs. Push CDNs & Request Routing (Anycast vs. GeoDNS)
+
+| Architectural Choice | Option A | Option B | Principal Engineering Verdict |
+| :--- | :--- | :--- | :--- |
+| **Ingestion Model: Pull vs. Push CDN** | **Pull CDN (Lazy Population)**: Edge fetches from OriginShield/Origin on first cache miss and caches according to `Cache-Control` headers. | **Push CDN (Pre-Warming)**: Deployment pipeline or media encoder proactively uploads assets to CDN storage before traffic arrives. | Use **Pull** for 95% of web/API traffic (zero state management). Use **Push** (or synthetic pre-warming) for massive, predictable launches (e.g., 50 GB game patches, Netflix global show premieres, iOS updates) where simultaneous cold-start misses would saturate origin egress bandwidth. |
+| **Traffic Routing: BGP Anycast vs. Unicast GeoDNS** | **BGP Anycast**: All Edge PoPs announce the exact same IP prefix. Internet BGP routing directs packets to the topologically shortest AS-path PoP. | **GeoDNS + EDNS0 Client Subnet (ECS)**: Authoritative DNS inspects the client's `/24` IPv4 or `/56` IPv6 prefix via ECS and returns a unicast A/AAAA record for the lowest-latency PoP. | **Anycast** excels at DDoS absorption, instant TCP/QUIC connection routing, and immunity to recursive resolver TTL ignores (Cloudflare, Fastly). **GeoDNS** allows fine-grained traffic steering and capacity shedding across thousands of ISP-embedded caches (Akamai, Netflix Open Connect) where BGP AS-path length does not match real-timePoP disk/bandwidth saturation. |
+
+### 3. Cache-Control Directives, Cache Key Normalization & Request Collapsing
+
+#### Precision `Cache-Control` Directives at the Edge
+```http
+Cache-Control: public, max-age=60, s-maxage=3600, stale-while-revalidate=120, stale-if-error=86400
+Surrogate-Control: max-age=3600
+Vary: Accept-Encoding
+```
+* `s-maxage=3600` vs. `max-age=60`: Separates **CDN edge TTL** (1 hour, easily purged via API in < 200ms) from **browser local cache TTL** (60 seconds, which you *cannot* remotely purge once stored on a user's device).
+* `stale-while-revalidate=120`: Eliminates synchronous tail-latency spikes on TTL expiry. For 120 seconds after the 3600s TTL expires, the Edge PoP immediately returns the cached stale object in $5\text{ms}$ while asynchronously refreshing the object from the Origin Shield in the background.
+* `stale-if-error=86400`: Crucial **availability shield**. If the origin returns `5xx` or times out during an outage, the CDN continues serving the stale cached object for up to 24 hours rather than propagating errors to end users.
+
+#### Cache Key Normalization (Preventing Cache Pollution & Hit-Ratio Collapse)
+By default, a CDN cache key is `Scheme + Host + Path + QueryString + Vary Headers`. Naive configurations suffer catastrophic cache fragmentation:
+* **Marketing & Tracking Query Parameters**: Requests for `/product?utm_source=fb&fbclid=9981` and `/product?utm_source=x&fbclid=1122` generate distinct cache keys, dropping hit ratio toward 0%. **Fix**: Strip tracking params (`utm_*`, `fbclid`, `gclid`) at the edge worker, sort remaining query parameters alphabetically, and lowercase paths before computing the cache key hash.
+* **The `Vary: *` or `Vary: User-Agent` Anti-Pattern**: Adding raw `User-Agent` (thousands of browser version permutations) or `Cookie` to `Vary` multiplies the cache key space by $10,000\times$. **Fix**: Normalize capabilities into coarse buckets at the edge (e.g., `X-Device-Bucket: mobile | desktop`, `Accept-Encoding: br | gzip`) before lookup.
+
+#### Request Collapsing (Edge Coalescing) & Global Purge Propagation
+* **Request Collapsing / Coalescing**: When a hot object is missing or expired at an Edge PoP and 5,000 concurrent requests arrive within the $80\text{ms}$ origin fetch window, the edge proxy places a **transient mutex entry ("hit-for-pass" / waiting queue)** in its hash table. Only **1 request** travels upstream to the Origin Shield; the other 4,999 requests block on the in-flight response buffer and stream the bytes as soon as the first upstream response header arrives. *(Caveat: If the origin replies with `Cache-Control: private, no-store`, the proxy must record a temporary **Hit-For-Pass** marker so subsequent requests don't serialize behind an uncacheable resource!)*
+* **Purge / Invalidation Propagation**: Global CDNs propagate Surrogate-Key / Cache-Tag invalidations across 300+ PoPs in $< 150\text{ms}$ using a **hierarchical pub/sub tree or gossip protocol (SWIM/gossip over UDP/QUIC)**. Instead of deleting gigabytes of disk blocks synchronously, edge nodes update an in-memory **epoch/generation bitmap** or soft-expire the object (marking it eligible for `stale-while-revalidate` rather than hard-deleting, which would trigger an immediate global origin stampede).
+
+### 4. Dynamic Site Acceleration (DSA): How CDNs Speed Up Uncacheable APIs
+
+Even when an API response or `POST /checkout` mutation cannot be cached (`Cache-Control: no-store`), routing through a CDN dramatically reduces latency via **Transport & Protocol Optimization**:
+1. **Local TCP & TLS 1.3 / 0-RTT Termination**: A TCP handshake (1 RTT) + TLS 1.3 handshake (1 RTT, or 0-RTT with session resumption) happens against an Edge PoP $10\text{ms}$ away instead of an origin server $200\text{ms}$ across the ocean—saving $200\text{ms}$–$400\text{ms}$ before the first byte of HTTP is even sent.
+2. **Split-TCP & Pre-Warmed Persistent Origin Tunnels**: The Edge PoP maintains long-lived, pre-warmed, high-CWND (congestion window) HTTP/2 or mTLS connections to the origin over private backbone fiber, bypassing public internet BGP congestion and TCP slow-start.
+
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace Scaling Reads & CDN Caching Interviews
+
+### 1. The Senior Framing Strategy (First 60 Seconds)
+
+When an interviewer asks *"How do we scale this system to 500,000 read QPS with sub-50ms global latency?"*, structure your opening around **Tiered Offload Math and Consistency Budgets**:
+1. **Establish the Read Offload Funnel**: Never scale reads at a single tier. Design a multi-stage filter:
+   * **Tier 0 (Browser / Client Cache)**: Absorbs repeat navigations via `max-age` + `ETag` (`304 Not Modified`).
+   * **Tier 1 (CDN Edge + Origin Shield)**: Absorbs 85%–98% of global public/semi-static reads via `s-maxage`, Surrogate Keys, and Request Collapsing.
+   * **Tier 2 (Application L1 Near-Cache + L2 Redis Cluster)**: Absorbs 90%+ of personalized/authenticated reads ($1\text{ms}$–$3\text{ms}$ latency), using SingleFlight coalescing and L1 Caffeine for hot keys.
+   * **Tier 3 (Database Read Replicas + Covering Indexes)**: Handles the remaining $<1\%$ tail misses, protected by connection pool bounds and Read-Your-Writes LSN pinning.
+2. **Quantify Request vs. Byte Offload & AMAT**: State explicitly that **Request Hit Ratio $\neq$ Origin Offload**. If 99% of requests hit on 2 KB JSON files, but the 1% miss rate is on 50 MB video chunks or expensive 20-table SQL joins, the origin still melts down.
+3. **Define the Staleness SLA per Entity**: Categorize data into *Immutable* (content-addressed assets, 1-year TTL), *Event-Invalidated* (catalog/profiles via CDC + Surrogate Keys, sub-second staleness), and *Strongly Consistent / Read-Your-Writes* (auth/financial state via LSN session pinning).
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "When a flash sale starts or a breaking news article is updated, we call the CDN Purge API to delete the old cached page so users immediately see the new price."
+* **Junior/Mid Answer:** "Yes, calling a hard purge URL API ensures immediate consistency across all CDN edge servers."
+* **Principal Rebuttal:** "Executing a **hard purge (delete)** on a high-QPS hot key during peak traffic is a classic self-inflicted DDoS. The millisecond the key is deleted across 300 PoPs, tens of thousands of requests bypass the cache simultaneously. Even with an Origin Shield and Request Collapsing, if the origin takes $500\text{ms}$ to render the page, edge request queues fill up and drop connections. Instead of hard purging, a Principal architecture performs a **Soft Purge (mark as stale)** combined with `stale-while-revalidate` and **Request Collapsing**. All users continue receiving the cached response in $5\text{ms}$ while a single background thread per shield fetches the updated version and atomically swaps the pointer."
+
+#### Trap 2: "Our Redis cache hit ratio is 99.8%, so our caching layer is healthy—why are our application pods timing out on Redis reads?"
+* **Junior/Mid Answer:** "Maybe Redis is out of memory and evicting keys, or we need to add more shards to the Redis cluster."
+* **Principal Rebuttal:** "Adding shards to a Redis cluster does zero good if the bottleneck is **Hot Key Saturation**. Because Redis hashes each key (`CRC16(key) % 16384`) to a single shard and processes commands on a single-threaded event loop, 150,000 QPS on a single viral key (`celebrity_post:999`) routes 100% of that load to **one single Redis CPU core and one NIC**, saturating its network bandwidth ($150\text{k} \times 50\text{KB} = 7.5\text{ GB/s}$) even at a 100% cache hit ratio! The fix is a bounded **L1 in-process near-cache (Caffeine)** with a 1–2 second TTL (plus Redis Pub/Sub invalidation or client-side tracking `CLIENT TRACKING`) or key-salting (`key:1`..`key:N`) across shards."
+
+#### Trap 3: "To fix stale cache bugs after a database update, should we update the cache or delete the cache key?"
+* **Junior/Mid Answer:** "We should delete the cache key after updating the database (Cache-Aside), and everything will be consistent."
+* **Principal Rebuttal:** "First, **updating** the cache in-place is broken under concurrent writes: if Writer A and Writer B update the DB in order $(A \rightarrow B)$ but their network calls to Redis arrive out-of-order $(B \rightarrow A)$, the cache stays permanently poisoned with $A$'s stale value. However, even **deleting** the cache after a DB write has a subtle race condition when paired with **Read Replicas**: Reader 1 misses the cache, queries a lagging Read Replica (getting old value $V_0$), Writer 2 updates Primary DB to $V_1$ and deletes the cache key, and then Reader 1 finishes its slow replica read and writes $V_0$ back into the cache—poisoning it for the full TTL! The Principal solution is **Transactional CDC Invalidation (Debezium tailing the DB WAL/binlog)** combined with **versioned/CAS cache writes** (only cache if `row_version > cached_version`) or delayed dual-delete."
+
+#### Trap 4: "We deployed a multi-region CDN, why is our cache hit ratio only 35% despite setting `Cache-Control: public, max-age=3600`?"
+* **Junior/Mid Answer:** "Maybe the TTL of 1 hour isn't long enough, so we should increase `max-age` to 24 hours."
+* **Principal Rebuttal:** "A 35% hit ratio with a 1-hour TTL almost always points to **Cache Key Fragmentation** or **Long-Tail Cold PoP Dispersion**, not TTL length. First, inspect if unnormalized query parameters (`?utm_campaign=...`, `?session_id=...`) or high-cardinality `Vary` headers (`Vary: Cookie`, `Vary: User-Agent`) are creating millions of unique cache buckets for identical content. Second, without an **Origin Shield (Tiered Caching)**, long-tail objects requested once every 30 minutes across 200 global PoPs miss in *every* PoP individually. Normalizing the cache key at the edge and enabling an Origin Shield typically jumps hit ratios from $35\%$ to $>92\%$ without touching the TTL."
+
+### 3. Quick Reference — Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **CDN Topology** | "Put Cloudflare or CloudFront in front of our API to cache static assets." | "Configure **Edge PoPs + Regional Origin Shield** with Request Collapsing (`SingleFlight`), normalized cache keys, and separate browser (`max-age=60`) vs. edge (`s-maxage=3600`) TTLs." |
+| **Cache Invalidation** | "Purge the URL when data changes, or wait for the TTL to expire." | "Tag responses with **Surrogate Keys (`Cache-Tag`)** for $O(1)$ relational group purges, and execute **Soft Purges + `stale-while-revalidate`** to prevent post-purge origin stampedes." |
+| **Stampede Protection** | "Increase the database connection pool or raise the cache TTL." | "Combine **Request Coalescing (SingleFlight / distributed mutex)** for cold misses with **Probabilistic Early Expiration (XFetch)** or background refresh for hot keys." |
+| **Read Replica Lag** | "Add read replicas to scale `SELECT` queries horizontally." | "Guard against replica lag anomalies using **LSN / WAL-position session pinning** (Read-Your-Writes routing) and never repopulate shared caches from unverified lagging replicas without version checks." |
+| **Multi-Tier Coherence** | "Use Caffeine in memory and Redis as a shared cache." | "Mitigate L1/L2 drift via **CDC-driven Redis Pub/Sub invalidation broadcasts**, backed by a strict 2–5 second L1 TTL backstop for network partitions." |

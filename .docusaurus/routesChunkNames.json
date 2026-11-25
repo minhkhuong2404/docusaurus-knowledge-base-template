@@ -111,13 +111,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-e54": {
+  "/-6c9": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-f28": {
+  "/-0cd": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -1397,9 +1397,9 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-cockroachdbc-5-e-f40"
   },
-  "/tags/code-assessment-679": {
+  "/tags/code-review-403": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
-    "__props": "__props---tags-code-assessmentd-7-e-998"
+    "__props": "__props---tags-code-review-0-db-da1"
   },
   "/tags/codebuild-f60": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1508,6 +1508,10 @@
   "/tags/compelling-evidence-c34": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-compelling-evidencedfe-138"
+  },
+  "/tags/compensation-5dd": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-compensationcf-9-cef"
   },
   "/tags/compliance-1bf": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2029,6 +2033,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-delegation-533-1f0"
   },
+  "/tags/delivery-framework-3da": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-delivery-framework-8-ef-27d"
+  },
   "/tags/deloitte-6c8": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-deloittee-8-f-e4a"
@@ -2484,6 +2492,10 @@
   "/tags/equals-hashcode-d56": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-equals-hashcode-3-bb-9a8"
+  },
+  "/tags/equity-40a": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-equityd-5-b-2f7"
   },
   "/tags/equivalence-partitioning-0d3": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -3172,6 +3184,10 @@
   "/tags/heaps-bbb": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-heaps-3-c-5-879"
+  },
+  "/tags/hello-interview-fbe": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-hello-interviewabb-97d"
   },
   "/tags/helm-053": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -5389,6 +5405,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-production-432-b40"
   },
+  "/tags/production-engineering-443": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-production-engineering-059-e87"
+  },
   "/tags/productivity-7f3": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-productivity-9-fd-3c2"
@@ -5813,6 +5833,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-restcontrolleradvicee-40-b94"
   },
+  "/tags/resume-e65": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-resumee-1-c-a11"
+  },
   "/tags/retrieval-augmented-generation-428": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-retrieval-augmented-generation-885-b62"
@@ -5929,6 +5953,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-rsaa-38-078"
   },
+  "/tags/rsu-c61": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-rsu-47-d-d42"
+  },
   "/tags/rtgs-f08": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-rtgs-9-d-8-77e"
@@ -5936,6 +5964,10 @@
   "/tags/rto-459": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-rto-500-0a8"
+  },
+  "/tags/rubrics-b09": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-rubricsc-9-f-499"
   },
   "/tags/runbook-995": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -5968,6 +6000,10 @@
   "/tags/saga-363": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-saga-6-a-2-ab1"
+  },
+  "/tags/salary-negotiation-2a8": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-salary-negotiation-258-4ef"
   },
   "/tags/sam-596": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -6569,6 +6605,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-stacktrace-510-0d9"
   },
+  "/tags/staff-engineer-557": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-staff-engineer-636-73f"
+  },
   "/tags/stakeholders-abe": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-stakeholders-036-ff6"
@@ -6628,6 +6668,10 @@
   "/tags/step-functions-3a5": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-step-functions-8-bc-6ae"
+  },
+  "/tags/stomp-61f": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-stomp-481-06d"
   },
   "/tags/storage-113": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -6880,10 +6924,6 @@
   "/tags/technical-debt-e51": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-technical-debt-71-a-622"
-  },
-  "/tags/technical-interview-837": {
-    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
-    "__props": "__props---tags-technical-interviewc-12-c08"
   },
   "/tags/technical-knowledge-739": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -7629,7 +7669,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-e03": {
+  "/-bc5": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -8787,6 +8827,10 @@
   "/technical-knowledge/become-senior-developer/7-coding-laws-a51": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-become-senior-developer-7-coding-laws-2-cf-a90"
+  },
+  "/technical-knowledge/become-senior-developer/real-world-engineering-playbook-ebe": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-become-senior-developer-real-world-engineering-playbook-393-760"
   },
   "/technical-knowledge/blockchain/consensus/consensus-mechanisms-52d": {
     "__comp": "__comp---theme-doc-item-178-a40",
@@ -12359,6 +12403,10 @@
   "/technical-knowledge/interview-questions/java/tricky-java-interview-81f": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-interview-questions-java-tricky-java-interviewbe-1-f6a"
+  },
+  "/technical-knowledge/interview-questions/resume-and-negotiation-guide-9e4": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-resume-and-negotiation-guide-0-d-5-86c"
   },
   "/technical-knowledge/java/concurrency-vs-parallelism-309": {
     "__comp": "__comp---theme-doc-item-178-a40",

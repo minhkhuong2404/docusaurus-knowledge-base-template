@@ -89,11 +89,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'e54'),
+    component: ComponentCreator('/', '6c9'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'f28'),
+        component: ComponentCreator('/', '0cd'),
         routes: [
           {
             path: '/tags',
@@ -1691,8 +1691,8 @@ export default [
             exact: true
           },
           {
-            path: '/tags/code-assessment',
-            component: ComponentCreator('/tags/code-assessment', '679'),
+            path: '/tags/code-review',
+            component: ComponentCreator('/tags/code-review', '403'),
             exact: true
           },
           {
@@ -1828,6 +1828,11 @@ export default [
           {
             path: '/tags/compelling-evidence',
             component: ComponentCreator('/tags/compelling-evidence', 'c34'),
+            exact: true
+          },
+          {
+            path: '/tags/compensation',
+            component: ComponentCreator('/tags/compensation', '5dd'),
             exact: true
           },
           {
@@ -2481,6 +2486,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/delivery-framework',
+            component: ComponentCreator('/tags/delivery-framework', '3da'),
+            exact: true
+          },
+          {
             path: '/tags/deloitte',
             component: ComponentCreator('/tags/deloitte', '6c8'),
             exact: true
@@ -3048,6 +3058,11 @@ export default [
           {
             path: '/tags/equals-hashcode',
             component: ComponentCreator('/tags/equals-hashcode', 'd56'),
+            exact: true
+          },
+          {
+            path: '/tags/equity',
+            component: ComponentCreator('/tags/equity', '40a'),
             exact: true
           },
           {
@@ -3908,6 +3923,11 @@ export default [
           {
             path: '/tags/heaps',
             component: ComponentCreator('/tags/heaps', 'bbb'),
+            exact: true
+          },
+          {
+            path: '/tags/hello-interview',
+            component: ComponentCreator('/tags/hello-interview', 'fbe'),
             exact: true
           },
           {
@@ -6681,6 +6701,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/production-engineering',
+            component: ComponentCreator('/tags/production-engineering', '443'),
+            exact: true
+          },
+          {
             path: '/tags/productivity',
             component: ComponentCreator('/tags/productivity', '7f3'),
             exact: true
@@ -7211,6 +7236,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/resume',
+            component: ComponentCreator('/tags/resume', 'e65'),
+            exact: true
+          },
+          {
             path: '/tags/retrieval-augmented-generation',
             component: ComponentCreator('/tags/retrieval-augmented-generation', '428'),
             exact: true
@@ -7356,6 +7386,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/rsu',
+            component: ComponentCreator('/tags/rsu', 'c61'),
+            exact: true
+          },
+          {
             path: '/tags/rtgs',
             component: ComponentCreator('/tags/rtgs', 'f08'),
             exact: true
@@ -7363,6 +7398,11 @@ export default [
           {
             path: '/tags/rto',
             component: ComponentCreator('/tags/rto', '459'),
+            exact: true
+          },
+          {
+            path: '/tags/rubrics',
+            component: ComponentCreator('/tags/rubrics', 'b09'),
             exact: true
           },
           {
@@ -7403,6 +7443,11 @@ export default [
           {
             path: '/tags/saga',
             component: ComponentCreator('/tags/saga', '363'),
+            exact: true
+          },
+          {
+            path: '/tags/salary-negotiation',
+            component: ComponentCreator('/tags/salary-negotiation', '2a8'),
             exact: true
           },
           {
@@ -8156,6 +8201,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/staff-engineer',
+            component: ComponentCreator('/tags/staff-engineer', '557'),
+            exact: true
+          },
+          {
             path: '/tags/stakeholders',
             component: ComponentCreator('/tags/stakeholders', 'abe'),
             exact: true
@@ -8228,6 +8278,11 @@ export default [
           {
             path: '/tags/step-functions',
             component: ComponentCreator('/tags/step-functions', '3a5'),
+            exact: true
+          },
+          {
+            path: '/tags/stomp',
+            component: ComponentCreator('/tags/stomp', '61f'),
             exact: true
           },
           {
@@ -8543,11 +8598,6 @@ export default [
           {
             path: '/tags/technical-debt',
             component: ComponentCreator('/tags/technical-debt', 'e51'),
-            exact: true
-          },
-          {
-            path: '/tags/technical-interview',
-            component: ComponentCreator('/tags/technical-interview', '837'),
             exact: true
           },
           {
@@ -9482,7 +9532,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'e03'),
+            component: ComponentCreator('/', 'bc5'),
             routes: [
               {
                 path: '/aws',
@@ -11215,6 +11265,12 @@ export default [
               {
                 path: '/technical-knowledge/become-senior-developer/7-coding-laws',
                 component: ComponentCreator('/technical-knowledge/become-senior-developer/7-coding-laws', 'a51'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/become-senior-developer/real-world-engineering-playbook',
+                component: ComponentCreator('/technical-knowledge/become-senior-developer/real-world-engineering-playbook', 'ebe'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -16573,6 +16629,12 @@ export default [
               {
                 path: '/technical-knowledge/interview-questions/java/tricky-java-interview',
                 component: ComponentCreator('/technical-knowledge/interview-questions/java/tricky-java-interview', '81f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/resume-and-negotiation-guide',
+                component: ComponentCreator('/technical-knowledge/interview-questions/resume-and-negotiation-guide', '9e4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

@@ -1419,3 +1419,116 @@ public class TraceIdFilter extends OncePerRequestFilter {
 - [Spring Data JPA: Custom Queries with @Query](../spring/spring-data-jpa-custom-query.md)
 - [Database Sharding & Partitioning](./sharding-partitioning.md)
 - [AI Agent Skills: Tools, MCP, Memory & RAG](../ai-agents/skills.md)
+
+---
+
+## 🔬 Deep Dive: Wire-Level RPC Mechanics, Deadlines, and Production API Contracts
+
+> **Reference**: [Sujeet Pro — RPC and API Design](https://sujeet.pro/articles/rpc-and-api-design)
+
+### 1. Protobuf Binary Wire Format & Tag-Length-Value (TLV) Encoding
+
+Unlike JSON—which repeatedly serializes human-readable field names (`"order_id": 150`) as UTF-8 strings—**Protocol Buffers (Protobuf)** compiles `.proto` definitions into a compact binary **Tag-Length-Value (TLV)** stream where field names are completely stripped from the wire:
+
+- **Wire Tag Byte**: Each field is prefixed by a single varint tag computed as:
+  $$\text{Tag} = (\text{field\_number} \ll 3) \mid \text{wire\_type}$$
+  where the lower 3 bits encode the `wire_type` (`0` = Varint for `int32`/`int64`/`bool`/`enum`, `1` = 64-bit fixed, `2` = Length-delimited for `string`/`bytes`/embedded messages/packed repeated fields, `5` = 32-bit fixed).
+- **Base-128 Varints & ZigZag Encoding**: Small integers (`1` to `127`) consume a **single byte** (MSB continuation bit = `0`). Signed negative integers use `sint32` / `sint64` **ZigZag encoding**—mapping $(-1 \rightarrow 1, 1 \rightarrow 2, -2 \rightarrow 3)$ so small negative numbers don't get sign-extended into 10-byte two's-complement varints.
+- **Why Field Numbers `1–15` Are Prime Real Estate**: Because the tag byte uses 3 bits for `wire_type` and 1 bit for the varint MSB continuation flag, field numbers `1` through `15` fit in the remaining 4 bits (1 byte total tag overhead), whereas field numbers `16` through `2047` require 2 bytes. Always assign `1–15` to the most frequently populated fields and use `reserved 4, 8 to 11;` when deleting deprecated fields so no engineer ever accidentally reuses a retired tag number.
+
+---
+
+### 2. gRPC over HTTP/2: Deadlines, Cancellation Propagation & L4/L7 Load Balancing
+
+#### Deadlines & Cascading Cancellation Propagation
+In a microservice call graph (`API Gateway` $\rightarrow$ `Order Service` $\rightarrow$ `Inventory Service` $\rightarrow$ `Postgres`), calling a downstream RPC without a deadline is a major reliability anti-pattern:
+- **Absolute Deadlines (`grpc-timeout` header)**: A gRPC client sets `.withDeadlineAfter(500, TimeUnit.MILLISECONDS)`. If `Order Service` spends `180ms` on local logic before calling `Inventory Service`, the gRPC context automatically propagates the **remaining budget** (`320ms`) in the outbound `grpc-timeout` HTTP/2 header.
+- **RST_STREAM Cancellation**: If the external client disconnects or the deadline expires, the upstream caller immediately transmits an HTTP/2 `RST_STREAM` frame (`CANCEL`) down the call tree. Downstream services listening to `Context.current().isCancelled()` abort expensive in-flight DB queries immediately, preventing **wasted work amplification** during retry storms.
+
+#### The Kubernetes L4 Load Balancing Trap with gRPC (HTTP/2)
+Because gRPC multiplexes hundreds of concurrent RPC streams over a **single long-lived TCP connection**, standard Kubernetes `ClusterIP` Services (which operate at **Layer 4 TCP connection level** via `iptables`/`IPVS`) will pin **100% of a client pod's RPC traffic to a single backend pod**, leaving newly scaled pods completely idle!
+- **Solutions**:
+  1. **L7 Proxy / Service Mesh**: Route through Envoy / Istio / Linkerd which terminates HTTP/2 frames and load-balances individual gRPC requests at Layer 7.
+  2. **Client-Side Load Balancing (xDS / Headless Service)**: Configure a Kubernetes Headless Service (`clusterIP: None`) with gRPC's `round_robin` name resolver so the client maintains an active subchannel pool across all backend pod IPs directly.
+  3. **Max Connection Age**: Configure server-side `maxConnectionAge(30, TimeUnit.SECONDS)` to periodically send HTTP/2 `GOAWAY` frames, forcing clients to re-resolve DNS and rebalance connections.
+
+---
+
+### 3. Production Idempotency Keys (IETF Draft & Stripe State Machine)
+
+Making `POST` or `PATCH` mutations safe across unreliable networks requires more than a naive `if (redis.exists(key))` check—which suffers from **TOCTOU (Time-of-Check to Time-of-Use)** race conditions when two identical retries arrive 2ms apart, or when the first request is still in-flight:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                    STRIPE-GRADE IDEMPOTENCY KEY LIFECYCLE                              │
+├──────────────────────┬─────────────────────────────────────────────────────────────────┤
+│ 1. Atomic Lock       │ INSERT INTO idempotency_keys (key, user_id, payload_hash,       │
+│    Acquisition       │ status, locked_until) VALUES (..., 'IN_PROGRESS', NOW() + '30s')│
+│                      │ ON CONFLICT (user_id, key) DO NOTHING                           │
+├──────────────────────┼─────────────────────────────────────────────────────────────────┤
+│ 2. Payload Hash      │ Compare SHA-256(request_body) against stored payload_hash.      │
+│    Verification      │ If different → Return HTTP 422 Unprocessable Entity             │
+│                      │ (client accidentally reused the same key for different params!) │
+├──────────────────────┼─────────────────────────────────────────────────────────────────┤
+│ 3. Concurrent        │ If status == 'IN_PROGRESS' and locked_until > NOW():            │
+│    In-Flight Retry   │ Return HTTP 409 Conflict (with Retry-After: 1) so the client    │
+│                      │ backs off while the first worker finishes                       │
+├──────────────────────┼─────────────────────────────────────────────────────────────────┤
+│ 4. Recovery Points   │ Store HTTP status code + serialized response body on 2xx/4xx    │
+│    & Error Policy    │ completion. On transient 5xx / network crash, release lock so   │
+│                      │ the next client retry safely resumes from the last atomic step  │
+└──────────────────────┴─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 4. HTTP Caching & Conditional Requests (`ETag` & `Cache-Control`)
+
+One of REST's strongest architectural advantages over gRPC and GraphQL (which tunnel `POST` requests over single endpoints) is native **HTTP Caching** at browser, CDN (Cloudflare/CloudFront), and reverse-proxy tiers:
+- **Freshness (`Cache-Control`)**: `Cache-Control: public, max-age=60, stale-while-revalidate=300` allows the CDN edge to serve cached responses instantly for 60 seconds, and for the next 300 seconds serve slightly stale data with 0ms origin latency while refreshing the cache asynchronously in the background.
+- **Validation (`ETag` & `If-None-Match`)**: When the server returns `ETag: "v42-9a8b7c"`, subsequent client `GET` requests include `If-None-Match: "v42-9a8b7c"`. If the resource hasn't changed, the server returns `304 Not Modified` with an empty body—saving bandwidth and serialization CPU.
+- **Optimistic Concurrency on Mutations (`If-Match`)**: Clients sending `PUT /orders/42` with `If-Match: "v42-9a8b7c"` prevent lost updates: if another actor modified the order in the meantime (advancing its ETag to `"v43-1f2e3d"`), the server rejects the write with `412 Precondition Failed`.
+
+---
+
+## 🧠 Senior/Staff Interview Playbook: How to Ace API Design & RPC Interviews
+
+### 1. The Senior Framing Strategy (First 60 Seconds)
+
+- **State Non-Negotiable Invariants Upfront**: Anchor your protocol choice on **consumer topology**: use **REST/OpenAPI** for public/partner-facing APIs (universal browser compatibility, CDN HTTP caching, zero client codegen barrier); **gRPC (Protobuf over HTTP/2)** for high-throughput internal east-west microservices (strict schema evolution, 5–10x faster binary serialization, bi-directional streaming, deadline propagation); and **GraphQL (BFF)** when heterogeneous mobile/web clients aggregate deep entity graphs across multiple backend domains.
+- **Back-of-the-Envelope Capacity & Hardware Physics**: Quantify payload and connection physics. A 5 KB JSON payload at 50,000 RPS consumes $250\text{ MB/s}$ ($2\text{ Gbps}$) of NIC bandwidth and significant Jackson UTF-8 parsing CPU; compressing that to a 700-byte Protobuf message drops network throughput to $35\text{ MB/s}$ and cuts p99 serialization latency from milliseconds to microseconds.
+- **Proactive Failure-Mode Identification**: Immediately mention **Idempotency Keys** on all mutating `POST`/`PATCH` endpoints, **Keyset/Cursor Pagination** (never `OFFSET` on large tables), **Deadline Propagation** to prevent cascading retry storms, and **BOLA/IDOR authorization checks** (`WHERE id = ? AND tenant_id = ?`).
+- **Day-2 Operational Realism**: Specify backward-compatible additive evolution (never renumbering Protobuf tags or removing JSON fields in-place), RFC 9457 (`ProblemDetails`) structured error envelopes with `traceId`, and `Sunset` / `Deprecation` HTTP headers tracked by per-client API key telemetry before retiring old versions.
+
+### 2. Classic Interviewer Traps & Principal Rebuttals
+
+#### Trap 1: "We switched our internal microservices on Kubernetes from REST (HTTP/1.1) to gRPC (HTTP/2) for better performance, and suddenly one pod is at 100% CPU while the other 9 pods sit at 0%. Why?"
+* **Junior/Mid Answer:** *"Kubernetes round-robins requests across pods, so maybe that one pod got a very heavy request or has a memory leak."*
+* **Principal Rebuttal:**
+  > *"That happens because gRPC multiplexes all RPC calls over a single persistent HTTP/2 TCP connection, whereas a standard Kubernetes `Service` (`ClusterIP`) operates as a Layer 4 TCP proxy (`iptables`/`IPVS`) that only load-balances when a **new TCP connection** is established! Once your client opens one HTTP/2 connection, every subsequent RPC flows to that single backend pod forever. To fix this, you either deploy an L7 proxy/service mesh (Envoy/Linkerd) that load-balances per HTTP/2 stream, or use a Kubernetes Headless Service (`clusterIP: None`) with gRPC's client-side `round_robin` load balancer and server-side `maxConnectionAge`."*
+
+#### Trap 2: "GraphQL eliminates over-fetching and under-fetching, so why not expose GraphQL directly as our public API for all third-party developers instead of REST?"
+* **Junior/Mid Answer:** *"We totally should! GraphQL is strictly better than REST because clients only ask for the exact fields they need."*
+* **Principal Rebuttal:**
+  > *"Exposing GraphQL as a public API introduces three severe operational costs compared to REST: (1) **Broken HTTP Caching**: because every GraphQL query is a `POST /graphql` with a dynamic JSON body, standard CDN edge caching and HTTP `ETag` / `Cache-Control` semantics don't work out-of-the-box without Persisted Queries; (2) **Asymmetric DoS & N+1 Amplification**: a single 6-level nested query can trigger thousands of backend resolver queries unless you strictly enforce AST **Query Depth Limits**, **Query Cost/Complexity Budgets**, and per-request **DataLoader** batching; and (3) **Rate Limiting Complexity**: you can no longer rate-limit by simple requests-per-second because 1 complex GraphQL query can cost 500x more DB CPU than 1 simple query—you must rate-limit by calculated query complexity points."*
+
+#### Trap 3: "To make `POST /v1/payments` idempotent, we check `if (redis.get(idempotencyKey) != null) return cached;` before charging the card, and save the response to Redis after charging. Is that production-safe?"
+* **Junior/Mid Answer:** *"Yes, Redis is super fast, so if the client retries with the same `Idempotency-Key`, it returns the cached response."*
+* **Principal Rebuttal:**
+  > *"That naive check-then-act pattern fails in two production scenarios: (1) **Concurrent Retry Race (TOCTOU)**: if a client times out or double-clicks and sends two requests 5ms apart while the first charge is still waiting on the payment gateway (taking 300ms), both requests see `redis.get(key) == null` and **double-charge the customer**. You must acquire an atomic lock upfront (`SET key 'IN_PROGRESS' NX EX 30` or `INSERT ... ON CONFLICT DO NOTHING`) and return `409 Conflict` if a duplicate arrives while `IN_PROGRESS`. (2) **Volatile Cache Eviction / Payload Mismatch**: if Redis evicts keys under memory pressure or crashes before AOF fsync, you lose idempotency protection for financial transactions. Furthermore, you must store a `SHA-256` hash of the request payload and return `422 Unprocessable Entity` if the client reuses the same `Idempotency-Key` with a different payment amount."*
+
+#### Trap 4: "Why can't we use `LIMIT 20 OFFSET 100000` for our infinite-scroll feed if we have an index on `created_at`?"
+* **Junior/Mid Answer:** *"Because `OFFSET` doesn't use the index and does a full table scan."*
+* **Principal Rebuttal:**
+  > *"Even when the database uses the B+Tree index on `(created_at DESC)`, `OFFSET 100000 LIMIT 20` still forces the storage engine to walk through **100,020 index leaf entries** (and check MVCC visibility / heap pages) just to discard the first 100,000 rows—making query latency degrade linearly $O(\text{offset})$ as the user scrolls deeper. Worse, if 5 new posts are inserted at the top of the feed while the user is reading page 1, requesting `OFFSET 20` shifts every row down by 5, returning **5 duplicate items** the user already saw. Keyset/Cursor pagination (`WHERE (created_at, id) < (:cursor_ts, :cursor_id) ORDER BY created_at DESC, id DESC LIMIT 20`) performs a direct $O(\log N)$ B+Tree seek straight to the exact tuple with zero skipped/duplicate rows."*
+
+### 3. Quick Reference — Mid-Level vs. Principal Candidate Cheat Sheet
+
+| Concept / Scenario | Mid-Level Candidate Says | Principal Candidate Demonstrates |
+| :--- | :--- | :--- |
+| **REST vs. gRPC Selection** | *"gRPC is faster than REST because it uses binary."* | *"Use REST at the public edge for universal client reach and CDN HTTP caching; use gRPC internally for TLV binary efficiency, strict `.proto` contracts, bi-directional streaming, and automatic deadline propagation."* |
+| **Protobuf Evolution** | *"Just change the field name or number in the `.proto` file and redeploy."* | *"Field names are absent on the wire; field tag numbers (`1–15` = 1 byte) are immutable wire identifiers. Never change a field number or type, and always mark deleted tags with `reserved`."* |
+| **Pagination** | *"Pass `?page=10&size=20` and run `LIMIT 20 OFFSET 200`."* | *"Use opaque Base64-encoded composite cursors (`created_at, id`) backed by keyset index seeks (`WHERE (created_at, id) < (?, ?)`) for constant $O(\log N)$ latency and immunity to concurrent insert drift."* |
+| **Idempotency** | *"Check if the key exists in Redis before running the POST method."* | *"Enforce an atomic state machine (`IN_PROGRESS` lock $\rightarrow$ SHA-256 payload fingerprint verification $\rightarrow$ transactional recovery point $\rightarrow$ cached HTTP response replay)."* |
+| **Timeouts & Retries** | *"Set a 30-second HTTP timeout and retry 3 times on failure."* | *"Propagate remaining deadline budgets (`grpc-timeout`) + cancellation signals (`RST_STREAM`) across every hop, and pair retries with jittered exponential backoff and retry budgets (max 10% extra traffic) to prevent retry storms."* |
+
