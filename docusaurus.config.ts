@@ -217,18 +217,24 @@ const config: Config = {
 					label: 'Docs',
 				},
 				{
+					to: '/diagrams',
+					label: 'Diagrams',
+					position: 'left',
+				},
+				{
+					type: 'dropdown',
+					label: 'Practice',
+					position: 'left',
+					items: [
+						{ to: '/arcade', label: 'Engineering Arcade' },
+						{ to: '/mock-interview', label: 'Mock Interview Studio' },
+						{ to: '/tech-english', label: 'Tech English' },
+						{ to: '/leaderboard', label: 'Cosmic Leaderboard' },
+					],
+				},
+				{
 					to: '/hub',
 					label: 'Career Hub',
-					position: 'left',
-				},
-				{
-					to: '/tech-english',
-					label: 'Tech English',
-					position: 'left',
-				},
-				{
-					to: '/arcade',
-					label: 'Arcade',
 					position: 'left',
 				},
 				{

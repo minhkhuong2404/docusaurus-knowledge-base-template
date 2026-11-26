@@ -8,6 +8,7 @@ import PremiumGate from "../components/PremiumGate";
 import ScrollProgressButton from "../components/ScrollProgressButton";
 import LevelUpToast from "../components/gamification/LevelUpToast";
 import FocusMusicPlayer from "../components/FocusMusicPlayer";
+import CommandPalette from "../components/CommandPalette";
 
 const PREMIUM_STATE_KEY = "premium_session_state";
 
@@ -111,6 +112,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
           <LevelUpToast />
           <ScrollProgressButton />
           <FocusMusicPlayer />
+          <CommandPalette />
           {isPremiumRoute ? <PremiumGate>{children}</PremiumGate> : children}
         </FocusMusicProvider>
       </UserProgressProvider>

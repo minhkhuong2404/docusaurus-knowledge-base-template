@@ -1,7 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { triggerCommandPalette } from "../components/CommandPalette";
+import {
+  AnimatedStatNumber,
+  BentoFeatureShowcase,
+  DomainIcon,
+  LiveDiagramSpotlight,
+  ResumeLearningCockpit,
+} from "../components/LandingWidgets";
 
 const DailyQuizGallery = React.lazy(() => import('../components/DailyQuizGallery'));
 const LeetCodeDaily = React.lazy(() => import('../components/LeetCodeDaily'));
@@ -1016,8 +1024,41 @@ const viewAllStyle: React.CSSProperties = {
 // @ts-ignore
 export default function Home(): React.ReactNode {
   useDocusaurusContext();
-  const [activeQuiz, setActiveQuiz] = useState<'java' | 'springboot'>('java');
   const [activeHubTab, setActiveHubTab] = useState<'leetcode' | 'quiz'>('leetcode');
+  const [pathFilter, setPathFilter] = useState<string>('All');
+  const [dsaPhase, setDsaPhase] = useState<'1-5' | '6-10' | '11-15' | '16-20' | 'all'>('1-5');
+  const [showAllAws, setShowAllAws] = useState<boolean>(false);
+
+  const handleCardMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty('--my', `${e.clientY - rect.top}px`);
+  }, []);
+
+  const filteredPaths = useMemo(() => {
+    if (pathFilter === 'All') return LEARNING_PATHS;
+    if (pathFilter === 'Infra & Cloud') {
+      return LEARNING_PATHS.filter((p) => ['Infra', 'Cloud', 'Security'].includes(p.tag));
+    }
+    if (pathFilter === 'Architecture') {
+      return LEARNING_PATHS.filter((p) => ['Architecture', 'Messaging', 'Cache'].includes(p.tag));
+    }
+    if (pathFilter === 'Domain & Tooling') {
+      return LEARNING_PATHS.filter((p) => ['Domain', 'Tooling'].includes(p.tag));
+    }
+    return LEARNING_PATHS.filter((p) => p.tag === pathFilter);
+  }, [pathFilter]);
+
+  const filteredDsaWeeks = useMemo(() => {
+    if (dsaPhase === 'all') return DSA_WEEKS;
+    const [start, end] = dsaPhase.split('-').map(Number);
+    return DSA_WEEKS.filter((w) => w.wk >= start && w.wk <= end);
+  }, [dsaPhase]);
+
+  const visibleAwsTopics = useMemo(
+    () => (showAllAws ? AWS_TOPICS : AWS_TOPICS.slice(0, 8)),
+    [showAllAws]
+  );
 
   /* Add / remove body class so global CSS can target search & premium btn */
   useEffect(() => {
@@ -1338,6 +1379,25 @@ export default function Home(): React.ReactNode {
               and cloud certification — all in one place.
             </p>
 
+            {/* Hero Quick-Search Command Palette Trigger */}
+            <div className="lp-ctas" style={{ display: "flex", justifyContent: "center" }}>
+              <button
+                type="button"
+                className="lp-hero-search-btn"
+                onClick={triggerCommandPalette}
+                aria-label="Open Quick Command Palette"
+              >
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "0.55rem" }}>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3" />
+                  </svg>
+                  Search docs, 765+ diagrams, or launch Arcade...
+                </span>
+                <kbd className="lp-hero-search-kbd">⌘K</kbd>
+              </button>
+            </div>
+
             {/* CTAs */}
             <div
               className="lp-ctas"
@@ -1406,6 +1466,10 @@ export default function Home(): React.ReactNode {
                 DSA Roadmap
               </Link>
             </div>
+            {/* Personalized Resume Learning Cockpit */}
+            <div style={{ marginTop: "2.5rem" }}>
+              <ResumeLearningCockpit />
+            </div>
           </section>
 
           {/* ══════════════════════════════════════════════════════════════════
@@ -1425,12 +1489,12 @@ export default function Home(): React.ReactNode {
             }}
           >
             {[
-              { num: "13+", label: "Learning Paths" },
-              { num: "20", label: "DSA Weeks" },
-              { num: "8", label: "Engineering Books" },
-              { num: "15+", label: "AWS Topics" },
-              { num: "500+", label: "Pages of Content" },
-            ].map(({ num, label }, i) => (
+              { target: 765, suffix: "+", label: "Interactive Diagrams" },
+              { target: 5, suffix: "", label: "Arcade Games" },
+              { target: 13, suffix: "+", label: "Learning Paths" },
+              { target: 20, suffix: "", label: "DSA Weeks" },
+              { target: 500, suffix: "+", label: "Deep-Dive Docs" },
+            ].map(({ target, suffix, label }, i) => (
               <div
                 key={label}
                 style={{
@@ -1438,7 +1502,7 @@ export default function Home(): React.ReactNode {
                   animation: `lp-fadeUp 0.5s ease ${0.8 + i * 0.08}s both`,
                 }}
               >
-                <div className="lp-stat-num">{num}</div>
+                <AnimatedStatNumber target={target} suffix={suffix} />
                 <div
                   style={{
                     fontSize: "0.94rem",
@@ -1454,6 +1518,12 @@ export default function Home(): React.ReactNode {
               </div>
             ))}
           </div>
+
+          {/* ══════════════════════════════════════════════════════════════════
+            BENTO FEATURE SHOWCASE & LIVE DIAGRAM SPOTLIGHT
+        ══════════════════════════════════════════════════════════════════ */}
+          <BentoFeatureShowcase onCardMouseMove={handleCardMouseMove} />
+          <LiveDiagramSpotlight />
 
           {/* ══════════════════════════════════════════════════════════════════
             SECTION 1 — Learning Paths
@@ -1476,6 +1546,18 @@ export default function Home(): React.ReactNode {
               senior-level topics with practical examples, interview questions,
               and real-world context.
             </p>
+            <div className="lp-filter-bar" role="tablist" aria-label="Filter learning paths">
+              {["All", "Core", "Architecture", "Infra & Cloud", "Domain & Tooling"].map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setPathFilter(tab)}
+                  className={`lp-filter-pill ${pathFilter === tab ? "lp-filter-pill--active" : ""}`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
             <div
               style={{
                 display: "grid",
@@ -1483,22 +1565,25 @@ export default function Home(): React.ReactNode {
                 gap: "1rem",
               }}
             >
-              {LEARNING_PATHS.map((p, i) => (
+              {filteredPaths.map((p, i) => (
                 <Link
                   key={p.name}
                   to={p.href}
                   ref={paths.setRef(i) as any}
-                  className={`lp-hcard ${paths.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
+                  onMouseMove={handleCardMouseMove}
+                  className="lp-hcard lp-spotlight-card lp-card-visible"
                   style={{
                     ...card,
+                    position: "relative",
+                    overflow: "hidden",
                     padding: "1.4rem 1.2rem",
                     display: "flex",
                     flexDirection: "column",
-                    gap: "0.5rem",
+                    gap: "0.55rem",
                   }}
                 >
-                  <span style={{ fontSize: "2rem", lineHeight: 1 }}>
-                    {p.icon}
+                  <span className="lp-icon-badge" aria-hidden="true">
+                    <DomainIcon name={p.name} color="#10b981" />
                   </span>
                   <span
                     style={{
@@ -2047,9 +2132,28 @@ export default function Home(): React.ReactNode {
               <DSADashboard />
             </React.Suspense>
 
-            <h3 style={{ color: "var(--brand-purple)", fontWeight: 800, marginTop: "3.5rem", marginBottom: "1.5rem", fontSize: "1.3rem" }}>
-              🗺️ 20-Week Lesson Navigation Blueprint
+            <h3 style={{ color: "var(--brand-purple)", fontWeight: 800, marginTop: "3.5rem", marginBottom: "1rem", fontSize: "1.3rem" }}>
+              20-Week Lesson Navigation Blueprint
             </h3>
+
+            <div className="lp-filter-bar" role="tablist" aria-label="Filter DSA weeks">
+              {[
+                { id: '1-5' as const, label: 'Phase 1 · Weeks 1–5' },
+                { id: '6-10' as const, label: 'Phase 2 · Weeks 6–10' },
+                { id: '11-15' as const, label: 'Phase 3 · Weeks 11–15' },
+                { id: '16-20' as const, label: 'Phase 4 · Weeks 16–20' },
+                { id: 'all' as const, label: 'All 20 Weeks' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setDsaPhase(tab.id)}
+                  className={`lp-filter-pill ${dsaPhase === tab.id ? "lp-filter-pill--active" : ""}`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
 
             <div
               style={{
@@ -2058,14 +2162,17 @@ export default function Home(): React.ReactNode {
                 gap: "0.75rem",
               }}
             >
-              {DSA_WEEKS.map(({ wk, title, sub, href }, i) => (
+              {filteredDsaWeeks.map(({ wk, title, sub, href }, i) => (
                 <Link
                   key={wk}
                   to={href}
                   ref={dsaWks.setRef(i) as any}
-                  className={`lp-hcard ${dsaWks.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
+                  onMouseMove={handleCardMouseMove}
+                  className="lp-hcard lp-spotlight-card lp-card-visible"
                   style={{
                     ...card,
+                    position: "relative",
+                    overflow: "hidden",
                     borderRadius: 10,
                     padding: "0.9rem 1rem",
                     display: "block",
@@ -2364,14 +2471,17 @@ export default function Home(): React.ReactNode {
                 gap: "0.85rem",
               }}
             >
-              {AWS_TOPICS.map(({ n, title, desc, href }, i) => (
+              {visibleAwsTopics.map(({ n, title, desc, href }, i) => (
                 <Link
                   key={title}
                   to={href}
                   ref={awsTop.setRef(i) as any}
-                  className={`lp-hcard ${awsTop.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
+                  onMouseMove={handleCardMouseMove}
+                  className="lp-hcard lp-spotlight-card lp-card-visible"
                   style={{
                     ...card,
+                    position: "relative",
+                    overflow: "hidden",
                     borderRadius: 10,
                     padding: "1rem 1.1rem",
                     display: "block",
@@ -2412,6 +2522,16 @@ export default function Home(): React.ReactNode {
                   </span>
                 </Link>
               ))}
+            </div>
+
+            <div style={{ marginTop: "1.1rem" }}>
+              <button
+                type="button"
+                onClick={() => setShowAllAws((v) => !v)}
+                className="lp-filter-pill"
+              >
+                {showAllAws ? "Show fewer AWS topics ↑" : `Show all ${AWS_TOPICS.length} AWS topics ↓`}
+              </button>
             </div>
 
             <div

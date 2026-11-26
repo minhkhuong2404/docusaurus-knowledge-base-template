@@ -1,8 +1,8 @@
 {
-  "id": "3331",
-  "title": "Find Subtree Sizes After Changes",
-  "url": "https://leetcode.com/problems/find-subtree-sizes-after-changes/",
-  "difficulty": "medium",
-  "topic": "Array, Hash Table, String, Tree, Depth-First Search",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-11-21."
+  "id": "3360",
+  "title": "Stone Removal Game",
+  "url": "https://leetcode.com/problems/stone-removal-game/",
+  "difficulty": "easy",
+  "topic": "Math, Simulation",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-11-26."
 }

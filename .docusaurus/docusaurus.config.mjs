@@ -9,7 +9,7 @@ export default {
   "url": "https://luminhkhuong.dev",
   "baseUrl": "/",
   "customFields": {
-    "firebaseApiKey": "",
+    "firebaseApiKey": "AIzaSyCfKNL2b9lwvZjOA916DoYDR5B5-Xz7NNE",
     "firebaseAuthDomain": "khuong-tjfxef.firebaseapp.com",
     "firebaseProjectId": "khuong-tjfxef",
     "firebaseStorageBucket": "khuong-tjfxef.firebasestorage.app",
@@ -309,18 +309,36 @@ export default {
           "label": "Docs"
         },
         {
+          "to": "/diagrams",
+          "label": "Diagrams",
+          "position": "left"
+        },
+        {
+          "type": "dropdown",
+          "label": "Practice",
+          "position": "left",
+          "items": [
+            {
+              "to": "/arcade",
+              "label": "Engineering Arcade"
+            },
+            {
+              "to": "/mock-interview",
+              "label": "Mock Interview Studio"
+            },
+            {
+              "to": "/tech-english",
+              "label": "Tech English"
+            },
+            {
+              "to": "/leaderboard",
+              "label": "Cosmic Leaderboard"
+            }
+          ]
+        },
+        {
           "to": "/hub",
           "label": "Career Hub",
-          "position": "left"
-        },
-        {
-          "to": "/tech-english",
-          "label": "Tech English",
-          "position": "left"
-        },
-        {
-          "to": "/arcade",
-          "label": "Arcade",
           "position": "left"
         },
         {
